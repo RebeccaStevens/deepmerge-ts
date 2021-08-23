@@ -1,0 +1,90 @@
+name: CI
+
+on:
+  - push
+  - pull_request
+
+jobs:
+  pre_job:
+    runs-on: ubuntu-latest
+    outputs:
+      should_skip: ${{ steps.skip_check.outputs.should_skip }}
+    steps:
+      - name: Skip Duplicate Actions
+        id: skip_check
+        uses: fkirc/skip-duplicate-actions@v3.4.0
+        with:
+          concurrent_skipping: "same_content"
+          paths_ignore: '[".vscode/", "**/docs/**", "**/*.md"]'
+          do_not_skip: '["pull_request"]'
+
+  lint:
+    name: Linting Checks
+    needs: pre_job
+    if: ${{ needs.pre_job.outputs.should_skip != 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup NodeJs
+        uses: actions/setup-node@v2
+        with:
+          node-version: "lts/*"
+
+      - name: Install Dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Run Linting Checks
+        run: yarn lint
+
+      - name: Check spelling
+        run: yarn check-spelling
+
+  test:
+    name: "Test - Node: ${{ matrix.node_version }} - TS: ${{ matrix.ts_version }} - OS: ${{ matrix.os }}"
+    needs: pre_job
+    if: ${{ needs.pre_job.outputs.should_skip != 'true' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - "ubuntu-latest"
+        node_version:
+          - "12"
+          - "14"
+          - "16"
+    runs-on: ${{ matrix.os }}
+    env:
+      REPORT_COVERAGE: ${{ fromJSON('["false", "true"]')[matrix.node_version == '16' && matrix.os != 'ubuntu-latest'] }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          # Fetch all commits for codecov.
+          fetch-depth: ${{ fromJSON('[0, 1]')[ env.REPORT_COVERAGE == 'true'] }}
+
+      - name: Setup NodeJs for building
+        uses: actions/setup-node@v2
+        with:
+          node-version: "lts/*"
+
+      - name: Install Dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build
+        run: yarn build
+
+      - name: Setup NodeJs ${{ matrix.node_version }} for testing
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node_version }}
+
+      - name: Run Tests
+        run: yarn test
+
+      - name: Report coverage
+        uses: codecov/codecov-action@v1
+        if: env.REPORT_COVERAGE == 'true'
+        with:
+          file: coverage/lcov.info

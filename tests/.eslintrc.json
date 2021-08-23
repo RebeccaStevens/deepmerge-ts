@@ -1,0 +1,7 @@
+{
+  "plugins": ["ava"],
+  "extends": ["plugin:ava/recommended"],
+  "rules": {
+    "import/no-relative-parent-imports": "off"
+  }
+}

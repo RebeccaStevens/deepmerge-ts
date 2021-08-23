@@ -1,0 +1,30 @@
+{
+  "root": true,
+  "env": {
+    "node": true
+  },
+  "plugins": [
+    "prettier"
+  ],
+  "extends": [
+    "@rebeccastevens/eslint-config/modern",
+    "@rebeccastevens/eslint-config/typescript",
+    "@rebeccastevens/eslint-config/common-overrides",
+    "plugin:prettier/recommended",
+    "prettier"
+  ],
+  "parserOptions": {
+    "project": [
+      "./tsconfig.json",
+      "./tests/tsconfig.json"
+    ]
+  },
+  "ignorePatterns": [
+    "coverage/",
+    "lib/",
+    "tests/types/**/*",
+    "**/*.cjs",
+    "**/*.js"
+  ],
+  "rules": {}
+}

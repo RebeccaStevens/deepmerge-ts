@@ -1,0 +1,11 @@
+/lib/
+/coverage/
+
+!/types/
+/types/*
+!/types/legacy
+
+.nyc_output/
+node_modules/
+
+*.log
