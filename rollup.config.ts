@@ -14,7 +14,6 @@ const common = {
   input: "src/index.ts",
 
   output: {
-    dir: "./lib",
     sourcemap: false,
   },
 
@@ -49,7 +48,7 @@ const cjs = {
 
   output: {
     ...common.output,
-    entryFileNames: "[name].cjs",
+    file: pkg.main,
     format: "cjs",
   },
 
@@ -61,7 +60,7 @@ const esm = {
 
   output: {
     ...common.output,
-    entryFileNames: "[name].mjs",
+    file: pkg.module,
     format: "esm",
   },
 
