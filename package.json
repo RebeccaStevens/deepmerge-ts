@@ -27,6 +27,7 @@
     "require": "./lib/index.cjs"
   },
   "main": "lib/index.cjs",
+  "module": "lib/index.mjs",
   "types": "types/current/index.d.ts",
   "files": [
     "lib/",
