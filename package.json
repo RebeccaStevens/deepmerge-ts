@@ -30,6 +30,7 @@
   "types": "types/current/index.d.ts",
   "files": [
     "lib/",
+    "types/",
     "package.json",
     "CHANGELOG.md",
     "LICENSE",
@@ -38,7 +39,6 @@
   "scripts": {
     "prebuild": "rimraf lib types/current",
     "build": "rollup -c",
-    "postbuild": "if [ -d \"lib/types\" ]; then mv lib/types types/current; fi",
     "check-format": "prettier --list-different \"./**/*.{md,ts,yml}\"",
     "check-spelling": "cspell --config=.cspell.json \"**/*.{md,ts}\"",
     "cz": "git-cz",
@@ -102,6 +102,7 @@
     "rimraf": "^3.0.2",
     "rollup": "^2.56.2",
     "rollup-plugin-auto-external": "^2.0.0",
+    "rollup-plugin-dts": "^3.0.2",
     "semantic-release": "^17.4.5",
     "source-map-support": "^0.5.19",
     "ts-node": "^10.2.1",

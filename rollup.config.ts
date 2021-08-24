@@ -6,6 +6,9 @@ import rollupPluginJSON from "@rollup/plugin-json";
 import rollupPluginNodeResolve from "@rollup/plugin-node-resolve";
 import rollupPluginTypescript from "@rollup/plugin-typescript";
 import rollupPluginAutoExternal from "rollup-plugin-auto-external";
+import rollupPluginDts from "rollup-plugin-dts";
+
+import pkg from "./package.json";
 
 const common = {
   input: "src/index.ts",
@@ -65,4 +68,15 @@ const esm = {
   plugins: getPlugins(),
 };
 
-export default [cjs, esm];
+const dts = {
+  ...common,
+
+  output: {
+    file: pkg.types,
+    format: "es",
+  },
+
+  plugins: [rollupPluginDts()],
+};
+
+export default [cjs, esm, dts];

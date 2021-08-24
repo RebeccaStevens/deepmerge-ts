@@ -22,6 +22,7 @@
   "ignorePatterns": [
     "coverage/",
     "lib/",
+    "types/",
     "tests/types/**/*",
     "**/*.cjs",
     "**/*.js"
