@@ -3,5 +3,6 @@
   "compilerOptions": {
     "module": "commonjs",
     "declaration": false,
+    "declarationDir": null
   }
 }
