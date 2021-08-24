@@ -7,6 +7,7 @@ import rollupPluginNodeResolve from "@rollup/plugin-node-resolve";
 import rollupPluginTypescript from "@rollup/plugin-typescript";
 import rollupPluginAutoExternal from "rollup-plugin-auto-external";
 import rollupPluginDts from "rollup-plugin-dts";
+import rollupPluginReplaceImports from "rollup-plugin-replace-imports";
 
 import pkg from "./package.json";
 
@@ -83,4 +84,22 @@ const dts = {
   ],
 };
 
-export default [cjs, esm, dts];
+const deno = {
+  ...esm,
+
+  output: {
+    ...esm.output,
+    file: "lib/deno.js",
+  },
+
+  plugins: [
+    rollupPluginReplaceImports((path) =>
+      path === "is-plain-object"
+        ? "https://raw.githubusercontent.com/jonschlinkert/is-plain-object/v5.0.0/is-plain-object.js"
+        : path
+    ),
+    ...esm.plugins,
+  ],
+};
+
+export default [cjs, esm, dts, deno];

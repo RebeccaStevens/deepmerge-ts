@@ -41,7 +41,7 @@ jobs:
       - name: Check spelling
         run: yarn check-spelling
 
-  test:
+  test-node:
     name: "Test - Node: ${{ matrix.node_version }} - TS: ${{ matrix.ts_version }} - OS: ${{ matrix.os }}"
     needs: pre_job
     if: ${{ needs.pre_job.outputs.should_skip != 'true' }}
@@ -88,3 +88,29 @@ jobs:
         if: (success() || failure()) && env.REPORT_COVERAGE == 'true'
         with:
           files: coverage/lcov.info
+
+  test-deno:
+    name: Test - Deno
+    needs: pre_job
+    if: ${{ needs.pre_job.outputs.should_skip != 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup NodeJs for building
+        uses: actions/setup-node@v2
+        with:
+          node-version: "lts/*"
+
+      - name: Install Dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build
+        run: yarn build
+
+      - name: Setup Deno
+        uses: denoland/setup-deno@v1.1.0
+
+      - name: Run tests
+        run: yarn test:deno

@@ -6829,6 +6829,11 @@ rollup-plugin-dts@^4.0.0:
   optionalDependencies:
     "@babel/code-frame" "^7.14.5"
 
+rollup-plugin-replace-imports@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/rollup-plugin-replace-imports/-/rollup-plugin-replace-imports-1.0.0.tgz#561aeb81f23c08f4f70ff120c88b5474515d8451"
+  integrity sha512-JkULc2lBBu3EViTAuG8Wg52q0AamE+isuXFey1/FHzDXq2TtgEEmGoC2mJrIEpzShZYyYW36/KBe3nauLVk9LQ==
+
 rollup@>=2.0.0:
   version "2.56.2"
   resolved "https://registry.yarnpkg.com/rollup/-/rollup-2.56.2.tgz#a045ff3f6af53ee009b5f5016ca3da0329e5470f"
