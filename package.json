@@ -44,10 +44,10 @@
     "check-spelling": "cspell --config=.cspell.json \"**/*.{md,ts}\"",
     "cz": "git-cz",
     "format": "prettier --write \"./**/*.{md,ts,yml}\"",
-    "postinstall": "yarn husky install",
     "lint": "yarn lint:js && yarn lint:md",
     "lint:js": "eslint .",
     "lint:md": "markdownlint \"**/*.md\" --config=.markdownlint.json --ignore-path=.markdownlintignore",
+    "prepare": "husky install",
     "test": "yarn test:js && yarn test:types",
     "test:js": "nyc ava",
     "test:types": "dtslint --localTs node_modules/typescript/lib --expectOnly tests/types"
