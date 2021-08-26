@@ -5,6 +5,7 @@ import type {
   DeepMergeRecords,
   DeepMergeSets,
   DeepMergeUnknowns,
+  DeepMergeDefaultURI,
   Property,
 } from "./types";
 import { getKeys, getObjectType, ObjectType, objectHasProperty } from "./utils";
@@ -16,7 +17,7 @@ import { getKeys, getObjectType, ObjectType, objectHasProperty } from "./utils";
  */
 export function deepmerge<Ts extends readonly [unknown, ...unknown[]]>(
   ...objects: readonly [...Ts]
-): DeepMerge<Ts>;
+): DeepMerge<Ts, DeepMergeDefaultURI>;
 
 /**
  * Deeply merge two or more objects.

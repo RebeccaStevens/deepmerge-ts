@@ -1,14 +1,41 @@
+import type { Kind2, URIS2 } from "fp-ts/HKT";
+
+declare module "fp-ts/HKT" {
+  // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+  interface URItoKind2<E, A> {
+    readonly DeepMergeDefaultHKT: DeepMergeUnknowns<E, A>;
+  }
+}
+
 /**
  * Deep merge 1 or more types given in an array.
  */
-export type DeepMerge<Ts extends readonly [unknown, ...unknown[]]> =
-  Ts extends readonly [infer T1, ...unknown[]]
-    ? Ts extends readonly [T1, infer T2, ...infer TRest]
-      ? TRest extends Readonly<ReadonlyArray<never>>
-        ? DeepMergeUnknowns<T1, T2>
-        : DeepMergeUnknowns<T1, DeepMerge<[T2, ...TRest]>>
-      : T1
-    : never;
+export type DeepMerge<
+  Ts extends readonly [unknown, ...unknown[]],
+  URI extends URIS2
+> = Ts extends readonly [infer T1, ...unknown[]]
+  ? Ts extends readonly [T1, infer T2, ...infer TRest]
+    ? TRest extends Readonly<ReadonlyArray<never>>
+      ? MergeOrLeafHKT<T1, T2, URI>
+      : MergeOrLeafHKT<T1, DeepMerge<[T2, ...TRest], URI>, URI>
+    : T1
+  : never;
+
+/**
+ * Merge the two types is they exists with the given HKT merge method, otherwise
+ * get a Leaf.
+ */
+type MergeOrLeafHKT<T1, T2, URI extends URIS2> = Or<
+  IsNever<T1>,
+  IsNever<T2>
+> extends true
+  ? Leaf<T1, T2>
+  : Kind2<URI, T1, T2>;
+
+/**
+ * The URI for DeepMergeDefaultHKT.
+ */
+export type DeepMergeDefaultURI = "DeepMergeDefaultHKT";
 
 /**
  * Deep merge 2 types.
