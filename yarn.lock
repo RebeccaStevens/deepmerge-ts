@@ -949,10 +949,10 @@
   dependencies:
     "@octokit/openapi-types" "^9.5.0"
 
-"@rebeccastevens/eslint-config@^1.0.14":
-  version "1.0.14"
-  resolved "https://registry.yarnpkg.com/@rebeccastevens/eslint-config/-/eslint-config-1.0.14.tgz#148412ed1447df0e2316c6959f82f9e047c962cd"
-  integrity sha512-s40NksJWJyyN2yp8AV428ffeRKaDlvyfnsagJDXYssKwk98cuPKZPSNvA+2mIRZr/TctOhQXyrt+6fDHQO0n3A==
+"@rebeccastevens/eslint-config@^1.0.15":
+  version "1.0.15"
+  resolved "https://registry.yarnpkg.com/@rebeccastevens/eslint-config/-/eslint-config-1.0.15.tgz#4e7611e14d38274be1085c29356ad5073494bd90"
+  integrity sha512-Vvbe1youfWDxfr+P8vy8ZmoVFi4Uxmp8Yp57UKFXlnCZ++aSPJdpcvhGUQA03kc/+uY7rlrVPCxn0TRvtPShAw==
   dependencies:
     deepmerge "^4.0.0"
 
