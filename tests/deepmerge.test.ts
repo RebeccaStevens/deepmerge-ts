@@ -102,13 +102,15 @@ test(`can merge nested objects`, (t) => {
     },
   };
 
+  const merged = deepmerge(x, y);
+
   t.deepEqual(x, {
     key1: {
       subkey1: `value1`,
       subkey2: `value2`,
     },
   });
-  t.deepEqual(deepmerge(x, y), expected);
+  t.deepEqual(merged, expected);
 });
 
 test(`replaces simple prop with nested object`, (t) => {
