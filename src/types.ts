@@ -22,6 +22,66 @@ export type DeepMerge<
   : never;
 
 /**
+ * The options the user can pass to customize deepmerge.
+ */
+export type DeepMergeOptions = Partial<DeepMergeOptionsFull>;
+
+/**
+ * All the options the user can pass to customize deepmerge.
+ */
+export type DeepMergeOptionsFull = Readonly<{
+  mergeMaps: <
+    T1 extends Readonly<ReadonlyMap<unknown, unknown>>,
+    T2 extends Readonly<ReadonlyMap<unknown, unknown>>,
+    U extends DeepMergeUtils
+  >(
+    x: T1,
+    y: T2,
+    utils: U
+  ) => unknown;
+  mergeSets: <
+    T1 extends Readonly<ReadonlySet<unknown>>,
+    T2 extends Readonly<ReadonlySet<unknown>>,
+    U extends DeepMergeUtils
+  >(
+    x: T1,
+    y: T2,
+    utils: U
+  ) => unknown;
+  mergeArrays: <
+    T1 extends Readonly<ReadonlyArray<unknown>>,
+    T2 extends Readonly<ReadonlyArray<unknown>>,
+    U extends DeepMergeUtils
+  >(
+    x: T1,
+    y: T2,
+    utils: U
+  ) => unknown;
+  mergeRecords: <
+    T1 extends Readonly<Record<Property, unknown>>,
+    T2 extends Readonly<Record<Property, unknown>>,
+    U extends DeepMergeUtils
+  >(
+    x: T1,
+    y: T2,
+    utils: U
+  ) => unknown;
+  mergeOthers: <T1, T2, U extends DeepMergeUtils>(
+    x: T1,
+    y: T2,
+    utils: U
+  ) => unknown;
+}>;
+
+/**
+ * The utils provided to the merge functions.
+ */
+export type DeepMergeUtils = DeepMergeOptionsFull &
+  Readonly<{
+    deepmerge: <T1, T2>(x: T1, y: T2) => unknown;
+  }>;
+
+/**
  * Merge the two types is they exists with the given HKT merge method, otherwise
  * get a Leaf.
  */
