@@ -1,4 +1,5 @@
 import { deepmerge } from "../../src/";
+import type { DeepMergeMergeFunctionsURIs } from "../../src/types";
 
 const a = {
   foo: "abc",

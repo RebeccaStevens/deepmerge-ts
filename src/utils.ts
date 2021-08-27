@@ -1,6 +1,6 @@
 import { isPlainObject } from "is-plain-object";
 
-import type { Property } from "./types";
+import type { RecordProperty } from "./types";
 
 /**
  * The different types of objects deepmerge-ts support.
@@ -54,8 +54,8 @@ export function getObjectType(object: unknown): ObjectType {
  */
 export function getKeys(
   objects: Readonly<ReadonlyArray<object>>
-): Set<Property> {
-  return objects.reduce<Set<Property>>((mutableCarry, object) => {
+): Set<RecordProperty> {
+  return objects.reduce<Set<RecordProperty>>((mutableCarry, object) => {
     // eslint-disable-next-line functional/no-loop-statement -- using a loop here is more efficient.
     for (const key of [
       ...Object.getOwnPropertyNames(object),
@@ -67,7 +67,7 @@ export function getKeys(
     }
 
     return mutableCarry;
-  }, new Set<Property>());
+  }, new Set<RecordProperty>());
 }
 
 /**
@@ -77,6 +77,9 @@ export function getKeys(
  * @param property - The property to test.
  * @returns Whether the object has the property.
  */
-export function objectHasProperty(object: object, property: Property): boolean {
+export function objectHasProperty(
+  object: object,
+  property: RecordProperty
+): boolean {
   return typeof object === "object" && property in object;
 }

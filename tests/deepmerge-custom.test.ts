@@ -1,6 +1,29 @@
 import test from "ava";
 
 import { deepmergeCustom } from "../src/deepmerge";
+import type {
+  DeepMergeMergeFunctionsURIs,
+  DeepMergeUnknownsHKT,
+  DeepMergeRecordsDefaultHKT,
+} from "../src/types";
+
+test("works just like non-customized version when no options passed", (t) => {
+  const v = { first: true };
+  const x = { second: false };
+  const y = { third: 123 };
+  const z = { fourth: "abc" };
+
+  const expected = {
+    first: true,
+    second: false,
+    third: 123,
+    fourth: "abc",
+  };
+
+  const merged = deepmergeCustom({})(v, x, y, z);
+
+  t.deepEqual(merged, expected);
+});
 
 test("custom merge strings", (t) => {
   const v = { foo: { bar: { baz: { qux: "a" } } } };
@@ -26,6 +49,17 @@ test("custom merge strings", (t) => {
   t.deepEqual(merged, expected);
 });
 
+declare module "../src/types" {
+  // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+  interface DeepMergeMergeFunctionURItoKind<
+    T1,
+    T2,
+    MF extends DeepMergeMergeFunctionsURIs
+  > {
+    readonly CustomArrays1: string[];
+  }
+}
+
 test("custom merge arrays", (t) => {
   const x = { foo: { bar: { baz: { qux: [1, 2, 3] } } } };
   const y = { foo: { bar: { baz: { qux: ["a", "b", "c"] } } } };
@@ -34,7 +68,9 @@ test("custom merge arrays", (t) => {
     foo: { bar: { baz: { qux: ["1a", "2b", "3c"] } } },
   };
 
-  const customizedDeepmerge = deepmergeCustom({
+  const customizedDeepmerge = deepmergeCustom<{
+    DeepMergeArraysURI: "CustomArrays1";
+  }>({
     mergeArrays: (array1, array2) => array1.map((e, i) => `${e}${array2[i]}`),
   });
 
@@ -43,31 +79,50 @@ test("custom merge arrays", (t) => {
   t.deepEqual(merged, expected);
 });
 
+declare module "../src/types" {
+  // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+  interface DeepMergeMergeFunctionURItoKind<
+    T1,
+    T2,
+    MF extends DeepMergeMergeFunctionsURIs
+  > {
+    readonly CustomArrays2: T1 extends Readonly<ReadonlyArray<infer E1>>
+      ? T2 extends Readonly<ReadonlyArray<infer E2>>
+        ? Array<DeepMergeUnknownsHKT<E1, E2, MF>>
+        : never
+      : never;
+    readonly CustomOthers2: string;
+  }
+}
+
 test("custom merge arrays of records", (t) => {
   const x = {
     foo: [
-      { bar: { baz: [{ qux: 1 }] } },
-      { bar: { baz: [{ qux: 2 }] } },
-      { bar: { baz: [{ qux: 3 }] } },
+      { bar: { baz: [{ qux: 35 }] } },
+      { bar: { baz: [{ qux: 36 }] } },
+      { bar: { baz: [{ qux: 37 }] } },
     ],
   };
   const y = {
     foo: [
-      { bar: { baz: [{ qux: 4 }] } },
-      { bar: { baz: [{ qux: 5 }] } },
-      { bar: { baz: [{ qux: 6 }] } },
+      { bar: { baz: [{ qux: 38 }] } },
+      { bar: { baz: [{ qux: 39 }] } },
+      { bar: { baz: [{ qux: 40 }] } },
     ],
   };
 
   const expected = {
     foo: [
-      { bar: { baz: [{ qux: 5 }] } },
-      { bar: { baz: [{ qux: 7 }] } },
-      { bar: { baz: [{ qux: 9 }] } },
+      { bar: { baz: [{ qux: "I" }] } },
+      { bar: { baz: [{ qux: "K" }] } },
+      { bar: { baz: [{ qux: "M" }] } },
     ],
   };
 
-  const customizedDeepmerge = deepmergeCustom({
+  const customizedDeepmerge = deepmergeCustom<{
+    DeepMergeArraysURI: "CustomArrays2";
+    DeepMergeOthersURI: "CustomOthers2";
+  }>({
     mergeArrays: (array1, array2, utils) => {
       const maxLength = Math.max(array1.length, array2.length);
       const result: unknown[] = [];
@@ -86,10 +141,63 @@ test("custom merge arrays of records", (t) => {
     },
     mergeOthers: (item1, item2) => {
       if (typeof item1 === "number" && typeof item2 === "number") {
-        return item1 + item2;
+        return String.fromCharCode(item1 + item2);
       }
-      return item2;
+      return "";
     },
+  });
+
+  const merged = customizedDeepmerge(x, y);
+
+  t.deepEqual(merged, expected);
+});
+
+declare module "../src/types" {
+  // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+  interface DeepMergeMergeFunctionURItoKind<
+    T1,
+    T2,
+    MF extends DeepMergeMergeFunctionsURIs
+  > {
+    readonly CustomRecords3: Entries<DeepMergeRecordsDefaultHKT<T1, T2, MF>>;
+  }
+
+  type Entries<T> = Array<
+    {
+      [K in keyof T]: [K, T[K]];
+    }[keyof T]
+  >;
+}
+
+test("custom merge records", (t) => {
+  const x = {
+    foo: {
+      bar: 1,
+    },
+  };
+  const y = {
+    foo: {
+      qux: 4,
+    },
+  };
+
+  const expected = [
+    [
+      "foo",
+      [
+        ["bar", 1],
+        ["qux", 4],
+      ],
+    ],
+  ];
+
+  const customizedDeepmerge = deepmergeCustom<{
+    DeepMergeRecordsURI: "CustomRecords3";
+  }>({
+    mergeRecords: (record1, record2, utils) =>
+      Object.entries(
+        utils.defaultMergeFunctions.mergeRecords(record1, record2, utils)
+      ),
   });
 
   const merged = customizedDeepmerge(x, y);
