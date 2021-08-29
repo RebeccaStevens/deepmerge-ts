@@ -16,7 +16,9 @@ export interface DeepMergeMergeFunctionURItoKind<
   T1,
   T2,
   MF extends DeepMergeMergeFunctionsURIs
-> {}
+> {
+  readonly DeepMergeLeafURI: DeepMergeLeafHKT<T1, T2, MF>;
+}
 
 /**
  * Get the type of the given merge function via its URI.
@@ -95,6 +97,20 @@ type MergeHKT<T1, T2, MF extends DeepMergeMergeFunctionsURIs> = Or<
  * Get the leaf type from 2 types that can't be merged.
  */
 export type Leaf<T1, T2> = IsNever<T2> extends true ? T1 : T2;
+
+/**
+ * The merge function that returns a leaf.
+ */
+export type DeepMergeLeafURI = "DeepMergeLeafURI";
+
+/**
+ * Get the leaf type from 2 types that can't be merged.
+ */
+export type DeepMergeLeafHKT<
+  T1,
+  T2,
+  MF extends DeepMergeMergeFunctionsURIs
+> = Leaf<T1, T2>;
 
 /**
  * Deep merge two types.

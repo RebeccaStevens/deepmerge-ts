@@ -204,3 +204,33 @@ test("custom merge records", (t) => {
 
   t.deepEqual(merged, expected);
 });
+
+declare module "../src/types" {
+  // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+  interface DeepMergeMergeFunctionURItoKind<
+    T1,
+    T2,
+    MF extends DeepMergeMergeFunctionsURIs
+  > {
+    readonly NoArrayMerge1: T2;
+  }
+}
+
+test("custom don't merge arrays", (t) => {
+  const v = { foo: [1, 2] } as const;
+  const x = { foo: [3, 4] } as const;
+  const y = { foo: [5, 6] } as const;
+  const z = { foo: [7, 8] } as const;
+
+  const expected = { foo: [7, 8] } as const;
+
+  const customizedDeepmerge = deepmergeCustom<{
+    DeepMergeArraysURI: "DeepMergeLeafURI";
+  }>({
+    mergeArrays: false,
+  } as const);
+
+  const merged = customizedDeepmerge(v, x, y, z);
+
+  t.deepEqual(merged, expected);
+});

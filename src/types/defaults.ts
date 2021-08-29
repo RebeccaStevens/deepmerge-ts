@@ -1,8 +1,9 @@
 import type {
-  Leaf,
-  DeepMergeUnknownsHKT,
+  DeepMergeLeafURI,
   DeepMergeMergeFunctionsURIs,
   DeepMergeMergeFunctionURItoKind,
+  DeepMergeUnknownsHKT,
+  Leaf,
 } from "./mergeing";
 import type { FlatternAlias, IsNever, Or, ValueOfKey } from "./utils";
 
@@ -17,7 +18,6 @@ declare module "./mergeing" {
     readonly DeepMergeArraysDefaultURI: DeepMergeArraysDefaultHKT<T1, T2, MF>;
     readonly DeepMergeSetsDefaultURI: DeepMergeSetsDefaultHKT<T1, T2, MF>;
     readonly DeepMergeMapsDefaultURI: DeepMergeMapsDefaultHKT<T1, T2, MF>;
-    readonly DeepMergeOthersDefaultURI: DeepMergeOthersDefaultHKT<T1, T2, MF>;
   }
 }
 
@@ -42,11 +42,6 @@ type DeepMergeSetsDefaultURI = "DeepMergeSetsDefaultURI";
 type DeepMergeMapsDefaultURI = "DeepMergeMapsDefaultURI";
 
 /**
- * The default merge function to merge other things with.
- */
-type DeepMergeOthersDefaultURI = "DeepMergeOthersDefaultURI";
-
-/**
  * The default merge functions to use when deep mergeing.
  */
 export type DeepMergeMergeFunctionsDefaultURIs = {
@@ -54,7 +49,7 @@ export type DeepMergeMergeFunctionsDefaultURIs = {
   DeepMergeArraysURI: DeepMergeArraysDefaultURI;
   DeepMergeSetsURI: DeepMergeSetsDefaultURI;
   DeepMergeMapsURI: DeepMergeMapsDefaultURI;
-  DeepMergeOthersURI: DeepMergeOthersDefaultURI;
+  DeepMergeOthersURI: DeepMergeLeafURI;
 };
 
 /**
@@ -143,15 +138,6 @@ export type DeepMergeMapsDefaultHKT<
   : never;
 
 /**
- * Deep merge other things.
- */
-export type DeepMergeOthersDefaultHKT<
-  T1,
-  T2,
-  MF extends DeepMergeMergeFunctionsURIs
-> = Leaf<T1, T2>;
-
-/**
  * Get the merge functions with defaults apply from the given subset.
  */
 export type GetDeepMergeMergeFunctionsURIs<
@@ -190,5 +176,5 @@ export type GetDeepMergeMergeFunctionsURIs<
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     PMF["DeepMergeOthersURI"] extends keyof DeepMergeMergeFunctionURItoKind<any, any, any>
       ? PMF["DeepMergeOthersURI"]
-      : DeepMergeOthersDefaultURI;
+      : DeepMergeLeafURI;
 };

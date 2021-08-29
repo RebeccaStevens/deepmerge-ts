@@ -10,7 +10,13 @@ export type DeepMergeOptions = Partial<DeepMergeOptionsFull>;
 /**
  * All the options the user can pass to customize deepmerge.
  */
-type DeepMergeOptionsFull = DeepMergeMergeFunctions;
+type DeepMergeOptionsFull = Readonly<{
+  mergeRecords: DeepMergeMergeFunctions["mergeRecords"] | false;
+  mergeArrays: DeepMergeMergeFunctions["mergeArrays"] | false;
+  mergeMaps: DeepMergeMergeFunctions["mergeMaps"] | false;
+  mergeSets: DeepMergeMergeFunctions["mergeSets"] | false;
+  mergeOthers: DeepMergeMergeFunctions["mergeOthers"];
+}>;
 
 /**
  * All the merge functions that deepmerge uses.

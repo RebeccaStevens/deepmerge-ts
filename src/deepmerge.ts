@@ -19,7 +19,7 @@ const defaultOptions = {
   mergeSets,
   mergeArrays,
   mergeRecords,
-  mergeOthers,
+  mergeOthers: leaf,
 } as const;
 
 export type DeepMergeMergeFunctionsDefaults = typeof defaultOptions;
@@ -88,7 +88,11 @@ function getUtils(
     defaultMergeFunctions: defaultOptions,
     mergeFunctions: {
       ...defaultOptions,
-      ...options,
+      ...Object.fromEntries(
+        Object.entries(options).map(([key, option]) =>
+          option === false ? [key, leaf] : [key, option]
+        )
+      ),
     },
     deepmerge,
   };
@@ -240,7 +244,7 @@ function mergeMaps<
  * @param x - The first thing.
  * @param y - The second thing.
  */
-function mergeOthers<
+function leaf<
   T1,
   T2,
   U extends DeepMergeMergeFunctionUtils,
