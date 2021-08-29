@@ -2,9 +2,10 @@ import test from "ava";
 
 import { deepmergeCustom } from "@/deepmerge";
 import type {
+  DeepMergeLeafURI,
   DeepMergeMergeFunctionsURIs,
-  DeepMergeUnknownsHKT,
   DeepMergeRecordsDefaultHKT,
+  DeepMergeUnknownsHKT,
 } from "@/deepmerge";
 
 test("works just like non-customized version when no options passed", (t) => {
@@ -225,12 +226,63 @@ test("custom don't merge arrays", (t) => {
   const expected = { foo: [7, 8] } as const;
 
   const customizedDeepmerge = deepmergeCustom<{
-    DeepMergeArraysURI: "DeepMergeLeafURI";
+    DeepMergeArraysURI: DeepMergeLeafURI;
   }>({
     mergeArrays: false,
-  } as const);
+  });
 
   const merged = customizedDeepmerge(v, x, y, z);
+
+  t.deepEqual(merged, expected);
+});
+
+declare module "../src/types" {
+  // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+  interface DeepMergeMergeFunctionURItoKind<
+    T1,
+    T2,
+    MF extends DeepMergeMergeFunctionsURIs
+  > {
+    readonly MergeDates1: T1 extends Date
+      ? T2 extends Date
+        ? [T1, T2]
+        : T2 extends Readonly<ReadonlyArray<Date>>
+        ? [T1, ...T2]
+        : T2
+      : T1 extends Readonly<ReadonlyArray<Date>>
+      ? T2 extends Date
+        ? [...T1, T2]
+        : T2
+      : T2;
+  }
+}
+
+test("custom merge dates", (t) => {
+  const x = { foo: new Date("2020-01-01") };
+  const y = { foo: new Date("2021-02-02") };
+  const z = { foo: new Date("2022-03-03") };
+
+  const expected = { foo: [x.foo, y.foo, z.foo] } as const;
+
+  const customizedDeepmerge = deepmergeCustom<{
+    DeepMergeOthersURI: "MergeDates1";
+  }>({
+    mergeOthers: (val1, val2) => {
+      if (val1 instanceof Date && val2 instanceof Date) {
+        return [val1, val2];
+      }
+      if (
+        Array.isArray(val1) &&
+        val1.every((val) => val instanceof Date) &&
+        val2 instanceof Date
+      ) {
+        return [...val1, val2];
+      }
+      return val2;
+    },
+  });
+
+  const merged = customizedDeepmerge(x, y, z);
 
   t.deepEqual(merged, expected);
 });
