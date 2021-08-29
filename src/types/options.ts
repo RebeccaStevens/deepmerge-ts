@@ -1,4 +1,4 @@
-import type { DeepMergeMergeFunctionsDefaults } from "../deepmerge";
+import type { DeepMergeMergeFunctionsDefaults } from "@/deepmerge";
 
 import type { RecordProperty } from "./basics";
 

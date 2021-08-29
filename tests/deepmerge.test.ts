@@ -1,6 +1,6 @@
 import test from "ava";
 
-import { deepmerge } from "../src/deepmerge";
+import { deepmerge } from "@/deepmerge";
 
 test("return undefined when nothing to merge", (t) => {
   const merged = deepmerge();

@@ -1,11 +1,11 @@
 import test from "ava";
 
-import { deepmergeCustom } from "../src/deepmerge";
+import { deepmergeCustom } from "@/deepmerge";
 import type {
   DeepMergeMergeFunctionsURIs,
   DeepMergeUnknownsHKT,
   DeepMergeRecordsDefaultHKT,
-} from "../src/types";
+} from "@/deepmerge";
 
 test("works just like non-customized version when no options passed", (t) => {
   const v = { first: true };
