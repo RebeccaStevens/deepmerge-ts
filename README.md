@@ -33,10 +33,11 @@ yarn add -D deepmerge-ts
 - Record merging support.
 - Array merging support.
 - Map and Set merging support.
+- Customized merging.
 
 ## Usage
 
-### Example
+### Basic Example
 
 ```js
 import { deepmerge } from "deepmerge-ts";
@@ -82,5 +83,103 @@ const output = {
   ]),
 };
 
-deepmerge(x, y) // => output
+deepmerge(x, y); // => output
+```
+
+### Simple Customized Example
+
+```js
+import type { DeepMergeLeafURI } from "deepmerge-ts";
+import { deepmergeCustom } from "deepmerge-ts";
+
+/**
+ * Create a custom deepmerge function that does not merge arrays, sets, or maps.
+ */
+const customDeepmerge = deepmergeCustom<{
+  DeepMergeArraysURI: DeepMergeLeafURI; // <-- Needed for correct typing information.
+  DeepMergeSetsURI: DeepMergeLeafURI;
+  DeepMergeMapsURI: DeepMergeLeafURI;
+}>({
+  mergeArrays: false,
+  mergeSets: false,
+  mergeMaps: false,
+});
+
+const x = { foo: [1, 2], bar: [3, 4] };
+const y = { foo: [5, 6] };
+
+customDeepmerge(x, y); // => { foo: [5, 6], bar: [3, 4] }
+```
+
+### Advanced Customized Example
+
+```ts
+import type { DeepMergeMergeFunctionURItoKind, DeepMergeMergeFunctionsURIs } from "deepmerge-ts";
+import { deepmergeCustom } from "deepmerge-ts";
+
+declare module "deepmerge-ts" {
+  interface DeepMergeMergeFunctionURItoKind<
+    T1,
+    T2,
+    MF extends DeepMergeMergeFunctionsURIs
+  > {
+    /**
+     * Define how 2 "other" types are merged.
+     */
+    readonly MyMergeOthersFn: T1 extends Date
+      ? T2 extends Date
+        ? [T1, T2]
+        : T2 extends Readonly<ReadonlyArray<Date>>
+          ? [T1, ...T2]
+          : T2
+      : T1 extends Readonly<ReadonlyArray<Date>>
+        ? T2 extends Date
+          ? [...T1, T2]
+          : T2
+        : T2;
+  }
+}
+
+/**
+ * Create a custom deepmerge function that amalgamates dates into an array.
+ */
+const customDeepmerge = deepmergeCustom<{
+  DeepMergeOthersURI: "MyMergeOthersFn";
+}>({
+  /**
+   * Define how 2 "other" values are merged.
+   */
+  mergeOthers: (val1, val2) => {
+    // How 2 dates are merged.
+    if (val1 instanceof Date && val2 instanceof Date) {
+      return [val1, val2];
+    }
+    // How an array of dates and a date are merged.
+    // This is not needed if only merge 2 values.
+    if (
+      Array.isArray(val1) &&
+      val2 instanceof Date &&
+      val1.every((val) => val instanceof Date)
+    ) {
+      return [...val1, val2];
+    }
+    // How a date and an array of dates are merged.
+    // This is not needed if only merge 2 values.
+    if (
+      val1 instanceof Date
+      Array.isArray(val2) &&
+      val2.every((val) => val instanceof Date)
+    ) {
+      return [val1, ...val2];
+    }
+    // Something else? Return the 2nd value.
+    return val2;
+  },
+});
+
+const x = { foo: new Date("2020-01-01") };
+const y = { foo: new Date("2021-02-02") };
+const z = { foo: new Date("2022-03-03") };
+
+customDeepmerge(x, y, z); // => { foo: [Date, Date, Date] }
 ```
