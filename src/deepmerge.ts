@@ -22,21 +22,28 @@ const defaultOptions = {
   mergeOthers: leaf,
 } as const;
 
+/**
+ * The default merge functions.
+ */
 export type DeepMergeMergeFunctionsDefaults = typeof defaultOptions;
-
-export function deepmerge<Ts extends readonly [unknown, ...unknown[]]>(
-  ...objects: readonly [...Ts]
-): DeepMergeHKT<Ts, DeepMergeMergeFunctionsDefaultURIs>;
-
-export function deepmerge(
-  ...objects: Readonly<ReadonlyArray<unknown>>
-): unknown;
 
 /**
  * Deeply merge two or more objects.
  *
  * @param objects - The objects to merge.
  */
+export function deepmerge<Ts extends readonly [unknown, ...unknown[]]>(
+  ...objects: readonly [...Ts]
+): DeepMergeHKT<Ts, DeepMergeMergeFunctionsDefaultURIs>;
+
+/**
+ * Deeply merge two or more objects.
+ *
+ * @param objects - The objects to merge.
+ */
+export function deepmerge(
+  ...objects: Readonly<ReadonlyArray<unknown>>
+): unknown;
 export function deepmerge(
   ...objects: Readonly<ReadonlyArray<unknown>>
 ): unknown {
@@ -57,8 +64,20 @@ export function deepmergeCustom<
 ) => Ts extends readonly [unknown, ...unknown[]]
   ? DeepMergeHKT<Ts, GetDeepMergeMergeFunctionsURIs<PMF>>
   : unknown {
-  const utils = getUtils(options, customizedDeepmerge);
+  /**
+   * The type of the customized deepmerge function.
+   */
+  type CustomizedDeepmerge = <Ts extends Readonly<ReadonlyArray<unknown>>>(
+    ...objects: Ts
+  ) => Ts extends readonly [unknown, ...unknown[]]
+    ? DeepMergeHKT<Ts, GetDeepMergeMergeFunctionsURIs<PMF>>
+    : unknown;
 
+  const utils = getUtils(options, customizedDeepmerge as CustomizedDeepmerge);
+
+  /**
+   * The customized deepmerge function.
+   */
   function customizedDeepmerge(...objects: Readonly<ReadonlyArray<unknown>>) {
     if (objects.length === 0) {
       return undefined;
@@ -72,7 +91,7 @@ export function deepmergeCustom<
     );
   }
 
-  return customizedDeepmerge as any;
+  return customizedDeepmerge as CustomizedDeepmerge;
 }
 
 /**
@@ -82,7 +101,7 @@ export function deepmergeCustom<
  */
 function getUtils(
   options: DeepMergeOptions,
-  deepmerge: any // TODO: types
+  customizedDeepmerge: DeepMergeMergeFunctionUtils["deepmerge"]
 ): DeepMergeMergeFunctionUtils {
   return {
     defaultMergeFunctions: defaultOptions,
@@ -94,7 +113,7 @@ function getUtils(
         )
       ),
     },
-    deepmerge,
+    deepmerge: customizedDeepmerge,
   };
 }
 
