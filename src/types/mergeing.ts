@@ -1,4 +1,10 @@
 import type {
+  DeepMergeRecordsDefaultHKT,
+  DeepMergeArraysDefaultHKT,
+  DeepMergeSetsDefaultHKT,
+  DeepMergeMapsDefaultHKT,
+} from "./defaults";
+import type {
   And,
   IsArray,
   IsMap,
@@ -11,13 +17,17 @@ import type {
 /**
  * Mapping of merge function URIs to the merge function type.
  */
-// eslint-disable-next-line @typescript-eslint/consistent-type-definitions, @typescript-eslint/no-empty-interface, @typescript-eslint/no-unused-vars-experimental
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export interface DeepMergeMergeFunctionURItoKind<
   T1,
   T2,
   MF extends DeepMergeMergeFunctionsURIs
 > {
   readonly DeepMergeLeafURI: DeepMergeLeafHKT<T1, T2, MF>;
+  readonly DeepMergeRecordsDefaultURI: DeepMergeRecordsDefaultHKT<T1, T2, MF>;
+  readonly DeepMergeArraysDefaultURI: DeepMergeArraysDefaultHKT<T1, T2, MF>;
+  readonly DeepMergeSetsDefaultURI: DeepMergeSetsDefaultHKT<T1, T2, MF>;
+  readonly DeepMergeMapsDefaultURI: DeepMergeMapsDefaultHKT<T1, T2, MF>;
 }
 
 /**

@@ -7,19 +7,21 @@ import type {
 } from "./mergeing";
 import type { FlatternAlias, IsNever, Or, ValueOfKey } from "./utils";
 
-declare module "./mergeing" {
-  // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
-  interface DeepMergeMergeFunctionURItoKind<
-    T1,
-    T2,
-    MF extends DeepMergeMergeFunctionsURIs
-  > {
-    readonly DeepMergeRecordsDefaultURI: DeepMergeRecordsDefaultHKT<T1, T2, MF>;
-    readonly DeepMergeArraysDefaultURI: DeepMergeArraysDefaultHKT<T1, T2, MF>;
-    readonly DeepMergeSetsDefaultURI: DeepMergeSetsDefaultHKT<T1, T2, MF>;
-    readonly DeepMergeMapsDefaultURI: DeepMergeMapsDefaultHKT<T1, T2, MF>;
-  }
-}
+// Ideally this should be defined here but this doesn't work with rollup-plugin-dts.
+// @see https://github.com/Swatinem/rollup-plugin-dts/issues/168
+// declare module "./mergeing" {
+//   // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+//   interface DeepMergeMergeFunctionURItoKind<
+//     T1,
+//     T2,
+//     MF extends DeepMergeMergeFunctionsURIs
+//   > {
+//     readonly DeepMergeRecordsDefaultURI: DeepMergeRecordsDefaultHKT<T1, T2, MF>;
+//     readonly DeepMergeArraysDefaultURI: DeepMergeArraysDefaultHKT<T1, T2, MF>;
+//     readonly DeepMergeSetsDefaultURI: DeepMergeSetsDefaultHKT<T1, T2, MF>;
+//     readonly DeepMergeMapsDefaultURI: DeepMergeMapsDefaultHKT<T1, T2, MF>;
+//   }
+// }
 
 /**
  * The default merge function to merge records with.
