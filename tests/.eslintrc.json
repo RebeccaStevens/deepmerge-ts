@@ -22,6 +22,7 @@
     "functional/no-try-statement": "off",
     "functional/prefer-readonly-type": "off",
     "import/no-relative-parent-imports": "off",
+    "jsdoc/require-jsdoc": "off",
     "sonarjs/no-duplicate-string": "off"
   }
 }

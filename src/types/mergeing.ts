@@ -31,9 +31,11 @@ type DeepMergeMergeFunctionKind<
 /**
  * A union of all valid merge function URIs.
  */
-type DeepMergeMergeFunctionURIs =
-  // prettier-ignore
-  keyof DeepMergeMergeFunctionURItoKind<any, any, any>;
+type DeepMergeMergeFunctionURIs = keyof DeepMergeMergeFunctionURItoKind<
+  unknown,
+  unknown,
+  DeepMergeMergeFunctionsURIs
+>;
 
 /**
  * The merge functions to use when deep mergeing.
