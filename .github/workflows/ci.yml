@@ -56,7 +56,7 @@ jobs:
           - "16"
     runs-on: ${{ matrix.os }}
     env:
-      REPORT_COVERAGE: ${{ fromJSON('["false", "true"]')[matrix.node_version == '16' && matrix.os != 'ubuntu-latest'] }}
+      REPORT_COVERAGE: ${{ fromJSON('["false", "true"]')[matrix.node_version == '16' && matrix.os == 'ubuntu-latest'] }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -85,6 +85,6 @@ jobs:
 
       - name: Report coverage
         uses: codecov/codecov-action@v2
-        if: env.REPORT_COVERAGE == 'true'
+        if: (success() || failure()) && env.REPORT_COVERAGE == 'true'
         with:
           files: coverage/lcov.info
