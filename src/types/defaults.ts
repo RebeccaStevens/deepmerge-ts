@@ -1,27 +1,21 @@
+import type { RecordProperty } from "./basics";
 import type {
+  DeepMergeHKT,
   DeepMergeLeafURI,
   DeepMergeMergeFunctionsURIs,
   DeepMergeMergeFunctionURItoKind,
-  DeepMergeUnknownsHKT,
-  Leaf,
-} from "./mergeing";
-import type { FlatternAlias, IsNever, Or, ValueOfKey } from "./utils";
-
-// Ideally this should be defined here but this doesn't work with rollup-plugin-dts.
-// @see https://github.com/Swatinem/rollup-plugin-dts/issues/168
-// declare module "./mergeing" {
-//   // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
-//   interface DeepMergeMergeFunctionURItoKind<
-//     T1,
-//     T2,
-//     MF extends DeepMergeMergeFunctionsURIs
-//   > {
-//     readonly DeepMergeRecordsDefaultURI: DeepMergeRecordsDefaultHKT<T1, T2, MF>;
-//     readonly DeepMergeArraysDefaultURI: DeepMergeArraysDefaultHKT<T1, T2, MF>;
-//     readonly DeepMergeSetsDefaultURI: DeepMergeSetsDefaultHKT<T1, T2, MF>;
-//     readonly DeepMergeMapsDefaultURI: DeepMergeMapsDefaultHKT<T1, T2, MF>;
-//   }
-// }
+} from "./merging";
+import type {
+  FlatternAlias,
+  FilterOutNever,
+  IsNever,
+  OptionalKeysOf,
+  RequiredKeysOf,
+  UnionMapKeys,
+  UnionMapValues,
+  UnionSetValues,
+  ValueOfKey,
+} from "./utils";
 
 /**
  * The default merge function to merge records with.
@@ -44,7 +38,7 @@ type DeepMergeSetsDefaultURI = "DeepMergeSetsDefaultURI";
 type DeepMergeMapsDefaultURI = "DeepMergeMapsDefaultURI";
 
 /**
- * The default merge functions to use when deep mergeing.
+ * The default merge functions to use when deep merging.
  */
 export type DeepMergeMergeFunctionsDefaultURIs = {
   DeepMergeRecordsURI: DeepMergeRecordsDefaultURI;
@@ -61,55 +55,93 @@ export type DeepMergeMergeFunctionsDefaultURIs = {
 type BlacklistedRecordProps = "__proto__";
 
 /**
- * Deep merge 2 non-array objects.
+ * Deep merge records.
  */
 export type DeepMergeRecordsDefaultHKT<
-  T1,
-  T2,
+  Ts extends ReadonlyArray<unknown>,
   MF extends DeepMergeMergeFunctionsURIs
-> = FlatternAlias<
-  Omit<
-    // prettier-ignore
-    {
-      -readonly [K in keyof T1]: DeepMergeRecordPropsDefaultHKT<
-        ValueOfKey<T1, K>,
-        ValueOfKey<T2, K>,
-        MF
-      >;
-    } &
-    {
-      -readonly [K in keyof T2]: DeepMergeRecordPropsDefaultHKT<
-        ValueOfKey<T1, K>,
-        ValueOfKey<T2, K>,
-        MF
-      >;
-    },
-    BlacklistedRecordProps
-  >
->;
+> = Ts extends readonly [unknown, ...unknown[]]
+  ? FlatternAlias<
+      Omit<
+        DeepMergeRecordsDefaultHKTInternalProps<Ts, MF>,
+        BlacklistedRecordProps
+      >
+    >
+  : {};
 
 /**
- * Deep merge 2 types that are known to be properties of an object being deeply
- * merged.
+ * Deep merge record props.
  */
-type DeepMergeRecordPropsDefaultHKT<
-  T1,
-  T2,
+type DeepMergeRecordsDefaultHKTInternalProps<
+  Ts extends readonly [unknown, ...unknown[]],
   MF extends DeepMergeMergeFunctionsURIs
-> = Or<IsNever<T1>, IsNever<T2>> extends true
-  ? Leaf<T1, T2>
-  : DeepMergeUnknownsHKT<T1, T2, MF>;
+> = {
+  [K in OptionalKeysOf<Ts>]?: DeepMergeHKT<
+    FilterOutNever<
+      DeepMergeRecordsDefaultHKTInternalPropsToMerge<
+        DeepMergeRecordsDefaultHKTInternalPropValue<Ts, K>
+      >
+    >,
+    MF
+  >;
+} & {
+  [K in RequiredKeysOf<Ts>]: DeepMergeHKT<
+    FilterOutNever<
+      DeepMergeRecordsDefaultHKTInternalPropsToMerge<
+        DeepMergeRecordsDefaultHKTInternalPropValue<Ts, K>
+      >
+    >,
+    MF
+  >;
+};
+
+/**
+ * Get the properties to merge.
+ */
+type DeepMergeRecordsDefaultHKTInternalPropsToMerge<
+  Ts extends readonly [unknown, unknown]
+> = Ts extends readonly [infer First, infer Second]
+  ? IsNever<First> extends true
+    ? Second extends readonly [unknown, unknown]
+      ? DeepMergeRecordsDefaultHKTInternalPropsToMerge<Second>
+      : Second extends readonly [unknown]
+      ? Second
+      : []
+    : Second extends readonly [unknown, unknown]
+    ? [First, ...DeepMergeRecordsDefaultHKTInternalPropsToMerge<Second>]
+    : Second extends readonly [unknown]
+    ? [First, Second[0]]
+    : []
+  : never;
+
+/**
+ * Get the value of the property.
+ */
+type DeepMergeRecordsDefaultHKTInternalPropValue<
+  Ts extends readonly [unknown, ...unknown[]],
+  K extends RecordProperty
+> = Ts extends readonly [infer Head, ...infer Rest]
+  ? Head extends Record<RecordProperty, unknown>
+    ? Rest extends readonly [unknown, ...unknown[]]
+      ? [
+          ValueOfKey<Head, K>,
+          DeepMergeRecordsDefaultHKTInternalPropValue<Rest, K>
+        ]
+      : [ValueOfKey<Head, K>]
+    : never
+  : never;
 
 /**
  * Deep merge 2 arrays.
  */
 export type DeepMergeArraysDefaultHKT<
-  T1,
-  T2,
+  Ts extends ReadonlyArray<unknown>,
   MF extends DeepMergeMergeFunctionsURIs
-> = T1 extends readonly [...infer E1]
-  ? T2 extends readonly [...infer E2]
-    ? [...E1, ...E2]
+> = Ts extends [infer Head, ...infer Rest]
+  ? Head extends ReadonlyArray<unknown>
+    ? Rest extends [ReadonlyArray<unknown>, ...ReadonlyArray<unknown[]>]
+      ? [...Head, ...DeepMergeArraysDefaultHKT<Rest, MF>]
+      : Head
     : never
   : never;
 
@@ -117,27 +149,17 @@ export type DeepMergeArraysDefaultHKT<
  * Deep merge 2 sets.
  */
 export type DeepMergeSetsDefaultHKT<
-  T1,
-  T2,
+  Ts extends ReadonlyArray<unknown>,
   MF extends DeepMergeMergeFunctionsURIs
-> = T1 extends Set<infer E1>
-  ? T2 extends Set<infer E2>
-    ? Set<E1 | E2>
-    : never
-  : never;
+> = Set<UnionSetValues<Ts>>;
 
 /**
  * Deep merge 2 maps.
  */
 export type DeepMergeMapsDefaultHKT<
-  T1,
-  T2,
+  Ts extends ReadonlyArray<unknown>,
   MF extends DeepMergeMergeFunctionsURIs
-> = T1 extends Map<infer K1, infer V1>
-  ? T2 extends Map<infer K2, infer V2>
-    ? Map<K1 | K2, V1 | V2>
-    : never
-  : never;
+> = Map<UnionMapKeys<Ts>, UnionMapValues<Ts>>;
 
 /**
  * Get the merge functions with defaults apply from the given subset.
@@ -148,35 +170,35 @@ export type GetDeepMergeMergeFunctionsURIs<
   // prettier-ignore
   DeepMergeRecordsURI:
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    PMF["DeepMergeRecordsURI"] extends keyof DeepMergeMergeFunctionURItoKind<any, any, any>
+    PMF["DeepMergeRecordsURI"] extends keyof DeepMergeMergeFunctionURItoKind<any, any>
       ? PMF["DeepMergeRecordsURI"]
       : DeepMergeRecordsDefaultURI;
 
   // prettier-ignore
   DeepMergeArraysURI:
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    PMF["DeepMergeArraysURI"] extends keyof DeepMergeMergeFunctionURItoKind<any, any, any>
+    PMF["DeepMergeArraysURI"] extends keyof DeepMergeMergeFunctionURItoKind<any, any>
       ? PMF["DeepMergeArraysURI"]
       : DeepMergeArraysDefaultURI;
 
   // prettier-ignore
   DeepMergeSetsURI:
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    PMF["DeepMergeSetsURI"] extends keyof DeepMergeMergeFunctionURItoKind<any, any, any>
+    PMF["DeepMergeSetsURI"] extends keyof DeepMergeMergeFunctionURItoKind<any, any>
       ? PMF["DeepMergeSetsURI"]
       : DeepMergeSetsDefaultURI;
 
   // prettier-ignore
   DeepMergeMapsURI:
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    PMF["DeepMergeMapsURI"] extends keyof DeepMergeMergeFunctionURItoKind<any, any, any>
+    PMF["DeepMergeMapsURI"] extends keyof DeepMergeMergeFunctionURItoKind<any, any>
       ? PMF["DeepMergeMapsURI"]
       : DeepMergeMapsDefaultURI;
 
   // prettier-ignore
   DeepMergeOthersURI:
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    PMF["DeepMergeOthersURI"] extends keyof DeepMergeMergeFunctionURItoKind<any, any, any>
+    PMF["DeepMergeOthersURI"] extends keyof DeepMergeMergeFunctionURItoKind<any, any>
       ? PMF["DeepMergeOthersURI"]
       : DeepMergeLeafURI;
 };

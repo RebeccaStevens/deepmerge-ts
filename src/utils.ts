@@ -83,3 +83,22 @@ export function objectHasProperty(
 ): boolean {
   return typeof object === "object" && property in object;
 }
+
+/**
+ * Get an iterable object that iterates over the given iterables.
+ */
+export function getIterableOfIterables<T>(
+  iterables: ReadonlyArray<Readonly<Iterable<T>>>
+): Iterable<T> {
+  return {
+    *[Symbol.iterator]() {
+      // eslint-disable-next-line functional/no-loop-statement
+      for (const iterable of iterables) {
+        // eslint-disable-next-line functional/no-loop-statement
+        for (const value of iterable) {
+          yield value;
+        }
+      }
+    },
+  };
+}

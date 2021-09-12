@@ -1,4 +1,4 @@
 export * from "./basics";
 export * from "./defaults";
-export * from "./mergeing";
+export * from "./merging";
 export * from "./options";

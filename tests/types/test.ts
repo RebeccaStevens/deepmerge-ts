@@ -1,5 +1,4 @@
 import { deepmerge } from "../../src/";
-import type { DeepMergeMergeFunctionsURIs } from "../../src/types";
 
 const a = {
   foo: "abc",
@@ -137,11 +136,28 @@ const k = {
   ]),
 };
 
-// $ExpectType { foo: Set<string | number>; bar: Map<string | number, string | number>; }
-deepmerge(j, k);
+const merged1: {
+  foo: Set<string | number>;
+  bar: Map<string | number, string | number>;
+} =
+  // $ExpectType { foo: DeepMergeSetsDefaultHKT<[Set<number>, Set<string>], DeepMergeMergeFunctionsDefaultURIs>; bar: DeepMergeMapsDefaultHKT<[Map<string, string>, Map<number, number>], DeepMergeMergeFunctionsDefaultURIs>; }
+  deepmerge(j, k);
 
 const l = new Map([[1, new Map([[1, a]])]]);
 const m = new Map([[1, new Map([[1, b]])]]);
 
-// $ExpectType Map<number, Map<number, { foo: string; baz: { quux: string[]; }; garply: number; }> | Map<number, { foo: string; baz: { corge: number; }; grault: number; }>>
-deepmerge(l, m);
+const merged2: Map<
+  number,
+  | Map<number, { foo: string; baz: { quux: string[] }; garply: number }>
+  | Map<number, { foo: string; baz: { corge: number }; grault: number }>
+> =
+  // $ExpectType DeepMergeMapsDefaultHKT<[Map<number, Map<number, { foo: string; baz: { quux: string[]; }; garply: number; }>>, Map<number, Map<number, { foo: string; baz: { corge: number; }; grault: number; }>>], DeepMergeMergeFunctionsDefaultURIs>
+  deepmerge(l, m);
+
+const first = { first: true };
+const second = { second: false };
+const third = { third: 123 };
+const fourth = { fourth: "abc" };
+
+// $ExpectType { first: boolean; second: boolean; third: number; fourth: string; }
+const merged = deepmerge(first, second, third, fourth);

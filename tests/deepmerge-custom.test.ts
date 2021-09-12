@@ -5,7 +5,7 @@ import type {
   DeepMergeLeafURI,
   DeepMergeMergeFunctionsURIs,
   DeepMergeRecordsDefaultHKT,
-  DeepMergeUnknownsHKT,
+  Leaf,
 } from "@/deepmerge";
 
 test("works just like non-customized version when no options passed", (t) => {
@@ -37,11 +37,11 @@ test("custom merge strings", (t) => {
   };
 
   const customizedDeepmerge = deepmergeCustom({
-    mergeOthers: (object1, object2) => {
-      if (typeof object1 === "string" && typeof object2 === "string") {
-        return `${object1} ${object2}`;
+    mergeOthers: (values, utils) => {
+      if (values.every((value) => typeof value === "string")) {
+        return values.join(" ");
       }
-      return object2;
+      return utils.defaultMergeFunctions.mergeOthers(values, utils);
     },
   });
 
@@ -53,8 +53,7 @@ test("custom merge strings", (t) => {
 declare module "../src/types" {
   // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
   interface DeepMergeMergeFunctionURItoKind<
-    T1,
-    T2,
+    Ts extends ReadonlyArray<unknown>,
     MF extends DeepMergeMergeFunctionsURIs
   > {
     readonly CustomArrays1: string[];
@@ -72,7 +71,23 @@ test("custom merge arrays", (t) => {
   const customizedDeepmerge = deepmergeCustom<{
     DeepMergeArraysURI: "CustomArrays1";
   }>({
-    mergeArrays: (array1, array2) => array1.map((e, i) => `${e}${array2[i]}`),
+    mergeArrays: (arrays) => {
+      const maxLength = Math.max(...arrays.map((array) => array.length));
+
+      const result = [];
+      for (let i = 0; i < maxLength; i++) {
+        result[i] = "";
+
+        for (const array of arrays) {
+          if (i >= array.length) {
+            break;
+          }
+          result[i] += `${array[i]}`;
+        }
+      }
+
+      return result;
+    },
   });
 
   const merged = customizedDeepmerge(x, y);
@@ -83,13 +98,12 @@ test("custom merge arrays", (t) => {
 declare module "../src/types" {
   // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
   interface DeepMergeMergeFunctionURItoKind<
-    T1,
-    T2,
+    Ts extends ReadonlyArray<unknown>,
     MF extends DeepMergeMergeFunctionsURIs
   > {
-    readonly CustomArrays2: T1 extends Readonly<ReadonlyArray<infer E1>>
-      ? T2 extends Readonly<ReadonlyArray<infer E2>>
-        ? Array<DeepMergeUnknownsHKT<E1, E2, MF>>
+    readonly CustomArrays2: Ts extends readonly [...infer Es]
+      ? Es extends ReadonlyArray<unknown>
+        ? unknown[]
         : never
       : never;
     readonly CustomOthers2: string;
@@ -124,25 +138,28 @@ test("custom merge arrays of records", (t) => {
     DeepMergeArraysURI: "CustomArrays2";
     DeepMergeOthersURI: "CustomOthers2";
   }>({
-    mergeArrays: (array1, array2, utils) => {
-      const maxLength = Math.max(array1.length, array2.length);
+    mergeArrays: (arrays, utils) => {
+      const maxLength = Math.max(...arrays.map((array) => array.length));
       const result: unknown[] = [];
 
       for (let i = 0; i < maxLength; i++) {
-        if (i < array1.length && i < array2.length) {
-          result.push(utils.deepmerge(array1[i], array2[i]));
-        } else if (i < array1.length) {
-          result.push(array1[i]);
-        } else if (i < array2.length) {
-          result.push(array2[i]);
-        }
+        const never = {};
+        result.push(
+          utils.deepmerge(
+            ...arrays
+              .map((array) => (i < array.length ? array[i] : never))
+              .filter((value) => value !== never)
+          )
+        );
       }
 
       return result;
     },
-    mergeOthers: (item1, item2) => {
-      if (typeof item1 === "number" && typeof item2 === "number") {
-        return String.fromCharCode(item1 + item2);
+    mergeOthers: (values) => {
+      if (values.every((value) => typeof value === "number")) {
+        return String.fromCharCode(
+          values.reduce<number>((carry, value) => carry + (value as number), 0)
+        );
       }
       return "";
     },
@@ -156,19 +173,18 @@ test("custom merge arrays of records", (t) => {
 declare module "../src/types" {
   // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
   interface DeepMergeMergeFunctionURItoKind<
-    T1,
-    T2,
+    Ts extends ReadonlyArray<unknown>,
     MF extends DeepMergeMergeFunctionsURIs
   > {
-    readonly CustomRecords3: Entries<DeepMergeRecordsDefaultHKT<T1, T2, MF>>;
+    readonly CustomRecords3: Entries<DeepMergeRecordsDefaultHKT<Ts, MF>>;
   }
-
-  type Entries<T> = Array<
-    {
-      [K in keyof T]: [K, T[K]];
-    }[keyof T]
-  >;
 }
+
+type Entries<T> = Array<
+  {
+    [K in keyof T]: [K, T[K]];
+  }[keyof T]
+>;
 
 test("custom merge records", (t) => {
   const x = {
@@ -195,10 +211,8 @@ test("custom merge records", (t) => {
   const customizedDeepmerge = deepmergeCustom<{
     DeepMergeRecordsURI: "CustomRecords3";
   }>({
-    mergeRecords: (record1, record2, utils) =>
-      Object.entries(
-        utils.defaultMergeFunctions.mergeRecords(record1, record2, utils)
-      ),
+    mergeRecords: (records, utils) =>
+      Object.entries(utils.defaultMergeFunctions.mergeRecords(records, utils)),
   });
 
   const merged = customizedDeepmerge(x, y);
@@ -209,11 +223,10 @@ test("custom merge records", (t) => {
 declare module "../src/types" {
   // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
   interface DeepMergeMergeFunctionURItoKind<
-    T1,
-    T2,
+    Ts extends ReadonlyArray<unknown>,
     MF extends DeepMergeMergeFunctionsURIs
   > {
-    readonly NoArrayMerge1: T2;
+    readonly NoArrayMerge1: Leaf<Ts>;
   }
 }
 
@@ -239,23 +252,21 @@ test("custom don't merge arrays", (t) => {
 declare module "../src/types" {
   // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
   interface DeepMergeMergeFunctionURItoKind<
-    T1,
-    T2,
+    Ts extends ReadonlyArray<unknown>,
     MF extends DeepMergeMergeFunctionsURIs
   > {
-    readonly MergeDates1: T1 extends Date
-      ? T2 extends Date
-        ? [T1, T2]
-        : T2 extends Readonly<ReadonlyArray<Date>>
-        ? [T1, ...T2]
-        : T2
-      : T1 extends Readonly<ReadonlyArray<Date>>
-      ? T2 extends Date
-        ? [...T1, T2]
-        : T2
-      : T2;
+    readonly MergeDates1: EveryIsDate<Ts> extends true ? Ts : Leaf<Ts>;
   }
 }
+
+type EveryIsDate<Ts extends ReadonlyArray<unknown>> = Ts extends readonly [
+  infer Head,
+  ...infer Rest
+]
+  ? Head extends Date
+    ? EveryIsDate<Rest>
+    : false
+  : true;
 
 test("custom merge dates", (t) => {
   const x = { foo: new Date("2020-01-01") };
@@ -267,18 +278,11 @@ test("custom merge dates", (t) => {
   const customizedDeepmerge = deepmergeCustom<{
     DeepMergeOthersURI: "MergeDates1";
   }>({
-    mergeOthers: (val1, val2) => {
-      if (val1 instanceof Date && val2 instanceof Date) {
-        return [val1, val2];
+    mergeOthers: (values, utils) => {
+      if (values.every((value) => value instanceof Date)) {
+        return values;
       }
-      if (
-        Array.isArray(val1) &&
-        val1.every((val) => val instanceof Date) &&
-        val2 instanceof Date
-      ) {
-        return [...val1, val2];
-      }
-      return val2;
+      return utils.defaultMergeFunctions.mergeOthers(values, utils);
     },
   });
 

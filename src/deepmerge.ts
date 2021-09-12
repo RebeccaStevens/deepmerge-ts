@@ -7,12 +7,17 @@ import type {
   DeepMergeOptions,
   DeepMergeRecordsDefaultHKT,
   DeepMergeSetsDefaultHKT,
-  DeepMergeUnknownsHKT,
   DeepMergeMergeFunctionUtils,
   GetDeepMergeMergeFunctionsURIs,
   RecordProperty,
 } from "./types";
-import { getKeys, getObjectType, ObjectType, objectHasProperty } from "./utils";
+import {
+  getIterableOfIterables,
+  getKeys,
+  getObjectType,
+  ObjectType,
+  objectHasProperty,
+} from "./utils";
 
 const defaultOptions = {
   mergeMaps,
@@ -28,26 +33,17 @@ const defaultOptions = {
 export type DeepMergeMergeFunctionsDefaults = typeof defaultOptions;
 
 /**
- * Deeply merge two or more objects.
+ * Deeply merge objects.
  *
  * @param objects - The objects to merge.
  */
-export function deepmerge<Ts extends readonly [unknown, ...unknown[]]>(
+export function deepmerge<Ts extends ReadonlyArray<unknown>>(
   ...objects: readonly [...Ts]
-): DeepMergeHKT<Ts, DeepMergeMergeFunctionsDefaultURIs>;
-
-/**
- * Deeply merge two or more objects.
- *
- * @param objects - The objects to merge.
- */
-export function deepmerge(
-  ...objects: Readonly<ReadonlyArray<unknown>>
-): unknown;
-export function deepmerge(
-  ...objects: Readonly<ReadonlyArray<unknown>>
-): unknown {
-  return deepmergeCustom({})(...objects);
+): DeepMergeHKT<Ts, DeepMergeMergeFunctionsDefaultURIs> {
+  return deepmergeCustom({})(...objects) as DeepMergeHKT<
+    Ts,
+    DeepMergeMergeFunctionsDefaultURIs
+  >;
 }
 
 /**
@@ -59,26 +55,22 @@ export function deepmergeCustom<
   PMF extends Partial<DeepMergeMergeFunctionsURIs>
 >(
   options: DeepMergeOptions
-): <Ts extends Readonly<ReadonlyArray<unknown>>>(
+): <Ts extends ReadonlyArray<unknown>>(
   ...objects: Ts
-) => Ts extends readonly [unknown, ...unknown[]]
-  ? DeepMergeHKT<Ts, GetDeepMergeMergeFunctionsURIs<PMF>>
-  : unknown {
+) => DeepMergeHKT<Ts, GetDeepMergeMergeFunctionsURIs<PMF>> {
   /**
    * The type of the customized deepmerge function.
    */
-  type CustomizedDeepmerge = <Ts extends Readonly<ReadonlyArray<unknown>>>(
+  type CustomizedDeepmerge = <Ts extends ReadonlyArray<unknown>>(
     ...objects: Ts
-  ) => Ts extends readonly [unknown, ...unknown[]]
-    ? DeepMergeHKT<Ts, GetDeepMergeMergeFunctionsURIs<PMF>>
-    : unknown;
+  ) => DeepMergeHKT<Ts, GetDeepMergeMergeFunctionsURIs<PMF>>;
 
   const utils = getUtils(options, customizedDeepmerge as CustomizedDeepmerge);
 
   /**
    * The customized deepmerge function.
    */
-  function customizedDeepmerge(...objects: Readonly<ReadonlyArray<unknown>>) {
+  function customizedDeepmerge(...objects: ReadonlyArray<unknown>) {
     if (objects.length === 0) {
       return undefined;
     }
@@ -86,9 +78,7 @@ export function deepmergeCustom<
       return objects[0];
     }
 
-    return objects.reduce((carry, item) =>
-      deepmergeUnknowns(carry, item, utils)
-    );
+    return mergeUnknowns(objects, utils);
   }
 
   return customizedDeepmerge as CustomizedDeepmerge;
@@ -112,162 +102,146 @@ function getUtils(
           option === false ? [key, leaf] : [key, option]
         )
       ),
-    },
+    } as DeepMergeMergeFunctionUtils["mergeFunctions"],
     deepmerge: customizedDeepmerge,
   };
 }
 
 /**
- * Deeply merge two objects.
+ * Merge unknown things.
  *
- * @param x - The first object.
- * @param y - The second object.
+ * @param values - The values.
  */
-function deepmergeUnknowns<
-  T1,
-  T2,
+function mergeUnknowns<
+  Ts extends ReadonlyArray<unknown>,
   U extends DeepMergeMergeFunctionUtils,
   MF extends DeepMergeMergeFunctionsURIs
->(x: T1, y: T2, utils: U): DeepMergeUnknownsHKT<T1, T2, MF> {
-  const typeOfX = getObjectType(x);
-  const typeOfY = getObjectType(y);
+>(values: Ts, utils: U): DeepMergeHKT<Ts, MF> {
+  const types = values.map(getObjectType);
+  const type = types[0];
 
-  if (typeOfX !== typeOfY) {
-    return y as unknown as DeepMergeUnknownsHKT<T1, T2, MF>;
+  if (types.every((value) => value === type)) {
+    if (type === ObjectType.RECORD) {
+      return utils.mergeFunctions.mergeRecords(
+        values as ReadonlyArray<Readonly<Record<RecordProperty, unknown>>>,
+        utils
+      ) as DeepMergeHKT<Ts, MF>;
+    }
+
+    if (type === ObjectType.ARRAY) {
+      return utils.mergeFunctions.mergeArrays(
+        values as ReadonlyArray<unknown[]>,
+        utils
+      ) as DeepMergeHKT<Ts, MF>;
+    }
+
+    if (type === ObjectType.SET) {
+      return utils.mergeFunctions.mergeSets(
+        values as ReadonlyArray<Readonly<ReadonlySet<unknown>>>,
+        utils
+      ) as DeepMergeHKT<Ts, MF>;
+    }
+
+    if (type === ObjectType.MAP) {
+      return utils.mergeFunctions.mergeMaps(
+        values as ReadonlyArray<Readonly<ReadonlyMap<unknown, unknown>>>,
+        utils
+      ) as DeepMergeHKT<Ts, MF>;
+    }
   }
 
-  if (typeOfX === ObjectType.RECORD) {
-    return utils.mergeFunctions.mergeRecords(
-      x as Readonly<Record<RecordProperty, unknown>>,
-      y as Readonly<Record<RecordProperty, unknown>>,
-      utils
-    ) as DeepMergeUnknownsHKT<T1, T2, MF>;
-  }
-
-  if (typeOfX === ObjectType.ARRAY) {
-    return utils.mergeFunctions.mergeArrays(
-      x as unknown as Readonly<ReadonlyArray<unknown>>,
-      y as unknown as Readonly<ReadonlyArray<unknown>>,
-      utils
-    ) as DeepMergeUnknownsHKT<T1, T2, MF>;
-  }
-
-  if (typeOfX === ObjectType.SET) {
-    return utils.mergeFunctions.mergeSets(
-      x as unknown as Readonly<ReadonlySet<unknown>>,
-      y as unknown as Readonly<ReadonlySet<unknown>>,
-      utils
-    ) as DeepMergeUnknownsHKT<T1, T2, MF>;
-  }
-
-  if (typeOfX === ObjectType.MAP) {
-    return utils.mergeFunctions.mergeMaps(
-      x as unknown as Readonly<ReadonlyMap<unknown, unknown>>,
-      y as unknown as Readonly<ReadonlyMap<unknown, unknown>>,
-      utils
-    ) as DeepMergeUnknownsHKT<T1, T2, MF>;
-  }
-
-  return utils.mergeFunctions.mergeOthers(x, y, utils) as DeepMergeUnknownsHKT<
-    T1,
-    T2,
+  return utils.mergeFunctions.mergeOthers(values, utils) as DeepMergeHKT<
+    Ts,
     MF
   >;
 }
 
 /**
- * Merge two records.
+ * Merge records.
  *
- * @param x - The first records.
- * @param y - The second records.
+ * @param values - The records.
  */
 function mergeRecords<
-  T1 extends Readonly<Record<RecordProperty, unknown>>,
-  T2 extends Readonly<Record<RecordProperty, unknown>>,
+  Ts extends ReadonlyArray<Record<RecordProperty, unknown>>,
   U extends DeepMergeMergeFunctionUtils,
   MF extends DeepMergeMergeFunctionsURIs
->(x: T1, y: T2, utils: U) {
+>(values: Ts, utils: U) {
+  const neverValue = {};
   return Object.fromEntries(
-    [...getKeys([x, y])].map((key) => {
-      const xHasKey = objectHasProperty(x, key);
-      const yHasKey = objectHasProperty(y, key);
+    [...getKeys(values)]
+      .map((key) => {
+        const propValues = values
+          .map((value) =>
+            objectHasProperty(value, key) ? value[key] : neverValue
+          )
+          .filter((value) => value !== neverValue);
 
-      if (xHasKey && yHasKey) {
-        return [key, deepmergeUnknowns(x[key], y[key], utils)];
-      }
-      if (yHasKey) {
-        return [key, y[key]];
-      }
-      return [key, x[key]];
-    })
-  ) as DeepMergeRecordsDefaultHKT<T1, T2, MF>;
+        // assert(propValues.length > 0);
+
+        if (propValues.length === 1) {
+          return [key, propValues[0]];
+        }
+
+        return [key, mergeUnknowns(propValues, utils)];
+      })
+      .filter((value): value is [unknown, unknown] => value !== neverValue)
+  ) as DeepMergeRecordsDefaultHKT<Ts, MF>;
 }
 
 /**
- * Merge two arrays.
+ * Merge arrays.
  *
- * @param x - The first array.
- * @param y - The second array.
+ * @param values - The arrays.
  */
 function mergeArrays<
-  T1 extends Readonly<ReadonlyArray<unknown>>,
-  T2 extends Readonly<ReadonlyArray<unknown>>,
+  Ts extends ReadonlyArray<unknown[]>,
   U extends DeepMergeMergeFunctionUtils,
   MF extends DeepMergeMergeFunctionsURIs
->(x: T1, y: T2, utils: U) {
-  return [...x, ...y] as DeepMergeArraysDefaultHKT<T1, T2, MF>;
+>(values: Ts, utils: U) {
+  return values.flat() as DeepMergeArraysDefaultHKT<Ts, MF>;
 }
 
 /**
- * Merge two sets.
+ * Merge sets.
  *
- * @param x - The first sets.
- * @param y - The second sets.
+ * @param values - The sets.
  */
 function mergeSets<
-  T1 extends Readonly<ReadonlySet<unknown>>,
-  T2 extends Readonly<ReadonlySet<unknown>>,
+  Ts extends ReadonlyArray<Readonly<ReadonlySet<unknown>>>,
   U extends DeepMergeMergeFunctionUtils,
   MF extends DeepMergeMergeFunctionsURIs
->(x: T1, y: T2, utils: U) {
-  return new Set([...x, ...y]) as DeepMergeSetsDefaultHKT<T1, T2, MF>;
+>(values: Ts, utils: U) {
+  return new Set(getIterableOfIterables(values)) as DeepMergeSetsDefaultHKT<
+    Ts,
+    MF
+  >;
 }
 
 /**
- * Merge two maps.
+ * Merge maps.
  *
- * @param x - The first maps.
- * @param y - The second maps.
+ * @param values - The maps.
  */
 function mergeMaps<
-  T1 extends Readonly<ReadonlyMap<unknown, unknown>>,
-  T2 extends Readonly<ReadonlyMap<unknown, unknown>>,
+  Ts extends ReadonlyArray<Readonly<ReadonlyMap<unknown, unknown>>>,
   U extends DeepMergeMergeFunctionUtils,
   MF extends DeepMergeMergeFunctionsURIs
->(x: T1, y: T2, utils: U) {
-  return [x, y].reduce((mutableCarry, current) => {
-    // eslint-disable-next-line functional/no-loop-statement -- using a loop here is more efficient.
-    for (const [key, value] of current.entries()) {
-      mutableCarry.set(
-        key,
-        deepmergeUnknowns(mutableCarry.get(key), value, utils)
-      );
-    }
-    return mutableCarry;
-  }, new Map()) as DeepMergeMapsDefaultHKT<T1, T2, MF>;
+>(values: Ts, utils: U) {
+  return new Map(getIterableOfIterables(values)) as DeepMergeMapsDefaultHKT<
+    Ts,
+    MF
+  >;
 }
 
 /**
- * Merge two other things.
+ * Merge "other" things.
  *
- * @param x - The first thing.
- * @param y - The second thing.
+ * @param values - The values.
  */
 function leaf<
-  T1,
-  T2,
+  Ts extends ReadonlyArray<unknown>,
   U extends DeepMergeMergeFunctionUtils,
   MF extends DeepMergeMergeFunctionsURIs
->(x: T1, y: T2, utils: U) {
-  return y;
+>(values: Ts, utils: U) {
+  return values[values.length - 1];
 }
