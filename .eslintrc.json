@@ -20,13 +20,13 @@
     ]
   },
   "ignorePatterns": [
-    "coverage/",
-    "lib/",
-    "types/",
-    "tests/types/**/*",
-    "**/*.cjs",
-    "**/*.js",
-    "**/*.md"
+    "/coverage/",
+    "/lib/",
+    "/types/",
+    "/tests/types/**/*",
+    "/**/*.cjs",
+    "/**/*.js",
+    "/**/*.md"
   ],
   "rules": {}
 }
