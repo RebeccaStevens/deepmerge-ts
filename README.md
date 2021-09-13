@@ -143,7 +143,7 @@ If false, sets won't be merged. If set to a function, that function will be used
 
 ##### `mergeOthers`
 
-Type: `false | (values: Set<unknown>[], utils: DeepMergeMergeFunctionUtils) => unknown`
+Type: `(values: Set<unknown>[], utils: DeepMergeMergeFunctionUtils) => unknown`
 
 If set to a function, that function will be used to merge everything else.
 

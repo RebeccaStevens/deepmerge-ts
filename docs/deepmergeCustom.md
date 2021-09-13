@@ -46,7 +46,7 @@ declare module "deepmerge-ts" {
 Here's an example of creating a custom deepmerge function that amalgamates dates into an array.
 
 ```ts
-import type { DeepMergeMergeFunctionURItoKind, DeepMergeMergeFunctionsURIs, Leaf } from "deepmerge-ts";
+import type { DeepMergeLeaf, DeepMergeMergeFunctionURItoKind, DeepMergeMergeFunctionsURIs } from "deepmerge-ts";
 import { deepmergeCustom } from "deepmerge-ts";
 
 const customizedDeepmerge = deepmergeCustom<{
@@ -73,7 +73,7 @@ declare module "deepmerge-ts" {
     Ts extends ReadonlyArray<unknown>,
     MF extends DeepMergeMergeFunctionsURIs
   > {
-    readonly MyDeepMergeDatesURI: EveryIsDate<Ts> extends true ? Ts : Leaf<Ts>;
+    readonly MyDeepMergeDatesURI: EveryIsDate<Ts> extends true ? Ts : DeepMergeLeaf<Ts>;
   }
 }
 

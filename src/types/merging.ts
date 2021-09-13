@@ -148,19 +148,19 @@ export type DeepMergeLeafURI = "DeepMergeLeafURI";
 export type DeepMergeLeafHKT<
   Ts extends ReadonlyArray<unknown>,
   MF extends DeepMergeMergeFunctionsURIs
-> = Leaf<Ts>;
+> = DeepMergeLeaf<Ts>;
 
 /**
  * Get the leaf type from many types that can't be merged.
  */
-export type Leaf<Ts extends ReadonlyArray<unknown>> = Ts extends []
+export type DeepMergeLeaf<Ts extends ReadonlyArray<unknown>> = Ts extends []
   ? never
   : Ts extends [infer T]
   ? T
   : Ts extends [...infer Rest, infer Tail]
   ? IsNever<Tail> extends true
     ? Rest extends ReadonlyArray<unknown>
-      ? Leaf<Rest>
+      ? DeepMergeLeaf<Rest>
       : never
     : Tail
   : never;

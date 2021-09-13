@@ -5,7 +5,7 @@ import type {
   DeepMergeLeafURI,
   DeepMergeMergeFunctionsURIs,
   DeepMergeRecordsDefaultHKT,
-  Leaf,
+  DeepMergeLeaf,
 } from "@/deepmerge";
 
 test("works just like non-customized version when no options passed", (t) => {
@@ -226,7 +226,7 @@ declare module "../src/types" {
     Ts extends ReadonlyArray<unknown>,
     MF extends DeepMergeMergeFunctionsURIs
   > {
-    readonly NoArrayMerge1: Leaf<Ts>;
+    readonly NoArrayMerge1: DeepMergeLeaf<Ts>;
   }
 }
 
@@ -255,7 +255,7 @@ declare module "../src/types" {
     Ts extends ReadonlyArray<unknown>,
     MF extends DeepMergeMergeFunctionsURIs
   > {
-    readonly MergeDates1: EveryIsDate<Ts> extends true ? Ts : Leaf<Ts>;
+    readonly MergeDates1: EveryIsDate<Ts> extends true ? Ts : DeepMergeLeaf<Ts>;
   }
 }
 
