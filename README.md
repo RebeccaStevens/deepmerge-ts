@@ -4,7 +4,7 @@
 
 [![npm version](https://img.shields.io/npm/v/deepmerge-ts.svg?style=flat-square)](https://www.npmjs.com/package/deepmerge-ts)
 [![CI](https://github.com/RebeccaStevens/deepmerge-ts/actions/workflows/ci.yml/badge.svg?style=flat-square)](https://github.com/RebeccaStevens/deepmerge-ts/actions/workflows/ci.yml)
-[![Coverage Status](https://codecov.io/gh/RebeccaStevens/deepmerge-ts/branch/master/graph/badge.svg?style=flat-square)](https://codecov.io/gh/RebeccaStevens/deepmerge-ts)\
+[![Coverage Status](https://codecov.io/gh/RebeccaStevens/deepmerge-ts/branch/main/graph/badge.svg?token=MVpR1oAbIT&style=flat-square)](https://codecov.io/gh/RebeccaStevens/deepmerge-ts)\
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 [![GitHub Discussions](https://img.shields.io/github/discussions/RebeccaStevens/deepmerge-ts?style=flat-square)](https://github.com/RebeccaStevens/deepmerge-ts/discussions)
 [![BSD 3 Clause license](https://img.shields.io/github/license/RebeccaStevens/deepmerge-ts.svg?style=flat-square)](https://opensource.org/licenses/BSD-3-Clause)
