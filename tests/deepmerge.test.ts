@@ -3,12 +3,14 @@ import test from "ava";
 import { deepmerge } from "../src/deepmerge";
 
 test("return an empty object when nothing to merge", (t) => {
-  t.deepEqual(deepmerge(), {});
+  const merged = deepmerge();
+  t.deepEqual(merged, {});
 });
 
 test("return the same object if only 1 is passed", (t) => {
   const foo = { prop: 1 };
-  t.is(deepmerge(foo), foo);
+  const merged = deepmerge(foo);
+  t.is(merged, foo);
 });
 
 test("return the same array if only 1 is passed", (t) => {
@@ -49,7 +51,7 @@ test("can merge 2 objects with different props", (t) => {
   t.deepEqual(merged, expected);
 });
 
-test("can merge objects with different props", (t) => {
+test("can merge many objects with different props", (t) => {
   const v = { first: true };
   const x = { second: false };
   const y = { third: 123 };
@@ -532,5 +534,7 @@ test(`merging objects with null prototype`, (t) => {
     d: 4,
   };
 
-  t.deepEqual(deepmerge(x, y), expected);
+  const merged = deepmerge(x, y);
+
+  t.deepEqual(merged, expected);
 });
