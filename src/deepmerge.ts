@@ -30,7 +30,7 @@ export function deepmerge(
   ...objects: Readonly<ReadonlyArray<unknown>>
 ): unknown {
   if (objects.length === 0) {
-    return {};
+    return undefined;
   }
   if (objects.length === 1) {
     return objects[0];
