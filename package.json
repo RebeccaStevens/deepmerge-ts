@@ -6,7 +6,17 @@
     "merge",
     "deepmerge",
     "deep merge",
-    "recursive merge"
+    "deep-merge",
+    "inferred types",
+    "inferred-types",
+    "recursive merge",
+    "recursive-merge",
+    "ts",
+    "ts merge",
+    "ts-merge",
+    "typescript",
+    "typescript merge",
+    "typescript-merge"
   ],
   "homepage": "https://github.com/RebeccaStevens/deepmerge-ts#readme",
   "bugs": {
