@@ -153,14 +153,15 @@ export type DeepMergeLeafHKT<
 /**
  * Get the leaf type from many types that can't be merged.
  */
-export type DeepMergeLeaf<Ts extends ReadonlyArray<unknown>> = Ts extends []
-  ? never
-  : Ts extends [infer T]
-  ? T
-  : Ts extends [...infer Rest, infer Tail]
-  ? IsNever<Tail> extends true
-    ? Rest extends ReadonlyArray<unknown>
-      ? DeepMergeLeaf<Rest>
-      : never
-    : Tail
-  : never;
+export type DeepMergeLeaf<Ts extends ReadonlyArray<unknown>> =
+  Ts extends readonly []
+    ? never
+    : Ts extends [infer T]
+    ? T
+    : Ts extends [...infer Rest, infer Tail]
+    ? IsNever<Tail> extends true
+      ? Rest extends ReadonlyArray<unknown>
+        ? DeepMergeLeaf<Rest>
+        : never
+      : Tail
+    : never;

@@ -172,7 +172,7 @@ export type UnionSetValues<Ts extends ReadonlyArray<unknown>> =
 export type UnionMapKeys<Ts extends ReadonlyArray<unknown>> =
   Ts extends readonly [infer Head, ...infer Rest]
     ? Head extends Map<infer K1, unknown>
-      ? Rest extends []
+      ? Rest extends readonly []
         ? K1
         : K1 | UnionMapKeys<Rest>
       : never
@@ -184,7 +184,7 @@ export type UnionMapKeys<Ts extends ReadonlyArray<unknown>> =
 export type UnionMapValues<Ts extends ReadonlyArray<unknown>> =
   Ts extends readonly [infer Head, ...infer Rest]
     ? Head extends Map<unknown, infer V1>
-      ? Rest extends []
+      ? Rest extends readonly []
         ? V1
         : UnionMapValues<Rest> | V1
       : never
@@ -251,13 +251,14 @@ export type OptionalKeysOf<Ts extends readonly [unknown, ...unknown[]]> =
 /**
  * Filter out nevers from a tuple.
  */
-export type FilterOutNever<T extends ReadonlyArray<unknown>> = T extends []
-  ? []
-  : T extends [infer Head, ...infer Rest]
-  ? IsNever<Head> extends true
-    ? FilterOutNever<Rest>
-    : [Head, ...FilterOutNever<Rest>]
-  : T;
+export type FilterOutNever<T extends ReadonlyArray<unknown>> =
+  T extends readonly []
+    ? []
+    : T extends [infer Head, ...infer Rest]
+    ? IsNever<Head> extends true
+      ? FilterOutNever<Rest>
+      : [Head, ...FilterOutNever<Rest>]
+    : T;
 
 /**
  * Is the type a tuple?

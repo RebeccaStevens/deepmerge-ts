@@ -130,7 +130,7 @@ function mergeUnknowns<
 
     if (type === ObjectType.ARRAY) {
       return utils.mergeFunctions.mergeArrays(
-        values as ReadonlyArray<unknown[]>,
+        values as ReadonlyArray<ReadonlyArray<unknown>>,
         utils
       ) as DeepMergeHKT<Ts, MF>;
     }
@@ -194,7 +194,7 @@ function mergeRecords<
  * @param values - The arrays.
  */
 function mergeArrays<
-  Ts extends ReadonlyArray<unknown[]>,
+  Ts extends ReadonlyArray<ReadonlyArray<unknown>>,
   U extends DeepMergeMergeFunctionUtils,
   MF extends DeepMergeMergeFunctionsURIs
 >(values: Ts, utils: U) {
