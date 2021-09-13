@@ -11,6 +11,44 @@ test("return the same object if only 1 is passed", (t) => {
   t.is(deepmerge(foo), foo);
 });
 
+test("return the same array if only 1 is passed", (t) => {
+  const foo = [1];
+  const merged = deepmerge(foo);
+  t.is(merged, foo);
+});
+
+test("return the same set if only 1 is passed", (t) => {
+  const foo = new Set([1]);
+  const merged = deepmerge(foo);
+  t.is(merged, foo);
+});
+
+test("return the same map if only 1 is passed", (t) => {
+  const foo = new Map([[1, 2]]);
+  const merged = deepmerge(foo);
+  t.is(merged, foo);
+});
+
+test("return the same date if only 1 is passed", (t) => {
+  const foo = new Date();
+  const merged = deepmerge(foo);
+  t.is(merged, foo);
+});
+
+test("can merge 2 objects with different props", (t) => {
+  const x = { first: true };
+  const y = { second: false };
+
+  const expected = {
+    first: true,
+    second: false,
+  };
+
+  const merged = deepmerge(x, y);
+
+  t.deepEqual(merged, expected);
+});
+
 test("can merge objects with different props", (t) => {
   const v = { first: true };
   const x = { second: false };
