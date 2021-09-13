@@ -1,29 +1,13 @@
 {
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "allowSyntheticDefaultImports": true,
-    "allowUnreachableCode": false,
-    "allowUnusedLabels": false,
-    "alwaysStrict": true,
-    "esModuleInterop": true,
     "exactOptionalPropertyTypes": true,
-    "forceConsistentCasingInFileNames": true,
-    "importHelpers": false,
     "lib": [
       "ESNext"
     ],
     "module": "commonjs",
-    "moduleResolution": "node",
-    "newLine": "LF",
     "noEmit": true,
-    "noEmitOnError": true,
-    "noImplicitReturns": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "pretty": true,
-    "resolveJsonModule": true,
     "skipLibCheck": true,
-    "sourceMap": false,
-    "strict": true,
-    "target": "ES2018"
+    "strict": true
   }
 }
