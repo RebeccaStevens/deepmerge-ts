@@ -37,7 +37,7 @@ yarn add -D deepmerge-ts
 
 ## Usage
 
-### Basic Example
+### Example using default config
 
 ```js
 import { deepmerge } from "deepmerge-ts";
@@ -68,118 +68,102 @@ const y = {
   ]),
 };
 
-const output = {
-  record: {
-    prop1: "changed",
-    prop2: "value2",
-    prop3: "value3",
-  },
-  array: [1, 2, 3, 2, 3, 4],
-  set: new Set([1, 2, 3, 4]),
-  map: new Map([
-    ["key1", "value1"],
-    ["key2", "changed"],
-    ["key3", "value3"],
-  ]),
-};
+const merged = deepmerge(x, y);
 
-deepmerge(x, y); // => output
+console.log(merged);
+
+// Prettierfied output:
+//
+// {
+//   record: {
+//      prop1: "changed",
+//      prop2: "value2",
+//      prop3: "value3"
+//   }
+//   array: (6) [1, 2, 3, 2, 3, 4]
+//   set: Set(4) {1, 2, 3, 4}
+//   map: Map(3) {
+//    "key1" => "value1",
+//    "key2" => "changed",
+//    "key3" => "value3"
+//   }
+// }
 ```
 
-### Simple Customized Example
+### Using customized config
 
-```js
-import type { DeepMergeLeafURI } from "deepmerge-ts";
-import { deepmergeCustom } from "deepmerge-ts";
+[See deepmerge custom docs](./docs/deepmergeCustom.md).
 
-/**
- * Create a custom deepmerge function that does not merge arrays, sets, or maps.
- */
-const customDeepmerge = deepmergeCustom<{
-  DeepMergeArraysURI: DeepMergeLeafURI; // <-- Needed for correct typing information.
-  DeepMergeSetsURI: DeepMergeLeafURI;
-  DeepMergeMapsURI: DeepMergeLeafURI;
-}>({
-  mergeArrays: false,
-  mergeSets: false,
-  mergeMaps: false,
-});
+## API
 
-const x = { foo: [1, 2], bar: [3, 4] };
-const y = { foo: [5, 6] };
+### deepmerge(x, y, ...)
 
-customDeepmerge(x, y); // => { foo: [5, 6], bar: [3, 4] }
-```
+Merges the given inputs together using the default configuration.
 
-### Advanced Customized Example
+#### deepmerge(...inputs)
 
-```ts
-import type { DeepMergeMergeFunctionURItoKind, DeepMergeMergeFunctionsURIs } from "deepmerge-ts";
-import { deepmergeCustom } from "deepmerge-ts";
+Merges the array of inputs together using the default configuration.
 
-declare module "deepmerge-ts" {
-  interface DeepMergeMergeFunctionURItoKind<
-    T1,
-    T2,
-    MF extends DeepMergeMergeFunctionsURIs
-  > {
-    /**
-     * Define how 2 "other" types are merged.
-     */
-    readonly MyMergeOthersFn: T1 extends Date
-      ? T2 extends Date
-        ? [T1, T2]
-        : T2 extends Readonly<ReadonlyArray<Date>>
-          ? [T1, ...T2]
-          : T2
-      : T1 extends Readonly<ReadonlyArray<Date>>
-        ? T2 extends Date
-          ? [...T1, T2]
-          : T2
-        : T2;
-  }
-}
+Note: If `inputs` isn't typed as a tuple then we cannot determine the output type. The output type will simply be `unknown`.
 
-/**
- * Create a custom deepmerge function that amalgamates dates into an array.
- */
-const customDeepmerge = deepmergeCustom<{
-  DeepMergeOthersURI: "MyMergeOthersFn";
-}>({
-  /**
-   * Define how 2 "other" values are merged.
-   */
-  mergeOthers: (val1, val2) => {
-    // How 2 dates are merged.
-    if (val1 instanceof Date && val2 instanceof Date) {
-      return [val1, val2];
-    }
-    // How an array of dates and a date are merged.
-    // This is not needed if only merge 2 values.
-    if (
-      Array.isArray(val1) &&
-      val2 instanceof Date &&
-      val1.every((val) => val instanceof Date)
-    ) {
-      return [...val1, val2];
-    }
-    // How a date and an array of dates are merged.
-    // This is not needed if only merge 2 values.
-    if (
-      val1 instanceof Date
-      Array.isArray(val2) &&
-      val2.every((val) => val instanceof Date)
-    ) {
-      return [val1, ...val2];
-    }
-    // Something else? Return the 2nd value.
-    return val2;
-  },
-});
+### deepmergeCustom(options)
 
-const x = { foo: new Date("2020-01-01") };
-const y = { foo: new Date("2021-02-02") };
-const z = { foo: new Date("2022-03-03") };
+Generate a customized deepmerge function using the given options. The returned function works just like `deepmerge` except it uses the customized configuration.
 
-customDeepmerge(x, y, z); // => { foo: [Date, Date, Date] }
-```
+#### options
+
+The following options can be used to customize the deepmerge function.\
+All these options are optional.
+
+##### `mergeRecords`
+
+Type: `false | (values: Record<any, unknown>[], utils: DeepMergeMergeFunctionUtils) => unknown`
+
+If false, records won't be merged. If set to a function, that function will be used to merge records.
+
+Note: Records are "vanilla" objects (e.g. `{ foo: "hello", bar: "world" }`).
+
+##### `mergeArrays`
+
+Type: `false | (values: unknown[][], utils: DeepMergeMergeFunctionUtils) => unknown`
+
+If false, arrays won't be merged. If set to a function, that function will be used to merge arrays.
+
+##### `mergeMaps`
+
+Type: `false | (values: Map<unknown, unknown>[], utils: DeepMergeMergeFunctionUtils) => unknown`
+
+If false, maps won't be merged. If set to a function, that function will be used to merge maps.
+
+##### `mergeSets`
+
+Type: `false | (values: Set<unknown>[], utils: DeepMergeMergeFunctionUtils) => unknown`
+
+If false, sets won't be merged. If set to a function, that function will be used to merge sets.
+
+##### `mergeOthers`
+
+Type: `false | (values: Set<unknown>[], utils: DeepMergeMergeFunctionUtils) => unknown`
+
+If set to a function, that function will be used to merge everything else.
+
+Note: This includes merging mixed types, such as merging a map with an array.
+
+#### DeepMergeMergeFunctionUtils
+
+This is a set of utility functions that are made available to your custom merge functions.
+
+##### `mergeFunctions`
+
+These are all the merge function being used to perform the deepmerge.\
+These will be the custom merge functions you gave, or the default merge functions for options you didn't customize.
+
+##### `defaultMergeFunctions`
+
+These are all the merge functions that the default, non-customize deepmerge function uses.
+
+##### `deepmerge`
+
+This is your top level customized deepmerge function.
+
+Note: Be careful when calling this as it is really easy to end up in an infinite loop.
