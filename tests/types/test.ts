@@ -1,15 +1,15 @@
 import { deepmerge } from "../../src/";
 
 const a = {
-  foo: `abc`,
+  foo: "abc",
   baz: {
-    quux: [`def`, `ghi`],
+    quux: ["def", "ghi"],
   },
   garply: 42,
 };
 
 const b = {
-  foo: `cba`,
+  foo: "cba",
   baz: {
     corge: 96,
   },
@@ -35,8 +35,8 @@ type U = {
 deepmerge(a as T, b as U);
 
 const c = {
-  bar: `123`,
-  quux: `456`,
+  bar: "123",
+  quux: "456",
   garply: 42,
 } as const;
 
@@ -55,8 +55,8 @@ const abc = [a, b, c];
 deepmerge(...abc);
 
 const d = {
-  bar: `abc`,
-  quux: `def`,
+  bar: "abc",
+  quux: "def",
   garply: 5,
 } as const;
 
@@ -71,7 +71,7 @@ const e = {
 } as const;
 
 const f = {
-  foo: [`a`, `b`, `c`],
+  foo: ["a", "b", "c"],
 } as const;
 
 // $ExpectType { foo: [1, 2, 3, "a", "b", "c"]; }
@@ -81,32 +81,32 @@ deepmerge(e, f);
 deepmerge(e as E, f as F);
 
 const g = {
-  key1: `key1-val`,
+  key1: "key1-val",
   key2: {
-    key2key1: [false, `true`],
+    key2key1: [false, "true"],
   },
   key3: {
     key3key1: {
-      key3key1key1: `key3key1key1-val`,
+      key3key1key1: "key3key1key1-val",
       key3key1key2: true,
-      key3key1key3: [`key3key1key3-val`],
+      key3key1key3: ["key3key1key3-val"],
     },
-    key3key2: [`key3key2-val`],
+    key3key2: ["key3key2-val"],
   },
 };
 
 const h = {
-  key1: [`key1-val`],
+  key1: ["key1-val"],
   key2: {
     key2key1: {
-      key2key1key1: () => `key2key1key1-val`,
+      key2key1key1: () => "key2key1key1-val",
       key2key1key2: true,
-      key2key1key3: [`key2key1key3-val`],
+      key2key1key3: ["key2key1key3-val"],
     },
   },
   key3: {
     key3key1: () => false,
-    key3key2: [`key3key2-val`, true],
+    key3key2: ["key3key2-val", true],
   },
 };
 
