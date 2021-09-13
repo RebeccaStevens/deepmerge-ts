@@ -3,6 +3,7 @@ import test from "ava";
 import { deepmerge } from "@/deepmerge";
 
 test("return undefined when nothing to merge", (t) => {
+  // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
   const merged = deepmerge();
   t.is(merged, undefined);
 });
