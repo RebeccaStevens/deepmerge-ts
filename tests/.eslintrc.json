@@ -7,6 +7,22 @@
     "@typescript-eslint/no-unsafe-call": "off",
     "@typescript-eslint/no-unsafe-member-access": "off",
     "@typescript-eslint/no-unsafe-return": "off",
-    "import/no-relative-parent-imports": "off"
+    "@typescript-eslint/restrict-template-expressions": "off",
+    "functional/immutable-data": "off",
+    "functional/no-class": "off",
+    "functional/no-conditional-statement": "off",
+    "functional/no-expression-statement": "off",
+    "functional/no-let": "off",
+    "functional/no-loop-statement": "off",
+    "functional/no-method-signature": "off",
+    "functional/no-mixed-type": "off",
+    "functional/no-return-void": "off",
+    "functional/no-this-expression": "off",
+    "functional/no-throw-statement": "off",
+    "functional/no-try-statement": "off",
+    "functional/prefer-readonly-type": "off",
+    "import/no-relative-parent-imports": "off",
+    "jsdoc/require-jsdoc": "off",
+    "sonarjs/no-duplicate-string": "off"
   }
 }
