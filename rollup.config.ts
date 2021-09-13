@@ -75,7 +75,12 @@ const dts = {
     format: "es",
   },
 
-  plugins: [rollupPluginDts()],
+  plugins: [
+    rollupPluginTypescript({
+      tsconfig: "tsconfig.build.json",
+    }),
+    rollupPluginDts(),
+  ],
 };
 
 export default [cjs, esm, dts];

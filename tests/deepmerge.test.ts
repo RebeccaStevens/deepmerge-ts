@@ -1,10 +1,11 @@
 import test from "ava";
 
-import { deepmerge } from "../src/deepmerge";
+import { deepmerge } from "@/deepmerge";
 
-test("return an empty object when nothing to merge", (t) => {
+test("return undefined when nothing to merge", (t) => {
+  // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
   const merged = deepmerge();
-  t.deepEqual(merged, {});
+  t.is(merged, undefined);
 });
 
 test("return the same object if only 1 is passed", (t) => {

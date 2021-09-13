@@ -23,5 +23,9 @@
     "strict": true,
     "alwaysStrict": true,
     "target": "ES2018",
+    "baseUrl": "./src",
+    "paths": {
+      "@/deepmerge": ["./index"],
+    },
   },
 }

@@ -28,5 +28,7 @@
     "/**/*.js",
     "/**/*.md"
   ],
-  "rules": {}
+  "rules": {
+    "import/no-relative-parent-imports": "error"
+  }
 }
