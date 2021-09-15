@@ -91,4 +91,4 @@ Note: If you want to use HKTs in your own project, not related to deepmerge-ts, 
 
 ## API
 
-[See deepmerge custom API](../README.md#deepmergecustomoptions).
+[See deepmerge custom API](./API.md#deepmergecustomoptions).
