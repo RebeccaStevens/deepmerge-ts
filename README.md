@@ -31,6 +31,7 @@ yarn add -D deepmerge-ts
 
 ## Features
 
+- Smart merging - High performance.
 - Merged output has correct typing.
 - Record merging support.
 - Array merging support.
@@ -95,6 +96,26 @@ console.log(merged);
 ### Using customized config
 
 [See deepmerge custom docs](./docs/deepmergeCustom.md).
+
+## Performance
+
+We use smart merging instead of the classic merging strategy which some alternative libraries use. This vastly improves performance, both in execution time and memory usage.
+
+### Classic Merge (not what we do)
+
+With classic merging, each input is merged with the next input until all inputs are merged.
+
+This strategy has large performance issues when lots of items need to be merged.
+
+![classic merge animation](./assets/classic-merge.gif)
+
+### Smart Merge (what we do)
+
+With our smart merging, we look ahead to see what can be merged and only merge those things.
+
+In addition to performance improvements, this strategy merges multiple inputs at once; allowing for benefits such as taking averages of the inputs.
+
+![smart merge animation](./assets/smart-merge.gif)
 
 ## API
 
