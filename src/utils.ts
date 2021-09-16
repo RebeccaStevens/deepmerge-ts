@@ -81,7 +81,10 @@ export function objectHasProperty(
   object: object,
   property: RecordProperty
 ): boolean {
-  return typeof object === "object" && property in object;
+  return (
+    typeof object === "object" &&
+    Object.prototype.propertyIsEnumerable.call(object, property)
+  );
 }
 
 /**
