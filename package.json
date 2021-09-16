@@ -38,7 +38,19 @@
   },
   "main": "lib/index.cjs",
   "module": "lib/index.mjs",
-  "types": "types/current/index.d.ts",
+  "types": "types/legacy/v4_0.d.ts",
+  "typesVersions": {
+    "<4.1": {
+      "*": [
+        "types/legacy/v4_0.d.ts"
+      ]
+    },
+    ">=4.1": {
+      "*": [
+        "types/current/index.d.ts"
+      ]
+    }
+  },
   "files": [
     "lib/",
     "types/",
@@ -121,14 +133,6 @@
     "ts-node": "^10.2.1",
     "tslib": "^2.3.1",
     "typescript": "^4.4.3"
-  },
-  "peerDependencies": {
-    "typescript": ">=4.1.0"
-  },
-  "peerDependenciesMeta": {
-    "typescript": {
-      "optional": true
-    }
   },
   "engines": {
     "node": ">=12.4.0"
