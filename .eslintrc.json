@@ -16,6 +16,7 @@
   "parserOptions": {
     "project": [
       "./tsconfig.json",
+      "./benchmark/tsconfig.json",
       "./tests/tsconfig.json"
     ]
   },

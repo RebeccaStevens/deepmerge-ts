@@ -49,6 +49,8 @@
   ],
   "scripts": {
     "prebuild": "rimraf lib types/current",
+    "prebenchmark": "yarn build && yarn link",
+    "benchmark": "cd benchmark && yarn benchmark; cd ..",
     "build": "rollup -c",
     "check-format": "prettier --list-different \"./**/*.{md,ts,yml}\"",
     "check-spelling": "cspell --config=.cspell.json \"**/*.{md,ts}\"",
