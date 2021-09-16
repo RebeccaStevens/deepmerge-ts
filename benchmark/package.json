@@ -1,0 +1,28 @@
+{
+  "name": "deepmerge-ts-benchmark",
+  "private": "true",
+  "version": "0.0.0-development",
+  "description": "Benchmark different deepmerge implementations",
+  "author": {
+    "name": "Rebecca Stevens",
+    "email": "rebecca.stevens@outlook.co.nz"
+  },
+  "scripts": {
+    "prebenchmark": "yarn install; yarn link deepmerge-ts",
+    "benchmark": "ts-node run.ts"
+  },
+  "dependencies": {
+    "@types/benchmark": "^2.1.1",
+    "benchmark": "^2.1.4",
+    "deepmerge": "^4.2.2",
+    "lodash": "^4.17.21",
+    "merge-anything": "^4.0.1",
+    "object-accumulator": "^0.0.5"
+  },
+  "engines": {
+    "node": ">=12.4.0"
+  },
+  "devDependencies": {
+    "ts-node": "^10.2.1"
+  }
+}

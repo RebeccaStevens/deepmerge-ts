@@ -10,11 +10,12 @@
     "lib": [
       "ESNext",
     ],
-    "module": "ESNext",
+    "module": "CommonJS",
     "moduleResolution": "node",
     "newLine": "LF",
     "noEmitOnError": true,
     "noImplicitReturns": true,
+    "noImplicitAny": false,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "pretty": true,
@@ -23,12 +24,5 @@
     "strict": true,
     "alwaysStrict": true,
     "target": "ES2018",
-    "baseUrl": "./src",
-    "paths": {
-      "@/deepmerge": ["./index"],
-    },
   },
-  "exclude": [
-    "benchmark/"
-  ]
 }
