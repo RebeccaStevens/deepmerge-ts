@@ -49,7 +49,7 @@ export function deepmerge<Ts extends ReadonlyArray<unknown>>(
 /**
  * Deeply merge two or more objects using the given options.
  *
- * @param options - The options on how to custom the merge function.
+ * @param options - The options on how to customize the merge function.
  */
 export function deepmergeCustom<
   PMF extends Partial<DeepMergeMergeFunctionsURIs>
