@@ -29,6 +29,7 @@
     },
   },
   "exclude": [
-    "benchmark/"
+    "benchmark/",
+    "types/"
   ]
 }
