@@ -55,19 +55,20 @@ export function getObjectType(object: unknown): ObjectType {
 export function getKeys(
   objects: Readonly<ReadonlyArray<object>>
 ): Set<RecordProperty> {
-  return objects.reduce<Set<RecordProperty>>((mutableCarry, object) => {
-    // eslint-disable-next-line functional/no-loop-statement -- using a loop here is more efficient.
-    for (const key of [
-      ...Object.getOwnPropertyNames(object),
-      ...Object.getOwnPropertySymbols(object),
-    ].filter((property) =>
-      Object.prototype.propertyIsEnumerable.call(object, property)
-    )) {
-      mutableCarry.add(key);
-    }
+  const keys = new Set<RecordProperty>();
 
-    return mutableCarry;
-  }, new Set<RecordProperty>());
+  /* eslint-disable functional/no-loop-statement -- using a loop here is more efficient. */
+  for (const object of objects) {
+    for (const key of [
+      ...Object.keys(object),
+      ...Object.getOwnPropertySymbols(object),
+    ]) {
+      keys.add(key);
+    }
+  }
+  /* eslint-enable functional/no-loop-statement */
+
+  return keys;
 }
 
 /**
