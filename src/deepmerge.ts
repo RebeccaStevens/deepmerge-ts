@@ -178,26 +178,30 @@ function mergeRecords<
   U extends DeepMergeMergeFunctionUtils,
   MF extends DeepMergeMergeFunctionsURIs
 >(values: Ts, utils: U) {
-  const neverValue = {};
-  return Object.fromEntries(
-    [...getKeys(values)]
-      .map((key) => {
-        const propValues = values
-          .map((value) =>
-            objectHasProperty(value, key) ? value[key] : neverValue
-          )
-          .filter((value) => value !== neverValue);
+  const result: Record<RecordProperty, unknown> = {};
 
-        // assert(propValues.length > 0);
+  /* eslint-disable functional/no-loop-statement, functional/no-conditional-statement -- using a loop here is more performant. */
 
-        if (propValues.length === 1) {
-          return [key, propValues[0]];
-        }
+  for (const key of getKeys(values)) {
+    const propValues = [];
 
-        return [key, mergeUnknowns(propValues, utils)];
-      })
-      .filter((value): value is [unknown, unknown] => value !== neverValue)
-  ) as DeepMergeRecordsDefaultHKT<Ts, MF>;
+    for (const value of values) {
+      if (objectHasProperty(value, key)) {
+        propValues.push(value[key]);
+      }
+    }
+
+    // assert(propValues.length > 0);
+
+    result[key] =
+      propValues.length === 1
+        ? propValues[0]
+        : mergeUnknowns(propValues, utils);
+  }
+
+  /* eslint-enable functional/no-loop-statement, functional/no-conditional-statement */
+
+  return result as DeepMergeRecordsDefaultHKT<Ts, MF>;
 }
 
 /**
