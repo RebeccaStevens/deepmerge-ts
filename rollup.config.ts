@@ -71,7 +71,7 @@ const dts = {
   ...common,
 
   output: {
-    file: pkg.types,
+    file: "types/current/index.d.ts",
     format: "es",
   },
 
