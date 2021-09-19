@@ -949,10 +949,10 @@
   dependencies:
     "@octokit/openapi-types" "^9.5.0"
 
-"@rebeccastevens/eslint-config@^1.1.1":
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/@rebeccastevens/eslint-config/-/eslint-config-1.1.1.tgz#749046cd6cff13220f5d4bf13f6e993bcc85d5e0"
-  integrity sha512-hglEfLQgLRJ/02FSwqCpWtv2X1GXc92QEEC9CBOgfiKJ99AXJs5uuBWMAincIYCipuNDODbq318Ad3S2oXLgpg==
+"@rebeccastevens/eslint-config@^1.1.2":
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/@rebeccastevens/eslint-config/-/eslint-config-1.1.2.tgz#0a57a0a7f356a1803703ddbe1bb9fcdd01a94300"
+  integrity sha512-hKflvZTI85LmNf7F+jn9w6Iy+AUGdY2WYwIiFmpgXF9de8Z1SZlJzHTwbj788x3K4cNWjlbinw9Ul68x/kVtAw==
   dependencies:
     deepmerge-ts "^1.0.1"
 
@@ -3090,10 +3090,10 @@ eslint-plugin-eslint-plugin@^3.5.3:
   dependencies:
     eslint-utils "^2.1.0"
 
-eslint-plugin-functional@^3.7.0:
-  version "3.7.0"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-functional/-/eslint-plugin-functional-3.7.0.tgz#b8fadf2b8c597f9f05a67b9e96bb3f90c82f3345"
-  integrity sha512-nyea0v1CM7RmcnZf5/c2GTTvSSgrj468o75MpVRIs6nlAbFU/7694r6DFMc5YxV3Sso0fSgXbTPYSsff/r9T1g==
+eslint-plugin-functional@^3.7.1:
+  version "3.7.1"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-functional/-/eslint-plugin-functional-3.7.1.tgz#42a25f85bd0b36878da789326b1f467c0e8cb193"
+  integrity sha512-ykMhjogt/bb2TOydUYiypwy8mTyX27Te2sb1T+5X2Bs71EcldPFhNyWow0KrCtn+BNV1aYoLg1umGxE2NhuuUw==
   dependencies:
     "@typescript-eslint/experimental-utils" "^4.9.1"
     array.prototype.flatmap "^1.2.4"

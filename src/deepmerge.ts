@@ -121,10 +121,9 @@ function mergeUnknowns<
 
   // eslint-disable-next-line functional/no-conditional-statement -- add an early escape for better performance.
   if (type !== ObjectType.NOT && type !== ObjectType.OTHER) {
-    // eslint-disable-next-line functional/no-loop-statement, functional/no-let -- using a loop here is more performant than mapping every value and then testing every value.
-    for (let i = 1; i < values.length; i++) {
-      // eslint-disable-next-line functional/no-conditional-statement -- waiting on https://github.com/jonaskello/eslint-plugin-functional/issues/269
-      if (getObjectType(values[i]) === type) {
+    // eslint-disable-next-line functional/no-loop-statement -- using a loop here is more performant than mapping every value and then testing every value.
+    for (let mutableIndex = 1; mutableIndex < values.length; mutableIndex++) {
+      if (getObjectType(values[mutableIndex]) === type) {
         continue;
       }
 
