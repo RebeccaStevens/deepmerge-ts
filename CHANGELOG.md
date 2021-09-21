@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
+## [1.1.3](https://github.com/RebeccaStevens/deepmerge-ts/compare/v1.1.2...v1.1.3) (2021-09-21)
+
+
+### Bug Fixes
+
+* order of package exports ([#12](https://github.com/RebeccaStevens/deepmerge-ts/issues/12)) ([4117460](https://github.com/RebeccaStevens/deepmerge-ts/commit/41174607ee57568f123e1a5661f635d5d54f7c0c))
+
 ## [1.1.2](https://github.com/RebeccaStevens/deepmerge-ts/compare/v1.1.1...v1.1.2) (2021-09-17)
 
 
