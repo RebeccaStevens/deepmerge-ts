@@ -431,7 +431,7 @@ test(`works with dates`, (t) => {
   const x = { key1: new Date() };
   const y = { key1: new Date() };
 
-  const expected = { key1: new Date() };
+  const expected = { key1: y.key1 };
 
   const merged = deepmerge(x, y);
 
