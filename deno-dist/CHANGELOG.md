@@ -1,8 +1,6 @@
 # Changelog
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
-## [1.1.4](https://github.com/RebeccaStevens/deepmerge-ts/compare/v1.1.3...v1.1.4) (2021-10-18)
-
 ## [1.1.3](https://github.com/RebeccaStevens/deepmerge-ts/compare/v1.1.2...v1.1.3) (2021-09-21)
 
 
