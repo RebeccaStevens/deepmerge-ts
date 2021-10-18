@@ -30,6 +30,17 @@ npm install deepmerge-ts --save-dev
 yarn add -D deepmerge-ts
 ```
 
+### Deno
+
+```jsonc
+// import_map.json
+{
+  "imports": {
+    "deepmerge-ts": "https://deno.land/x/deepmergets@__version__/index.ts"
+  }
+}
+```
+
 ## Features
 
 - Smart merging - High performance.
