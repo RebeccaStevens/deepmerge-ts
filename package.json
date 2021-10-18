@@ -60,10 +60,15 @@
     "README.md"
   ],
   "scripts": {
-    "prebuild": "rimraf lib types/current",
     "prebenchmark": "yarn build && yarn link",
     "benchmark": "cd benchmark && yarn benchmark; cd ..",
-    "build": "rollup -c",
+    "prebuild": "rimraf build",
+    "build": "yarn build:npm && yarn build:deno",
+    "postbuild": "rimraf build",
+    "pre:build:deno": "rimraf deno-dist",
+    "build:deno": "tsc -p tsconfig.build.deno.json && denoify",
+    "prebuild:npm": "rimraf lib types/current",
+    "build:npm": "rollup -c",
     "check-format": "prettier --list-different \"./**/*.{md,ts,yml}\"",
     "check-spelling": "cspell --config=.cspell.json \"**/*.{md,ts}\"",
     "cz": "git-cz",
@@ -101,6 +106,7 @@
     "codecov": "^3.8.3",
     "commitizen": "^4.2.4",
     "cspell": "^5.9.0",
+    "denoify": "^0.10.5",
     "dtslint": "^4.1.6",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
@@ -133,6 +139,18 @@
     "ts-node": "^10.2.1",
     "tslib": "^2.3.1",
     "typescript": "^4.4.3"
+  },
+  "denoify": {
+    "out": "deno-dist",
+    "includes": [
+      "CHANGELOG.md",
+      "LICENSE",
+      "README.md"
+    ],
+    "index": "src/index.ts",
+    "ports": {
+      "is-plain-object": "https://raw.githubusercontent.com/jonschlinkert/is-plain-object/v5.0.0/is-plain-object.js"
+    }
   },
   "engines": {
     "node": ">=12.4.0"

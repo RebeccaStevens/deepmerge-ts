@@ -1,7 +1,10 @@
 {
   "files.exclude": {
-    ".nyc_output": true,
-    "coverage": true,
+    ".nyc_output/": true,
+    "coverage/": true,
+    "build/": true,
+    "deno-release/": true,
+    "lib/": true,
     "ava.config.cjs": true,
     "rollup.config.cjs": true,
   },
@@ -10,6 +13,7 @@
     "**/.git/": true,
     ".nyc_output/": true,
     ".vscode/": true,
+    "deno-release/": true,
     "lib/": true,
     "ava.config.cjs": true,
     "rollup.config.cjs": true,
