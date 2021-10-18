@@ -144,6 +144,7 @@
     "out": "deno-dist",
     "includes": [
       "assets",
+      "docs",
       "CHANGELOG.md",
       "LICENSE",
       "README.md"
