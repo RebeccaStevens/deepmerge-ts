@@ -143,6 +143,7 @@
   "denoify": {
     "out": "deno-dist",
     "includes": [
+      "assets",
       "CHANGELOG.md",
       "LICENSE",
       "README.md"
