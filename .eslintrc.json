@@ -22,6 +22,7 @@
   },
   "ignorePatterns": [
     "/coverage/",
+    "/deno-dist/",
     "/lib/",
     "/types/",
     "/tests/types/**/*",
@@ -31,5 +32,16 @@
   ],
   "rules": {
     "import/no-relative-parent-imports": "error"
-  }
+  },
+  "overrides": [
+    {
+      "files": "src/**",
+      "env": {
+        "node": false
+      },
+      "rules": {
+        "functional/prefer-readonly-type": "off"
+      }
+    }
+  ]
 }

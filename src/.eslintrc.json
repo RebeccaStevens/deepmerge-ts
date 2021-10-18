@@ -1,8 +1,0 @@
-{
-  "env": {
-    "node": false
-  },
-  "rules": {
-    "functional/prefer-readonly-type": "off"
-  }
-}

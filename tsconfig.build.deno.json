@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.build.json",
+  "compilerOptions": {
+    "outDir": "build/deno/",
+  },
+  "exclude": [
+    "node_modules",
+    "build/deno/",
+    "deno-dist/",
+    "src/**/*.deno.ts",
+    "src/**/*.deno.tsx",
+  ]
+}

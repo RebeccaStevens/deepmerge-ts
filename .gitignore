@@ -1,4 +1,6 @@
+/deno-dist/
 /lib/
+/build/
 /coverage/
 
 !/types/
