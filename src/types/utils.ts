@@ -215,16 +215,21 @@ type UnionMapValuesHelper<
 /**
  * Get all the keys of the given records.
  */
-export type KeysOf<Ts extends ReadonlyArray<unknown>> = Ts extends readonly [
-  infer Head,
-  ...infer Rest
-]
+export type KeysOf<Ts extends ReadonlyArray<unknown>> = KeysOfHelper<Ts, never>;
+
+/**
+ * Tail-recursive helper type for KeysOf.
+ */
+type KeysOfHelper<
+  Ts extends ReadonlyArray<unknown>,
+  Acc
+> = Ts extends readonly [infer Head, ...infer Rest]
   ? Head extends Record<PropertyKey, unknown>
     ? Rest extends ReadonlyArray<unknown>
-      ? KeysOf<Rest> | keyof Head
-      : keyof Head
+      ? KeysOfHelper<Rest, Acc | keyof Head>
+      : Acc | keyof Head
     : never
-  : never;
+  : Acc;
 
 /**
  * Get the keys of the type what match a certain criteria.
