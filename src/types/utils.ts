@@ -156,13 +156,21 @@ export type Not<T extends boolean> = T extends true ? false : true;
  * Union of the sets' values' types
  */
 export type UnionSetValues<Ts extends ReadonlyArray<unknown>> =
-  Ts extends readonly [infer Head, ...infer Rest]
-    ? Head extends Set<infer V1>
-      ? Rest extends ReadonlyArray<unknown>
-        ? UnionSetValues<Rest> | V1
-        : V1
-      : never
-    : never;
+  UnionSetValuesHelper<Ts, never>;
+
+/**
+ * Tail-recursive helper type for UnionSetValues.
+ */
+type UnionSetValuesHelper<
+  Ts extends ReadonlyArray<unknown>,
+  Acc
+> = Ts extends readonly [infer Head, ...infer Rest]
+  ? Head extends Set<infer V1>
+    ? Rest extends ReadonlyArray<unknown>
+      ? UnionSetValuesHelper<Rest, Acc | V1>
+      : Acc | V1
+    : never
+  : Acc;
 
 /**
  * Union of the maps' values' types
