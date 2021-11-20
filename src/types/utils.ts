@@ -196,13 +196,21 @@ type UnionMapKeysHelper<
  * Union of the maps' keys' types
  */
 export type UnionMapValues<Ts extends ReadonlyArray<unknown>> =
-  Ts extends readonly [infer Head, ...infer Rest]
-    ? Head extends Map<unknown, infer V1>
-      ? Rest extends readonly []
-        ? V1
-        : UnionMapValues<Rest> | V1
-      : never
-    : never;
+  UnionMapValuesHelper<Ts, never>;
+
+/**
+ * Tail-recursive helper type for UnionMapValues.
+ */
+type UnionMapValuesHelper<
+  Ts extends ReadonlyArray<unknown>,
+  Acc
+> = Ts extends readonly [infer Head, ...infer Rest]
+  ? Head extends Map<unknown, infer V1>
+    ? Rest extends readonly []
+      ? Acc | V1
+      : UnionMapValuesHelper<Rest, Acc | V1>
+    : never
+  : Acc;
 
 /**
  * Get all the keys of the given records.
