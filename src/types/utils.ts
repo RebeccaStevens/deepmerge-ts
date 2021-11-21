@@ -275,13 +275,21 @@ type OptionalKeys<T> = Exclude<keyof T, RequiredKeys<T>>;
  * Get all the optional keys on the types in the tuple.
  */
 export type OptionalKeysOf<Ts extends readonly [unknown, ...unknown[]]> =
-  Ts extends readonly [infer Head, ...infer Rest]
-    ? Head extends Record<PropertyKey, unknown>
-      ? Rest extends readonly [unknown, ...unknown[]]
-        ? OptionalKeys<Head> | OptionalKeysOf<Rest>
-        : OptionalKeys<Head>
-      : never
-    : never;
+  OptionalKeysOfHelper<Ts, never>;
+
+/**
+ * Tail-recursive helper type for OptionalKeysOf.
+ */
+type OptionalKeysOfHelper<
+  Ts extends readonly [unknown, ...unknown[]],
+  Acc
+> = Ts extends readonly [infer Head, ...infer Rest]
+  ? Head extends Record<PropertyKey, unknown>
+    ? Rest extends readonly [unknown, ...unknown[]]
+      ? OptionalKeysOfHelper<Rest, Acc | OptionalKeys<Head>>
+      : Acc | OptionalKeys<Head>
+    : never
+  : Acc;
 
 /**
  * Filter out nevers from a tuple.
