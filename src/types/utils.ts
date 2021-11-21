@@ -1,5 +1,3 @@
-import type { RecordProperty } from "./basics";
-
 /**
  * Flatten a complex type such as a union or intersection of objects into a
  * single object.
@@ -10,8 +8,8 @@ export type FlatternAlias<T> = { [P in keyof T]: T[P] } & {};
  * Get the value of the given key in the given object.
  */
 export type ValueOfKey<
-  T extends Record<RecordProperty, unknown>,
-  K extends RecordProperty
+  T extends Record<PropertyKey, unknown>,
+  K extends PropertyKey
 > = K extends keyof T ? T[K] : never;
 
 /**
@@ -45,7 +43,7 @@ export type EveryIsNever<Ts extends ReadonlyArray<unknown>> = Ts extends [
  */
 export type IsRecord<T> = And<
   Not<IsNever<T>>,
-  T extends Readonly<Record<RecordProperty, unknown>> ? true : false
+  T extends Readonly<Record<PropertyKey, unknown>> ? true : false
 >;
 
 /**
@@ -197,7 +195,7 @@ export type KeysOf<Ts extends ReadonlyArray<unknown>> = Ts extends readonly [
   infer Head,
   ...infer Rest
 ]
-  ? Head extends Record<RecordProperty, unknown>
+  ? Head extends Record<PropertyKey, unknown>
     ? Rest extends ReadonlyArray<unknown>
       ? KeysOf<Rest> | keyof Head
       : keyof Head
@@ -224,7 +222,7 @@ type RequiredKeys<T> = Exclude<
  */
 export type RequiredKeysOf<Ts extends readonly [unknown, ...unknown[]]> =
   Ts extends readonly [infer Head, ...infer Rest]
-    ? Head extends Record<RecordProperty, unknown>
+    ? Head extends Record<PropertyKey, unknown>
       ? Rest extends readonly [unknown, ...unknown[]]
         ? RequiredKeys<Head> | RequiredKeysOf<Rest>
         : RequiredKeys<Head>
@@ -241,7 +239,7 @@ type OptionalKeys<T> = Exclude<keyof T, RequiredKeys<T>>;
  */
 export type OptionalKeysOf<Ts extends readonly [unknown, ...unknown[]]> =
   Ts extends readonly [infer Head, ...infer Rest]
-    ? Head extends Record<RecordProperty, unknown>
+    ? Head extends Record<PropertyKey, unknown>
       ? Rest extends readonly [unknown, ...unknown[]]
         ? OptionalKeys<Head> | OptionalKeysOf<Rest>
         : OptionalKeys<Head>

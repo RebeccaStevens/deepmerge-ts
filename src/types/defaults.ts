@@ -1,4 +1,3 @@
-import type { RecordProperty } from "./basics";
 import type {
   DeepMergeHKT,
   DeepMergeLeafURI,
@@ -119,9 +118,9 @@ type DeepMergeRecordsDefaultHKTInternalPropsToMerge<
  */
 type DeepMergeRecordsDefaultHKTInternalPropValue<
   Ts extends readonly [unknown, ...unknown[]],
-  K extends RecordProperty
+  K extends PropertyKey
 > = Ts extends readonly [infer Head, ...infer Rest]
-  ? Head extends Record<RecordProperty, unknown>
+  ? Head extends Record<PropertyKey, unknown>
     ? Rest extends readonly [unknown, ...unknown[]]
       ? [
           ValueOfKey<Head, K>,

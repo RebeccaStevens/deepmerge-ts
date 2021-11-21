@@ -9,7 +9,6 @@ import type {
   DeepMergeSetsDefaultHKT,
   DeepMergeMergeFunctionUtils,
   GetDeepMergeMergeFunctionsURIs,
-  RecordProperty,
 } from "./types";
 import {
   getIterableOfIterables,
@@ -137,7 +136,7 @@ function mergeUnknowns<
   switch (type) {
     case ObjectType.RECORD:
       return utils.mergeFunctions.mergeRecords(
-        values as ReadonlyArray<Readonly<Record<RecordProperty, unknown>>>,
+        values as ReadonlyArray<Readonly<Record<PropertyKey, unknown>>>,
         utils
       ) as DeepMergeHKT<Ts, MF>;
 
@@ -173,11 +172,11 @@ function mergeUnknowns<
  * @param values - The records.
  */
 function mergeRecords<
-  Ts extends ReadonlyArray<Record<RecordProperty, unknown>>,
+  Ts extends ReadonlyArray<Record<PropertyKey, unknown>>,
   U extends DeepMergeMergeFunctionUtils,
   MF extends DeepMergeMergeFunctionsURIs
 >(values: Ts, utils: U) {
-  const result: Record<RecordProperty, unknown> = {};
+  const result: Record<PropertyKey, unknown> = {};
 
   /* eslint-disable functional/no-loop-statement, functional/no-conditional-statement -- using a loop here is more performant. */
 
