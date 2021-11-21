@@ -250,13 +250,21 @@ type RequiredKeys<T> = Exclude<
  * Get all the required keys on the types in the tuple.
  */
 export type RequiredKeysOf<Ts extends readonly [unknown, ...unknown[]]> =
-  Ts extends readonly [infer Head, ...infer Rest]
-    ? Head extends Record<PropertyKey, unknown>
-      ? Rest extends readonly [unknown, ...unknown[]]
-        ? RequiredKeys<Head> | RequiredKeysOf<Rest>
-        : RequiredKeys<Head>
-      : never
-    : never;
+  RequiredKeysOfHelper<Ts, never>;
+
+/**
+ * Tail-recursive helper type for RequiredKeysOf.
+ */
+type RequiredKeysOfHelper<
+  Ts extends readonly [unknown, ...unknown[]],
+  Acc
+> = Ts extends readonly [infer Head, ...infer Rest]
+  ? Head extends Record<PropertyKey, unknown>
+    ? Rest extends readonly [unknown, ...unknown[]]
+      ? RequiredKeysOfHelper<Rest, Acc | RequiredKeys<Head>>
+      : Acc | RequiredKeys<Head>
+    : never
+  : Acc;
 
 /**
  * Get the optional keys of the type.
