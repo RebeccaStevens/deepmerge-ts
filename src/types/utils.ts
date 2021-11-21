@@ -295,13 +295,21 @@ type OptionalKeysOfHelper<
  * Filter out nevers from a tuple.
  */
 export type FilterOutNever<T extends ReadonlyArray<unknown>> =
-  T extends readonly []
-    ? []
-    : T extends [infer Head, ...infer Rest]
-    ? IsNever<Head> extends true
-      ? FilterOutNever<Rest>
-      : [Head, ...FilterOutNever<Rest>]
-    : T;
+  FilterOutNeverHelper<T, []>;
+
+/**
+ * Tail-recursive helper type for FilterOutNever.
+ */
+type FilterOutNeverHelper<
+  T extends ReadonlyArray<unknown>,
+  Acc extends ReadonlyArray<unknown>
+> = T extends readonly []
+  ? Acc
+  : T extends readonly [infer Head, ...infer Rest]
+  ? IsNever<Head> extends true
+    ? FilterOutNeverHelper<Rest, Acc>
+    : FilterOutNeverHelper<Rest, [...Acc, Head]>
+  : T;
 
 /**
  * Is the type a tuple?
