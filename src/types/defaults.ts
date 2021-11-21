@@ -136,11 +136,23 @@ type DeepMergeRecordsDefaultHKTInternalPropValue<
 export type DeepMergeArraysDefaultHKT<
   Ts extends ReadonlyArray<unknown>,
   MF extends DeepMergeMergeFunctionsURIs
-> = Ts extends [infer Head, ...infer Rest]
+> = DeepMergeArraysDefaultHKTHelper<Ts, MF, []>;
+
+/**
+ * Tail-recursive helper type for DeepMergeArraysDefaultHKT.
+ */
+type DeepMergeArraysDefaultHKTHelper<
+  Ts extends ReadonlyArray<unknown>,
+  MF extends DeepMergeMergeFunctionsURIs,
+  Acc extends ReadonlyArray<unknown>
+> = Ts extends readonly [infer Head, ...infer Rest]
   ? Head extends ReadonlyArray<unknown>
-    ? Rest extends [ReadonlyArray<unknown>, ...ReadonlyArray<unknown[]>]
-      ? [...Head, ...DeepMergeArraysDefaultHKT<Rest, MF>]
-      : Head
+    ? Rest extends readonly [
+        ReadonlyArray<unknown>,
+        ...ReadonlyArray<unknown[]>
+      ]
+      ? DeepMergeArraysDefaultHKTHelper<Rest, MF, [...Acc, ...Head]>
+      : [...Acc, ...Head]
     : never
   : never;
 
