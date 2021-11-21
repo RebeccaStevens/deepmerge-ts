@@ -143,7 +143,7 @@ const merged1: {
   foo: Set<string | number>;
   bar: Map<string | number, string | number>;
 } =
-  // $ExpectType { foo: DeepMergeSetsDefaultHKT<[Set<number>, Set<string>], DeepMergeMergeFunctionsDefaultURIs>; bar: DeepMergeMapsDefaultHKT<[Map<string, string>, Map<number, number>], DeepMergeMergeFunctionsDefaultURIs>; }
+  // $ExpectType { foo: DeepMergeSetsDefaultHKT<[Set<number>, Set<string>], Readonly<{ DeepMergeRecordsURI: "DeepMergeRecordsDefaultURI"; DeepMergeArraysURI: "DeepMergeArraysDefaultURI"; DeepMergeSetsURI: "DeepMergeSetsDefaultURI"; DeepMergeMapsURI: "DeepMergeMapsDefaultURI"; DeepMergeOthersURI: "DeepMergeLeafURI"; }>>; bar: DeepMergeMapsDefaultHKT<[Map<string, string>, Map<number, number>], Readonly<{ DeepMergeRecordsURI: "DeepMergeRecordsDefaultURI"; DeepMergeArraysURI: "DeepMergeArraysDefaultURI"; DeepMergeSetsURI: "DeepMergeSetsDefaultURI"; DeepMergeMapsURI: "DeepMergeMapsDefaultURI"; DeepMergeOthersURI: "DeepMergeLeafURI"; }>>; }
   deepmerge(j, k);
 
 const l = new Map([[1, new Map([[1, a]])]]);
@@ -154,7 +154,7 @@ const merged2: Map<
   | Map<number, { foo: string; baz: { quux: string[] }; garply: number }>
   | Map<number, { foo: string; baz: { corge: number }; grault: number }>
 > =
-  // $ExpectType DeepMergeMapsDefaultHKT<[Map<number, Map<number, { foo: string; baz: { quux: string[]; }; garply: number; }>>, Map<number, Map<number, { foo: string; baz: { corge: number; }; grault: number; }>>], DeepMergeMergeFunctionsDefaultURIs>
+  // $ExpectType DeepMergeMapsDefaultHKT<[Map<number, Map<number, { foo: string; baz: { quux: string[]; }; garply: number; }>>, Map<number, Map<number, { foo: string; baz: { corge: number; }; grault: number; }>>], Readonly<{ DeepMergeRecordsURI: "DeepMergeRecordsDefaultURI"; DeepMergeArraysURI: "DeepMergeArraysDefaultURI"; DeepMergeSetsURI: "DeepMergeSetsDefaultURI"; DeepMergeMapsURI: "DeepMergeMapsDefaultURI"; DeepMergeOthersURI: "DeepMergeLeafURI"; }>>
   deepmerge(l, m);
 
 const first = { first: true };

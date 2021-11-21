@@ -90,7 +90,7 @@ export function objectHasProperty(
  * Get an iterable object that iterates over the given iterables.
  */
 export function getIterableOfIterables<T>(
-  iterables: ReadonlyArray<Readonly<Iterable<T>>>
+  iterables: Readonly<ReadonlyArray<Readonly<Iterable<T>>>>
 ): Iterable<T> {
   return {
     *[Symbol.iterator]() {

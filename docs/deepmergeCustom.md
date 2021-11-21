@@ -37,7 +37,7 @@ This can be done using [Declaration Merging](https://www.typescriptlang.org/docs
 
 ```ts
 declare module "deepmerge-ts" {
-  interface DeepMergeMergeFunctionURItoKind<Ts extends ReadonlyArray<unknown>, MF extends DeepMergeMergeFunctionsURIs> {
+  interface DeepMergeMergeFunctionURItoKind<Ts extends Readonly<ReadonlyArray<unknown>>, MF extends DeepMergeMergeFunctionsURIs> {
     readonly MyCustomMergeURI: MyValue;
   }
 }
@@ -70,17 +70,16 @@ customDeepmerge(x, y, z); // => { foo: [Date, Date, Date] }
 
 declare module "deepmerge-ts" {
   interface DeepMergeMergeFunctionURItoKind<
-    Ts extends ReadonlyArray<unknown>,
+    Ts extends Readonly<ReadonlyArray<unknown>>,
     MF extends DeepMergeMergeFunctionsURIs
   > {
     readonly MyDeepMergeDatesURI: EveryIsDate<Ts> extends true ? Ts : DeepMergeLeaf<Ts>;
   }
 }
 
-type EveryIsDate<Ts extends ReadonlyArray<unknown>> = Ts extends readonly [
-  infer Head,
-  ...infer Rest
-]
+type EveryIsDate<Ts extends Readonly<ReadonlyArray<unknown>>> = Ts extends Readonly<
+  readonly [infer Head, ...infer Rest]
+>
   ? Head extends Date
     ? EveryIsDate<Rest>
     : false
