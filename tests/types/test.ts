@@ -77,6 +77,9 @@ const f = {
 // $ExpectType { foo: [1, 2, 3, "a", "b", "c"]; }
 deepmerge(e, f);
 
+// $ExpectType { foo: [1, 2, 3, "a", "b", "c", "a", "b", "c"]; }
+deepmerge(e, f, f);
+
 // $ExpectType { foo: (string | number)[]; }
 deepmerge(e as E, f as F);
 
