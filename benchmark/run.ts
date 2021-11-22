@@ -1,48 +1,87 @@
 import Benchmark from "benchmark";
 
+import { constants as fsConstants, promises as fs } from "node:fs";
+import * as path from "node:path";
+
 import { deepmerge as deepmergeTs } from "deepmerge-ts";
 import { all as deepmerge } from "deepmerge";
 import { merge as mergeAnything } from "merge-anything";
 import { Accumulator as ObjectAccumulator } from "object-accumulator";
 import { merge as lodashMerge } from "lodash";
 
-console.log("Generating benchmark data.");
+const benchmarkDataFile = path.join(__dirname, "data.json");
 
-const benchmarkData = generateBenchmarkDataArray(100, 10, 4);
+void (async () => {
+  const benchmarkDataSets: any[][] = await fs
+    .access(benchmarkDataFile, fsConstants.R_OK)
+    .then(async () => {
+      console.log("Loading benchmark data file.");
+      const data = await fs.readFile(benchmarkDataFile, { encoding: "utf-8" });
+      return JSON.parse(data);
+    })
+    .catch(async (error) => {
+      if (error?.code !== "ENOENT") {
+        throw error;
+      }
+      console.log("No benchmark data file found. Generating benchmark data.");
 
-console.log("Running benchmarks.");
+      const data = [
+        generateBenchmarkDataArray(2, 4, 15),
+        generateBenchmarkDataArray(100, 10, 4),
+      ];
 
-const suite = new Benchmark.Suite();
+      await fs.writeFile(benchmarkDataFile, JSON.stringify(data), {
+        encoding: "utf-8",
+      });
 
-// add tests
-suite
-  .add("deepmerge-ts", () => {
-    deepmergeTs(...benchmarkData);
-  })
-  .add("deepmerge", () => {
-    deepmerge(benchmarkData);
-  })
-  .add("merge-anything", () => {
-    (mergeAnything as any)(...benchmarkData);
-  })
-  .add("object-accumulator", () => {
-    ObjectAccumulator.from(benchmarkData).merge();
-  })
-  .add("lowdash merge", () => {
-    lodashMerge({}, benchmarkData);
-  })
-  .on("cycle", (event: any) => {
-    console.log(String(event.target));
-  })
-  // eslint-disable-next-line func-names
-  .on("complete", function () {
-    // @ts-expect-error When need to access the "this" value
-    // eslint-disable-next-line unicorn/no-this-assignment, @typescript-eslint/no-this-alias, no-invalid-this
-    const results = this;
+      return data;
+    });
 
-    console.log(`\nFastest is ${results.filter("fastest").map("name")}`);
-  })
-  .run({ async: true });
+  for (let i = 0; i < benchmarkDataSets.length; i++) {
+    const benchmarkData = benchmarkDataSets[i];
+    const suite = new Benchmark.Suite();
+
+    console.log(
+      `\nRunning benchmarks for data set ${i + 1} of ${
+        benchmarkDataSets.length
+      }:\n`
+    );
+
+    // add tests
+    suite
+      .add("deepmerge-ts", () => {
+        deepmergeTs(...benchmarkData);
+      })
+      .add("deepmerge", () => {
+        deepmerge(benchmarkData);
+      })
+      .add("merge-anything", () => {
+        (mergeAnything as any)(...benchmarkData);
+      })
+      .add("object-accumulator", () => {
+        ObjectAccumulator.from(benchmarkData).merge();
+      })
+      .add("lowdash merge", () => {
+        lodashMerge({}, benchmarkData);
+      })
+      .on("cycle", (event: any) => {
+        console.log(String(event.target));
+      })
+      // eslint-disable-next-line func-names
+      .on("complete", function () {
+        // @ts-expect-error When need to access the "this" value
+        // eslint-disable-next-line unicorn/no-this-assignment, @typescript-eslint/no-this-alias, no-invalid-this
+        const results = this;
+
+        console.log(
+          `\nFastest is ${results.filter("fastest").map("name")} for data set ${
+            i + 1
+          } of ${benchmarkDataSets.length}`
+        );
+      })
+      .run({ async: false });
+  }
+})();
 
 function generateBenchmarkDataArray(items, maxProperties, maxDepth) {
   const data: object[] = [];
