@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
+## [1.1.8-beta.1](https://github.com/RebeccaStevens/deepmerge-ts/compare/v1.1.7...v1.1.8-beta.1) (2021-11-22)
+
+
+### Bug Fixes
+
+* add better support for readonly types ([#17](https://github.com/RebeccaStevens/deepmerge-ts/issues/17)) ([0609832](https://github.com/RebeccaStevens/deepmerge-ts/commit/0609832ed999673046ffc0b49a86382e4df7bf9a))
+
 ## [1.1.7](https://github.com/RebeccaStevens/deepmerge-ts/compare/v1.1.6...v1.1.7) (2021-11-22)
 
 
