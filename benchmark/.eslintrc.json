@@ -28,6 +28,7 @@
     "node/no-extraneous-import": "off",
     "sonarjs/no-duplicate-string": "off",
     "sonarjs/no-ignored-return": "off",
+    "unicorn/prefer-module": "off",
     "init-declarations": "off",
     "no-plusplus": "off"
   }
