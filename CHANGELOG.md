@@ -1,6 +1,18 @@
 # Changelog
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
+# [2.0.0](https://github.com/RebeccaStevens/deepmerge-ts/compare/v1.1.7...v2.0.0) (2021-11-22)
+
+
+### Bug Fixes
+
+* add better support for readonly types ([#17](https://github.com/RebeccaStevens/deepmerge-ts/issues/17)) ([ee59064](https://github.com/RebeccaStevens/deepmerge-ts/commit/ee5906448bcc0fabef2a2b8e215d4c309d30b4db))
+
+
+### BREAKING CHANGES
+
+* interface DeepMergeMergeFunctionURItoKind's signature has changed
+
 # [2.0.0-beta.1](https://github.com/RebeccaStevens/deepmerge-ts/compare/v1.1.7...v2.0.0-beta.1) (2021-11-22)
 
 
