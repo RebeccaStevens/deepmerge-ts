@@ -7,7 +7,6 @@ import type {
 import type {
   FlatternAlias,
   FilterOutNever,
-  IsNever,
   OptionalKeysOf,
   RequiredKeysOf,
   UnionMapKeys,
