@@ -156,51 +156,80 @@ export type Not<T extends boolean> = T extends true ? false : true;
  * Union of the sets' values' types
  */
 export type UnionSetValues<Ts extends ReadonlyArray<unknown>> =
-  Ts extends readonly [infer Head, ...infer Rest]
-    ? Head extends Set<infer V1>
-      ? Rest extends ReadonlyArray<unknown>
-        ? UnionSetValues<Rest> | V1
-        : V1
-      : never
-    : never;
+  UnionSetValuesHelper<Ts, never>;
+
+/**
+ * Tail-recursive helper type for UnionSetValues.
+ */
+type UnionSetValuesHelper<
+  Ts extends ReadonlyArray<unknown>,
+  Acc
+> = Ts extends readonly [infer Head, ...infer Rest]
+  ? Head extends Set<infer V1>
+    ? Rest extends ReadonlyArray<unknown>
+      ? UnionSetValuesHelper<Rest, Acc | V1>
+      : Acc | V1
+    : never
+  : Acc;
 
 /**
  * Union of the maps' values' types
  */
 export type UnionMapKeys<Ts extends ReadonlyArray<unknown>> =
-  Ts extends readonly [infer Head, ...infer Rest]
-    ? Head extends Map<infer K1, unknown>
-      ? Rest extends readonly []
-        ? K1
-        : K1 | UnionMapKeys<Rest>
-      : never
-    : never;
+  UnionMapKeysHelper<Ts, never>;
+
+/**
+ * Tail-recursive helper type for UnionMapKeys.
+ */
+type UnionMapKeysHelper<
+  Ts extends ReadonlyArray<unknown>,
+  Acc
+> = Ts extends readonly [infer Head, ...infer Rest]
+  ? Head extends Map<infer K1, unknown>
+    ? Rest extends readonly []
+      ? Acc | K1
+      : UnionMapKeysHelper<Rest, Acc | K1>
+    : never
+  : Acc;
 
 /**
  * Union of the maps' keys' types
  */
 export type UnionMapValues<Ts extends ReadonlyArray<unknown>> =
-  Ts extends readonly [infer Head, ...infer Rest]
-    ? Head extends Map<unknown, infer V1>
-      ? Rest extends readonly []
-        ? V1
-        : UnionMapValues<Rest> | V1
-      : never
-    : never;
+  UnionMapValuesHelper<Ts, never>;
+
+/**
+ * Tail-recursive helper type for UnionMapValues.
+ */
+type UnionMapValuesHelper<
+  Ts extends ReadonlyArray<unknown>,
+  Acc
+> = Ts extends readonly [infer Head, ...infer Rest]
+  ? Head extends Map<unknown, infer V1>
+    ? Rest extends readonly []
+      ? Acc | V1
+      : UnionMapValuesHelper<Rest, Acc | V1>
+    : never
+  : Acc;
 
 /**
  * Get all the keys of the given records.
  */
-export type KeysOf<Ts extends ReadonlyArray<unknown>> = Ts extends readonly [
-  infer Head,
-  ...infer Rest
-]
+export type KeysOf<Ts extends ReadonlyArray<unknown>> = KeysOfHelper<Ts, never>;
+
+/**
+ * Tail-recursive helper type for KeysOf.
+ */
+type KeysOfHelper<
+  Ts extends ReadonlyArray<unknown>,
+  Acc
+> = Ts extends readonly [infer Head, ...infer Rest]
   ? Head extends Record<PropertyKey, unknown>
     ? Rest extends ReadonlyArray<unknown>
-      ? KeysOf<Rest> | keyof Head
-      : keyof Head
+      ? KeysOfHelper<Rest, Acc | keyof Head>
+      : Acc | keyof Head
     : never
-  : never;
+  : Acc;
 
 /**
  * Get the keys of the type what match a certain criteria.
@@ -221,13 +250,21 @@ type RequiredKeys<T> = Exclude<
  * Get all the required keys on the types in the tuple.
  */
 export type RequiredKeysOf<Ts extends readonly [unknown, ...unknown[]]> =
-  Ts extends readonly [infer Head, ...infer Rest]
-    ? Head extends Record<PropertyKey, unknown>
-      ? Rest extends readonly [unknown, ...unknown[]]
-        ? RequiredKeys<Head> | RequiredKeysOf<Rest>
-        : RequiredKeys<Head>
-      : never
-    : never;
+  RequiredKeysOfHelper<Ts, never>;
+
+/**
+ * Tail-recursive helper type for RequiredKeysOf.
+ */
+type RequiredKeysOfHelper<
+  Ts extends readonly [unknown, ...unknown[]],
+  Acc
+> = Ts extends readonly [infer Head, ...infer Rest]
+  ? Head extends Record<PropertyKey, unknown>
+    ? Rest extends readonly [unknown, ...unknown[]]
+      ? RequiredKeysOfHelper<Rest, Acc | RequiredKeys<Head>>
+      : Acc | RequiredKeys<Head>
+    : never
+  : Acc;
 
 /**
  * Get the optional keys of the type.
@@ -238,25 +275,41 @@ type OptionalKeys<T> = Exclude<keyof T, RequiredKeys<T>>;
  * Get all the optional keys on the types in the tuple.
  */
 export type OptionalKeysOf<Ts extends readonly [unknown, ...unknown[]]> =
-  Ts extends readonly [infer Head, ...infer Rest]
-    ? Head extends Record<PropertyKey, unknown>
-      ? Rest extends readonly [unknown, ...unknown[]]
-        ? OptionalKeys<Head> | OptionalKeysOf<Rest>
-        : OptionalKeys<Head>
-      : never
-    : never;
+  OptionalKeysOfHelper<Ts, never>;
+
+/**
+ * Tail-recursive helper type for OptionalKeysOf.
+ */
+type OptionalKeysOfHelper<
+  Ts extends readonly [unknown, ...unknown[]],
+  Acc
+> = Ts extends readonly [infer Head, ...infer Rest]
+  ? Head extends Record<PropertyKey, unknown>
+    ? Rest extends readonly [unknown, ...unknown[]]
+      ? OptionalKeysOfHelper<Rest, Acc | OptionalKeys<Head>>
+      : Acc | OptionalKeys<Head>
+    : never
+  : Acc;
 
 /**
  * Filter out nevers from a tuple.
  */
 export type FilterOutNever<T extends ReadonlyArray<unknown>> =
-  T extends readonly []
-    ? []
-    : T extends [infer Head, ...infer Rest]
-    ? IsNever<Head> extends true
-      ? FilterOutNever<Rest>
-      : [Head, ...FilterOutNever<Rest>]
-    : T;
+  FilterOutNeverHelper<T, []>;
+
+/**
+ * Tail-recursive helper type for FilterOutNever.
+ */
+type FilterOutNeverHelper<
+  T extends ReadonlyArray<unknown>,
+  Acc extends ReadonlyArray<unknown>
+> = T extends readonly []
+  ? Acc
+  : T extends readonly [infer Head, ...infer Rest]
+  ? IsNever<Head> extends true
+    ? FilterOutNeverHelper<Rest, Acc>
+    : FilterOutNeverHelper<Rest, [...Acc, Head]>
+  : T;
 
 /**
  * Is the type a tuple?
