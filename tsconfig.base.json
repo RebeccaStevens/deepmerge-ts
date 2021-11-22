@@ -30,6 +30,6 @@
   },
   "exclude": [
     "benchmark/",
-    "types/"
+    "types-legacy/"
   ]
 }

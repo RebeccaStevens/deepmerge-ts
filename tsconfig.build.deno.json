@@ -6,7 +6,7 @@
   "exclude": [
     "node_modules",
     "build/deno/",
-    "deno-dist/",
+    "dist/",
     "src/**/*.deno.ts",
     "src/**/*.deno.tsx",
   ]

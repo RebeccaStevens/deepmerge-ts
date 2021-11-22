@@ -36,7 +36,7 @@ yarn add -D deepmerge-ts
 // import_map.json
 {
   "imports": {
-    "deepmerge-ts": "https://deno.land/x/deepmergets@__version__/index.ts"
+    "deepmerge-ts": "https://deno.land/x/deepmergets@__version__/dist/deno/index.ts"
   }
 }
 ```
