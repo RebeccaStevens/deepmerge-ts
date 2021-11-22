@@ -1,11 +1,6 @@
-/deno-dist/
-/lib/
 /build/
 /coverage/
-
-!/types/
-/types/*
-!/types/legacy
+/dist/
 
 .nyc_output/
 node_modules/

@@ -33,7 +33,7 @@ plugins:
         All notable changes to this project will be documented in this file. Dates are displayed in UTC."
   - - "@semantic-release/git"
     - assets:
-      - deno-dist/
+      - dist
       - CHANGELOG.md
   - "@semantic-release/npm"
   - - "@semantic-release/github"

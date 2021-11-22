@@ -6,6 +6,7 @@ import rollupPluginJSON from "@rollup/plugin-json";
 import rollupPluginNodeResolve from "@rollup/plugin-node-resolve";
 import rollupPluginTypescript from "@rollup/plugin-typescript";
 import rollupPluginAutoExternal from "rollup-plugin-auto-external";
+import rollupPluginCopy from "rollup-plugin-copy";
 import rollupPluginDts from "rollup-plugin-dts";
 
 import pkg from "./package.json";
@@ -71,7 +72,7 @@ const dts = {
   ...common,
 
   output: {
-    file: "types/current/index.d.ts",
+    file: "dist/node/types/current/index.d.ts",
     format: "es",
   },
 
@@ -80,6 +81,11 @@ const dts = {
       tsconfig: "tsconfig.build.json",
     }),
     rollupPluginDts(),
+    rollupPluginCopy({
+      targets: [
+        { src: "types-legacy", dest: "dist/node/types", rename: "legacy" },
+      ],
+    }),
   ],
 };
 
