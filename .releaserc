@@ -1,5 +1,8 @@
 branches:
   - main
+  - name: next
+    channel: next
+    prerelease: beta
 plugins:
   - - "@semantic-release/commit-analyzer"
     - preset: angular
