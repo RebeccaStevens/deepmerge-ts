@@ -20,11 +20,11 @@ declare type DeepMergeOptionsFull = Readonly<{
  * All the merge functions that deepmerge uses.
  */
 declare type DeepMergeMergeFunctions = Readonly<{
-  mergeRecords: <Ts extends ReadonlyArray<Readonly<Record<keyof any, any>>>, U extends DeepMergeMergeFunctionUtils>(records: Ts, utils: U) => any;
-  mergeArrays: <Ts extends ReadonlyArray<Readonly<ReadonlyArray<any>>>, U extends DeepMergeMergeFunctionUtils>(records: Ts, utils: U) => any;
-  mergeMaps: <Ts extends ReadonlyArray<Readonly<ReadonlyMap<any, any>>>, U extends DeepMergeMergeFunctionUtils>(records: Ts, utils: U) => any;
-  mergeSets: <Ts extends ReadonlyArray<Readonly<ReadonlySet<any>>>, U extends DeepMergeMergeFunctionUtils>(records: Ts, utils: U) => any;
-  mergeOthers: <Ts extends ReadonlyArray<any>, U extends DeepMergeMergeFunctionUtils>(records: Ts, utils: U) => any;
+  mergeRecords: <Ts extends Readonly<ReadonlyArray<Readonly<Record<keyof any, any>>>>, U extends DeepMergeMergeFunctionUtils>(records: Ts, utils: U) => any;
+  mergeArrays: <Ts extends Readonly<ReadonlyArray<Readonly<ReadonlyArray<any>>>>, U extends DeepMergeMergeFunctionUtils>(records: Ts, utils: U) => any;
+  mergeMaps: <Ts extends Readonly<ReadonlyArray<Readonly<ReadonlyMap<any, any>>>>, U extends DeepMergeMergeFunctionUtils>(records: Ts, utils: U) => any;
+  mergeSets: <Ts extends Readonly<ReadonlyArray<Readonly<ReadonlySet<any>>>>, U extends DeepMergeMergeFunctionUtils>(records: Ts, utils: U) => any;
+  mergeOthers: <Ts extends Readonly<ReadonlyArray<any>>, U extends DeepMergeMergeFunctionUtils>(records: Ts, utils: U) => any;
 }>;
 
 /**
@@ -33,7 +33,7 @@ declare type DeepMergeMergeFunctions = Readonly<{
 declare type DeepMergeMergeFunctionUtils = Readonly<{
   mergeFunctions: DeepMergeMergeFunctions;
   defaultMergeFunctions: DeepMergeMergeFunctionsDefaults;
-  deepmerge: <Ts extends ReadonlyArray<any>>(...values: Ts) => any;
+  deepmerge: <Ts extends Readonly<ReadonlyArray<any>>>(...values: Ts) => any;
 }>;
 
 /**
