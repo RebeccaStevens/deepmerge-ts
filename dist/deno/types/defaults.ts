@@ -38,13 +38,13 @@ type DeepMergeMapsDefaultURI = "DeepMergeMapsDefaultURI";
 /**
  * The default merge functions to use when deep merging.
  */
-export type DeepMergeMergeFunctionsDefaultURIs = {
+export type DeepMergeMergeFunctionsDefaultURIs = Readonly<{
   DeepMergeRecordsURI: DeepMergeRecordsDefaultURI;
   DeepMergeArraysURI: DeepMergeArraysDefaultURI;
   DeepMergeSetsURI: DeepMergeSetsDefaultURI;
   DeepMergeMapsURI: DeepMergeMapsDefaultURI;
   DeepMergeOthersURI: DeepMergeLeafURI;
-};
+}>;
 
 /**
  * A union of all the props that should not be included in type information for
@@ -56,9 +56,9 @@ type BlacklistedRecordProps = "__proto__";
  * Deep merge records.
  */
 export type DeepMergeRecordsDefaultHKT<
-  Ts extends ReadonlyArray<unknown>,
+  Ts extends Readonly<ReadonlyArray<unknown>>,
   MF extends DeepMergeMergeFunctionsURIs
-> = Ts extends readonly [unknown, ...unknown[]]
+> = Ts extends Readonly<readonly [unknown, ...Readonly<ReadonlyArray<unknown>>]>
   ? FlatternAlias<
       Omit<
         DeepMergeRecordsDefaultHKTInternalProps<Ts, MF>,
@@ -71,7 +71,7 @@ export type DeepMergeRecordsDefaultHKT<
  * Deep merge record props.
  */
 type DeepMergeRecordsDefaultHKTInternalProps<
-  Ts extends readonly [unknown, ...unknown[]],
+  Ts extends Readonly<readonly [unknown, ...Readonly<ReadonlyArray<unknown>>]>,
   MF extends DeepMergeMergeFunctionsURIs
 > = {
   [K in OptionalKeysOf<Ts>]?: DeepMergeHKT<
@@ -89,22 +89,28 @@ type DeepMergeRecordsDefaultHKTInternalProps<
  * Get the value of the property.
  */
 type DeepMergeRecordsDefaultHKTInternalPropValue<
-  Ts extends readonly [unknown, ...unknown[]],
+  Ts extends Readonly<readonly [unknown, ...Readonly<ReadonlyArray<unknown>>]>,
   K extends PropertyKey
 > = FilterOutNever<
-  DeepMergeRecordsDefaultHKTInternalPropValueHelper<Ts, K, []>
+  DeepMergeRecordsDefaultHKTInternalPropValueHelper<
+    Ts,
+    K,
+    Readonly<readonly []>
+  >
 >;
 
 /**
  * Tail-recursive helper type for DeepMergeRecordsDefaultHKTInternalPropValue.
  */
 type DeepMergeRecordsDefaultHKTInternalPropValueHelper<
-  Ts extends readonly [unknown, ...unknown[]],
+  Ts extends Readonly<readonly [unknown, ...Readonly<ReadonlyArray<unknown>>]>,
   K extends PropertyKey,
-  Acc extends ReadonlyArray<unknown>
-> = Ts extends readonly [infer Head, ...infer Rest]
+  Acc extends Readonly<ReadonlyArray<unknown>>
+> = Ts extends Readonly<readonly [infer Head, ...infer Rest]>
   ? Head extends Record<PropertyKey, unknown>
-    ? Rest extends readonly [unknown, ...unknown[]]
+    ? Rest extends Readonly<
+        readonly [unknown, ...Readonly<ReadonlyArray<unknown>>]
+      >
       ? DeepMergeRecordsDefaultHKTInternalPropValueHelper<
           Rest,
           K,
@@ -118,7 +124,7 @@ type DeepMergeRecordsDefaultHKTInternalPropValueHelper<
  * Deep merge 2 arrays.
  */
 export type DeepMergeArraysDefaultHKT<
-  Ts extends ReadonlyArray<unknown>,
+  Ts extends Readonly<ReadonlyArray<unknown>>,
   MF extends DeepMergeMergeFunctionsURIs
 > = DeepMergeArraysDefaultHKTHelper<Ts, MF, []>;
 
@@ -126,14 +132,14 @@ export type DeepMergeArraysDefaultHKT<
  * Tail-recursive helper type for DeepMergeArraysDefaultHKT.
  */
 type DeepMergeArraysDefaultHKTHelper<
-  Ts extends ReadonlyArray<unknown>,
+  Ts extends Readonly<ReadonlyArray<unknown>>,
   MF extends DeepMergeMergeFunctionsURIs,
-  Acc extends ReadonlyArray<unknown>
+  Acc extends Readonly<ReadonlyArray<unknown>>
 > = Ts extends readonly [infer Head, ...infer Rest]
-  ? Head extends ReadonlyArray<unknown>
+  ? Head extends Readonly<ReadonlyArray<unknown>>
     ? Rest extends readonly [
-        ReadonlyArray<unknown>,
-        ...ReadonlyArray<ReadonlyArray<unknown>>
+        Readonly<ReadonlyArray<unknown>>,
+        ...Readonly<ReadonlyArray<Readonly<ReadonlyArray<unknown>>>>
       ]
       ? DeepMergeArraysDefaultHKTHelper<Rest, MF, [...Acc, ...Head]>
       : [...Acc, ...Head]
@@ -144,7 +150,7 @@ type DeepMergeArraysDefaultHKTHelper<
  * Deep merge 2 sets.
  */
 export type DeepMergeSetsDefaultHKT<
-  Ts extends ReadonlyArray<unknown>,
+  Ts extends Readonly<ReadonlyArray<unknown>>,
   MF extends DeepMergeMergeFunctionsURIs
 > = Set<UnionSetValues<Ts>>;
 
@@ -152,7 +158,7 @@ export type DeepMergeSetsDefaultHKT<
  * Deep merge 2 maps.
  */
 export type DeepMergeMapsDefaultHKT<
-  Ts extends ReadonlyArray<unknown>,
+  Ts extends Readonly<ReadonlyArray<unknown>>,
   MF extends DeepMergeMergeFunctionsURIs
 > = Map<UnionMapKeys<Ts>, UnionMapValues<Ts>>;
 
@@ -161,7 +167,7 @@ export type DeepMergeMapsDefaultHKT<
  */
 export type GetDeepMergeMergeFunctionsURIs<
   PMF extends Partial<DeepMergeMergeFunctionsURIs>
-> = {
+> = Readonly<{
   // prettier-ignore
   DeepMergeRecordsURI:
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -196,4 +202,4 @@ export type GetDeepMergeMergeFunctionsURIs<
     PMF["DeepMergeOthersURI"] extends keyof DeepMergeMergeFunctionURItoKind<any, any>
       ? PMF["DeepMergeOthersURI"]
       : DeepMergeLeafURI;
-};
+}>;

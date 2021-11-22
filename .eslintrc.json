@@ -22,10 +22,9 @@
   },
   "ignorePatterns": [
     "/coverage/",
-    "/deno-dist/",
-    "/lib/",
-    "/types/",
-    "/tests/types/**/*",
+    "/dist/",
+    "/tests/types/",
+    "/types-legacy/",
     "/**/*.cjs",
     "/**/*.js",
     "/**/*.md"
