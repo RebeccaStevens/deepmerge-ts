@@ -1,7 +1,5 @@
 import { isPlainObject } from "https://raw.githubusercontent.com/jonschlinkert/is-plain-object/v5.0.0/is-plain-object.js";
 
-import type { RecordProperty } from "./types/index.ts";
-
 /**
  * The different types of objects deepmerge-ts support.
  */
@@ -54,8 +52,8 @@ export function getObjectType(object: unknown): ObjectType {
  */
 export function getKeys(
   objects: Readonly<ReadonlyArray<object>>
-): Set<RecordProperty> {
-  const keys = new Set<RecordProperty>();
+): Set<PropertyKey> {
+  const keys = new Set<PropertyKey>();
 
   /* eslint-disable functional/no-loop-statement -- using a loop here is more efficient. */
   for (const object of objects) {
@@ -80,7 +78,7 @@ export function getKeys(
  */
 export function objectHasProperty(
   object: object,
-  property: RecordProperty
+  property: PropertyKey
 ): boolean {
   return (
     typeof object === "object" &&

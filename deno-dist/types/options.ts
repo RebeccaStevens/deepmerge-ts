@@ -1,7 +1,5 @@
 import type { DeepMergeMergeFunctionsDefaults } from "@/deepmerge DENOIFY: DEPENDENCY UNMET (BUILTIN)";
 
-import type { RecordProperty } from "./basics.ts";
-
 /**
  * The options the user can pass to customize deepmerge.
  */
@@ -23,7 +21,7 @@ type DeepMergeOptionsFull = Readonly<{
  */
 type DeepMergeMergeFunctions = Readonly<{
   mergeRecords: <
-    Ts extends ReadonlyArray<Readonly<Record<RecordProperty, unknown>>>,
+    Ts extends ReadonlyArray<Readonly<Record<PropertyKey, unknown>>>,
     U extends DeepMergeMergeFunctionUtils
   >(
     records: Ts,
