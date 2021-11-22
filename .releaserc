@@ -38,4 +38,4 @@ plugins:
   - "@semantic-release/npm"
   - - "@semantic-release/github"
     - releasedLabels:
-        - "<%= nextRelease.channel === 'next' ? 'Status: Beta Released` : 'Status: Released' %>"
+        - "<%= nextRelease.channel === 'next' ? 'Status: Beta Released' : 'Status: Released' %>"
