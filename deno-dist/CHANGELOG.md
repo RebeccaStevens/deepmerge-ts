@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
+## [1.1.6](https://github.com/RebeccaStevens/deepmerge-ts/compare/v1.1.5...v1.1.6) (2021-11-22)
+
+
+### Performance Improvements
+
+* convert recursive types to tail-recursive versions ([#15](https://github.com/RebeccaStevens/deepmerge-ts/issues/15)) ([4401ac2](https://github.com/RebeccaStevens/deepmerge-ts/commit/4401ac2d1651093ab855d3d4bdf6c9628c0767ab))
+
 ## [1.1.5](https://github.com/RebeccaStevens/deepmerge-ts/compare/v1.1.4...v1.1.5) (2021-10-18)
 
 

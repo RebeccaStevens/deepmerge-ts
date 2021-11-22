@@ -7,7 +7,6 @@ import type {
 import type {
   FlatternAlias,
   FilterOutNever,
-  IsNever,
   OptionalKeysOf,
   RequiredKeysOf,
   UnionMapKeys,
@@ -134,7 +133,7 @@ type DeepMergeArraysDefaultHKTHelper<
   ? Head extends ReadonlyArray<unknown>
     ? Rest extends readonly [
         ReadonlyArray<unknown>,
-        ...ReadonlyArray<unknown[]>
+        ...ReadonlyArray<ReadonlyArray<unknown>>
       ]
       ? DeepMergeArraysDefaultHKTHelper<Rest, MF, [...Acc, ...Head]>
       : [...Acc, ...Head]

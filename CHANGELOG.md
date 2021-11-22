@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
+## [1.1.7](https://github.com/RebeccaStevens/deepmerge-ts/compare/v1.1.6...v1.1.7) (2021-11-22)
+
+
+### Bug Fixes
+
+* incorrect resulting type when merging 3+ readonly tuples ([#20](https://github.com/RebeccaStevens/deepmerge-ts/issues/20)) ([696a1b2](https://github.com/RebeccaStevens/deepmerge-ts/commit/696a1b21ce225e11e38ee9ef3b92a28cf3ed6a4c))
+
 ## [1.1.6](https://github.com/RebeccaStevens/deepmerge-ts/compare/v1.1.5...v1.1.6) (2021-11-22)
 
 
