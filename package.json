@@ -127,7 +127,7 @@
     "husky": "^7.0.2",
     "lint-staged": "^11.1.2",
     "markdownlint-cli": "^0.28.1",
-    "marked": "^3.0.3",
+    "marked": "^4.0.10",
     "nyc": "^15.1.0",
     "prettier": "^2.4.0",
     "rimraf": "^3.0.2",
