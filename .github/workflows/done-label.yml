@@ -1,7 +1,9 @@
 name: Apply Done Label
 
 on:
-  - pull_request
+  pull_request:
+    types:
+      - closed
 
 jobs:
   run:
