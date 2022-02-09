@@ -8,6 +8,21 @@ import type {
   DeepMergeLeaf,
 } from "@/deepmerge";
 
+declare module "ava" {
+  // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+  interface DeepEqualAssertion {
+    /**
+     * Assert that `actual` is [deeply equal](https://github.com/concordancejs/concordance#comparison-details) to
+     * `expected`, returning a boolean indicating whether the assertion passed.
+     */
+    <Actual extends Expected, Expected>(
+      actual: Actual,
+      expected: Expected,
+      message?: string
+    ): expected is Actual;
+  }
+}
+
 test("works just like non-customized version when no options passed", (t) => {
   const v = { first: true };
   const x = { second: false };
@@ -157,7 +172,7 @@ test("custom merge arrays of records", (t) => {
     },
     mergeOthers: (values) => {
       if (values.every((value) => typeof value === "number")) {
-        return String.fromCharCode(
+        return String.fromCodePoint(
           values.reduce<number>((carry, value) => carry + (value as number), 0)
         );
       }

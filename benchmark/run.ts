@@ -99,7 +99,9 @@ function generateBenchmarkDataItem(maxProperties, depth, currentDepth = 0) {
   const properties = Math.floor(maxProperties * Math.random()) + 1;
 
   const propertiesOptions = shuffle(
-    Array.from({ length: maxProperties }, (_, i) => String.fromCharCode(i + 65))
+    Array.from({ length: maxProperties }, (_, i) =>
+      String.fromCodePoint(i + 65)
+    )
   );
 
   for (let i = 0; i < properties; i++) {
