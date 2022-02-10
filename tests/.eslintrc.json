@@ -24,6 +24,8 @@
     "functional/prefer-readonly-type": "off",
     "import/no-relative-parent-imports": "off",
     "jsdoc/require-jsdoc": "off",
-    "sonarjs/no-duplicate-string": "off"
+    "sonarjs/no-duplicate-string": "off",
+    "sonarjs/no-identical-functions": "off",
+    "unicorn/consistent-function-scoping": "off"
   }
 }

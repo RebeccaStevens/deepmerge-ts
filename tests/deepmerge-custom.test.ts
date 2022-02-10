@@ -8,7 +8,10 @@ import type {
   DeepMergeMergeFunctionsURIs,
   DeepMergeRecordsDefaultHKT,
   DeepMergeLeaf,
+  DeepMergeOptions,
 } from "@/deepmerge";
+
+import { areAllNumbers, hasProp } from "./utils";
 
 declare module "ava" {
   interface DeepEqualAssertion {
@@ -69,7 +72,8 @@ test("custom merge strings", (t) => {
 declare module "../src/types" {
   interface DeepMergeMergeFunctionURItoKind<
     Ts extends ReadonlyArray<unknown>,
-    MF extends DeepMergeMergeFunctionsURIs
+    MF extends DeepMergeMergeFunctionsURIs,
+    M
   > {
     readonly CustomArrays1: string[];
   }
@@ -113,7 +117,8 @@ test("custom merge arrays", (t) => {
 declare module "../src/types" {
   interface DeepMergeMergeFunctionURItoKind<
     Ts extends ReadonlyArray<unknown>,
-    MF extends DeepMergeMergeFunctionsURIs
+    MF extends DeepMergeMergeFunctionsURIs,
+    M
   > {
     readonly CustomArrays2: Ts extends Readonly<readonly [...infer Es]>
       ? Es extends ReadonlyArray<unknown>
@@ -187,9 +192,10 @@ test("custom merge arrays of records", (t) => {
 declare module "../src/types" {
   interface DeepMergeMergeFunctionURItoKind<
     Ts extends ReadonlyArray<unknown>,
-    MF extends DeepMergeMergeFunctionsURIs
+    MF extends DeepMergeMergeFunctionsURIs,
+    M
   > {
-    readonly CustomRecords3: Entries<DeepMergeRecordsDefaultHKT<Ts, MF>>;
+    readonly CustomRecords3: Entries<DeepMergeRecordsDefaultHKT<Ts, MF, M>>;
   }
 }
 
@@ -224,8 +230,10 @@ test("custom merge records", (t) => {
   const customizedDeepmerge = deepmergeCustom<{
     DeepMergeRecordsURI: "CustomRecords3";
   }>({
-    mergeRecords: (records, utils) =>
-      Object.entries(utils.defaultMergeFunctions.mergeRecords(records, utils)),
+    mergeRecords: (records, utils, meta) =>
+      Object.entries(
+        utils.defaultMergeFunctions.mergeRecords(records, utils, meta)
+      ),
   });
 
   const merged = customizedDeepmerge(x, y);
@@ -236,7 +244,8 @@ test("custom merge records", (t) => {
 declare module "../src/types" {
   interface DeepMergeMergeFunctionURItoKind<
     Ts extends ReadonlyArray<unknown>,
-    MF extends DeepMergeMergeFunctionsURIs
+    MF extends DeepMergeMergeFunctionsURIs,
+    M
   > {
     readonly NoArrayMerge1: DeepMergeLeaf<Ts>;
   }
@@ -264,7 +273,8 @@ test("custom don't merge arrays", (t) => {
 declare module "../src/types" {
   interface DeepMergeMergeFunctionURItoKind<
     Ts extends ReadonlyArray<unknown>,
-    MF extends DeepMergeMergeFunctionsURIs
+    MF extends DeepMergeMergeFunctionsURIs,
+    M
   > {
     readonly MergeDates1: EveryIsDate<Ts> extends true ? Ts : DeepMergeLeaf<Ts>;
   }
@@ -297,6 +307,224 @@ test("custom merge dates", (t) => {
   });
 
   const merged = customizedDeepmerge(x, y, z);
+
+  t.deepEqual(merged, expected);
+});
+
+test("key based merging", (t) => {
+  const v = { sum: 1, product: 2, mean: 3 };
+  const x = { sum: 4, product: 5, mean: 6 };
+  const y = { sum: 7, product: 8, mean: 9 };
+  const z = { sum: 10, product: 11, mean: 12 };
+
+  const expected = {
+    sum: 22,
+    product: 880,
+    mean: 7.5,
+  };
+
+  const customizedDeepmerge = deepmergeCustom({
+    mergeOthers: (values, utils, meta) => {
+      if (areAllNumbers(values)) {
+        const { key } = meta;
+        const numbers: ReadonlyArray<number> = values;
+
+        if (key === "sum") {
+          return numbers.reduce((sum, value) => sum + value);
+        }
+        if (key === "product") {
+          return numbers.reduce((prod, value) => prod * value);
+        }
+        if (key === "mean") {
+          return numbers.reduce((sum, value) => sum + value) / numbers.length;
+        }
+      }
+
+      return utils.defaultMergeFunctions.mergeOthers(values);
+    },
+  });
+
+  const merged = customizedDeepmerge(v, x, y, z);
+
+  t.deepEqual(merged, expected);
+});
+
+declare module "../src/types" {
+  interface DeepMergeMergeFunctionURItoKind<
+    Ts extends Readonly<ReadonlyArray<unknown>>,
+    MF extends DeepMergeMergeFunctionsURIs,
+    M
+  > {
+    readonly KeyPathBasedMerge: Ts[number] extends number
+      ? Ts[number] | string
+      : DeepMergeLeaf<Ts>;
+  }
+}
+
+test("key path based merging", (t) => {
+  const x = {
+    foo: { bar: { baz: 1, qux: 2 } },
+    bar: { baz: 3, qux: 4 },
+  };
+  const y = {
+    foo: { bar: { baz: 5, bar: { baz: 6, qux: 7 } } },
+    bar: { baz: 8, qux: 9 },
+  };
+
+  const expected = {
+    foo: { bar: { baz: "special merge", bar: { baz: 6, qux: 7 }, qux: 2 } },
+    bar: { baz: "special merge", qux: 9 },
+  };
+
+  const customizedDeepmerge = deepmergeCustom<
+    {
+      DeepMergeOthersURI: "KeyPathBasedMerge";
+    },
+    ReadonlyArray<PropertyKey>
+  >(
+    {
+      metaDataUpdater: (previousMeta, metaMeta) => {
+        return [...previousMeta, metaMeta.key];
+      },
+      mergeOthers: (values, utils, meta) => {
+        if (
+          meta.length >= 2 &&
+          meta[meta.length - 2] === "bar" &&
+          meta[meta.length - 1] === "baz"
+        ) {
+          return "special merge";
+        }
+
+        return utils.defaultMergeFunctions.mergeOthers(values);
+      },
+    },
+    []
+  );
+
+  const merged = customizedDeepmerge(x, y);
+
+  t.deepEqual(merged, expected);
+});
+
+test("key path based array merging", (t) => {
+  const x = {
+    foo: [
+      { id: 1, value: ["a"] },
+      { id: 2, value: ["b"] },
+    ],
+    bar: [1, 2, 3],
+    baz: {
+      qux: [
+        { id: 1, value: ["c"] },
+        { id: 2, value: ["d"] },
+      ],
+    },
+    qux: [
+      { id: 1, value: ["e"] },
+      { id: 2, value: ["f"] },
+    ],
+  };
+  const y = {
+    foo: [
+      { id: 2, value: ["g"] },
+      { id: 1, value: ["h"] },
+    ],
+    bar: [4, 5, 6],
+    baz: {
+      qux: [
+        { id: 2, value: ["i"] },
+        { id: 1, value: ["j"] },
+      ],
+    },
+    qux: [
+      { id: 2, value: ["k"] },
+      { id: 1, value: ["l"] },
+    ],
+  };
+
+  const expected = {
+    foo: [
+      { id: 1, value: ["a", "h"] },
+      { id: 2, value: ["b", "g"] },
+    ],
+    bar: [1, 2, 3, 4, 5, 6],
+    baz: {
+      qux: [
+        { id: 1, value: ["c", "j"] },
+        { id: 2, value: ["d", "i"] },
+      ],
+    },
+    qux: [
+      { id: 1, value: ["e"] },
+      { id: 2, value: ["f"] },
+      { id: 2, value: ["k"] },
+      { id: 1, value: ["l"] },
+    ],
+  };
+
+  const customizedDeepmergeEntry = <K extends PropertyKey>(
+    ...idsPaths: ReadonlyArray<ReadonlyArray<K>>
+  ) => {
+    const mergeSettings: DeepMergeOptions<
+      ReadonlyArray<unknown>,
+      Readonly<Partial<{ id: unknown; key: PropertyKey }>>
+    > = {
+      metaDataUpdater: (previousMeta, metaMeta) => {
+        return [...previousMeta, metaMeta.key ?? metaMeta.id];
+      },
+      mergeArrays: (values, utils, meta) => {
+        const idPath = idsPaths.find((idPath) => {
+          const parentPath = idPath.slice(0, -1);
+          return (
+            parentPath.length === meta.length &&
+            parentPath.every((part, i) => part === meta[i])
+          );
+        });
+        if (idPath === undefined) {
+          return utils.defaultMergeFunctions.mergeArrays(values);
+        }
+
+        const id = idPath[idPath.length - 1];
+        const valuesById = values.reduce<Map<unknown, unknown[]>>(
+          (carry, current) => {
+            const currentElementsById = new Map<unknown, unknown>();
+            for (const element of current) {
+              if (!hasProp(element, id)) {
+                throw new Error("Invalid element type");
+              }
+              if (currentElementsById.has(element[id])) {
+                throw new Error("multiple elements with the same id");
+              }
+              currentElementsById.set(element[id], element);
+
+              const currentList = carry.get(element[id]) ?? [];
+              carry.set(element[id], [...currentList, element]);
+            }
+            return carry;
+          },
+          new Map<unknown, unknown[]>()
+        );
+
+        return [...valuesById.entries()].reduce<unknown[]>(
+          (carry, [id, values]) => {
+            const childMeta = utils.metaDataUpdater(meta, { id });
+            return [
+              ...carry,
+              deepmergeCustom(mergeSettings, childMeta)(...values),
+            ];
+          },
+          []
+        );
+      },
+    };
+
+    return deepmergeCustom(mergeSettings, []);
+  };
+
+  const merged = customizedDeepmergeEntry(["foo", "id"], ["baz", "qux", "id"])(
+    x,
+    y
+  );
 
   t.deepEqual(merged, expected);
 });
