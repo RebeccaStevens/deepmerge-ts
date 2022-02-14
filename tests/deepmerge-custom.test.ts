@@ -68,7 +68,7 @@ test("custom merge strings", (t) => {
 declare module "../src/types" {
   // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
   interface DeepMergeMergeFunctionURItoKind<
-    Ts extends Readonly<ReadonlyArray<unknown>>,
+    Ts extends ReadonlyArray<unknown>,
     MF extends DeepMergeMergeFunctionsURIs
   > {
     readonly CustomArrays1: string[];
@@ -113,11 +113,11 @@ test("custom merge arrays", (t) => {
 declare module "../src/types" {
   // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
   interface DeepMergeMergeFunctionURItoKind<
-    Ts extends Readonly<ReadonlyArray<unknown>>,
+    Ts extends ReadonlyArray<unknown>,
     MF extends DeepMergeMergeFunctionsURIs
   > {
     readonly CustomArrays2: Ts extends Readonly<readonly [...infer Es]>
-      ? Es extends Readonly<ReadonlyArray<unknown>>
+      ? Es extends ReadonlyArray<unknown>
         ? unknown[]
         : never
       : never;
@@ -188,7 +188,7 @@ test("custom merge arrays of records", (t) => {
 declare module "../src/types" {
   // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
   interface DeepMergeMergeFunctionURItoKind<
-    Ts extends Readonly<ReadonlyArray<unknown>>,
+    Ts extends ReadonlyArray<unknown>,
     MF extends DeepMergeMergeFunctionsURIs
   > {
     readonly CustomRecords3: Entries<DeepMergeRecordsDefaultHKT<Ts, MF>>;
@@ -238,7 +238,7 @@ test("custom merge records", (t) => {
 declare module "../src/types" {
   // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
   interface DeepMergeMergeFunctionURItoKind<
-    Ts extends Readonly<ReadonlyArray<unknown>>,
+    Ts extends ReadonlyArray<unknown>,
     MF extends DeepMergeMergeFunctionsURIs
   > {
     readonly NoArrayMerge1: DeepMergeLeaf<Ts>;
@@ -267,19 +267,20 @@ test("custom don't merge arrays", (t) => {
 declare module "../src/types" {
   // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
   interface DeepMergeMergeFunctionURItoKind<
-    Ts extends Readonly<ReadonlyArray<unknown>>,
+    Ts extends ReadonlyArray<unknown>,
     MF extends DeepMergeMergeFunctionsURIs
   > {
     readonly MergeDates1: EveryIsDate<Ts> extends true ? Ts : DeepMergeLeaf<Ts>;
   }
 }
 
-type EveryIsDate<Ts extends Readonly<ReadonlyArray<unknown>>> =
-  Ts extends Readonly<readonly [infer Head, ...infer Rest]>
-    ? Head extends Date
-      ? EveryIsDate<Rest>
-      : false
-    : true;
+type EveryIsDate<Ts extends ReadonlyArray<unknown>> = Ts extends Readonly<
+  readonly [infer Head, ...infer Rest]
+>
+  ? Head extends Date
+    ? EveryIsDate<Rest>
+    : false
+  : true;
 
 test("custom merge dates", (t) => {
   const x = { foo: new Date("2020-01-01") };
