@@ -37,7 +37,7 @@ This can be done using [Declaration Merging](https://www.typescriptlang.org/docs
 
 ```ts
 declare module "deepmerge-ts" {
-  interface DeepMergeMergeFunctionURItoKind<Ts extends ReadonlyArray<unknown>, MF extends DeepMergeMergeFunctionsURIs> {
+  interface DeepMergeMergeFunctionURItoKind<Ts extends ReadonlyArray<unknown>, MF extends DeepMergeMergeFunctionsURIs, M> {
     readonly MyCustomMergeURI: MyValue;
   }
 }
@@ -52,13 +52,13 @@ import { deepmergeCustom } from "deepmerge-ts";
 const customizedDeepmerge = deepmergeCustom<{
   DeepMergeOthersURI: "MyDeepMergeDatesURI"; // <-- Needed for correct output type.
 }>({
-  mergeOthers: (values, utils) => {
+  mergeOthers: (values, utils, meta) => {
     // If every value is a date, the return the amalgamated array.
     if (values.every((value) => value instanceof Date)) {
       return values;
     }
     // Otherwise, use the default merging strategy.
-    return utils.defaultMergeFunctions.mergeOthers(values, utils);
+    return utils.defaultMergeFunctions.mergeOthers(values);
   },
 });
 
@@ -71,7 +71,8 @@ customDeepmerge(x, y, z); // => { foo: [Date, Date, Date] }
 declare module "deepmerge-ts" {
   interface DeepMergeMergeFunctionURItoKind<
     Ts extends ReadonlyArray<unknown>,
-    MF extends DeepMergeMergeFunctionsURIs
+    MF extends DeepMergeMergeFunctionsURIs,
+    M
   > {
     readonly MyDeepMergeDatesURI: EveryIsDate<Ts> extends true ? Ts : DeepMergeLeaf<Ts>;
   }
@@ -85,6 +86,121 @@ type EveryIsDate<Ts extends ReadonlyArray<unknown>> = Ts extends readonly [infer
 ```
 
 Note: If you want to use HKTs in your own project, not related to deepmerge-ts, we recommend checking out [fp-ts](https://gcanti.github.io/fp-ts/modules/HKT.ts.html).
+
+## Meta Data
+
+We provide a simple object of meta data that states the key that the values being merged were under.
+
+Here's an example that creates a custom deepmerge function that merges numbers differently based on the key they were under.
+
+```ts
+import type { DeepMergeLeaf, DeepMergeMergeFunctionURItoKind, DeepMergeMergeFunctionsURIs } from "deepmerge-ts";
+import { deepmergeCustom } from "deepmerge-ts";
+
+const customizedDeepmerge = deepmergeCustom({
+  mergeOthers: (values, utils, meta) => {
+    if (areAllNumbers(values)) {
+      const { key } = meta;
+      const numbers: ReadonlyArray<number> = values;
+
+      if (key === "sum") {
+        return numbers.reduce((sum, value) => sum + value);
+      }
+      if (key === "product") {
+        return numbers.reduce((prod, value) => prod * value);
+      }
+      if (key === "mean") {
+        return numbers.reduce((sum, value) => sum + value) / numbers.length;
+      }
+    }
+
+    return utils.defaultMergeFunctions.mergeOthers(values);
+  },
+});
+
+function areAllNumbers(values: ReadonlyArray<unknown>): values is ReadonlyArray<number> {
+  return values.every((value) => typeof value === "number");
+}
+
+const v = { sum: 1, product: 2, mean: 3 };
+const x = { sum: 4, product: 5, mean: 6 };
+const y = { sum: 7, product: 8, mean: 9 };
+const z = { sum: 10, product: 11, mean: 12 };
+
+customizedDeepmerge(v, x, y, z); // => { sum: 22, product: 880, mean: 7.5 }
+```
+
+### Customizing the Meta Data
+
+You can customize the meta data that is passed to the merge functions by providing a `metaDataUpdater` function.
+
+Here's an example that uses custom metadata that accumulates the full key path.
+
+```ts
+import type { DeepMergeLeaf, DeepMergeMergeFunctionURItoKind, DeepMergeMergeFunctionsURIs } from "deepmerge-ts";
+import { deepmergeCustom } from "deepmerge-ts";
+
+const customizedDeepmerge = deepmergeCustom<
+  // Change the return type of `mergeOthers`.
+  {
+    DeepMergeOthersURI: "KeyPathBasedMerge";
+  },
+  // Change the meta data type.
+  {
+    key?: PropertyKey;
+    keyPath: ReadonlyArray<PropertyKey>;
+  }
+>(
+  {
+    // Customize what the actual meta data.
+    metaDataUpdater: (previousMeta, metaMeta) => {
+      return {
+        ...metaMeta,
+        keyPath: [...previousMeta.keyPath, metaMeta.key],
+      };
+    },
+    // Use the meta data when merging others.
+    mergeOthers: (values, utils, meta) => {
+      if (
+        meta.keyPath.length >= 2 &&
+        meta.keyPath[meta.keyPath.length - 2] === "bar" &&
+        meta.keyPath[meta.keyPath.length - 1] === "baz"
+      ) {
+        return "special merge";
+      }
+
+      return utils.defaultMergeFunctions.mergeOthers(values);
+    },
+  },
+  // Provide initial meta data.
+  {
+    keyPath: [],
+  }
+);
+
+const x = {
+  foo: { bar: { baz: 1, qux: 2 } },
+  bar: { baz: 3, qux: 4 },
+};
+const y = {
+  foo: { bar: { baz: 5, bar: { baz: 6, qux: 7 } } },
+  bar: { baz: 8, qux: 9 },
+};
+
+customizedDeepmerge(x, y); // => { foo: { bar: { baz: "special merge", bar: { baz: 6, qux: 7 }, qux: 2 } }, bar: { baz: "special merge", qux: 9 }, }
+
+declare module "../src/types" {
+  interface DeepMergeMergeFunctionURItoKind<
+    Ts extends Readonly<ReadonlyArray<unknown>>,
+    MF extends DeepMergeMergeFunctionsURIs,
+    M // This is the meta data type
+  > {
+    readonly KeyPathBasedMerge: Ts[number] extends number
+      ? Ts[number] | string
+      : DeepMergeLeaf<Ts>;
+  }
+}
+```
 
 ## API
 
