@@ -26,15 +26,15 @@ declare type IsRecord<T> = And<Not<IsNever<T>>, T extends Readonly<Record<Proper
 /**
  * Returns whether or not all the given types are records.
  */
-declare type EveryIsRecord<Ts extends Readonly<ReadonlyArray<unknown>>> = Ts extends Readonly<readonly [infer Head, ...infer Rest]> ? IsRecord<Head> extends true ? Rest extends Readonly<ReadonlyArray<unknown>> ? EveryIsRecord<Rest> : true : false : true;
+declare type EveryIsRecord<Ts extends ReadonlyArray<unknown>> = Ts extends readonly [infer Head, ...infer Rest] ? IsRecord<Head> extends true ? Rest extends ReadonlyArray<unknown> ? EveryIsRecord<Rest> : true : false : true;
 /**
  * Returns whether or not the given type is an array.
  */
-declare type IsArray<T> = And<Not<IsNever<T>>, T extends Readonly<ReadonlyArray<unknown>> ? true : false>;
+declare type IsArray<T> = And<Not<IsNever<T>>, T extends ReadonlyArray<unknown> ? true : false>;
 /**
  * Returns whether or not all the given types are arrays.
  */
-declare type EveryIsArray<Ts extends Readonly<ReadonlyArray<unknown>>> = Ts extends Readonly<readonly [infer T1]> ? IsArray<T1> : Ts extends Readonly<readonly [infer Head, ...infer Rest]> ? IsArray<Head> extends true ? Rest extends Readonly<readonly [unknown, ...Readonly<ReadonlyArray<unknown>>]> ? EveryIsArray<Rest> : false : false : false;
+declare type EveryIsArray<Ts extends ReadonlyArray<unknown>> = Ts extends readonly [infer T1] ? IsArray<T1> : Ts extends readonly [infer Head, ...infer Rest] ? IsArray<Head> extends true ? Rest extends readonly [unknown, ...ReadonlyArray<unknown>] ? EveryIsArray<Rest> : false : false : false;
 /**
  * Returns whether or not the given type is an set.
  *
@@ -46,7 +46,7 @@ declare type IsSet<T> = And<Not<IsNever<T>>, T extends Readonly<ReadonlySet<unkn
  *
  * Note: This may also return true if all are maps.
  */
-declare type EveryIsSet<Ts extends Readonly<ReadonlyArray<unknown>>> = Ts extends Readonly<readonly [infer T1]> ? IsSet<T1> : Ts extends Readonly<readonly [infer Head, ...infer Rest]> ? IsSet<Head> extends true ? Rest extends Readonly<readonly [unknown, ...Readonly<ReadonlyArray<unknown>>]> ? EveryIsSet<Rest> : false : false : false;
+declare type EveryIsSet<Ts extends ReadonlyArray<unknown>> = Ts extends Readonly<readonly [infer T1]> ? IsSet<T1> : Ts extends readonly [infer Head, ...infer Rest] ? IsSet<Head> extends true ? Rest extends readonly [unknown, ...ReadonlyArray<unknown>] ? EveryIsSet<Rest> : false : false : false;
 /**
  * Returns whether or not the given type is an map.
  */
@@ -54,7 +54,7 @@ declare type IsMap<T> = And<Not<IsNever<T>>, T extends Readonly<ReadonlyMap<unkn
 /**
  * Returns whether or not all the given types are maps.
  */
-declare type EveryIsMap<Ts extends Readonly<ReadonlyArray<unknown>>> = Ts extends Readonly<readonly [infer T1]> ? IsMap<T1> : Ts extends Readonly<readonly [infer Head, ...infer Rest]> ? IsMap<Head> extends true ? Rest extends Readonly<readonly [unknown, ...Readonly<ReadonlyArray<unknown>>]> ? EveryIsMap<Rest> : false : false : false;
+declare type EveryIsMap<Ts extends ReadonlyArray<unknown>> = Ts extends Readonly<readonly [infer T1]> ? IsMap<T1> : Ts extends readonly [infer Head, ...infer Rest] ? IsMap<Head> extends true ? Rest extends readonly [unknown, ...ReadonlyArray<unknown>] ? EveryIsMap<Rest> : false : false : false;
 /**
  * And operator for types.
  */
@@ -66,27 +66,27 @@ declare type Not<T extends boolean> = T extends true ? false : true;
 /**
  * Union of the sets' values' types
  */
-declare type UnionSetValues<Ts extends Readonly<ReadonlyArray<unknown>>> = UnionSetValuesHelper<Ts, never>;
+declare type UnionSetValues<Ts extends ReadonlyArray<unknown>> = UnionSetValuesHelper<Ts, never>;
 /**
  * Tail-recursive helper type for UnionSetValues.
  */
-declare type UnionSetValuesHelper<Ts extends Readonly<ReadonlyArray<unknown>>, Acc> = Ts extends readonly [infer Head, ...infer Rest] ? Head extends Readonly<ReadonlySet<infer V1>> ? Rest extends Readonly<ReadonlyArray<unknown>> ? UnionSetValuesHelper<Rest, Acc | V1> : Acc | V1 : never : Acc;
+declare type UnionSetValuesHelper<Ts extends ReadonlyArray<unknown>, Acc> = Ts extends readonly [infer Head, ...infer Rest] ? Head extends Readonly<ReadonlySet<infer V1>> ? Rest extends ReadonlyArray<unknown> ? UnionSetValuesHelper<Rest, Acc | V1> : Acc | V1 : never : Acc;
 /**
  * Union of the maps' values' types
  */
-declare type UnionMapKeys<Ts extends Readonly<ReadonlyArray<unknown>>> = UnionMapKeysHelper<Ts, never>;
+declare type UnionMapKeys<Ts extends ReadonlyArray<unknown>> = UnionMapKeysHelper<Ts, never>;
 /**
  * Tail-recursive helper type for UnionMapKeys.
  */
-declare type UnionMapKeysHelper<Ts extends Readonly<ReadonlyArray<unknown>>, Acc> = Ts extends readonly [infer Head, ...infer Rest] ? Head extends Readonly<ReadonlyMap<infer K1, unknown>> ? Rest extends readonly [] ? Acc | K1 : UnionMapKeysHelper<Rest, Acc | K1> : never : Acc;
+declare type UnionMapKeysHelper<Ts extends ReadonlyArray<unknown>, Acc> = Ts extends readonly [infer Head, ...infer Rest] ? Head extends Readonly<ReadonlyMap<infer K1, unknown>> ? Rest extends readonly [] ? Acc | K1 : UnionMapKeysHelper<Rest, Acc | K1> : never : Acc;
 /**
  * Union of the maps' keys' types
  */
-declare type UnionMapValues<Ts extends Readonly<ReadonlyArray<unknown>>> = UnionMapValuesHelper<Ts, never>;
+declare type UnionMapValues<Ts extends ReadonlyArray<unknown>> = UnionMapValuesHelper<Ts, never>;
 /**
  * Tail-recursive helper type for UnionMapValues.
  */
-declare type UnionMapValuesHelper<Ts extends Readonly<ReadonlyArray<unknown>>, Acc> = Ts extends readonly [infer Head, ...infer Rest] ? Head extends Readonly<ReadonlyMap<unknown, infer V1>> ? Rest extends readonly [] ? Acc | V1 : UnionMapValuesHelper<Rest, Acc | V1> : never : Acc;
+declare type UnionMapValuesHelper<Ts extends ReadonlyArray<unknown>, Acc> = Ts extends readonly [infer Head, ...infer Rest] ? Head extends Readonly<ReadonlyMap<unknown, infer V1>> ? Rest extends readonly [] ? Acc | V1 : UnionMapValuesHelper<Rest, Acc | V1> : never : Acc;
 /**
  * Get the keys of the type what match a certain criteria.
  */
@@ -100,11 +100,11 @@ declare type RequiredKeys<T> = Exclude<KeysOfType<T, Exclude<T[keyof T], undefin
 /**
  * Get all the required keys on the types in the tuple.
  */
-declare type RequiredKeysOf<Ts extends Readonly<readonly [unknown, ...Readonly<ReadonlyArray<unknown>>]>> = RequiredKeysOfHelper<Ts, never>;
+declare type RequiredKeysOf<Ts extends readonly [unknown, ...ReadonlyArray<unknown>]> = RequiredKeysOfHelper<Ts, never>;
 /**
  * Tail-recursive helper type for RequiredKeysOf.
  */
-declare type RequiredKeysOfHelper<Ts extends Readonly<readonly [unknown, ...Readonly<ReadonlyArray<unknown>>]>, Acc> = Ts extends Readonly<readonly [infer Head, ...infer Rest]> ? Head extends Record<PropertyKey, unknown> ? Rest extends Readonly<readonly [unknown, ...Readonly<ReadonlyArray<unknown>>]> ? RequiredKeysOfHelper<Rest, Acc | RequiredKeys<Head>> : Acc | RequiredKeys<Head> : never : Acc;
+declare type RequiredKeysOfHelper<Ts extends readonly [unknown, ...ReadonlyArray<unknown>], Acc> = Ts extends readonly [infer Head, ...infer Rest] ? Head extends Record<PropertyKey, unknown> ? Rest extends readonly [unknown, ...ReadonlyArray<unknown>] ? RequiredKeysOfHelper<Rest, Acc | RequiredKeys<Head>> : Acc | RequiredKeys<Head> : never : Acc;
 /**
  * Get the optional keys of the type.
  */
@@ -112,42 +112,42 @@ declare type OptionalKeys<T> = Exclude<keyof T, RequiredKeys<T>>;
 /**
  * Get all the optional keys on the types in the tuple.
  */
-declare type OptionalKeysOf<Ts extends Readonly<readonly [unknown, ...Readonly<ReadonlyArray<unknown>>]>> = OptionalKeysOfHelper<Ts, never>;
+declare type OptionalKeysOf<Ts extends readonly [unknown, ...ReadonlyArray<unknown>]> = OptionalKeysOfHelper<Ts, never>;
 /**
  * Tail-recursive helper type for OptionalKeysOf.
  */
-declare type OptionalKeysOfHelper<Ts extends Readonly<readonly [unknown, ...Readonly<ReadonlyArray<unknown>>]>, Acc> = Ts extends readonly [infer Head, ...infer Rest] ? Head extends Record<PropertyKey, unknown> ? Rest extends Readonly<readonly [unknown, ...Readonly<ReadonlyArray<unknown>>]> ? OptionalKeysOfHelper<Rest, Acc | OptionalKeys<Head>> : Acc | OptionalKeys<Head> : never : Acc;
+declare type OptionalKeysOfHelper<Ts extends readonly [unknown, ...ReadonlyArray<unknown>], Acc> = Ts extends readonly [infer Head, ...infer Rest] ? Head extends Record<PropertyKey, unknown> ? Rest extends readonly [unknown, ...ReadonlyArray<unknown>] ? OptionalKeysOfHelper<Rest, Acc | OptionalKeys<Head>> : Acc | OptionalKeys<Head> : never : Acc;
 /**
  * Filter out nevers from a tuple.
  */
-declare type FilterOutNever<T extends Readonly<ReadonlyArray<unknown>>> = FilterOutNeverHelper<T, []>;
+declare type FilterOutNever<T extends ReadonlyArray<unknown>> = FilterOutNeverHelper<T, []>;
 /**
  * Tail-recursive helper type for FilterOutNever.
  */
-declare type FilterOutNeverHelper<T extends Readonly<ReadonlyArray<unknown>>, Acc extends Readonly<ReadonlyArray<unknown>>> = T extends Readonly<readonly []> ? Acc : T extends Readonly<readonly [infer Head, ...infer Rest]> ? IsNever<Head> extends true ? FilterOutNeverHelper<Rest, Acc> : FilterOutNeverHelper<Rest, [...Acc, Head]> : T;
+declare type FilterOutNeverHelper<T extends ReadonlyArray<unknown>, Acc extends ReadonlyArray<unknown>> = T extends readonly [] ? Acc : T extends readonly [infer Head, ...infer Rest] ? IsNever<Head> extends true ? FilterOutNeverHelper<Rest, Acc> : FilterOutNeverHelper<Rest, [...Acc, Head]> : T;
 /**
  * Is the type a tuple?
  */
-declare type IsTuple<T extends Readonly<ReadonlyArray<unknown>>> = T extends Readonly<readonly []> ? true : T extends Readonly<readonly [unknown, ...Readonly<ReadonlyArray<unknown>>]> ? true : false;
+declare type IsTuple<T extends ReadonlyArray<unknown>> = T extends readonly [] ? true : T extends readonly [unknown, ...ReadonlyArray<unknown>] ? true : false;
 
 /**
  * Mapping of merge function URIs to the merge function type.
  */
-interface DeepMergeMergeFunctionURItoKind<Ts extends Readonly<ReadonlyArray<unknown>>, MF extends DeepMergeMergeFunctionsURIs> {
-    readonly DeepMergeLeafURI: DeepMergeLeafHKT<Ts, MF>;
+interface DeepMergeMergeFunctionURItoKind<Ts extends ReadonlyArray<unknown>, MF extends DeepMergeMergeFunctionsURIs> {
+    readonly DeepMergeLeafURI: DeepMergeLeafHKT<Ts>;
     readonly DeepMergeRecordsDefaultURI: DeepMergeRecordsDefaultHKT<Ts, MF>;
     readonly DeepMergeArraysDefaultURI: DeepMergeArraysDefaultHKT<Ts, MF>;
-    readonly DeepMergeSetsDefaultURI: DeepMergeSetsDefaultHKT<Ts, MF>;
-    readonly DeepMergeMapsDefaultURI: DeepMergeMapsDefaultHKT<Ts, MF>;
+    readonly DeepMergeSetsDefaultURI: DeepMergeSetsDefaultHKT<Ts>;
+    readonly DeepMergeMapsDefaultURI: DeepMergeMapsDefaultHKT<Ts>;
 }
 /**
  * Get the type of the given merge function via its URI.
  */
-declare type DeepMergeMergeFunctionKind<URI extends DeepMergeMergeFunctionURIs, Ts extends Readonly<ReadonlyArray<unknown>>, MF extends DeepMergeMergeFunctionsURIs> = DeepMergeMergeFunctionURItoKind<Ts, MF>[URI];
+declare type DeepMergeMergeFunctionKind<URI extends DeepMergeMergeFunctionURIs, Ts extends ReadonlyArray<unknown>, MF extends DeepMergeMergeFunctionsURIs> = DeepMergeMergeFunctionURItoKind<Ts, MF>[URI];
 /**
  * A union of all valid merge function URIs.
  */
-declare type DeepMergeMergeFunctionURIs = keyof DeepMergeMergeFunctionURItoKind<Readonly<ReadonlyArray<unknown>>, DeepMergeMergeFunctionsURIs>;
+declare type DeepMergeMergeFunctionURIs = keyof DeepMergeMergeFunctionURItoKind<ReadonlyArray<unknown>, DeepMergeMergeFunctionsURIs>;
 /**
  * The merge functions to use when deep merging.
  */
@@ -176,27 +176,27 @@ declare type DeepMergeMergeFunctionsURIs = Readonly<{
 /**
  * Deep merge types.
  */
-declare type DeepMergeHKT<Ts extends Readonly<ReadonlyArray<unknown>>, MF extends DeepMergeMergeFunctionsURIs> = IsTuple<Ts> extends true ? Ts extends Readonly<readonly []> ? undefined : Ts extends Readonly<readonly [infer T1]> ? T1 : EveryIsArray<Ts> extends true ? DeepMergeArraysHKT<Ts, MF> : EveryIsMap<Ts> extends true ? DeepMergeMapsHKT<Ts, MF> : EveryIsSet<Ts> extends true ? DeepMergeSetsHKT<Ts, MF> : EveryIsRecord<Ts> extends true ? DeepMergeRecordsHKT<Ts, MF> : DeepMergeOthersHKT<Ts, MF> : unknown;
+declare type DeepMergeHKT<Ts extends ReadonlyArray<unknown>, MF extends DeepMergeMergeFunctionsURIs> = IsTuple<Ts> extends true ? Ts extends readonly [] ? undefined : Ts extends readonly [infer T1] ? T1 : EveryIsArray<Ts> extends true ? DeepMergeArraysHKT<Ts, MF> : EveryIsMap<Ts> extends true ? DeepMergeMapsHKT<Ts, MF> : EveryIsSet<Ts> extends true ? DeepMergeSetsHKT<Ts, MF> : EveryIsRecord<Ts> extends true ? DeepMergeRecordsHKT<Ts, MF> : DeepMergeOthersHKT<Ts, MF> : unknown;
 /**
  * Deep merge records.
  */
-declare type DeepMergeRecordsHKT<Ts extends Readonly<ReadonlyArray<unknown>>, MF extends DeepMergeMergeFunctionsURIs> = DeepMergeMergeFunctionKind<MF["DeepMergeRecordsURI"], Ts, MF>;
+declare type DeepMergeRecordsHKT<Ts extends ReadonlyArray<unknown>, MF extends DeepMergeMergeFunctionsURIs> = DeepMergeMergeFunctionKind<MF["DeepMergeRecordsURI"], Ts, MF>;
 /**
  * Deep merge arrays.
  */
-declare type DeepMergeArraysHKT<Ts extends Readonly<ReadonlyArray<unknown>>, MF extends DeepMergeMergeFunctionsURIs> = DeepMergeMergeFunctionKind<MF["DeepMergeArraysURI"], Ts, MF>;
+declare type DeepMergeArraysHKT<Ts extends ReadonlyArray<unknown>, MF extends DeepMergeMergeFunctionsURIs> = DeepMergeMergeFunctionKind<MF["DeepMergeArraysURI"], Ts, MF>;
 /**
  * Deep merge sets.
  */
-declare type DeepMergeSetsHKT<Ts extends Readonly<ReadonlyArray<unknown>>, MF extends DeepMergeMergeFunctionsURIs> = DeepMergeMergeFunctionKind<MF["DeepMergeSetsURI"], Ts, MF>;
+declare type DeepMergeSetsHKT<Ts extends ReadonlyArray<unknown>, MF extends DeepMergeMergeFunctionsURIs> = DeepMergeMergeFunctionKind<MF["DeepMergeSetsURI"], Ts, MF>;
 /**
  * Deep merge maps.
  */
-declare type DeepMergeMapsHKT<Ts extends Readonly<ReadonlyArray<unknown>>, MF extends DeepMergeMergeFunctionsURIs> = DeepMergeMergeFunctionKind<MF["DeepMergeMapsURI"], Ts, MF>;
+declare type DeepMergeMapsHKT<Ts extends ReadonlyArray<unknown>, MF extends DeepMergeMergeFunctionsURIs> = DeepMergeMergeFunctionKind<MF["DeepMergeMapsURI"], Ts, MF>;
 /**
  * Deep merge other things.
  */
-declare type DeepMergeOthersHKT<Ts extends Readonly<ReadonlyArray<unknown>>, MF extends DeepMergeMergeFunctionsURIs> = DeepMergeMergeFunctionKind<MF["DeepMergeOthersURI"], Ts, MF>;
+declare type DeepMergeOthersHKT<Ts extends ReadonlyArray<unknown>, MF extends DeepMergeMergeFunctionsURIs> = DeepMergeMergeFunctionKind<MF["DeepMergeOthersURI"], Ts, MF>;
 /**
  * The merge function that returns a leaf.
  */
@@ -204,11 +204,11 @@ declare type DeepMergeLeafURI = "DeepMergeLeafURI";
 /**
  * Get the leaf type from 2 types that can't be merged.
  */
-declare type DeepMergeLeafHKT<Ts extends Readonly<ReadonlyArray<unknown>>, MF extends DeepMergeMergeFunctionsURIs> = DeepMergeLeaf<Ts>;
+declare type DeepMergeLeafHKT<Ts extends ReadonlyArray<unknown>> = DeepMergeLeaf<Ts>;
 /**
  * Get the leaf type from many types that can't be merged.
  */
-declare type DeepMergeLeaf<Ts extends Readonly<ReadonlyArray<unknown>>> = Ts extends Readonly<readonly []> ? never : Ts extends Readonly<readonly [infer T]> ? T : Ts extends Readonly<readonly [...infer Rest, infer Tail]> ? IsNever<Tail> extends true ? Rest extends Readonly<ReadonlyArray<unknown>> ? DeepMergeLeaf<Rest> : never : Tail : never;
+declare type DeepMergeLeaf<Ts extends ReadonlyArray<unknown>> = Ts extends readonly [] ? never : Ts extends readonly [infer T] ? T : Ts extends readonly [...infer Rest, infer Tail] ? IsNever<Tail> extends true ? Rest extends ReadonlyArray<unknown> ? DeepMergeLeaf<Rest> : never : Tail : never;
 
 /**
  * The default merge function to merge records with.
@@ -244,11 +244,11 @@ declare type BlacklistedRecordProps = "__proto__";
 /**
  * Deep merge records.
  */
-declare type DeepMergeRecordsDefaultHKT<Ts extends Readonly<ReadonlyArray<unknown>>, MF extends DeepMergeMergeFunctionsURIs> = Ts extends Readonly<readonly [unknown, ...Readonly<ReadonlyArray<unknown>>]> ? FlatternAlias<Omit<DeepMergeRecordsDefaultHKTInternalProps<Ts, MF>, BlacklistedRecordProps>> : {};
+declare type DeepMergeRecordsDefaultHKT<Ts extends ReadonlyArray<unknown>, MF extends DeepMergeMergeFunctionsURIs> = Ts extends readonly [unknown, ...ReadonlyArray<unknown>] ? FlatternAlias<Omit<DeepMergeRecordsDefaultHKTInternalProps<Ts, MF>, BlacklistedRecordProps>> : {};
 /**
  * Deep merge record props.
  */
-declare type DeepMergeRecordsDefaultHKTInternalProps<Ts extends Readonly<readonly [unknown, ...Readonly<ReadonlyArray<unknown>>]>, MF extends DeepMergeMergeFunctionsURIs> = {
+declare type DeepMergeRecordsDefaultHKTInternalProps<Ts extends readonly [unknown, ...ReadonlyArray<unknown>], MF extends DeepMergeMergeFunctionsURIs> = {
     [K in OptionalKeysOf<Ts>]?: DeepMergeHKT<DeepMergeRecordsDefaultHKTInternalPropValue<Ts, K>, MF>;
 } & {
     [K in RequiredKeysOf<Ts>]: DeepMergeHKT<DeepMergeRecordsDefaultHKTInternalPropValue<Ts, K>, MF>;
@@ -256,33 +256,33 @@ declare type DeepMergeRecordsDefaultHKTInternalProps<Ts extends Readonly<readonl
 /**
  * Get the value of the property.
  */
-declare type DeepMergeRecordsDefaultHKTInternalPropValue<Ts extends Readonly<readonly [unknown, ...Readonly<ReadonlyArray<unknown>>]>, K extends PropertyKey> = FilterOutNever<DeepMergeRecordsDefaultHKTInternalPropValueHelper<Ts, K, Readonly<readonly []>>>;
+declare type DeepMergeRecordsDefaultHKTInternalPropValue<Ts extends readonly [unknown, ...ReadonlyArray<unknown>], K extends PropertyKey> = FilterOutNever<DeepMergeRecordsDefaultHKTInternalPropValueHelper<Ts, K, readonly []>>;
 /**
  * Tail-recursive helper type for DeepMergeRecordsDefaultHKTInternalPropValue.
  */
-declare type DeepMergeRecordsDefaultHKTInternalPropValueHelper<Ts extends Readonly<readonly [unknown, ...Readonly<ReadonlyArray<unknown>>]>, K extends PropertyKey, Acc extends Readonly<ReadonlyArray<unknown>>> = Ts extends Readonly<readonly [infer Head, ...infer Rest]> ? Head extends Record<PropertyKey, unknown> ? Rest extends Readonly<readonly [unknown, ...Readonly<ReadonlyArray<unknown>>]> ? DeepMergeRecordsDefaultHKTInternalPropValueHelper<Rest, K, [
+declare type DeepMergeRecordsDefaultHKTInternalPropValueHelper<Ts extends readonly [unknown, ...ReadonlyArray<unknown>], K extends PropertyKey, Acc extends ReadonlyArray<unknown>> = Ts extends readonly [infer Head, ...infer Rest] ? Head extends Record<PropertyKey, unknown> ? Rest extends readonly [unknown, ...ReadonlyArray<unknown>] ? DeepMergeRecordsDefaultHKTInternalPropValueHelper<Rest, K, [
     ...Acc,
     ValueOfKey<Head, K>
 ]> : [...Acc, ValueOfKey<Head, K>] : never : never;
 /**
  * Deep merge 2 arrays.
  */
-declare type DeepMergeArraysDefaultHKT<Ts extends Readonly<ReadonlyArray<unknown>>, MF extends DeepMergeMergeFunctionsURIs> = DeepMergeArraysDefaultHKTHelper<Ts, MF, []>;
+declare type DeepMergeArraysDefaultHKT<Ts extends ReadonlyArray<unknown>, MF extends DeepMergeMergeFunctionsURIs> = DeepMergeArraysDefaultHKTHelper<Ts, MF, []>;
 /**
  * Tail-recursive helper type for DeepMergeArraysDefaultHKT.
  */
-declare type DeepMergeArraysDefaultHKTHelper<Ts extends Readonly<ReadonlyArray<unknown>>, MF extends DeepMergeMergeFunctionsURIs, Acc extends Readonly<ReadonlyArray<unknown>>> = Ts extends readonly [infer Head, ...infer Rest] ? Head extends Readonly<ReadonlyArray<unknown>> ? Rest extends readonly [
-    Readonly<ReadonlyArray<unknown>>,
-    ...Readonly<ReadonlyArray<Readonly<ReadonlyArray<unknown>>>>
+declare type DeepMergeArraysDefaultHKTHelper<Ts extends ReadonlyArray<unknown>, MF extends DeepMergeMergeFunctionsURIs, Acc extends ReadonlyArray<unknown>> = Ts extends readonly [infer Head, ...infer Rest] ? Head extends ReadonlyArray<unknown> ? Rest extends readonly [
+    ReadonlyArray<unknown>,
+    ...ReadonlyArray<ReadonlyArray<unknown>>
 ] ? DeepMergeArraysDefaultHKTHelper<Rest, MF, [...Acc, ...Head]> : [...Acc, ...Head] : never : never;
 /**
  * Deep merge 2 sets.
  */
-declare type DeepMergeSetsDefaultHKT<Ts extends Readonly<ReadonlyArray<unknown>>, MF extends DeepMergeMergeFunctionsURIs> = Set<UnionSetValues<Ts>>;
+declare type DeepMergeSetsDefaultHKT<Ts extends ReadonlyArray<unknown>> = Set<UnionSetValues<Ts>>;
 /**
  * Deep merge 2 maps.
  */
-declare type DeepMergeMapsDefaultHKT<Ts extends Readonly<ReadonlyArray<unknown>>, MF extends DeepMergeMergeFunctionsURIs> = Map<UnionMapKeys<Ts>, UnionMapValues<Ts>>;
+declare type DeepMergeMapsDefaultHKT<Ts extends ReadonlyArray<unknown>> = Map<UnionMapKeys<Ts>, UnionMapValues<Ts>>;
 /**
  * Get the merge functions with defaults apply from the given subset.
  */
@@ -312,11 +312,11 @@ declare type DeepMergeOptionsFull = Readonly<{
  * All the merge functions that deepmerge uses.
  */
 declare type DeepMergeMergeFunctions = Readonly<{
-    mergeRecords: <Ts extends Readonly<ReadonlyArray<Readonly<Record<PropertyKey, unknown>>>>, U extends DeepMergeMergeFunctionUtils>(records: Ts, utils: U) => unknown;
-    mergeArrays: <Ts extends Readonly<ReadonlyArray<Readonly<ReadonlyArray<unknown>>>>, U extends DeepMergeMergeFunctionUtils>(records: Ts, utils: U) => unknown;
-    mergeMaps: <Ts extends Readonly<ReadonlyArray<Readonly<ReadonlyMap<unknown, unknown>>>>, U extends DeepMergeMergeFunctionUtils>(records: Ts, utils: U) => unknown;
-    mergeSets: <Ts extends Readonly<ReadonlyArray<Readonly<ReadonlySet<unknown>>>>, U extends DeepMergeMergeFunctionUtils>(records: Ts, utils: U) => unknown;
-    mergeOthers: <Ts extends Readonly<ReadonlyArray<unknown>>, U extends DeepMergeMergeFunctionUtils>(records: Ts, utils: U) => unknown;
+    mergeRecords: <Ts extends ReadonlyArray<Readonly<Record<PropertyKey, unknown>>>, U extends DeepMergeMergeFunctionUtils>(records: Ts, utils: U) => unknown;
+    mergeArrays: <Ts extends ReadonlyArray<ReadonlyArray<unknown>>, U extends DeepMergeMergeFunctionUtils>(records: Ts, utils: U) => unknown;
+    mergeMaps: <Ts extends ReadonlyArray<Readonly<ReadonlyMap<unknown, unknown>>>, U extends DeepMergeMergeFunctionUtils>(records: Ts, utils: U) => unknown;
+    mergeSets: <Ts extends ReadonlyArray<Readonly<ReadonlySet<unknown>>>, U extends DeepMergeMergeFunctionUtils>(records: Ts, utils: U) => unknown;
+    mergeOthers: <Ts extends ReadonlyArray<unknown>, U extends DeepMergeMergeFunctionUtils>(records: Ts, utils: U) => unknown;
 }>;
 /**
  * The utils provided to the merge functions.
@@ -324,10 +324,10 @@ declare type DeepMergeMergeFunctions = Readonly<{
 declare type DeepMergeMergeFunctionUtils = Readonly<{
     mergeFunctions: DeepMergeMergeFunctions;
     defaultMergeFunctions: DeepMergeMergeFunctionsDefaults;
-    deepmerge: <Ts extends Readonly<ReadonlyArray<unknown>>>(...values: Ts) => unknown;
+    deepmerge: <Ts extends ReadonlyArray<unknown>>(...values: Ts) => unknown;
 }>;
 
-declare const defaultOptions: {
+declare const defaultMergeFunctions: {
     readonly mergeMaps: typeof mergeMaps;
     readonly mergeSets: typeof mergeSets;
     readonly mergeArrays: typeof mergeArrays;
@@ -337,48 +337,48 @@ declare const defaultOptions: {
 /**
  * The default merge functions.
  */
-declare type DeepMergeMergeFunctionsDefaults = typeof defaultOptions;
+declare type DeepMergeMergeFunctionsDefaults = typeof defaultMergeFunctions;
 /**
  * Deeply merge objects.
  *
  * @param objects - The objects to merge.
  */
-declare function deepmerge<Ts extends Readonly<ReadonlyArray<unknown>>>(...objects: Readonly<readonly [...Ts]>): DeepMergeHKT<Ts, DeepMergeMergeFunctionsDefaultURIs>;
+declare function deepmerge<Ts extends ReadonlyArray<unknown>>(...objects: readonly [...Ts]): DeepMergeHKT<Ts, DeepMergeMergeFunctionsDefaultURIs>;
 /**
  * Deeply merge two or more objects using the given options.
  *
  * @param options - The options on how to customize the merge function.
  */
-declare function deepmergeCustom<PMF extends Partial<DeepMergeMergeFunctionsURIs>>(options: DeepMergeOptions): <Ts extends Readonly<ReadonlyArray<unknown>>>(...objects: Ts) => DeepMergeHKT<Ts, GetDeepMergeMergeFunctionsURIs<PMF>>;
+declare function deepmergeCustom<PMF extends Partial<DeepMergeMergeFunctionsURIs>>(options: DeepMergeOptions): <Ts extends ReadonlyArray<unknown>>(...objects: Ts) => DeepMergeHKT<Ts, GetDeepMergeMergeFunctionsURIs<PMF>>;
 /**
  * Merge records.
  *
  * @param values - The records.
  */
-declare function mergeRecords<Ts extends Readonly<ReadonlyArray<Record<PropertyKey, unknown>>>, U extends DeepMergeMergeFunctionUtils, MF extends DeepMergeMergeFunctionsURIs>(values: Ts, utils: U): DeepMergeRecordsDefaultHKT<Ts, MF>;
+declare function mergeRecords<Ts extends ReadonlyArray<Record<PropertyKey, unknown>>, U extends DeepMergeMergeFunctionUtils, MF extends DeepMergeMergeFunctionsURIs>(values: Ts, utils: U): DeepMergeRecordsDefaultHKT<Ts, MF>;
 /**
  * Merge arrays.
  *
  * @param values - The arrays.
  */
-declare function mergeArrays<Ts extends Readonly<ReadonlyArray<Readonly<ReadonlyArray<unknown>>>>, U extends DeepMergeMergeFunctionUtils, MF extends DeepMergeMergeFunctionsURIs>(values: Ts, utils: U): Ts extends readonly [infer Head, ...infer Rest] ? Head extends readonly unknown[] ? Rest extends readonly [readonly unknown[], ...(readonly unknown[])[]] ? Rest extends readonly [infer Head, ...infer Rest] ? Head extends readonly unknown[] ? Rest extends readonly [readonly unknown[], ...(readonly unknown[])[]] ? Rest extends readonly [infer Head, ...infer Rest] ? Head extends readonly unknown[] ? Rest extends readonly [readonly unknown[], ...(readonly unknown[])[]] ? Rest extends readonly [infer Head, ...infer Rest] ? Head extends readonly unknown[] ? Rest extends readonly [readonly unknown[], ...(readonly unknown[])[]] ? Rest extends readonly [infer Head, ...infer Rest] ? Head extends readonly unknown[] ? Rest extends readonly [readonly unknown[], ...(readonly unknown[])[]] ? Rest extends readonly [infer Head, ...infer Rest] ? Head extends readonly unknown[] ? Rest extends readonly [readonly unknown[], ...(readonly unknown[])[]] ? Rest extends readonly [infer Head, ...infer Rest] ? Head extends readonly unknown[] ? Rest extends readonly [readonly unknown[], ...(readonly unknown[])[]] ? Rest extends readonly [infer Head, ...infer Rest] ? Head extends readonly unknown[] ? Rest extends readonly [readonly unknown[], ...(readonly unknown[])[]] ? Rest extends readonly [infer Head, ...infer Rest] ? Head extends readonly unknown[] ? Rest extends readonly [readonly unknown[], ...(readonly unknown[])[]] ? Rest extends readonly [infer Head, ...infer Rest] ? Head extends readonly unknown[] ? Rest extends readonly [readonly unknown[], ...(readonly unknown[])[]] ? Rest extends readonly [infer Head, ...infer Rest] ? Head extends readonly unknown[] ? Rest extends readonly [readonly unknown[], ...(readonly unknown[])[]] ? any : [...Head, ...Head, ...Head, ...Head, ...Head, ...Head, ...Head, ...Head, ...Head, ...Head, ...Head] : never : never : [...Head, ...Head, ...Head, ...Head, ...Head, ...Head, ...Head, ...Head, ...Head, ...Head] : never : never : [...Head, ...Head, ...Head, ...Head, ...Head, ...Head, ...Head, ...Head, ...Head] : never : never : [...Head, ...Head, ...Head, ...Head, ...Head, ...Head, ...Head, ...Head] : never : never : [...Head, ...Head, ...Head, ...Head, ...Head, ...Head, ...Head] : never : never : [...Head, ...Head, ...Head, ...Head, ...Head, ...Head] : never : never : [...Head, ...Head, ...Head, ...Head, ...Head] : never : never : [...Head, ...Head, ...Head, ...Head] : never : never : [...Head, ...Head, ...Head] : never : never : [...Head, ...Head] : never : never : [...Head] : never : never;
+declare function mergeArrays<Ts extends ReadonlyArray<ReadonlyArray<unknown>>, MF extends DeepMergeMergeFunctionsURIs>(values: Ts): Ts extends readonly [infer Head, ...infer Rest] ? Head extends readonly unknown[] ? Rest extends readonly [readonly unknown[], ...(readonly unknown[])[]] ? Rest extends readonly [infer Head, ...infer Rest] ? Head extends readonly unknown[] ? Rest extends readonly [readonly unknown[], ...(readonly unknown[])[]] ? Rest extends readonly [infer Head, ...infer Rest] ? Head extends readonly unknown[] ? Rest extends readonly [readonly unknown[], ...(readonly unknown[])[]] ? Rest extends readonly [infer Head, ...infer Rest] ? Head extends readonly unknown[] ? Rest extends readonly [readonly unknown[], ...(readonly unknown[])[]] ? Rest extends readonly [infer Head, ...infer Rest] ? Head extends readonly unknown[] ? Rest extends readonly [readonly unknown[], ...(readonly unknown[])[]] ? Rest extends readonly [infer Head, ...infer Rest] ? Head extends readonly unknown[] ? Rest extends readonly [readonly unknown[], ...(readonly unknown[])[]] ? Rest extends readonly [infer Head, ...infer Rest] ? Head extends readonly unknown[] ? Rest extends readonly [readonly unknown[], ...(readonly unknown[])[]] ? Rest extends readonly [infer Head, ...infer Rest] ? Head extends readonly unknown[] ? Rest extends readonly [readonly unknown[], ...(readonly unknown[])[]] ? Rest extends readonly [infer Head, ...infer Rest] ? Head extends readonly unknown[] ? Rest extends readonly [readonly unknown[], ...(readonly unknown[])[]] ? Rest extends readonly [infer Head, ...infer Rest] ? Head extends readonly unknown[] ? Rest extends readonly [readonly unknown[], ...(readonly unknown[])[]] ? Rest extends readonly [infer Head, ...infer Rest] ? Head extends readonly unknown[] ? Rest extends readonly [readonly unknown[], ...(readonly unknown[])[]] ? any : [...Head, ...Head, ...Head, ...Head, ...Head, ...Head, ...Head, ...Head, ...Head, ...Head, ...Head] : never : never : [...Head, ...Head, ...Head, ...Head, ...Head, ...Head, ...Head, ...Head, ...Head, ...Head] : never : never : [...Head, ...Head, ...Head, ...Head, ...Head, ...Head, ...Head, ...Head, ...Head] : never : never : [...Head, ...Head, ...Head, ...Head, ...Head, ...Head, ...Head, ...Head] : never : never : [...Head, ...Head, ...Head, ...Head, ...Head, ...Head, ...Head] : never : never : [...Head, ...Head, ...Head, ...Head, ...Head, ...Head] : never : never : [...Head, ...Head, ...Head, ...Head, ...Head] : never : never : [...Head, ...Head, ...Head, ...Head] : never : never : [...Head, ...Head, ...Head] : never : never : [...Head, ...Head] : never : never : [...Head] : never : never;
 /**
  * Merge sets.
  *
  * @param values - The sets.
  */
-declare function mergeSets<Ts extends Readonly<ReadonlyArray<Readonly<ReadonlySet<unknown>>>>, U extends DeepMergeMergeFunctionUtils, MF extends DeepMergeMergeFunctionsURIs>(values: Ts, utils: U): DeepMergeSetsDefaultHKT<Ts, MF>;
+declare function mergeSets<Ts extends ReadonlyArray<Readonly<ReadonlySet<unknown>>>>(values: Ts): DeepMergeSetsDefaultHKT<Ts>;
 /**
  * Merge maps.
  *
  * @param values - The maps.
  */
-declare function mergeMaps<Ts extends Readonly<ReadonlyArray<Readonly<ReadonlyMap<unknown, unknown>>>>, U extends DeepMergeMergeFunctionUtils, MF extends DeepMergeMergeFunctionsURIs>(values: Ts, utils: U): DeepMergeMapsDefaultHKT<Ts, MF>;
+declare function mergeMaps<Ts extends ReadonlyArray<Readonly<ReadonlyMap<unknown, unknown>>>>(values: Ts): DeepMergeMapsDefaultHKT<Ts>;
 /**
  * Merge "other" things.
  *
  * @param values - The values.
  */
-declare function leaf<Ts extends Readonly<ReadonlyArray<unknown>>, U extends DeepMergeMergeFunctionUtils, MF extends DeepMergeMergeFunctionsURIs>(values: Ts, utils: U): unknown;
+declare function leaf<Ts extends ReadonlyArray<unknown>>(values: Ts): unknown;
 
 export { DeepMergeArraysDefaultHKT, DeepMergeHKT, DeepMergeLeaf, DeepMergeLeafHKT, DeepMergeLeafURI, DeepMergeMapsDefaultHKT, DeepMergeMergeFunctionURItoKind, DeepMergeMergeFunctionUtils, DeepMergeMergeFunctionsDefaultURIs, DeepMergeMergeFunctionsDefaults, DeepMergeMergeFunctionsURIs, DeepMergeOptions, DeepMergeRecordsDefaultHKT, DeepMergeSetsDefaultHKT, deepmerge, deepmergeCustom };

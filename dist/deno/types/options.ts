@@ -21,7 +21,7 @@ type DeepMergeOptionsFull = Readonly<{
  */
 type DeepMergeMergeFunctions = Readonly<{
   mergeRecords: <
-    Ts extends Readonly<ReadonlyArray<Readonly<Record<PropertyKey, unknown>>>>,
+    Ts extends ReadonlyArray<Readonly<Record<PropertyKey, unknown>>>,
     U extends DeepMergeMergeFunctionUtils
   >(
     records: Ts,
@@ -29,7 +29,7 @@ type DeepMergeMergeFunctions = Readonly<{
   ) => unknown;
 
   mergeArrays: <
-    Ts extends Readonly<ReadonlyArray<Readonly<ReadonlyArray<unknown>>>>,
+    Ts extends ReadonlyArray<ReadonlyArray<unknown>>,
     U extends DeepMergeMergeFunctionUtils
   >(
     records: Ts,
@@ -37,7 +37,7 @@ type DeepMergeMergeFunctions = Readonly<{
   ) => unknown;
 
   mergeMaps: <
-    Ts extends Readonly<ReadonlyArray<Readonly<ReadonlyMap<unknown, unknown>>>>,
+    Ts extends ReadonlyArray<Readonly<ReadonlyMap<unknown, unknown>>>,
     U extends DeepMergeMergeFunctionUtils
   >(
     records: Ts,
@@ -45,7 +45,7 @@ type DeepMergeMergeFunctions = Readonly<{
   ) => unknown;
 
   mergeSets: <
-    Ts extends Readonly<ReadonlyArray<Readonly<ReadonlySet<unknown>>>>,
+    Ts extends ReadonlyArray<Readonly<ReadonlySet<unknown>>>,
     U extends DeepMergeMergeFunctionUtils
   >(
     records: Ts,
@@ -53,7 +53,7 @@ type DeepMergeMergeFunctions = Readonly<{
   ) => unknown;
 
   mergeOthers: <
-    Ts extends Readonly<ReadonlyArray<unknown>>,
+    Ts extends ReadonlyArray<unknown>,
     U extends DeepMergeMergeFunctionUtils
   >(
     records: Ts,
@@ -67,7 +67,5 @@ type DeepMergeMergeFunctions = Readonly<{
 export type DeepMergeMergeFunctionUtils = Readonly<{
   mergeFunctions: DeepMergeMergeFunctions;
   defaultMergeFunctions: DeepMergeMergeFunctionsDefaults;
-  deepmerge: <Ts extends Readonly<ReadonlyArray<unknown>>>(
-    ...values: Ts
-  ) => unknown;
+  deepmerge: <Ts extends ReadonlyArray<unknown>>(...values: Ts) => unknown;
 }>;

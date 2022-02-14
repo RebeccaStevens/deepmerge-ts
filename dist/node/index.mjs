@@ -74,7 +74,7 @@ function getIterableOfIterables(iterables) {
     };
 }
 
-const defaultOptions = {
+const defaultMergeFunctions = {
     mergeMaps,
     mergeSets,
     mergeArrays,
@@ -117,9 +117,9 @@ function deepmergeCustom(options) {
  */
 function getUtils(options, customizedDeepmerge) {
     return {
-        defaultMergeFunctions: defaultOptions,
+        defaultMergeFunctions,
         mergeFunctions: {
-            ...defaultOptions,
+            ...defaultMergeFunctions,
             ...Object.fromEntries(Object.entries(options).map(([key, option]) => option === false ? [key, leaf] : [key, option])),
         },
         deepmerge: customizedDeepmerge,
@@ -184,7 +184,7 @@ function mergeRecords(values, utils) {
  *
  * @param values - The arrays.
  */
-function mergeArrays(values, utils) {
+function mergeArrays(values) {
     return values.flat();
 }
 /**
@@ -192,7 +192,7 @@ function mergeArrays(values, utils) {
  *
  * @param values - The sets.
  */
-function mergeSets(values, utils) {
+function mergeSets(values) {
     return new Set(getIterableOfIterables(values));
 }
 /**
@@ -200,7 +200,7 @@ function mergeSets(values, utils) {
  *
  * @param values - The maps.
  */
-function mergeMaps(values, utils) {
+function mergeMaps(values) {
     return new Map(getIterableOfIterables(values));
 }
 /**
@@ -208,7 +208,7 @@ function mergeMaps(values, utils) {
  *
  * @param values - The values.
  */
-function leaf(values, utils) {
+function leaf(values) {
     return values[values.length - 1];
 }
 
