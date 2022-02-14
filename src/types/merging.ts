@@ -21,7 +21,7 @@ export interface DeepMergeMergeFunctionURItoKind<
   Ts extends ReadonlyArray<unknown>,
   MF extends DeepMergeMergeFunctionsURIs
 > {
-  readonly DeepMergeLeafURI: DeepMergeLeafHKT<Ts>;
+  readonly DeepMergeLeafURI: DeepMergeLeaf<Ts>;
   readonly DeepMergeRecordsDefaultURI: DeepMergeRecordsDefaultHKT<Ts, MF>;
   readonly DeepMergeArraysDefaultURI: DeepMergeArraysDefaultHKT<Ts, MF>;
   readonly DeepMergeSetsDefaultURI: DeepMergeSetsDefaultHKT<Ts>;
@@ -143,7 +143,9 @@ type DeepMergeOthersHKT<
 export type DeepMergeLeafURI = "DeepMergeLeafURI";
 
 /**
- * Get the leaf type from 2 types that can't be merged.
+ * Get the leaf type from many types that can't be merged.
+ *
+ * @deprecated Use `DeepMergeLeaf` instead.
  */
 export type DeepMergeLeafHKT<Ts extends ReadonlyArray<unknown>> =
   DeepMergeLeaf<Ts>;
