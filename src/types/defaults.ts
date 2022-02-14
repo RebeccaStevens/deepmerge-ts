@@ -143,18 +143,17 @@ type DeepMergeArraysDefaultHKTHelper<
 /**
  * Deep merge 2 sets.
  */
-export type DeepMergeSetsDefaultHKT<
-  Ts extends ReadonlyArray<unknown>,
-  MF extends DeepMergeMergeFunctionsURIs
-> = Set<UnionSetValues<Ts>>;
+export type DeepMergeSetsDefaultHKT<Ts extends ReadonlyArray<unknown>> = Set<
+  UnionSetValues<Ts>
+>;
 
 /**
  * Deep merge 2 maps.
  */
-export type DeepMergeMapsDefaultHKT<
-  Ts extends ReadonlyArray<unknown>,
-  MF extends DeepMergeMergeFunctionsURIs
-> = Map<UnionMapKeys<Ts>, UnionMapValues<Ts>>;
+export type DeepMergeMapsDefaultHKT<Ts extends ReadonlyArray<unknown>> = Map<
+  UnionMapKeys<Ts>,
+  UnionMapValues<Ts>
+>;
 
 /**
  * Get the merge functions with defaults apply from the given subset.

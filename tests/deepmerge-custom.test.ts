@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/consistent-type-definitions, @typescript-eslint/no-unused-vars */
+
 import test from "ava";
 
 import { deepmergeCustom } from "@/deepmerge";
@@ -9,7 +11,6 @@ import type {
 } from "@/deepmerge";
 
 declare module "ava" {
-  // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
   interface DeepEqualAssertion {
     /**
      * Assert that `actual` is [deeply equal](https://github.com/concordancejs/concordance#comparison-details) to
@@ -56,7 +57,7 @@ test("custom merge strings", (t) => {
       if (values.every((value) => typeof value === "string")) {
         return values.join(" ");
       }
-      return utils.defaultMergeFunctions.mergeOthers(values, utils);
+      return utils.defaultMergeFunctions.mergeOthers(values);
     },
   });
 
@@ -66,7 +67,6 @@ test("custom merge strings", (t) => {
 });
 
 declare module "../src/types" {
-  // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
   interface DeepMergeMergeFunctionURItoKind<
     Ts extends ReadonlyArray<unknown>,
     MF extends DeepMergeMergeFunctionsURIs
@@ -111,7 +111,6 @@ test("custom merge arrays", (t) => {
 });
 
 declare module "../src/types" {
-  // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
   interface DeepMergeMergeFunctionURItoKind<
     Ts extends ReadonlyArray<unknown>,
     MF extends DeepMergeMergeFunctionsURIs
@@ -186,7 +185,6 @@ test("custom merge arrays of records", (t) => {
 });
 
 declare module "../src/types" {
-  // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
   interface DeepMergeMergeFunctionURItoKind<
     Ts extends ReadonlyArray<unknown>,
     MF extends DeepMergeMergeFunctionsURIs
@@ -236,7 +234,6 @@ test("custom merge records", (t) => {
 });
 
 declare module "../src/types" {
-  // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
   interface DeepMergeMergeFunctionURItoKind<
     Ts extends ReadonlyArray<unknown>,
     MF extends DeepMergeMergeFunctionsURIs
@@ -265,7 +262,6 @@ test("custom don't merge arrays", (t) => {
 });
 
 declare module "../src/types" {
-  // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
   interface DeepMergeMergeFunctionURItoKind<
     Ts extends ReadonlyArray<unknown>,
     MF extends DeepMergeMergeFunctionsURIs
@@ -296,7 +292,7 @@ test("custom merge dates", (t) => {
       if (values.every((value) => value instanceof Date)) {
         return values;
       }
-      return utils.defaultMergeFunctions.mergeOthers(values, utils);
+      return utils.defaultMergeFunctions.mergeOthers(values);
     },
   });
 

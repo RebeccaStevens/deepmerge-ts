@@ -18,7 +18,7 @@ import {
   objectHasProperty,
 } from "./utils";
 
-const defaultOptions = {
+const defaultMergeFunctions = {
   mergeMaps,
   mergeSets,
   mergeArrays,
@@ -29,7 +29,7 @@ const defaultOptions = {
 /**
  * The default merge functions.
  */
-export type DeepMergeMergeFunctionsDefaults = typeof defaultOptions;
+export type DeepMergeMergeFunctionsDefaults = typeof defaultMergeFunctions;
 
 /**
  * Deeply merge objects.
@@ -93,9 +93,9 @@ function getUtils(
   customizedDeepmerge: DeepMergeMergeFunctionUtils["deepmerge"]
 ): DeepMergeMergeFunctionUtils {
   return {
-    defaultMergeFunctions: defaultOptions,
+    defaultMergeFunctions,
     mergeFunctions: {
-      ...defaultOptions,
+      ...defaultMergeFunctions,
       ...Object.fromEntries(
         Object.entries(options).map(([key, option]) =>
           option === false ? [key, leaf] : [key, option]
@@ -209,9 +209,8 @@ function mergeRecords<
  */
 function mergeArrays<
   Ts extends ReadonlyArray<ReadonlyArray<unknown>>,
-  U extends DeepMergeMergeFunctionUtils,
   MF extends DeepMergeMergeFunctionsURIs
->(values: Ts, utils: U) {
+>(values: Ts) {
   return values.flat() as DeepMergeArraysDefaultHKT<Ts, MF>;
 }
 
@@ -220,15 +219,10 @@ function mergeArrays<
  *
  * @param values - The sets.
  */
-function mergeSets<
-  Ts extends ReadonlyArray<Readonly<ReadonlySet<unknown>>>,
-  U extends DeepMergeMergeFunctionUtils,
-  MF extends DeepMergeMergeFunctionsURIs
->(values: Ts, utils: U) {
-  return new Set(getIterableOfIterables(values)) as DeepMergeSetsDefaultHKT<
-    Ts,
-    MF
-  >;
+function mergeSets<Ts extends ReadonlyArray<Readonly<ReadonlySet<unknown>>>>(
+  values: Ts
+) {
+  return new Set(getIterableOfIterables(values)) as DeepMergeSetsDefaultHKT<Ts>;
 }
 
 /**
@@ -237,14 +231,9 @@ function mergeSets<
  * @param values - The maps.
  */
 function mergeMaps<
-  Ts extends ReadonlyArray<Readonly<ReadonlyMap<unknown, unknown>>>,
-  U extends DeepMergeMergeFunctionUtils,
-  MF extends DeepMergeMergeFunctionsURIs
->(values: Ts, utils: U) {
-  return new Map(getIterableOfIterables(values)) as DeepMergeMapsDefaultHKT<
-    Ts,
-    MF
-  >;
+  Ts extends ReadonlyArray<Readonly<ReadonlyMap<unknown, unknown>>>
+>(values: Ts) {
+  return new Map(getIterableOfIterables(values)) as DeepMergeMapsDefaultHKT<Ts>;
 }
 
 /**
@@ -252,10 +241,6 @@ function mergeMaps<
  *
  * @param values - The values.
  */
-function leaf<
-  Ts extends ReadonlyArray<unknown>,
-  U extends DeepMergeMergeFunctionUtils,
-  MF extends DeepMergeMergeFunctionsURIs
->(values: Ts, utils: U) {
+function leaf<Ts extends ReadonlyArray<unknown>>(values: Ts) {
   return values[values.length - 1];
 }
