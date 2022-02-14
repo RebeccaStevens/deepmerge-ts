@@ -36,8 +36,8 @@ export type DeepMergeMergeFunctionsDefaults = typeof defaultOptions;
  *
  * @param objects - The objects to merge.
  */
-export function deepmerge<Ts extends Readonly<ReadonlyArray<unknown>>>(
-  ...objects: Readonly<readonly [...Ts]>
+export function deepmerge<Ts extends ReadonlyArray<unknown>>(
+  ...objects: readonly [...Ts]
 ): DeepMergeHKT<Ts, DeepMergeMergeFunctionsDefaultURIs> {
   return deepmergeCustom({})(...objects) as DeepMergeHKT<
     Ts,
@@ -54,13 +54,13 @@ export function deepmergeCustom<
   PMF extends Partial<DeepMergeMergeFunctionsURIs>
 >(
   options: DeepMergeOptions
-): <Ts extends Readonly<ReadonlyArray<unknown>>>(
+): <Ts extends ReadonlyArray<unknown>>(
   ...objects: Ts
 ) => DeepMergeHKT<Ts, GetDeepMergeMergeFunctionsURIs<PMF>> {
   /**
    * The type of the customized deepmerge function.
    */
-  type CustomizedDeepmerge = <Ts extends Readonly<ReadonlyArray<unknown>>>(
+  type CustomizedDeepmerge = <Ts extends ReadonlyArray<unknown>>(
     ...objects: Ts
   ) => DeepMergeHKT<Ts, GetDeepMergeMergeFunctionsURIs<PMF>>;
 
@@ -69,7 +69,7 @@ export function deepmergeCustom<
   /**
    * The customized deepmerge function.
    */
-  function customizedDeepmerge(...objects: Readonly<ReadonlyArray<unknown>>) {
+  function customizedDeepmerge(...objects: ReadonlyArray<unknown>) {
     if (objects.length === 0) {
       return undefined;
     }
@@ -112,7 +112,7 @@ function getUtils(
  * @param values - The values.
  */
 function mergeUnknowns<
-  Ts extends Readonly<ReadonlyArray<unknown>>,
+  Ts extends ReadonlyArray<unknown>,
   U extends DeepMergeMergeFunctionUtils,
   MF extends DeepMergeMergeFunctionsURIs
 >(values: Ts, utils: U): DeepMergeHKT<Ts, MF> {
@@ -136,29 +136,25 @@ function mergeUnknowns<
   switch (type) {
     case ObjectType.RECORD:
       return utils.mergeFunctions.mergeRecords(
-        values as Readonly<
-          ReadonlyArray<Readonly<Record<PropertyKey, unknown>>>
-        >,
+        values as ReadonlyArray<Readonly<Record<PropertyKey, unknown>>>,
         utils
       ) as DeepMergeHKT<Ts, MF>;
 
     case ObjectType.ARRAY:
       return utils.mergeFunctions.mergeArrays(
-        values as Readonly<ReadonlyArray<Readonly<ReadonlyArray<unknown>>>>,
+        values as ReadonlyArray<ReadonlyArray<unknown>>,
         utils
       ) as DeepMergeHKT<Ts, MF>;
 
     case ObjectType.SET:
       return utils.mergeFunctions.mergeSets(
-        values as Readonly<ReadonlyArray<Readonly<ReadonlySet<unknown>>>>,
+        values as ReadonlyArray<Readonly<ReadonlySet<unknown>>>,
         utils
       ) as DeepMergeHKT<Ts, MF>;
 
     case ObjectType.MAP:
       return utils.mergeFunctions.mergeMaps(
-        values as Readonly<
-          ReadonlyArray<Readonly<ReadonlyMap<unknown, unknown>>>
-        >,
+        values as ReadonlyArray<Readonly<ReadonlyMap<unknown, unknown>>>,
         utils
       ) as DeepMergeHKT<Ts, MF>;
 
@@ -176,7 +172,7 @@ function mergeUnknowns<
  * @param values - The records.
  */
 function mergeRecords<
-  Ts extends Readonly<ReadonlyArray<Record<PropertyKey, unknown>>>,
+  Ts extends ReadonlyArray<Record<PropertyKey, unknown>>,
   U extends DeepMergeMergeFunctionUtils,
   MF extends DeepMergeMergeFunctionsURIs
 >(values: Ts, utils: U) {
@@ -212,7 +208,7 @@ function mergeRecords<
  * @param values - The arrays.
  */
 function mergeArrays<
-  Ts extends Readonly<ReadonlyArray<Readonly<ReadonlyArray<unknown>>>>,
+  Ts extends ReadonlyArray<ReadonlyArray<unknown>>,
   U extends DeepMergeMergeFunctionUtils,
   MF extends DeepMergeMergeFunctionsURIs
 >(values: Ts, utils: U) {
@@ -225,7 +221,7 @@ function mergeArrays<
  * @param values - The sets.
  */
 function mergeSets<
-  Ts extends Readonly<ReadonlyArray<Readonly<ReadonlySet<unknown>>>>,
+  Ts extends ReadonlyArray<Readonly<ReadonlySet<unknown>>>,
   U extends DeepMergeMergeFunctionUtils,
   MF extends DeepMergeMergeFunctionsURIs
 >(values: Ts, utils: U) {
@@ -241,7 +237,7 @@ function mergeSets<
  * @param values - The maps.
  */
 function mergeMaps<
-  Ts extends Readonly<ReadonlyArray<Readonly<ReadonlyMap<unknown, unknown>>>>,
+  Ts extends ReadonlyArray<Readonly<ReadonlyMap<unknown, unknown>>>,
   U extends DeepMergeMergeFunctionUtils,
   MF extends DeepMergeMergeFunctionsURIs
 >(values: Ts, utils: U) {
@@ -257,7 +253,7 @@ function mergeMaps<
  * @param values - The values.
  */
 function leaf<
-  Ts extends Readonly<ReadonlyArray<unknown>>,
+  Ts extends ReadonlyArray<unknown>,
   U extends DeepMergeMergeFunctionUtils,
   MF extends DeepMergeMergeFunctionsURIs
 >(values: Ts, utils: U) {

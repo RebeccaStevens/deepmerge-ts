@@ -50,9 +50,7 @@ export function getObjectType(object: unknown): ObjectType {
  * @param objects - An array of objects to get the keys of.
  * @returns A set containing all the keys of all the given objects.
  */
-export function getKeys(
-  objects: Readonly<ReadonlyArray<object>>
-): Set<PropertyKey> {
+export function getKeys(objects: ReadonlyArray<object>): Set<PropertyKey> {
   const keys = new Set<PropertyKey>();
 
   /* eslint-disable functional/no-loop-statement -- using a loop here is more efficient. */
@@ -90,7 +88,7 @@ export function objectHasProperty(
  * Get an iterable object that iterates over the given iterables.
  */
 export function getIterableOfIterables<T>(
-  iterables: Readonly<ReadonlyArray<Readonly<Iterable<T>>>>
+  iterables: ReadonlyArray<Readonly<Iterable<T>>>
 ): Iterable<T> {
   return {
     *[Symbol.iterator]() {
