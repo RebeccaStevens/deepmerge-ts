@@ -180,4 +180,5 @@ export type DeepMergeLeaf<Ts extends ReadonlyArray<unknown>> =
  */
 export type DeepMergeBuiltInMetaData = Readonly<{
   key: PropertyKey;
+  parents: ReadonlyArray<Readonly<Record<PropertyKey, unknown>>>;
 }>;

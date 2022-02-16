@@ -325,7 +325,7 @@ test("key based merging", (t) => {
 
   const customizedDeepmerge = deepmergeCustom({
     mergeOthers: (values, utils, meta) => {
-      if (areAllNumbers(values)) {
+      if (meta !== undefined && areAllNumbers(values)) {
         const { key } = meta;
         const numbers: ReadonlyArray<number> = values;
 
@@ -383,11 +383,12 @@ test("key path based merging", (t) => {
     ReadonlyArray<PropertyKey>
   >(
     {
-      metaDataUpdater: (previousMeta, metaMeta) => {
+      metaDataUpdater: (previousMeta = [], metaMeta) => {
         return [...previousMeta, metaMeta.key];
       },
       mergeOthers: (values, utils, meta) => {
         if (
+          meta !== undefined &&
           meta.length >= 2 &&
           meta[meta.length - 2] === "bar" &&
           meta[meta.length - 1] === "baz"
@@ -467,12 +468,12 @@ test("key path based array merging", (t) => {
   ) => {
     const mergeSettings: DeepMergeOptions<
       ReadonlyArray<unknown>,
-      Readonly<Partial<{ id: unknown; key: PropertyKey }>>
+      Readonly<Partial<{ id: unknown }>>
     > = {
-      metaDataUpdater: (previousMeta, metaMeta) => {
+      metaDataUpdater: (previousMeta = [], metaMeta) => {
         return [...previousMeta, metaMeta.key ?? metaMeta.id];
       },
-      mergeArrays: (values, utils, meta) => {
+      mergeArrays: (values, utils, meta = []) => {
         const idPath = idsPaths.find((idPath) => {
           const parentPath = idPath.slice(0, -1);
           return (
@@ -525,6 +526,43 @@ test("key path based array merging", (t) => {
     x,
     y
   );
+
+  t.deepEqual(merged, expected);
+});
+
+test("custom merge with parents", (t) => {
+  const v = { sum: 1, isBadObject: true };
+  const x = { sum: 2, isBadObject: false };
+  const y = { sum: 3, isBadObject: true };
+  const z = { sum: 4, isBadObject: false };
+
+  const expected = {
+    sum: 6,
+    isBadObject: false,
+  };
+
+  const customizedDeepmerge = deepmergeCustom({
+    mergeOthers: (values, utils, meta) => {
+      if (meta !== undefined) {
+        const { key, parents } = meta;
+        if (key === "isBadObject") {
+          return false;
+        }
+
+        const goodValues = values.filter(
+          (value, index): value is number =>
+            parents[index].isBadObject !== true && typeof value === "number"
+        );
+
+        if (key === "sum") {
+          return goodValues.reduce((sum, value) => sum + value, 0);
+        }
+      }
+      return utils.defaultMergeFunctions.mergeOthers(values);
+    },
+  });
+
+  const merged = customizedDeepmerge(v, x, y, z);
 
   t.deepEqual(merged, expected);
 });

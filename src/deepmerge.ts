@@ -87,7 +87,9 @@ export function deepmergeCustom<
 export function deepmergeCustom<
   PMF extends Partial<DeepMergeMergeFunctionsURIs>,
   MetaData,
-  MetaMetaData extends Partial<DeepMergeBuiltInMetaData> = DeepMergeBuiltInMetaData
+  MetaMetaData extends Readonly<
+    Record<PropertyKey, unknown>
+  > = DeepMergeBuiltInMetaData
 >(
   options: DeepMergeOptions<MetaData, MetaMetaData>,
   rootMetaData: MetaData
@@ -98,7 +100,7 @@ export function deepmergeCustom<
 export function deepmergeCustom<
   PMF extends Partial<DeepMergeMergeFunctionsURIs>,
   MetaData,
-  MetaMetaData extends Partial<DeepMergeBuiltInMetaData>
+  MetaMetaData extends Readonly<Record<PropertyKey, unknown>>
 >(
   options: DeepMergeOptions<MetaData>,
   rootMetaData?: MetaData
@@ -134,7 +136,7 @@ export function deepmergeCustom<
       GetDeepMergeMergeFunctionsURIs<PMF>,
       MetaData,
       MetaMetaData
-    >(objects, utils, rootMetaData as MetaData);
+    >(objects, utils, rootMetaData);
   }
 
   return customizedDeepmerge as CustomizedDeepmerge;
@@ -145,7 +147,7 @@ export function deepmergeCustom<
  *
  * @param options - The options the user specified
  */
-function getUtils<M, MM extends Partial<DeepMergeBuiltInMetaData>>(
+function getUtils<M, MM extends Readonly<Record<PropertyKey, unknown>>>(
   options: DeepMergeOptions<M>,
   customizedDeepmerge: DeepMergeMergeFunctionUtils<M, MM>["deepmerge"]
 ): DeepMergeMergeFunctionUtils<M, MM> {
@@ -164,7 +166,7 @@ function getUtils<M, MM extends Partial<DeepMergeBuiltInMetaData>>(
       ),
     } as DeepMergeMergeFunctionUtils<M, MM>["mergeFunctions"],
     metaDataUpdater: (options.metaDataUpdater ??
-      defaultMetaDataUpdater) as DeepMergeMergeFunctionUtils<
+      defaultMetaDataUpdater) as unknown as DeepMergeMergeFunctionUtils<
       M,
       MM
     >["metaDataUpdater"],
@@ -182,8 +184,8 @@ function mergeUnknowns<
   U extends DeepMergeMergeFunctionUtils<M, MM>,
   MF extends DeepMergeMergeFunctionsURIs,
   M,
-  MM extends Partial<DeepMergeBuiltInMetaData>
->(values: Ts, utils: U, meta: M): DeepMergeHKT<Ts, MF, M> {
+  MM extends Readonly<Record<PropertyKey, unknown>>
+>(values: Ts, utils: U, meta: M | undefined): DeepMergeHKT<Ts, MF, M> {
   const type = getObjectType(values[0]);
 
   // eslint-disable-next-line functional/no-conditional-statement -- add an early escape for better performance.
@@ -251,7 +253,7 @@ function mergeRecords<
   MF extends DeepMergeMergeFunctionsURIs,
   M,
   MM extends DeepMergeBuiltInMetaData
->(values: Ts, utils: U, meta: M) {
+>(values: Ts, utils: U, meta: M | undefined) {
   const result: Record<PropertyKey, unknown> = {};
 
   /* eslint-disable functional/no-loop-statement, functional/no-conditional-statement -- using a loop here is more performant. */
@@ -267,7 +269,10 @@ function mergeRecords<
 
     // assert(propValues.length > 0);
 
-    const updatedMeta = utils.metaDataUpdater(meta, { key } as MM);
+    const updatedMeta = utils.metaDataUpdater(meta, {
+      key,
+      parents: values,
+    } as unknown as MM);
 
     result[key] =
       propValues.length === 1
