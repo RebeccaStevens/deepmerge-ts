@@ -99,7 +99,7 @@ import { deepmergeCustom } from "deepmerge-ts";
 
 const customizedDeepmerge = deepmergeCustom({
   mergeOthers: (values, utils, meta) => {
-    if (areAllNumbers(values)) {
+    if (meta !== undefined && areAllNumbers(values)) {
       const { key } = meta;
       const numbers: ReadonlyArray<number> = values;
 
@@ -147,36 +147,33 @@ const customizedDeepmerge = deepmergeCustom<
   },
   // Change the meta data type.
   {
-    key?: PropertyKey;
     keyPath: ReadonlyArray<PropertyKey>;
   }
->(
-  {
-    // Customize what the actual meta data.
-    metaDataUpdater: (previousMeta, metaMeta) => {
-      return {
-        ...metaMeta,
-        keyPath: [...previousMeta.keyPath, metaMeta.key],
-      };
-    },
-    // Use the meta data when merging others.
-    mergeOthers: (values, utils, meta) => {
-      if (
-        meta.keyPath.length >= 2 &&
-        meta.keyPath[meta.keyPath.length - 2] === "bar" &&
-        meta.keyPath[meta.keyPath.length - 1] === "baz"
-      ) {
-        return "special merge";
-      }
-
-      return utils.defaultMergeFunctions.mergeOthers(values);
-    },
+>({
+  // Customize what the actual meta data.
+  metaDataUpdater: (previousMeta, metaMeta) => {
+    if (previousMeta === undefined) {
+      return { keyPath: [] };
+    }
+    return {
+      ...metaMeta,
+      keyPath: [...previousMeta.keyPath, metaMeta.key],
+    };
   },
-  // Provide initial meta data.
-  {
-    keyPath: [],
-  }
-);
+  // Use the meta data when merging others.
+  mergeOthers: (values, utils, meta) => {
+    if (
+      meta !== undefined &&
+      meta.keyPath.length >= 2 &&
+      meta.keyPath[meta.keyPath.length - 2] === "bar" &&
+      meta.keyPath[meta.keyPath.length - 1] === "baz"
+    ) {
+      return "special merge";
+    }
+
+    return utils.defaultMergeFunctions.mergeOthers(values);
+  },
+});
 
 const x = {
   foo: { bar: { baz: 1, qux: 2 } },

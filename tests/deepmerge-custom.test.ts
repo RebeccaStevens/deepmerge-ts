@@ -381,26 +381,23 @@ test("key path based merging", (t) => {
       DeepMergeOthersURI: "KeyPathBasedMerge";
     },
     ReadonlyArray<PropertyKey>
-  >(
-    {
-      metaDataUpdater: (previousMeta = [], metaMeta) => {
-        return [...previousMeta, metaMeta.key];
-      },
-      mergeOthers: (values, utils, meta) => {
-        if (
-          meta !== undefined &&
-          meta.length >= 2 &&
-          meta[meta.length - 2] === "bar" &&
-          meta[meta.length - 1] === "baz"
-        ) {
-          return "special merge";
-        }
-
-        return utils.defaultMergeFunctions.mergeOthers(values);
-      },
+  >({
+    metaDataUpdater: (previousMeta = [], metaMeta) => {
+      return [...previousMeta, metaMeta.key];
     },
-    []
-  );
+    mergeOthers: (values, utils, meta) => {
+      if (
+        meta !== undefined &&
+        meta.length >= 2 &&
+        meta[meta.length - 2] === "bar" &&
+        meta[meta.length - 1] === "baz"
+      ) {
+        return "special merge";
+      }
+
+      return utils.defaultMergeFunctions.mergeOthers(values);
+    },
+  });
 
   const merged = customizedDeepmerge(x, y);
 

@@ -22,7 +22,7 @@ export interface DeepMergeMergeFunctionURItoKind<
   MF extends DeepMergeMergeFunctionsURIs,
   M
 > {
-  readonly DeepMergeLeafURI: DeepMergeLeafHKT<Ts>;
+  readonly DeepMergeLeafURI: DeepMergeLeaf<Ts>;
   readonly DeepMergeRecordsDefaultURI: DeepMergeRecordsDefaultHKT<Ts, MF, M>;
   readonly DeepMergeArraysDefaultURI: DeepMergeArraysDefaultHKT<Ts, MF, M>;
   readonly DeepMergeSetsDefaultURI: DeepMergeSetsDefaultHKT<Ts>;
