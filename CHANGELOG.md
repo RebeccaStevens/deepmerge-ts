@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
+# [3.0.0-beta.5](https://github.com/RebeccaStevens/deepmerge-ts/compare/v3.0.0-beta.4...v3.0.0-beta.5) (2022-02-16)
+
+
+### Features
+
+* provide customizable meta data to custom merge functions ([f6b1cad](https://github.com/RebeccaStevens/deepmerge-ts/commit/f6b1cad607d8b747f8273b29058ef796bcd4239b)), closes [#33](https://github.com/RebeccaStevens/deepmerge-ts/issues/33)
+
 # [3.0.0-beta.4](https://github.com/RebeccaStevens/deepmerge-ts/compare/v3.0.0-beta.3...v3.0.0-beta.4) (2022-02-16)
 
 

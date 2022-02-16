@@ -134,7 +134,7 @@ declare type IsTuple<T extends ReadonlyArray<unknown>> = T extends readonly [] ?
  * Mapping of merge function URIs to the merge function type.
  */
 interface DeepMergeMergeFunctionURItoKind<Ts extends ReadonlyArray<unknown>, MF extends DeepMergeMergeFunctionsURIs, M> {
-    readonly DeepMergeLeafURI: DeepMergeLeafHKT<Ts>;
+    readonly DeepMergeLeafURI: DeepMergeLeaf<Ts>;
     readonly DeepMergeRecordsDefaultURI: DeepMergeRecordsDefaultHKT<Ts, MF, M>;
     readonly DeepMergeArraysDefaultURI: DeepMergeArraysDefaultHKT<Ts, MF, M>;
     readonly DeepMergeSetsDefaultURI: DeepMergeSetsDefaultHKT<Ts>;
@@ -368,7 +368,7 @@ declare function deepmergeCustom<PMF extends Partial<DeepMergeMergeFunctionsURIs
  * @param options - The options on how to customize the merge function.
  * @param rootMetaData - The meta data passed to the root items' being merged.
  */
-declare function deepmergeCustom<PMF extends Partial<DeepMergeMergeFunctionsURIs>, MetaData, MetaMetaData extends Readonly<Record<PropertyKey, unknown>> = DeepMergeBuiltInMetaData>(options: DeepMergeOptions<MetaData, MetaMetaData>, rootMetaData: MetaData): <Ts extends ReadonlyArray<unknown>>(...objects: Ts) => DeepMergeHKT<Ts, GetDeepMergeMergeFunctionsURIs<PMF>, MetaData>;
+declare function deepmergeCustom<PMF extends Partial<DeepMergeMergeFunctionsURIs>, MetaData, MetaMetaData extends Readonly<Record<PropertyKey, unknown>> = DeepMergeBuiltInMetaData>(options: DeepMergeOptions<MetaData, MetaMetaData>, rootMetaData?: MetaData): <Ts extends ReadonlyArray<unknown>>(...objects: Ts) => DeepMergeHKT<Ts, GetDeepMergeMergeFunctionsURIs<PMF>, MetaData>;
 /**
  * Merge records.
  *

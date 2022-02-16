@@ -92,7 +92,7 @@ export function deepmergeCustom<
   > = DeepMergeBuiltInMetaData
 >(
   options: DeepMergeOptions<MetaData, MetaMetaData>,
-  rootMetaData: MetaData
+  rootMetaData?: MetaData
 ): <Ts extends ReadonlyArray<unknown>>(
   ...objects: Ts
 ) => DeepMergeHKT<Ts, GetDeepMergeMergeFunctionsURIs<PMF>, MetaData>;
