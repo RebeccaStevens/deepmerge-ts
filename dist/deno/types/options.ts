@@ -7,11 +7,11 @@ import type { DeepMergeBuiltInMetaData } from "./merging.ts";
  */
 export type DeepMergeOptions<
   M,
-  MM extends Partial<DeepMergeBuiltInMetaData> = DeepMergeBuiltInMetaData
-> = Partial<DeepMergeOptionsFull<M, MM>>;
+  MM extends Record<PropertyKey, unknown> = DeepMergeBuiltInMetaData
+> = Partial<DeepMergeOptionsFull<M, MM & Partial<DeepMergeBuiltInMetaData>>>;
 
-type MetaDataUpdater<M, MM extends Partial<DeepMergeBuiltInMetaData>> = (
-  previousMeta: M,
+type MetaDataUpdater<M, MM extends Record<PropertyKey, unknown>> = (
+  previousMeta: M | undefined,
   metaMeta: MM
 ) => M;
 
@@ -20,7 +20,7 @@ type MetaDataUpdater<M, MM extends Partial<DeepMergeBuiltInMetaData>> = (
  */
 type DeepMergeOptionsFull<
   M,
-  MM extends Partial<DeepMergeBuiltInMetaData>
+  MM extends Record<PropertyKey, unknown>
 > = Readonly<{
   mergeRecords: DeepMergeMergeFunctions<M, MM>["mergeRecords"] | false;
   mergeArrays: DeepMergeMergeFunctions<M, MM>["mergeArrays"] | false;
@@ -35,7 +35,7 @@ type DeepMergeOptionsFull<
  */
 type DeepMergeMergeFunctions<
   M,
-  MM extends Partial<DeepMergeBuiltInMetaData>
+  MM extends Record<PropertyKey, unknown>
 > = Readonly<{
   mergeRecords: <
     Ts extends ReadonlyArray<Readonly<Record<PropertyKey, unknown>>>,
@@ -43,7 +43,7 @@ type DeepMergeMergeFunctions<
   >(
     records: Ts,
     utils: U,
-    meta: M
+    meta: M | undefined
   ) => unknown;
 
   mergeArrays: <
@@ -52,7 +52,7 @@ type DeepMergeMergeFunctions<
   >(
     records: Ts,
     utils: U,
-    meta: M
+    meta: M | undefined
   ) => unknown;
 
   mergeMaps: <
@@ -61,7 +61,7 @@ type DeepMergeMergeFunctions<
   >(
     records: Ts,
     utils: U,
-    meta: M
+    meta: M | undefined
   ) => unknown;
 
   mergeSets: <
@@ -70,7 +70,7 @@ type DeepMergeMergeFunctions<
   >(
     records: Ts,
     utils: U,
-    meta: M
+    meta: M | undefined
   ) => unknown;
 
   mergeOthers: <
@@ -79,7 +79,7 @@ type DeepMergeMergeFunctions<
   >(
     records: Ts,
     utils: U,
-    meta: M
+    meta: M | undefined
   ) => unknown;
 }>;
 
@@ -88,7 +88,7 @@ type DeepMergeMergeFunctions<
  */
 export type DeepMergeMergeFunctionUtils<
   M,
-  MM extends Partial<DeepMergeBuiltInMetaData>
+  MM extends Record<PropertyKey, unknown>
 > = Readonly<{
   mergeFunctions: DeepMergeMergeFunctions<M, MM>;
   defaultMergeFunctions: DeepMergeMergeFunctionsDefaults;

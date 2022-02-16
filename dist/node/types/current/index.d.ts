@@ -216,6 +216,7 @@ declare type DeepMergeLeaf<Ts extends ReadonlyArray<unknown>> = Ts extends reado
  */
 declare type DeepMergeBuiltInMetaData = Readonly<{
     key: PropertyKey;
+    parents: ReadonlyArray<Readonly<Record<PropertyKey, unknown>>>;
 }>;
 
 /**
@@ -305,12 +306,12 @@ declare type GetDeepMergeMergeFunctionsURIs<PMF extends Partial<DeepMergeMergeFu
 /**
  * The options the user can pass to customize deepmerge.
  */
-declare type DeepMergeOptions<M, MM extends Partial<DeepMergeBuiltInMetaData> = DeepMergeBuiltInMetaData> = Partial<DeepMergeOptionsFull<M, MM>>;
-declare type MetaDataUpdater<M, MM extends Partial<DeepMergeBuiltInMetaData>> = (previousMeta: M, metaMeta: MM) => M;
+declare type DeepMergeOptions<M, MM extends Record<PropertyKey, unknown> = DeepMergeBuiltInMetaData> = Partial<DeepMergeOptionsFull<M, MM & Partial<DeepMergeBuiltInMetaData>>>;
+declare type MetaDataUpdater<M, MM extends Record<PropertyKey, unknown>> = (previousMeta: M | undefined, metaMeta: MM) => M;
 /**
  * All the options the user can pass to customize deepmerge.
  */
-declare type DeepMergeOptionsFull<M, MM extends Partial<DeepMergeBuiltInMetaData>> = Readonly<{
+declare type DeepMergeOptionsFull<M, MM extends Record<PropertyKey, unknown>> = Readonly<{
     mergeRecords: DeepMergeMergeFunctions<M, MM>["mergeRecords"] | false;
     mergeArrays: DeepMergeMergeFunctions<M, MM>["mergeArrays"] | false;
     mergeMaps: DeepMergeMergeFunctions<M, MM>["mergeMaps"] | false;
@@ -321,17 +322,17 @@ declare type DeepMergeOptionsFull<M, MM extends Partial<DeepMergeBuiltInMetaData
 /**
  * All the merge functions that deepmerge uses.
  */
-declare type DeepMergeMergeFunctions<M, MM extends Partial<DeepMergeBuiltInMetaData>> = Readonly<{
-    mergeRecords: <Ts extends ReadonlyArray<Readonly<Record<PropertyKey, unknown>>>, U extends DeepMergeMergeFunctionUtils<M, MM>>(records: Ts, utils: U, meta: M) => unknown;
-    mergeArrays: <Ts extends ReadonlyArray<ReadonlyArray<unknown>>, U extends DeepMergeMergeFunctionUtils<M, MM>>(records: Ts, utils: U, meta: M) => unknown;
-    mergeMaps: <Ts extends ReadonlyArray<Readonly<ReadonlyMap<unknown, unknown>>>, U extends DeepMergeMergeFunctionUtils<M, MM>>(records: Ts, utils: U, meta: M) => unknown;
-    mergeSets: <Ts extends ReadonlyArray<Readonly<ReadonlySet<unknown>>>, U extends DeepMergeMergeFunctionUtils<M, MM>>(records: Ts, utils: U, meta: M) => unknown;
-    mergeOthers: <Ts extends ReadonlyArray<unknown>, U extends DeepMergeMergeFunctionUtils<M, MM>>(records: Ts, utils: U, meta: M) => unknown;
+declare type DeepMergeMergeFunctions<M, MM extends Record<PropertyKey, unknown>> = Readonly<{
+    mergeRecords: <Ts extends ReadonlyArray<Readonly<Record<PropertyKey, unknown>>>, U extends DeepMergeMergeFunctionUtils<M, MM>>(records: Ts, utils: U, meta: M | undefined) => unknown;
+    mergeArrays: <Ts extends ReadonlyArray<ReadonlyArray<unknown>>, U extends DeepMergeMergeFunctionUtils<M, MM>>(records: Ts, utils: U, meta: M | undefined) => unknown;
+    mergeMaps: <Ts extends ReadonlyArray<Readonly<ReadonlyMap<unknown, unknown>>>, U extends DeepMergeMergeFunctionUtils<M, MM>>(records: Ts, utils: U, meta: M | undefined) => unknown;
+    mergeSets: <Ts extends ReadonlyArray<Readonly<ReadonlySet<unknown>>>, U extends DeepMergeMergeFunctionUtils<M, MM>>(records: Ts, utils: U, meta: M | undefined) => unknown;
+    mergeOthers: <Ts extends ReadonlyArray<unknown>, U extends DeepMergeMergeFunctionUtils<M, MM>>(records: Ts, utils: U, meta: M | undefined) => unknown;
 }>;
 /**
  * The utils provided to the merge functions.
  */
-declare type DeepMergeMergeFunctionUtils<M, MM extends Partial<DeepMergeBuiltInMetaData>> = Readonly<{
+declare type DeepMergeMergeFunctionUtils<M, MM extends Record<PropertyKey, unknown>> = Readonly<{
     mergeFunctions: DeepMergeMergeFunctions<M, MM>;
     defaultMergeFunctions: DeepMergeMergeFunctionsDefaults;
     metaDataUpdater: MetaDataUpdater<M, MM>;
@@ -367,13 +368,13 @@ declare function deepmergeCustom<PMF extends Partial<DeepMergeMergeFunctionsURIs
  * @param options - The options on how to customize the merge function.
  * @param rootMetaData - The meta data passed to the root items' being merged.
  */
-declare function deepmergeCustom<PMF extends Partial<DeepMergeMergeFunctionsURIs>, MetaData, MetaMetaData extends Partial<DeepMergeBuiltInMetaData> = DeepMergeBuiltInMetaData>(options: DeepMergeOptions<MetaData, MetaMetaData>, rootMetaData: MetaData): <Ts extends ReadonlyArray<unknown>>(...objects: Ts) => DeepMergeHKT<Ts, GetDeepMergeMergeFunctionsURIs<PMF>, MetaData>;
+declare function deepmergeCustom<PMF extends Partial<DeepMergeMergeFunctionsURIs>, MetaData, MetaMetaData extends Readonly<Record<PropertyKey, unknown>> = DeepMergeBuiltInMetaData>(options: DeepMergeOptions<MetaData, MetaMetaData>, rootMetaData: MetaData): <Ts extends ReadonlyArray<unknown>>(...objects: Ts) => DeepMergeHKT<Ts, GetDeepMergeMergeFunctionsURIs<PMF>, MetaData>;
 /**
  * Merge records.
  *
  * @param values - The records.
  */
-declare function mergeRecords<Ts extends ReadonlyArray<Record<PropertyKey, unknown>>, U extends DeepMergeMergeFunctionUtils<M, MM>, MF extends DeepMergeMergeFunctionsURIs, M, MM extends DeepMergeBuiltInMetaData>(values: Ts, utils: U, meta: M): DeepMergeRecordsDefaultHKT<Ts, MF, M>;
+declare function mergeRecords<Ts extends ReadonlyArray<Record<PropertyKey, unknown>>, U extends DeepMergeMergeFunctionUtils<M, MM>, MF extends DeepMergeMergeFunctionsURIs, M, MM extends DeepMergeBuiltInMetaData>(values: Ts, utils: U, meta: M | undefined): DeepMergeRecordsDefaultHKT<Ts, MF, M>;
 /**
  * Merge arrays.
  *
@@ -399,4 +400,4 @@ declare function mergeMaps<Ts extends ReadonlyArray<Readonly<ReadonlyMap<unknown
  */
 declare function leaf<Ts extends ReadonlyArray<unknown>>(values: Ts): unknown;
 
-export { DeepMergeArraysDefaultHKT, DeepMergeHKT, DeepMergeLeaf, DeepMergeLeafHKT, DeepMergeLeafURI, DeepMergeMapsDefaultHKT, DeepMergeMergeFunctionURItoKind, DeepMergeMergeFunctionUtils, DeepMergeMergeFunctionsDefaultURIs, DeepMergeMergeFunctionsDefaults, DeepMergeMergeFunctionsURIs, DeepMergeOptions, DeepMergeRecordsDefaultHKT, DeepMergeSetsDefaultHKT, deepmerge, deepmergeCustom };
+export { DeepMergeArraysDefaultHKT, DeepMergeBuiltInMetaData, DeepMergeHKT, DeepMergeLeaf, DeepMergeLeafHKT, DeepMergeLeafURI, DeepMergeMapsDefaultHKT, DeepMergeMergeFunctionURItoKind, DeepMergeMergeFunctionUtils, DeepMergeMergeFunctionsDefaultURIs, DeepMergeMergeFunctionsDefaults, DeepMergeMergeFunctionsURIs, DeepMergeOptions, DeepMergeRecordsDefaultHKT, DeepMergeSetsDefaultHKT, deepmerge, deepmergeCustom };

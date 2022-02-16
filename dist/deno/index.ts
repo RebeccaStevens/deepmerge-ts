@@ -3,6 +3,7 @@ export { deepmerge, deepmergeCustom } from "./deepmerge.ts";
 export type { DeepMergeMergeFunctionsDefaults } from "./deepmerge.ts";
 export type {
   DeepMergeArraysDefaultHKT,
+  DeepMergeBuiltInMetaData,
   DeepMergeHKT,
   DeepMergeLeaf,
   DeepMergeLeafHKT,

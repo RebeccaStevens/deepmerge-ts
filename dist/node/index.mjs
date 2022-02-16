@@ -176,7 +176,10 @@ function mergeRecords(values, utils, meta) {
             }
         }
         // assert(propValues.length > 0);
-        const updatedMeta = utils.metaDataUpdater(meta, { key });
+        const updatedMeta = utils.metaDataUpdater(meta, {
+            key,
+            parents: values,
+        });
         result[key] =
             propValues.length === 1
                 ? propValues[0]

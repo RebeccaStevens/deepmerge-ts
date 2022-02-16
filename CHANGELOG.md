@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
+# [3.0.0-beta.4](https://github.com/RebeccaStevens/deepmerge-ts/compare/v3.0.0-beta.3...v3.0.0-beta.4) (2022-02-16)
+
+
+### Features
+
+* built in meta data now includes parent objects ([c2b8596](https://github.com/RebeccaStevens/deepmerge-ts/commit/c2b8596f91505fec6b392f7e138cc2e63a64cb59)), closes [#48](https://github.com/RebeccaStevens/deepmerge-ts/issues/48)
+
 # [3.0.0-beta.3](https://github.com/RebeccaStevens/deepmerge-ts/compare/v3.0.0-beta.2...v3.0.0-beta.3) (2022-02-14)
 
 
