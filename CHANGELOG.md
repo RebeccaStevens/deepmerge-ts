@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
+# [3.0.0-beta.6](https://github.com/RebeccaStevens/deepmerge-ts/compare/v3.0.0-beta.5...v3.0.0-beta.6) (2022-02-17)
+
+
+### Bug Fixes
+
+* update legacy types ([67fc4f9](https://github.com/RebeccaStevens/deepmerge-ts/commit/67fc4f959ee8fbd62dc2c7dc9bbb423d769d5bce))
+
 # [3.0.0-beta.5](https://github.com/RebeccaStevens/deepmerge-ts/compare/v3.0.0-beta.4...v3.0.0-beta.5) (2022-02-16)
 
 
