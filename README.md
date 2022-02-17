@@ -93,21 +93,23 @@ console.log(merged);
 
 // Prettierfied output:
 //
-// {
-//   record: {
-//      prop1: "changed",
-//      prop2: "value2",
-//      prop3: "value3"
-//   }
-//   array: (6) [1, 2, 3, 2, 3, 4]
-//   set: Set(4) {1, 2, 3, 4}
-//   map: Map(3) {
-//    "key1" => "value1",
-//    "key2" => "changed",
-//    "key3" => "value3"
-//   }
+// Object {
+//   "record": Object {
+//     "prop1": "changed",
+//     "prop2": "value2",
+//     "prop3": "value3",
+//   },
+//   "array": Array [1, 2, 3, 2, 3, 4],
+//   "set": Set { 1, 2, 3, 4 },
+//   "map": Map {
+//     "key1" => "value1",
+//     "key2" => "changed",
+//     "key3" => "value3",
+//   },
 // }
 ```
+
+You can try out this example at [codesandbox.io](https://codesandbox.io/s/deepmerge-ts-example-iltxby?file=/src/example.ts).
 
 ### Using customized config
 
