@@ -58,6 +58,7 @@
     "allowed_elements": [
       "br",
       "div",
+      "img",
       "sub",
       "sup",
       "span",

@@ -18,6 +18,10 @@ Deeply merge 2 or more objects respecting type information.
 
 </div>
 
+## Donate
+
+[Any donations would be much appreciated](./DONATIONS.md). 😄
+
 ## Installation
 
 ### Node
