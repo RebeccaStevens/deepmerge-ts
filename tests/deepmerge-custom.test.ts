@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/consistent-type-definitions, @typescript-eslint/no-unused-vars */
 
 import test from "ava";
+import _ from "lodash";
 
 import { deepmergeCustom } from "@/deepmerge";
 import type {
@@ -562,4 +563,30 @@ test("custom merge with parents", (t) => {
   const merged = customizedDeepmerge(v, x, y, z);
 
   t.deepEqual(merged, expected);
+});
+
+test("custom merge that clones", (t) => {
+  const x = { foo: { bar: { baz: { qux: [1, 2, 3] } } } };
+  const y = { bar: new Date("2021-02-02"), baz: { qux: 1 } };
+
+  const expected = {
+    foo: _.cloneDeep(x.foo),
+    bar: _.cloneDeep(y.bar),
+    baz: _.cloneDeep(y.baz),
+  } as const;
+
+  const customizedDeepmerge = deepmergeCustom({
+    mergeOthers: (values, utils) =>
+      _.cloneDeep(utils.defaultMergeFunctions.mergeOthers(values)),
+  });
+
+  const merged = customizedDeepmerge(x, y);
+
+  t.deepEqual(merged, expected);
+  t.not(merged.foo, x.foo);
+  t.not(merged.foo.bar, x.foo.bar);
+  t.not(merged.foo.bar.baz, x.foo.bar.baz);
+  t.not(merged.foo.bar.baz.qux, x.foo.bar.baz.qux);
+  t.not(merged.bar, y.bar);
+  t.not(merged.baz, y.baz);
 });
