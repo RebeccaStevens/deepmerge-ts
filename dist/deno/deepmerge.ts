@@ -123,13 +123,6 @@ export function deepmergeCustom<
    * The customized deepmerge function.
    */
   function customizedDeepmerge(...objects: ReadonlyArray<unknown>) {
-    if (objects.length === 0) {
-      return undefined;
-    }
-    if (objects.length === 1) {
-      return objects[0];
-    }
-
     return mergeUnknowns<
       ReadonlyArray<unknown>,
       typeof utils,
@@ -186,6 +179,17 @@ function mergeUnknowns<
   M,
   MM extends Readonly<Record<PropertyKey, unknown>>
 >(values: Ts, utils: U, meta: M | undefined): DeepMergeHKT<Ts, MF, M> {
+  if (values.length === 0) {
+    return undefined as DeepMergeHKT<Ts, MF, M>;
+  }
+  if (values.length === 1) {
+    return utils.mergeFunctions.mergeOthers(
+      values,
+      utils,
+      meta
+    ) as DeepMergeHKT<Ts, MF, M>;
+  }
+
   const type = getObjectType(values[0]);
 
   // eslint-disable-next-line functional/no-conditional-statement -- add an early escape for better performance.
@@ -274,14 +278,11 @@ function mergeRecords<
       parents: values,
     } as unknown as MM);
 
-    result[key] =
-      propValues.length === 1
-        ? propValues[0]
-        : mergeUnknowns<ReadonlyArray<unknown>, U, MF, M, MM>(
-            propValues,
-            utils,
-            updatedMeta
-          );
+    result[key] = mergeUnknowns<ReadonlyArray<unknown>, U, MF, M, MM>(
+      propValues,
+      utils,
+      updatedMeta
+    );
   }
 
   /* eslint-enable functional/no-loop-statement, functional/no-conditional-statement */

@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
+# [3.0.0-beta.7](https://github.com/RebeccaStevens/deepmerge-ts/compare/v3.0.0-beta.6...v3.0.0-beta.7) (2022-02-18)
+
+
+### Features
+
+* lone values will now be passed to mergeOthers rather than just returned ([#57](https://github.com/RebeccaStevens/deepmerge-ts/issues/57)) ([14a09ca](https://github.com/RebeccaStevens/deepmerge-ts/commit/14a09ca2d67ffbb5341719c633873e91a5565d89))
+
 # [3.0.0-beta.6](https://github.com/RebeccaStevens/deepmerge-ts/compare/v3.0.0-beta.5...v3.0.0-beta.6) (2022-02-17)
 
 

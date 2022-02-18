@@ -105,12 +105,6 @@ function deepmergeCustom(options, rootMetaData) {
      * The customized deepmerge function.
      */
     function customizedDeepmerge(...objects) {
-        if (objects.length === 0) {
-            return undefined;
-        }
-        if (objects.length === 1) {
-            return objects[0];
-        }
         return mergeUnknowns(objects, utils, rootMetaData);
     }
     return customizedDeepmerge;
@@ -140,6 +134,12 @@ function getUtils(options, customizedDeepmerge) {
  * @param values - The values.
  */
 function mergeUnknowns(values, utils, meta) {
+    if (values.length === 0) {
+        return undefined;
+    }
+    if (values.length === 1) {
+        return utils.mergeFunctions.mergeOthers(values, utils, meta);
+    }
     const type = getObjectType(values[0]);
     // eslint-disable-next-line functional/no-conditional-statement -- add an early escape for better performance.
     if (type !== 0 /* NOT */ && type !== 5 /* OTHER */) {
@@ -184,10 +184,7 @@ function mergeRecords(values, utils, meta) {
             key,
             parents: values,
         });
-        result[key] =
-            propValues.length === 1
-                ? propValues[0]
-                : mergeUnknowns(propValues, utils, updatedMeta);
+        result[key] = mergeUnknowns(propValues, utils, updatedMeta);
     }
     /* eslint-enable functional/no-loop-statement, functional/no-conditional-statement */
     return result;
