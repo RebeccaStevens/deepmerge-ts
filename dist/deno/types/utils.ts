@@ -27,10 +27,10 @@ export type IsNever<T> = Is<T, never>;
 /**
  * Returns whether or not all the given types are never.
  */
-export type EveryIsNever<Ts extends Readonly<ReadonlyArray<unknown>>> =
-  Ts extends Readonly<readonly [infer Head, ...infer Rest]>
+export type EveryIsNever<Ts extends ReadonlyArray<unknown>> =
+  Ts extends readonly [infer Head, ...infer Rest]
     ? IsNever<Head> extends true
-      ? Rest extends Readonly<ReadonlyArray<unknown>>
+      ? Rest extends ReadonlyArray<unknown>
         ? EveryIsNever<Rest>
         : true
       : false
@@ -47,10 +47,10 @@ export type IsRecord<T> = And<
 /**
  * Returns whether or not all the given types are records.
  */
-export type EveryIsRecord<Ts extends Readonly<ReadonlyArray<unknown>>> =
-  Ts extends Readonly<readonly [infer Head, ...infer Rest]>
+export type EveryIsRecord<Ts extends ReadonlyArray<unknown>> =
+  Ts extends readonly [infer Head, ...infer Rest]
     ? IsRecord<Head> extends true
-      ? Rest extends Readonly<ReadonlyArray<unknown>>
+      ? Rest extends ReadonlyArray<unknown>
         ? EveryIsRecord<Rest>
         : true
       : false
@@ -61,20 +61,18 @@ export type EveryIsRecord<Ts extends Readonly<ReadonlyArray<unknown>>> =
  */
 export type IsArray<T> = And<
   Not<IsNever<T>>,
-  T extends Readonly<ReadonlyArray<unknown>> ? true : false
+  T extends ReadonlyArray<unknown> ? true : false
 >;
 
 /**
  * Returns whether or not all the given types are arrays.
  */
-export type EveryIsArray<Ts extends Readonly<ReadonlyArray<unknown>>> =
-  Ts extends Readonly<readonly [infer T1]>
+export type EveryIsArray<Ts extends ReadonlyArray<unknown>> =
+  Ts extends readonly [infer T1]
     ? IsArray<T1>
-    : Ts extends Readonly<readonly [infer Head, ...infer Rest]>
+    : Ts extends readonly [infer Head, ...infer Rest]
     ? IsArray<Head> extends true
-      ? Rest extends Readonly<
-          readonly [unknown, ...Readonly<ReadonlyArray<unknown>>]
-        >
+      ? Rest extends readonly [unknown, ...ReadonlyArray<unknown>]
         ? EveryIsArray<Rest>
         : false
       : false
@@ -95,18 +93,17 @@ export type IsSet<T> = And<
  *
  * Note: This may also return true if all are maps.
  */
-export type EveryIsSet<Ts extends Readonly<ReadonlyArray<unknown>>> =
-  Ts extends Readonly<readonly [infer T1]>
-    ? IsSet<T1>
-    : Ts extends Readonly<readonly [infer Head, ...infer Rest]>
-    ? IsSet<Head> extends true
-      ? Rest extends Readonly<
-          readonly [unknown, ...Readonly<ReadonlyArray<unknown>>]
-        >
-        ? EveryIsSet<Rest>
-        : false
+export type EveryIsSet<Ts extends ReadonlyArray<unknown>> = Ts extends Readonly<
+  readonly [infer T1]
+>
+  ? IsSet<T1>
+  : Ts extends readonly [infer Head, ...infer Rest]
+  ? IsSet<Head> extends true
+    ? Rest extends readonly [unknown, ...ReadonlyArray<unknown>]
+      ? EveryIsSet<Rest>
       : false
-    : false;
+    : false
+  : false;
 
 /**
  * Returns whether or not the given type is an map.
@@ -119,18 +116,17 @@ export type IsMap<T> = And<
 /**
  * Returns whether or not all the given types are maps.
  */
-export type EveryIsMap<Ts extends Readonly<ReadonlyArray<unknown>>> =
-  Ts extends Readonly<readonly [infer T1]>
-    ? IsMap<T1>
-    : Ts extends Readonly<readonly [infer Head, ...infer Rest]>
-    ? IsMap<Head> extends true
-      ? Rest extends Readonly<
-          readonly [unknown, ...Readonly<ReadonlyArray<unknown>>]
-        >
-        ? EveryIsMap<Rest>
-        : false
+export type EveryIsMap<Ts extends ReadonlyArray<unknown>> = Ts extends Readonly<
+  readonly [infer T1]
+>
+  ? IsMap<T1>
+  : Ts extends readonly [infer Head, ...infer Rest]
+  ? IsMap<Head> extends true
+    ? Rest extends readonly [unknown, ...ReadonlyArray<unknown>]
+      ? EveryIsMap<Rest>
       : false
-    : false;
+    : false
+  : false;
 
 /**
  * And operator for types.
@@ -154,18 +150,18 @@ export type Not<T extends boolean> = T extends true ? false : true;
 /**
  * Union of the sets' values' types
  */
-export type UnionSetValues<Ts extends Readonly<ReadonlyArray<unknown>>> =
+export type UnionSetValues<Ts extends ReadonlyArray<unknown>> =
   UnionSetValuesHelper<Ts, never>;
 
 /**
  * Tail-recursive helper type for UnionSetValues.
  */
 type UnionSetValuesHelper<
-  Ts extends Readonly<ReadonlyArray<unknown>>,
+  Ts extends ReadonlyArray<unknown>,
   Acc
 > = Ts extends readonly [infer Head, ...infer Rest]
   ? Head extends Readonly<ReadonlySet<infer V1>>
-    ? Rest extends Readonly<ReadonlyArray<unknown>>
+    ? Rest extends ReadonlyArray<unknown>
       ? UnionSetValuesHelper<Rest, Acc | V1>
       : Acc | V1
     : never
@@ -174,14 +170,14 @@ type UnionSetValuesHelper<
 /**
  * Union of the maps' values' types
  */
-export type UnionMapKeys<Ts extends Readonly<ReadonlyArray<unknown>>> =
+export type UnionMapKeys<Ts extends ReadonlyArray<unknown>> =
   UnionMapKeysHelper<Ts, never>;
 
 /**
  * Tail-recursive helper type for UnionMapKeys.
  */
 type UnionMapKeysHelper<
-  Ts extends Readonly<ReadonlyArray<unknown>>,
+  Ts extends ReadonlyArray<unknown>,
   Acc
 > = Ts extends readonly [infer Head, ...infer Rest]
   ? Head extends Readonly<ReadonlyMap<infer K1, unknown>>
@@ -194,14 +190,14 @@ type UnionMapKeysHelper<
 /**
  * Union of the maps' keys' types
  */
-export type UnionMapValues<Ts extends Readonly<ReadonlyArray<unknown>>> =
+export type UnionMapValues<Ts extends ReadonlyArray<unknown>> =
   UnionMapValuesHelper<Ts, never>;
 
 /**
  * Tail-recursive helper type for UnionMapValues.
  */
 type UnionMapValuesHelper<
-  Ts extends Readonly<ReadonlyArray<unknown>>,
+  Ts extends ReadonlyArray<unknown>,
   Acc
 > = Ts extends readonly [infer Head, ...infer Rest]
   ? Head extends Readonly<ReadonlyMap<unknown, infer V1>>
@@ -214,20 +210,17 @@ type UnionMapValuesHelper<
 /**
  * Get all the keys of the given records.
  */
-export type KeysOf<Ts extends Readonly<ReadonlyArray<unknown>>> = KeysOfHelper<
-  Ts,
-  never
->;
+export type KeysOf<Ts extends ReadonlyArray<unknown>> = KeysOfHelper<Ts, never>;
 
 /**
  * Tail-recursive helper type for KeysOf.
  */
 type KeysOfHelper<
-  Ts extends Readonly<ReadonlyArray<unknown>>,
+  Ts extends ReadonlyArray<unknown>,
   Acc
 > = Ts extends readonly [infer Head, ...infer Rest]
   ? Head extends Record<PropertyKey, unknown>
-    ? Rest extends Readonly<ReadonlyArray<unknown>>
+    ? Rest extends ReadonlyArray<unknown>
       ? KeysOfHelper<Rest, Acc | keyof Head>
       : Acc | keyof Head
     : never
@@ -252,20 +245,18 @@ type RequiredKeys<T> = Exclude<
  * Get all the required keys on the types in the tuple.
  */
 export type RequiredKeysOf<
-  Ts extends Readonly<readonly [unknown, ...Readonly<ReadonlyArray<unknown>>]>
+  Ts extends readonly [unknown, ...ReadonlyArray<unknown>]
 > = RequiredKeysOfHelper<Ts, never>;
 
 /**
  * Tail-recursive helper type for RequiredKeysOf.
  */
 type RequiredKeysOfHelper<
-  Ts extends Readonly<readonly [unknown, ...Readonly<ReadonlyArray<unknown>>]>,
+  Ts extends readonly [unknown, ...ReadonlyArray<unknown>],
   Acc
-> = Ts extends Readonly<readonly [infer Head, ...infer Rest]>
+> = Ts extends readonly [infer Head, ...infer Rest]
   ? Head extends Record<PropertyKey, unknown>
-    ? Rest extends Readonly<
-        readonly [unknown, ...Readonly<ReadonlyArray<unknown>>]
-      >
+    ? Rest extends readonly [unknown, ...ReadonlyArray<unknown>]
       ? RequiredKeysOfHelper<Rest, Acc | RequiredKeys<Head>>
       : Acc | RequiredKeys<Head>
     : never
@@ -280,20 +271,18 @@ type OptionalKeys<T> = Exclude<keyof T, RequiredKeys<T>>;
  * Get all the optional keys on the types in the tuple.
  */
 export type OptionalKeysOf<
-  Ts extends Readonly<readonly [unknown, ...Readonly<ReadonlyArray<unknown>>]>
+  Ts extends readonly [unknown, ...ReadonlyArray<unknown>]
 > = OptionalKeysOfHelper<Ts, never>;
 
 /**
  * Tail-recursive helper type for OptionalKeysOf.
  */
 type OptionalKeysOfHelper<
-  Ts extends Readonly<readonly [unknown, ...Readonly<ReadonlyArray<unknown>>]>,
+  Ts extends readonly [unknown, ...ReadonlyArray<unknown>],
   Acc
 > = Ts extends readonly [infer Head, ...infer Rest]
   ? Head extends Record<PropertyKey, unknown>
-    ? Rest extends Readonly<
-        readonly [unknown, ...Readonly<ReadonlyArray<unknown>>]
-      >
+    ? Rest extends readonly [unknown, ...ReadonlyArray<unknown>]
       ? OptionalKeysOfHelper<Rest, Acc | OptionalKeys<Head>>
       : Acc | OptionalKeys<Head>
     : never
@@ -302,18 +291,18 @@ type OptionalKeysOfHelper<
 /**
  * Filter out nevers from a tuple.
  */
-export type FilterOutNever<T extends Readonly<ReadonlyArray<unknown>>> =
+export type FilterOutNever<T extends ReadonlyArray<unknown>> =
   FilterOutNeverHelper<T, []>;
 
 /**
  * Tail-recursive helper type for FilterOutNever.
  */
 type FilterOutNeverHelper<
-  T extends Readonly<ReadonlyArray<unknown>>,
-  Acc extends Readonly<ReadonlyArray<unknown>>
-> = T extends Readonly<readonly []>
+  T extends ReadonlyArray<unknown>,
+  Acc extends ReadonlyArray<unknown>
+> = T extends readonly []
   ? Acc
-  : T extends Readonly<readonly [infer Head, ...infer Rest]>
+  : T extends readonly [infer Head, ...infer Rest]
   ? IsNever<Head> extends true
     ? FilterOutNeverHelper<Rest, Acc>
     : FilterOutNeverHelper<Rest, [...Acc, Head]>
@@ -322,11 +311,8 @@ type FilterOutNeverHelper<
 /**
  * Is the type a tuple?
  */
-export type IsTuple<T extends Readonly<ReadonlyArray<unknown>>> =
-  T extends Readonly<readonly []>
-    ? true
-    : T extends Readonly<
-        readonly [unknown, ...Readonly<ReadonlyArray<unknown>>]
-      >
-    ? true
-    : false;
+export type IsTuple<T extends ReadonlyArray<unknown>> = T extends readonly []
+  ? true
+  : T extends readonly [unknown, ...ReadonlyArray<unknown>]
+  ? true
+  : false;

@@ -3,7 +3,7 @@
 # DeepmergeTS
 
 [![npm version](https://img.shields.io/npm/v/deepmerge-ts.svg)](https://www.npmjs.com/package/deepmerge-ts)
-[![deno version](https://img.shields.io/github/v/tag/RebeccaStevens/deepmerge-ts?label=deno)](https://deno.land/x/deepmergets)
+[![deno version](https://img.shields.io/github/v/tag/RebeccaStevens/deepmerge-ts?label=deno&sort=semver)](https://deno.land/x/deepmergets)
 [![CI](https://github.com/RebeccaStevens/deepmerge-ts/actions/workflows/ci.yml/badge.svg)](https://github.com/RebeccaStevens/deepmerge-ts/actions/workflows/ci.yml)
 [![Coverage Status](https://codecov.io/gh/RebeccaStevens/deepmerge-ts/branch/main/graph/badge.svg?token=MVpR1oAbIT)](https://codecov.io/gh/RebeccaStevens/deepmerge-ts)\
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
@@ -17,6 +17,10 @@ Deeply merge 2 or more objects respecting type information.
 ![classic merge animation](./assets/header.png)
 
 </div>
+
+## Donate
+
+[Any donations would be much appreciated](./DONATIONS.md). 😄
 
 ## Installation
 
@@ -89,21 +93,23 @@ console.log(merged);
 
 // Prettierfied output:
 //
-// {
-//   record: {
-//      prop1: "changed",
-//      prop2: "value2",
-//      prop3: "value3"
-//   }
-//   array: (6) [1, 2, 3, 2, 3, 4]
-//   set: Set(4) {1, 2, 3, 4}
-//   map: Map(3) {
-//    "key1" => "value1",
-//    "key2" => "changed",
-//    "key3" => "value3"
-//   }
+// Object {
+//   "record": Object {
+//     "prop1": "changed",
+//     "prop2": "value2",
+//     "prop3": "value3",
+//   },
+//   "array": Array [1, 2, 3, 2, 3, 4],
+//   "set": Set { 1, 2, 3, 4 },
+//   "map": Map {
+//     "key1" => "value1",
+//     "key2" => "changed",
+//     "key3" => "value3",
+//   },
 // }
 ```
+
+You can try out this example at [codesandbox.io](https://codesandbox.io/s/deepmerge-ts-example-iltxby?file=/src/example.ts).
 
 ### Using customized config
 

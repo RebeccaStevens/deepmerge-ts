@@ -1,6 +1,24 @@
 # Changelog
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
+# [3.0.0](https://github.com/RebeccaStevens/deepmerge-ts/compare/v2.0.1...v3.0.0) (2022-02-19)
+
+
+### Code Refactoring
+
+* unrequire unused types and values ([c78e373](https://github.com/RebeccaStevens/deepmerge-ts/commit/c78e3736fe725008b745a302233afacb2155db94))
+
+
+### Features
+
+* lone values will now be passed to mergeOthers rather than just returned ([#57](https://github.com/RebeccaStevens/deepmerge-ts/issues/57)) ([9c24584](https://github.com/RebeccaStevens/deepmerge-ts/commit/9c245846f8afbd8bc0fbe2a28626e6461f41ea53))
+* provide customizable meta data to custom merge functions ([3d96692](https://github.com/RebeccaStevens/deepmerge-ts/commit/3d96692386c363e3f4250b267cac1d78231457ff)), closes [#33](https://github.com/RebeccaStevens/deepmerge-ts/issues/33)
+
+
+### BREAKING CHANGES
+
+* some types have changed for `deepmergeCustom`
+
 ## [2.0.1](https://github.com/RebeccaStevens/deepmerge-ts/compare/v2.0.0...v2.0.1) (2021-12-22)
 
 # [2.0.0](https://github.com/RebeccaStevens/deepmerge-ts/compare/v1.1.7...v2.0.0) (2021-11-22)
