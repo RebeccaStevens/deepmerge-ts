@@ -265,11 +265,11 @@ declare type DeepMergeRecordsDefaultHKTInternalProps<Ts extends readonly [unknow
 /**
  * Get the value of the property.
  */
-declare type DeepMergeRecordsDefaultHKTInternalPropValue<Ts extends readonly [unknown, ...ReadonlyArray<unknown>], K extends PropertyKey, M> = FilterOutNever<DeepMergeRecordsDefaultHKTInternalPropValueHelper<Ts, K, M, Readonly<readonly []>>>;
+declare type DeepMergeRecordsDefaultHKTInternalPropValue<Ts extends readonly [unknown, ...ReadonlyArray<unknown>], K extends PropertyKey, M> = FilterOutNever<DeepMergeRecordsDefaultHKTInternalPropValueHelper<Ts, K, M, readonly []>>;
 /**
  * Tail-recursive helper type for DeepMergeRecordsDefaultHKTInternalPropValue.
  */
-declare type DeepMergeRecordsDefaultHKTInternalPropValueHelper<Ts extends readonly [unknown, ...ReadonlyArray<unknown>], K extends PropertyKey, M, Acc extends ReadonlyArray<unknown>> = Ts extends readonly [infer Head, ...infer Rest] ? Head extends Record<PropertyKey, unknown> ? Rest extends readonly [unknown, ...ReadonlyArray<unknown>] ? DeepMergeRecordsDefaultHKTInternalPropValueHelper<Rest, K, M, [
+declare type DeepMergeRecordsDefaultHKTInternalPropValueHelper<Ts extends readonly [unknown, ...ReadonlyArray<unknown>], K extends PropertyKey, M, Acc extends ReadonlyArray<unknown>> = Ts extends readonly [infer Head, ...infer Rest] ? Head extends Readonly<Record<PropertyKey, unknown>> ? Rest extends readonly [unknown, ...ReadonlyArray<unknown>] ? DeepMergeRecordsDefaultHKTInternalPropValueHelper<Rest, K, M, [
     ...Acc,
     ValueOfKey<Head, K>
 ]> : [...Acc, ValueOfKey<Head, K>] : never : never;

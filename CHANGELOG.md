@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
+## [3.0.1](https://github.com/RebeccaStevens/deepmerge-ts/compare/v3.0.0...v3.0.1) (2022-02-22)
+
+
+### Bug Fixes
+
+* allows readonly records in DeepMergeRecordsDefaultHKTInternalPropValueHelper ([#60](https://github.com/RebeccaStevens/deepmerge-ts/issues/60)) ([fc85dfa](https://github.com/RebeccaStevens/deepmerge-ts/commit/fc85dfa0cc579de127c8458e808f81cbca84d090))
+
 # [3.0.0](https://github.com/RebeccaStevens/deepmerge-ts/compare/v2.0.1...v3.0.0) (2022-02-19)
 
 
