@@ -97,12 +97,7 @@ type DeepMergeRecordsDefaultHKTInternalPropValue<
   K extends PropertyKey,
   M
 > = FilterOutNever<
-  DeepMergeRecordsDefaultHKTInternalPropValueHelper<
-    Ts,
-    K,
-    M,
-    Readonly<readonly []>
-  >
+  DeepMergeRecordsDefaultHKTInternalPropValueHelper<Ts, K, M, readonly []>
 >;
 
 /**
@@ -114,7 +109,7 @@ type DeepMergeRecordsDefaultHKTInternalPropValueHelper<
   M,
   Acc extends ReadonlyArray<unknown>
 > = Ts extends readonly [infer Head, ...infer Rest]
-  ? Head extends Record<PropertyKey, unknown>
+  ? Head extends Readonly<Record<PropertyKey, unknown>>
     ? Rest extends readonly [unknown, ...ReadonlyArray<unknown>]
       ? DeepMergeRecordsDefaultHKTInternalPropValueHelper<
           Rest,
