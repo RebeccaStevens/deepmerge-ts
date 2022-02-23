@@ -20,10 +20,10 @@ import {
 } from "./utils";
 
 const defaultMergeFunctions = {
-  mergeMaps,
-  mergeSets,
-  mergeArrays,
-  mergeRecords,
+  mergeMaps: defaultMergeMaps,
+  mergeSets: defaultMergeSets,
+  mergeArrays: defaultMergeArrays,
+  mergeRecords: defaultMergeRecords,
   mergeOthers: leaf,
 } as const;
 
@@ -247,11 +247,11 @@ function mergeUnknowns<
 }
 
 /**
- * Merge records.
+ * The default strategy to merge records.
  *
  * @param values - The records.
  */
-function mergeRecords<
+function defaultMergeRecords<
   Ts extends ReadonlyArray<Record<PropertyKey, unknown>>,
   U extends DeepMergeMergeFunctionUtils<M, MM>,
   MF extends DeepMergeMergeFunctionsURIs,
@@ -291,11 +291,11 @@ function mergeRecords<
 }
 
 /**
- * Merge arrays.
+ * The default strategy to merge arrays.
  *
  * @param values - The arrays.
  */
-function mergeArrays<
+function defaultMergeArrays<
   Ts extends ReadonlyArray<ReadonlyArray<unknown>>,
   MF extends DeepMergeMergeFunctionsURIs,
   M
@@ -304,31 +304,29 @@ function mergeArrays<
 }
 
 /**
- * Merge sets.
+ * The default strategy to merge sets.
  *
  * @param values - The sets.
  */
-function mergeSets<Ts extends ReadonlyArray<Readonly<ReadonlySet<unknown>>>>(
-  values: Ts
-) {
+function defaultMergeSets<
+  Ts extends ReadonlyArray<Readonly<ReadonlySet<unknown>>>
+>(values: Ts) {
   return new Set(getIterableOfIterables(values)) as DeepMergeSetsDefaultHKT<Ts>;
 }
 
 /**
- * Merge maps.
+ * The default strategy to merge maps.
  *
  * @param values - The maps.
  */
-function mergeMaps<
+function defaultMergeMaps<
   Ts extends ReadonlyArray<Readonly<ReadonlyMap<unknown, unknown>>>
 >(values: Ts) {
   return new Map(getIterableOfIterables(values)) as DeepMergeMapsDefaultHKT<Ts>;
 }
 
 /**
- * Merge "other" things.
- *
- * @param values - The values.
+ * Get the last value in the given array.
  */
 function leaf<Ts extends ReadonlyArray<unknown>>(values: Ts) {
   return values[values.length - 1];
