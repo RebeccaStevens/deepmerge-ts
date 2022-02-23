@@ -155,6 +155,9 @@ const customizedDeepmerge = deepmergeCustom<
     if (previousMeta === undefined) {
       return { keyPath: [] };
     }
+    if (metaMeta.key === undefined) {
+      return previousMeta;
+    }
     return {
       ...metaMeta,
       keyPath: [...previousMeta.keyPath, metaMeta.key],

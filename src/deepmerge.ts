@@ -87,9 +87,7 @@ export function deepmergeCustom<
 export function deepmergeCustom<
   PMF extends Partial<DeepMergeMergeFunctionsURIs>,
   MetaData,
-  MetaMetaData extends Readonly<
-    Record<PropertyKey, unknown>
-  > = DeepMergeBuiltInMetaData
+  MetaMetaData extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData
 >(
   options: DeepMergeOptions<MetaData, MetaMetaData>,
   rootMetaData?: MetaData
@@ -100,7 +98,7 @@ export function deepmergeCustom<
 export function deepmergeCustom<
   PMF extends Partial<DeepMergeMergeFunctionsURIs>,
   MetaData,
-  MetaMetaData extends Readonly<Record<PropertyKey, unknown>>
+  MetaMetaData extends DeepMergeBuiltInMetaData
 >(
   options: DeepMergeOptions<MetaData, MetaMetaData>,
   rootMetaData?: MetaData
@@ -140,7 +138,7 @@ export function deepmergeCustom<
  *
  * @param options - The options the user specified
  */
-function getUtils<M, MM extends Readonly<Record<PropertyKey, unknown>>>(
+function getUtils<M, MM extends DeepMergeBuiltInMetaData>(
   options: DeepMergeOptions<M, MM>,
   customizedDeepmerge: DeepMergeMergeFunctionUtils<M, MM>["deepmerge"]
 ): DeepMergeMergeFunctionUtils<M, MM> {
@@ -177,7 +175,7 @@ function mergeUnknowns<
   U extends DeepMergeMergeFunctionUtils<M, MM>,
   MF extends DeepMergeMergeFunctionsURIs,
   M,
-  MM extends Readonly<Record<PropertyKey, unknown>>
+  MM extends DeepMergeBuiltInMetaData
 >(values: Ts, utils: U, meta: M | undefined): DeepMergeHKT<Ts, MF, M> {
   if (values.length === 0) {
     return undefined as DeepMergeHKT<Ts, MF, M>;
