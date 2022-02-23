@@ -384,6 +384,9 @@ test("key path based merging", (t) => {
     ReadonlyArray<PropertyKey>
   >({
     metaDataUpdater: (previousMeta = [], metaMeta) => {
+      if (metaMeta.key === undefined) {
+        return previousMeta;
+      }
       return [...previousMeta, metaMeta.key];
     },
     mergeOthers: (values, utils, meta) => {
@@ -466,7 +469,7 @@ test("key path based array merging", (t) => {
   ) => {
     const mergeSettings: DeepMergeOptions<
       ReadonlyArray<unknown>,
-      Readonly<Partial<{ id: unknown }>>
+      Readonly<{ id: unknown }>
     > = {
       metaDataUpdater: (previousMeta = [], metaMeta) => {
         return [...previousMeta, metaMeta.key ?? metaMeta.id];
