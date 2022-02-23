@@ -75,11 +75,14 @@ function getIterableOfIterables(iterables) {
 }
 
 const defaultMergeFunctions = {
-    mergeMaps,
-    mergeSets,
-    mergeArrays,
-    mergeRecords,
+    mergeMaps: defaultMergeMaps,
+    mergeSets: defaultMergeSets,
+    mergeArrays: defaultMergeArrays,
+    mergeRecords: defaultMergeRecords,
     mergeOthers: leaf,
+};
+const shortcutActions = {
+    defaultMerging: Symbol("deepmerge-ts: default merging"),
 };
 /**
  * The default function to update meta data.
@@ -111,7 +114,7 @@ function deepmergeCustom(options, rootMetaData) {
  * @param options - The options the user specified
  */
 function getUtils(options, customizedDeepmerge) {
-    var _a;
+    var _a, _b;
     return {
         defaultMergeFunctions,
         mergeFunctions: {
@@ -122,6 +125,8 @@ function getUtils(options, customizedDeepmerge) {
         },
         metaDataUpdater: ((_a = options.metaDataUpdater) !== null && _a !== void 0 ? _a : defaultMetaDataUpdater),
         deepmerge: customizedDeepmerge,
+        allowImplicitDefaultMerging: (_b = options.allowImplicitDefaultMerging) !== null && _b !== void 0 ? _b : false,
+        use: shortcutActions,
     };
 }
 /**
@@ -134,7 +139,7 @@ function mergeUnknowns(values, utils, meta) {
         return undefined;
     }
     if (values.length === 1) {
-        return utils.mergeFunctions.mergeOthers(values, utils, meta);
+        return mergeOthers(values, utils, meta);
     }
     const type = getObjectType(values[0]);
     // eslint-disable-next-line functional/no-conditional-statement -- add an early escape for better performance.
@@ -144,20 +149,20 @@ function mergeUnknowns(values, utils, meta) {
             if (getObjectType(values[mutableIndex]) === type) {
                 continue;
             }
-            return utils.mergeFunctions.mergeOthers(values, utils, meta);
+            return mergeOthers(values, utils, meta);
         }
     }
     switch (type) {
         case 1 /* RECORD */:
-            return utils.mergeFunctions.mergeRecords(values, utils, meta);
+            return mergeRecords(values, utils, meta);
         case 2 /* ARRAY */:
-            return utils.mergeFunctions.mergeArrays(values, utils, meta);
+            return mergeArrays(values, utils, meta);
         case 3 /* SET */:
-            return utils.mergeFunctions.mergeSets(values, utils, meta);
+            return mergeSets(values, utils, meta);
         case 4 /* MAP */:
-            return utils.mergeFunctions.mergeMaps(values, utils, meta);
+            return mergeMaps(values, utils, meta);
         default:
-            return utils.mergeFunctions.mergeOthers(values, utils, meta);
+            return mergeOthers(values, utils, meta);
     }
 }
 /**
@@ -166,6 +171,84 @@ function mergeUnknowns(values, utils, meta) {
  * @param values - The records.
  */
 function mergeRecords(values, utils, meta) {
+    const result = utils.mergeFunctions.mergeRecords(values, utils, meta);
+    if (result === shortcutActions.defaultMerging ||
+        (utils.allowImplicitDefaultMerging &&
+            result === undefined &&
+            utils.mergeFunctions.mergeRecords !==
+                utils.defaultMergeFunctions.mergeRecords)) {
+        return utils.defaultMergeFunctions.mergeRecords(values, utils, meta);
+    }
+    return result;
+}
+/**
+ * Merge arrays.
+ *
+ * @param values - The arrays.
+ */
+function mergeArrays(values, utils, meta) {
+    const result = utils.mergeFunctions.mergeArrays(values, utils, meta);
+    if (result === shortcutActions.defaultMerging ||
+        (utils.allowImplicitDefaultMerging &&
+            result === undefined &&
+            utils.mergeFunctions.mergeArrays !==
+                utils.defaultMergeFunctions.mergeArrays)) {
+        return utils.defaultMergeFunctions.mergeArrays(values);
+    }
+    return result;
+}
+/**
+ * Merge sets.
+ *
+ * @param values - The sets.
+ */
+function mergeSets(values, utils, meta) {
+    const result = utils.mergeFunctions.mergeSets(values, utils, meta);
+    if (result === shortcutActions.defaultMerging ||
+        (utils.allowImplicitDefaultMerging &&
+            result === undefined &&
+            utils.mergeFunctions.mergeSets !== utils.defaultMergeFunctions.mergeSets)) {
+        return utils.defaultMergeFunctions.mergeSets(values);
+    }
+    return result;
+}
+/**
+ * Merge maps.
+ *
+ * @param values - The maps.
+ */
+function mergeMaps(values, utils, meta) {
+    const result = utils.mergeFunctions.mergeMaps(values, utils, meta);
+    if (result === shortcutActions.defaultMerging ||
+        (utils.allowImplicitDefaultMerging &&
+            result === undefined &&
+            utils.mergeFunctions.mergeMaps !== utils.defaultMergeFunctions.mergeMaps)) {
+        return utils.defaultMergeFunctions.mergeMaps(values);
+    }
+    return result;
+}
+/**
+ * Merge other things.
+ *
+ * @param values - The other things.
+ */
+function mergeOthers(values, utils, meta) {
+    const result = utils.mergeFunctions.mergeOthers(values, utils, meta);
+    if (result === shortcutActions.defaultMerging ||
+        (utils.allowImplicitDefaultMerging &&
+            result === undefined &&
+            utils.mergeFunctions.mergeOthers !==
+                utils.defaultMergeFunctions.mergeOthers)) {
+        return utils.defaultMergeFunctions.mergeOthers(values);
+    }
+    return result;
+}
+/**
+ * The default strategy to merge records.
+ *
+ * @param values - The records.
+ */
+function defaultMergeRecords(values, utils, meta) {
     const result = {};
     /* eslint-disable functional/no-loop-statement, functional/no-conditional-statement -- using a loop here is more performant. */
     for (const key of getKeys(values)) {
@@ -186,33 +269,31 @@ function mergeRecords(values, utils, meta) {
     return result;
 }
 /**
- * Merge arrays.
+ * The default strategy to merge arrays.
  *
  * @param values - The arrays.
  */
-function mergeArrays(values) {
+function defaultMergeArrays(values) {
     return values.flat();
 }
 /**
- * Merge sets.
+ * The default strategy to merge sets.
  *
  * @param values - The sets.
  */
-function mergeSets(values) {
+function defaultMergeSets(values) {
     return new Set(getIterableOfIterables(values));
 }
 /**
- * Merge maps.
+ * The default strategy to merge maps.
  *
  * @param values - The maps.
  */
-function mergeMaps(values) {
+function defaultMergeMaps(values) {
     return new Map(getIterableOfIterables(values));
 }
 /**
- * Merge "other" things.
- *
- * @param values - The values.
+ * Get the last value in the given array.
  */
 function leaf(values) {
     return values[values.length - 1];
