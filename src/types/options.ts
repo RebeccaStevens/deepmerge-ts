@@ -93,4 +93,7 @@ export type DeepMergeMergeFunctionUtils<
   metaDataUpdater: MetaDataUpdater<M, MM>;
   deepmerge: <Ts extends ReadonlyArray<unknown>>(...values: Ts) => unknown;
   useImplicitDefaultMerging: boolean;
+  actions: Readonly<{
+    defaultMerging: symbol;
+  }>;
 }>;

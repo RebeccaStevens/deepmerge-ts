@@ -28,6 +28,13 @@ const defaultMergeFunctions = {
 } as const;
 
 /**
+ * Special values that tell deepmerge-ts to perform a certain action.
+ */
+const actions = {
+  defaultMerging: Symbol("deepmerge-ts: default merging"),
+} as const;
+
+/**
  * The default function to update meta data.
  */
 function defaultMetaDataUpdater<M>(
@@ -163,6 +170,7 @@ function getUtils<M, MM extends DeepMergeBuiltInMetaData>(
     >["metaDataUpdater"],
     deepmerge: customizedDeepmerge,
     useImplicitDefaultMerging: options.enableImplicitDefaultMerging ?? false,
+    actions,
   };
 }
 
@@ -263,10 +271,11 @@ function mergeRecords<
   const result = utils.mergeFunctions.mergeRecords(values, utils, meta);
 
   if (
-    utils.useImplicitDefaultMerging &&
-    result === undefined &&
-    utils.mergeFunctions.mergeRecords !==
-      utils.defaultMergeFunctions.mergeRecords
+    result === actions.defaultMerging ||
+    (utils.useImplicitDefaultMerging &&
+      result === undefined &&
+      utils.mergeFunctions.mergeRecords !==
+        utils.defaultMergeFunctions.mergeRecords)
   ) {
     return utils.defaultMergeFunctions.mergeRecords<
       ReadonlyArray<Readonly<Record<PropertyKey, unknown>>>,
@@ -297,9 +306,11 @@ function mergeArrays<
   const result = utils.mergeFunctions.mergeArrays(values, utils, meta);
 
   if (
-    utils.useImplicitDefaultMerging &&
-    result === undefined &&
-    utils.mergeFunctions.mergeArrays !== utils.defaultMergeFunctions.mergeArrays
+    result === actions.defaultMerging ||
+    (utils.useImplicitDefaultMerging &&
+      result === undefined &&
+      utils.mergeFunctions.mergeArrays !==
+        utils.defaultMergeFunctions.mergeArrays)
   ) {
     return utils.defaultMergeFunctions.mergeArrays(values);
   }
@@ -323,9 +334,10 @@ function mergeSets<
   const result = utils.mergeFunctions.mergeSets(values, utils, meta);
 
   if (
-    utils.useImplicitDefaultMerging &&
-    result === undefined &&
-    utils.mergeFunctions.mergeSets !== utils.defaultMergeFunctions.mergeSets
+    result === actions.defaultMerging ||
+    (utils.useImplicitDefaultMerging &&
+      result === undefined &&
+      utils.mergeFunctions.mergeSets !== utils.defaultMergeFunctions.mergeSets)
   ) {
     return utils.defaultMergeFunctions.mergeSets(values);
   }
@@ -349,9 +361,10 @@ function mergeMaps<
   const result = utils.mergeFunctions.mergeMaps(values, utils, meta);
 
   if (
-    utils.useImplicitDefaultMerging &&
-    result === undefined &&
-    utils.mergeFunctions.mergeMaps !== utils.defaultMergeFunctions.mergeMaps
+    result === actions.defaultMerging ||
+    (utils.useImplicitDefaultMerging &&
+      result === undefined &&
+      utils.mergeFunctions.mergeMaps !== utils.defaultMergeFunctions.mergeMaps)
   ) {
     return utils.defaultMergeFunctions.mergeMaps(values);
   }
@@ -371,9 +384,11 @@ function mergeOthers<
   const result = utils.mergeFunctions.mergeOthers(values, utils, meta);
 
   if (
-    utils.useImplicitDefaultMerging &&
-    result === undefined &&
-    utils.mergeFunctions.mergeOthers !== utils.defaultMergeFunctions.mergeOthers
+    result === actions.defaultMerging ||
+    (utils.useImplicitDefaultMerging &&
+      result === undefined &&
+      utils.mergeFunctions.mergeOthers !==
+        utils.defaultMergeFunctions.mergeOthers)
   ) {
     return utils.defaultMergeFunctions.mergeOthers(values);
   }
