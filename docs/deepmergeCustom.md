@@ -202,6 +202,37 @@ declare module "../src/types" {
 }
 ```
 
+## Implicit Default Merging
+
+If you do not want to have to explicitly perform default merging in your custom merge functions;
+you can set the option `allowImplicitDefaultMerging` to `true`. Once set, if any of your custom
+merge functions return `undefined`, then the default merging functions will automatically be called.
+
+For example, the following `customizedDeepmerge` functions are equivalent:
+
+```ts
+const customizedDeepmerge = deepmergeCustom({
+  mergeOthers: (value, utils) => {
+    if (someCondition) {
+      return someCustomValue;
+    }
+    return utils.defaultMergeFunctions.mergeOthers(values);
+  },
+});
+```
+
+```ts
+const customizedDeepmerge = deepmergeCustom({
+  allowImplicitDefaultMerging: true,  // enable implicit default merging
+  mergeOthers: (value, utils) => {
+    if (someCondition) {
+      return someCustomValue;
+    }
+    // implicitly return undefined
+  },
+});
+```
+
 ## API
 
 [See deepmerge custom API](./API.md#deepmergecustomoptions).
