@@ -629,3 +629,38 @@ test("implicit default merging", (t) => {
 
   t.deepEqual(merged, expected);
 });
+
+test("default merging using shortcut", (t) => {
+  const x = {
+    foo: 1,
+    bar: { baz: [2], qux: new Set([1]), quux: new Map([[1, 2]]) },
+  };
+  const y = {
+    foo: 3,
+    bar: { baz: [4], qux: new Set([2]), quux: new Map([[2, 3]]) },
+  };
+
+  const expected = {
+    foo: 3,
+    bar: {
+      baz: [2, 4],
+      qux: new Set([1, 2]),
+      quux: new Map([
+        [1, 2],
+        [2, 3],
+      ]),
+    },
+  };
+
+  const customizedDeepmerge = deepmergeCustom({
+    mergeRecords: (value, utils) => utils.actions.defaultMerge,
+    mergeArrays: (value, utils) => utils.actions.defaultMerge,
+    mergeSets: (value, utils) => utils.actions.defaultMerge,
+    mergeMaps: (value, utils) => utils.actions.defaultMerge,
+    mergeOthers: (value, utils) => utils.actions.defaultMerge,
+  });
+
+  const merged = customizedDeepmerge(x, y);
+
+  t.deepEqual(merged, expected);
+});
