@@ -1,6 +1,17 @@
 # Changelog
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
+# [4.0.0-beta.2](https://github.com/RebeccaStevens/deepmerge-ts/compare/v4.0.0-beta.1...v4.0.0-beta.2) (2022-02-24)
+
+
+### Features
+
+* allow for alternative ways to apply default merging ([b8dd88a](https://github.com/RebeccaStevens/deepmerge-ts/commit/b8dd88a60093c2cc65af2fa59153c856cd529e76))
+* allow for default merging via a special return value ([658d1fd](https://github.com/RebeccaStevens/deepmerge-ts/commit/658d1fd454fe095e6c7f2be22ccf4823fe0ea6ef))
+* allow for implicit default merging ([1d5e617](https://github.com/RebeccaStevens/deepmerge-ts/commit/1d5e617bc4980f64a75fa9da1397979b2310fc06))
+* allow for skipping properties completely via a special return value ([e936516](https://github.com/RebeccaStevens/deepmerge-ts/commit/e9365162c1357db4b1d19104675ab4ad10a5f9d2))
+* allow for skipping properties completely via a special return value ([#64](https://github.com/RebeccaStevens/deepmerge-ts/issues/64)) ([76ceed8](https://github.com/RebeccaStevens/deepmerge-ts/commit/76ceed856e26c7222cfd99314f08a2f15b9973b0))
+
 # [4.0.0-beta.1](https://github.com/RebeccaStevens/deepmerge-ts/compare/v3.0.1...v4.0.0-beta.1) (2022-02-23)
 
 

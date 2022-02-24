@@ -27,8 +27,12 @@ const defaultMergeFunctions = {
   mergeOthers: leaf,
 } as const;
 
-const shortcutActions = {
-  defaultMerging: Symbol("deepmerge-ts: default merging"),
+/**
+ * Special values that tell deepmerge-ts to perform a certain action.
+ */
+const actions = {
+  defaultMerge: Symbol("deepmerge-ts: default merge"),
+  skip: Symbol("deepmerge-ts: skip"),
 } as const;
 
 /**
@@ -166,8 +170,8 @@ function getUtils<M, MM extends DeepMergeBuiltInMetaData>(
       MM
     >["metaDataUpdater"],
     deepmerge: customizedDeepmerge,
-    allowImplicitDefaultMerging: options.allowImplicitDefaultMerging ?? false,
-    use: shortcutActions,
+    useImplicitDefaultMerging: options.enableImplicitDefaultMerging ?? false,
+    actions,
   };
 }
 
@@ -268,8 +272,8 @@ function mergeRecords<
   const result = utils.mergeFunctions.mergeRecords(values, utils, meta);
 
   if (
-    result === shortcutActions.defaultMerging ||
-    (utils.allowImplicitDefaultMerging &&
+    result === actions.defaultMerge ||
+    (utils.useImplicitDefaultMerging &&
       result === undefined &&
       utils.mergeFunctions.mergeRecords !==
         utils.defaultMergeFunctions.mergeRecords)
@@ -303,8 +307,8 @@ function mergeArrays<
   const result = utils.mergeFunctions.mergeArrays(values, utils, meta);
 
   if (
-    result === shortcutActions.defaultMerging ||
-    (utils.allowImplicitDefaultMerging &&
+    result === actions.defaultMerge ||
+    (utils.useImplicitDefaultMerging &&
       result === undefined &&
       utils.mergeFunctions.mergeArrays !==
         utils.defaultMergeFunctions.mergeArrays)
@@ -331,8 +335,8 @@ function mergeSets<
   const result = utils.mergeFunctions.mergeSets(values, utils, meta);
 
   if (
-    result === shortcutActions.defaultMerging ||
-    (utils.allowImplicitDefaultMerging &&
+    result === actions.defaultMerge ||
+    (utils.useImplicitDefaultMerging &&
       result === undefined &&
       utils.mergeFunctions.mergeSets !== utils.defaultMergeFunctions.mergeSets)
   ) {
@@ -358,8 +362,8 @@ function mergeMaps<
   const result = utils.mergeFunctions.mergeMaps(values, utils, meta);
 
   if (
-    result === shortcutActions.defaultMerging ||
-    (utils.allowImplicitDefaultMerging &&
+    result === actions.defaultMerge ||
+    (utils.useImplicitDefaultMerging &&
       result === undefined &&
       utils.mergeFunctions.mergeMaps !== utils.defaultMergeFunctions.mergeMaps)
   ) {
@@ -381,8 +385,8 @@ function mergeOthers<
   const result = utils.mergeFunctions.mergeOthers(values, utils, meta);
 
   if (
-    result === shortcutActions.defaultMerging ||
-    (utils.allowImplicitDefaultMerging &&
+    result === actions.defaultMerge ||
+    (utils.useImplicitDefaultMerging &&
       result === undefined &&
       utils.mergeFunctions.mergeOthers !==
         utils.defaultMergeFunctions.mergeOthers)
@@ -424,11 +428,17 @@ function defaultMergeRecords<
       parents: values,
     } as unknown as MM);
 
-    result[key] = mergeUnknowns<ReadonlyArray<unknown>, U, MF, M, MM>(
+    const propertyResult = mergeUnknowns<ReadonlyArray<unknown>, U, MF, M, MM>(
       propValues,
       utils,
       updatedMeta
     );
+
+    if (propertyResult === actions.skip) {
+      continue;
+    }
+
+    result[key] = propertyResult;
   }
 
   /* eslint-enable functional/no-loop-statement, functional/no-conditional-statement */

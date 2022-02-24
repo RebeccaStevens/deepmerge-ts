@@ -318,7 +318,7 @@ declare type DeepMergeOptionsFull<M, MM extends DeepMergeBuiltInMetaData> = Read
     mergeSets: DeepMergeMergeFunctions<M, MM>["mergeSets"] | false;
     mergeOthers: DeepMergeMergeFunctions<M, MM>["mergeOthers"];
     metaDataUpdater: MetaDataUpdater<M, MM>;
-    allowImplicitDefaultMerging: boolean;
+    enableImplicitDefaultMerging: boolean;
 }>;
 /**
  * All the merge functions that deepmerge uses.
@@ -338,9 +338,10 @@ declare type DeepMergeMergeFunctionUtils<M, MM extends DeepMergeBuiltInMetaData>
     defaultMergeFunctions: DeepMergeMergeFunctionsDefaults;
     metaDataUpdater: MetaDataUpdater<M, MM>;
     deepmerge: <Ts extends ReadonlyArray<unknown>>(...values: Ts) => unknown;
-    allowImplicitDefaultMerging: boolean;
-    use: Readonly<{
-        defaultMerging: symbol;
+    useImplicitDefaultMerging: boolean;
+    actions: Readonly<{
+        defaultMerge: symbol;
+        skip: symbol;
     }>;
 }>;
 

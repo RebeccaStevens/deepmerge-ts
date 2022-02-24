@@ -81,8 +81,12 @@ const defaultMergeFunctions = {
     mergeRecords: defaultMergeRecords,
     mergeOthers: leaf,
 };
-const shortcutActions = {
-    defaultMerging: Symbol("deepmerge-ts: default merging"),
+/**
+ * Special values that tell deepmerge-ts to perform a certain action.
+ */
+const actions = {
+    defaultMerge: Symbol("deepmerge-ts: default merge"),
+    skip: Symbol("deepmerge-ts: skip"),
 };
 /**
  * The default function to update meta data.
@@ -125,8 +129,8 @@ function getUtils(options, customizedDeepmerge) {
         },
         metaDataUpdater: ((_a = options.metaDataUpdater) !== null && _a !== void 0 ? _a : defaultMetaDataUpdater),
         deepmerge: customizedDeepmerge,
-        allowImplicitDefaultMerging: (_b = options.allowImplicitDefaultMerging) !== null && _b !== void 0 ? _b : false,
-        use: shortcutActions,
+        useImplicitDefaultMerging: (_b = options.enableImplicitDefaultMerging) !== null && _b !== void 0 ? _b : false,
+        actions,
     };
 }
 /**
@@ -172,8 +176,8 @@ function mergeUnknowns(values, utils, meta) {
  */
 function mergeRecords(values, utils, meta) {
     const result = utils.mergeFunctions.mergeRecords(values, utils, meta);
-    if (result === shortcutActions.defaultMerging ||
-        (utils.allowImplicitDefaultMerging &&
+    if (result === actions.defaultMerge ||
+        (utils.useImplicitDefaultMerging &&
             result === undefined &&
             utils.mergeFunctions.mergeRecords !==
                 utils.defaultMergeFunctions.mergeRecords)) {
@@ -188,8 +192,8 @@ function mergeRecords(values, utils, meta) {
  */
 function mergeArrays(values, utils, meta) {
     const result = utils.mergeFunctions.mergeArrays(values, utils, meta);
-    if (result === shortcutActions.defaultMerging ||
-        (utils.allowImplicitDefaultMerging &&
+    if (result === actions.defaultMerge ||
+        (utils.useImplicitDefaultMerging &&
             result === undefined &&
             utils.mergeFunctions.mergeArrays !==
                 utils.defaultMergeFunctions.mergeArrays)) {
@@ -204,8 +208,8 @@ function mergeArrays(values, utils, meta) {
  */
 function mergeSets(values, utils, meta) {
     const result = utils.mergeFunctions.mergeSets(values, utils, meta);
-    if (result === shortcutActions.defaultMerging ||
-        (utils.allowImplicitDefaultMerging &&
+    if (result === actions.defaultMerge ||
+        (utils.useImplicitDefaultMerging &&
             result === undefined &&
             utils.mergeFunctions.mergeSets !== utils.defaultMergeFunctions.mergeSets)) {
         return utils.defaultMergeFunctions.mergeSets(values);
@@ -219,8 +223,8 @@ function mergeSets(values, utils, meta) {
  */
 function mergeMaps(values, utils, meta) {
     const result = utils.mergeFunctions.mergeMaps(values, utils, meta);
-    if (result === shortcutActions.defaultMerging ||
-        (utils.allowImplicitDefaultMerging &&
+    if (result === actions.defaultMerge ||
+        (utils.useImplicitDefaultMerging &&
             result === undefined &&
             utils.mergeFunctions.mergeMaps !== utils.defaultMergeFunctions.mergeMaps)) {
         return utils.defaultMergeFunctions.mergeMaps(values);
@@ -234,8 +238,8 @@ function mergeMaps(values, utils, meta) {
  */
 function mergeOthers(values, utils, meta) {
     const result = utils.mergeFunctions.mergeOthers(values, utils, meta);
-    if (result === shortcutActions.defaultMerging ||
-        (utils.allowImplicitDefaultMerging &&
+    if (result === actions.defaultMerge ||
+        (utils.useImplicitDefaultMerging &&
             result === undefined &&
             utils.mergeFunctions.mergeOthers !==
                 utils.defaultMergeFunctions.mergeOthers)) {
@@ -263,7 +267,11 @@ function defaultMergeRecords(values, utils, meta) {
             key,
             parents: values,
         });
-        result[key] = mergeUnknowns(propValues, utils, updatedMeta);
+        const propertyResult = mergeUnknowns(propValues, utils, updatedMeta);
+        if (propertyResult === actions.skip) {
+            continue;
+        }
+        result[key] = propertyResult;
     }
     /* eslint-enable functional/no-loop-statement, functional/no-conditional-statement */
     return result;
