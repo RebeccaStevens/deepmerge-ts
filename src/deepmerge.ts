@@ -32,6 +32,7 @@ const defaultMergeFunctions = {
  */
 const actions = {
   defaultMerge: Symbol("deepmerge-ts: default merge"),
+  skip: Symbol("deepmerge-ts: skip"),
 } as const;
 
 /**
@@ -427,11 +428,17 @@ function defaultMergeRecords<
       parents: values,
     } as unknown as MM);
 
-    result[key] = mergeUnknowns<ReadonlyArray<unknown>, U, MF, M, MM>(
+    const propertyResult = mergeUnknowns<ReadonlyArray<unknown>, U, MF, M, MM>(
       propValues,
       utils,
       updatedMeta
     );
+
+    if (propertyResult === actions.skip) {
+      continue;
+    }
+
+    result[key] = propertyResult;
   }
 
   /* eslint-enable functional/no-loop-statement, functional/no-conditional-statement */
