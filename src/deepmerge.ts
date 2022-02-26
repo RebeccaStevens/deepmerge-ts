@@ -28,6 +28,14 @@ const defaultMergeFunctions = {
 } as const;
 
 /**
+ * Special values that tell deepmerge-ts to perform a certain action.
+ */
+const actions = {
+  defaultMerge: Symbol("deepmerge-ts: default merge"),
+  skip: Symbol("deepmerge-ts: skip"),
+} as const;
+
+/**
  * The default function to update meta data.
  */
 function defaultMetaDataUpdater<M>(
@@ -87,9 +95,7 @@ export function deepmergeCustom<
 export function deepmergeCustom<
   PMF extends Partial<DeepMergeMergeFunctionsURIs>,
   MetaData,
-  MetaMetaData extends Readonly<
-    Record<PropertyKey, unknown>
-  > = DeepMergeBuiltInMetaData
+  MetaMetaData extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData
 >(
   options: DeepMergeOptions<MetaData, MetaMetaData>,
   rootMetaData?: MetaData
@@ -100,7 +106,7 @@ export function deepmergeCustom<
 export function deepmergeCustom<
   PMF extends Partial<DeepMergeMergeFunctionsURIs>,
   MetaData,
-  MetaMetaData extends Readonly<Record<PropertyKey, unknown>>
+  MetaMetaData extends DeepMergeBuiltInMetaData
 >(
   options: DeepMergeOptions<MetaData, MetaMetaData>,
   rootMetaData?: MetaData
@@ -140,7 +146,7 @@ export function deepmergeCustom<
  *
  * @param options - The options the user specified
  */
-function getUtils<M, MM extends Readonly<Record<PropertyKey, unknown>>>(
+function getUtils<M, MM extends DeepMergeBuiltInMetaData>(
   options: DeepMergeOptions<M, MM>,
   customizedDeepmerge: DeepMergeMergeFunctionUtils<M, MM>["deepmerge"]
 ): DeepMergeMergeFunctionUtils<M, MM> {
@@ -164,6 +170,8 @@ function getUtils<M, MM extends Readonly<Record<PropertyKey, unknown>>>(
       MM
     >["metaDataUpdater"],
     deepmerge: customizedDeepmerge,
+    useImplicitDefaultMerging: options.enableImplicitDefaultMerging ?? false,
+    actions,
   };
 }
 
@@ -177,17 +185,17 @@ function mergeUnknowns<
   U extends DeepMergeMergeFunctionUtils<M, MM>,
   MF extends DeepMergeMergeFunctionsURIs,
   M,
-  MM extends Readonly<Record<PropertyKey, unknown>>
+  MM extends DeepMergeBuiltInMetaData
 >(values: Ts, utils: U, meta: M | undefined): DeepMergeHKT<Ts, MF, M> {
   if (values.length === 0) {
     return undefined as DeepMergeHKT<Ts, MF, M>;
   }
   if (values.length === 1) {
-    return utils.mergeFunctions.mergeOthers(
-      values,
-      utils,
-      meta
-    ) as DeepMergeHKT<Ts, MF, M>;
+    return mergeOthers<U, M, MM>(values, utils, meta) as DeepMergeHKT<
+      Ts,
+      MF,
+      M
+    >;
   }
 
   const type = getObjectType(values[0]);
@@ -200,50 +208,192 @@ function mergeUnknowns<
         continue;
       }
 
-      return utils.mergeFunctions.mergeOthers(
-        values,
-        utils,
-        meta
-      ) as DeepMergeHKT<Ts, MF, M>;
+      return mergeOthers<U, M, MM>(values, utils, meta) as DeepMergeHKT<
+        Ts,
+        MF,
+        M
+      >;
     }
   }
 
   switch (type) {
     case ObjectType.RECORD:
-      return utils.mergeFunctions.mergeRecords(
+      return mergeRecords<U, MF, M, MM>(
         values as ReadonlyArray<Readonly<Record<PropertyKey, unknown>>>,
         utils,
         meta
       ) as DeepMergeHKT<Ts, MF, M>;
 
     case ObjectType.ARRAY:
-      return utils.mergeFunctions.mergeArrays(
+      return mergeArrays<U, M, MM>(
         values as ReadonlyArray<Readonly<ReadonlyArray<unknown>>>,
         utils,
         meta
       ) as DeepMergeHKT<Ts, MF, M>;
 
     case ObjectType.SET:
-      return utils.mergeFunctions.mergeSets(
+      return mergeSets<U, M, MM>(
         values as ReadonlyArray<Readonly<ReadonlySet<unknown>>>,
         utils,
         meta
       ) as DeepMergeHKT<Ts, MF, M>;
 
     case ObjectType.MAP:
-      return utils.mergeFunctions.mergeMaps(
+      return mergeMaps<U, M, MM>(
         values as ReadonlyArray<Readonly<ReadonlyMap<unknown, unknown>>>,
         utils,
         meta
       ) as DeepMergeHKT<Ts, MF, M>;
 
     default:
-      return utils.mergeFunctions.mergeOthers(
-        values,
-        utils,
-        meta
-      ) as DeepMergeHKT<Ts, MF, M>;
+      return mergeOthers<U, M, MM>(values, utils, meta) as DeepMergeHKT<
+        Ts,
+        MF,
+        M
+      >;
   }
+}
+
+/**
+ * Merge records.
+ *
+ * @param values - The records.
+ */
+function mergeRecords<
+  U extends DeepMergeMergeFunctionUtils<M, MM>,
+  MF extends DeepMergeMergeFunctionsURIs,
+  M,
+  MM extends DeepMergeBuiltInMetaData
+>(
+  values: ReadonlyArray<Readonly<Record<PropertyKey, unknown>>>,
+  utils: U,
+  meta: M | undefined
+) {
+  const result = utils.mergeFunctions.mergeRecords(values, utils, meta);
+
+  if (
+    result === actions.defaultMerge ||
+    (utils.useImplicitDefaultMerging &&
+      result === undefined &&
+      utils.mergeFunctions.mergeRecords !==
+        utils.defaultMergeFunctions.mergeRecords)
+  ) {
+    return utils.defaultMergeFunctions.mergeRecords<
+      ReadonlyArray<Readonly<Record<PropertyKey, unknown>>>,
+      U,
+      MF,
+      M,
+      MM
+    >(values, utils, meta);
+  }
+
+  return result;
+}
+
+/**
+ * Merge arrays.
+ *
+ * @param values - The arrays.
+ */
+function mergeArrays<
+  U extends DeepMergeMergeFunctionUtils<M, MM>,
+  M,
+  MM extends DeepMergeBuiltInMetaData
+>(
+  values: ReadonlyArray<Readonly<ReadonlyArray<unknown>>>,
+  utils: U,
+  meta: M | undefined
+) {
+  const result = utils.mergeFunctions.mergeArrays(values, utils, meta);
+
+  if (
+    result === actions.defaultMerge ||
+    (utils.useImplicitDefaultMerging &&
+      result === undefined &&
+      utils.mergeFunctions.mergeArrays !==
+        utils.defaultMergeFunctions.mergeArrays)
+  ) {
+    return utils.defaultMergeFunctions.mergeArrays(values);
+  }
+  return result;
+}
+
+/**
+ * Merge sets.
+ *
+ * @param values - The sets.
+ */
+function mergeSets<
+  U extends DeepMergeMergeFunctionUtils<M, MM>,
+  M,
+  MM extends DeepMergeBuiltInMetaData
+>(
+  values: ReadonlyArray<Readonly<ReadonlySet<unknown>>>,
+  utils: U,
+  meta: M | undefined
+) {
+  const result = utils.mergeFunctions.mergeSets(values, utils, meta);
+
+  if (
+    result === actions.defaultMerge ||
+    (utils.useImplicitDefaultMerging &&
+      result === undefined &&
+      utils.mergeFunctions.mergeSets !== utils.defaultMergeFunctions.mergeSets)
+  ) {
+    return utils.defaultMergeFunctions.mergeSets(values);
+  }
+  return result;
+}
+
+/**
+ * Merge maps.
+ *
+ * @param values - The maps.
+ */
+function mergeMaps<
+  U extends DeepMergeMergeFunctionUtils<M, MM>,
+  M,
+  MM extends DeepMergeBuiltInMetaData
+>(
+  values: ReadonlyArray<Readonly<ReadonlyMap<unknown, unknown>>>,
+  utils: U,
+  meta: M | undefined
+) {
+  const result = utils.mergeFunctions.mergeMaps(values, utils, meta);
+
+  if (
+    result === actions.defaultMerge ||
+    (utils.useImplicitDefaultMerging &&
+      result === undefined &&
+      utils.mergeFunctions.mergeMaps !== utils.defaultMergeFunctions.mergeMaps)
+  ) {
+    return utils.defaultMergeFunctions.mergeMaps(values);
+  }
+  return result;
+}
+
+/**
+ * Merge other things.
+ *
+ * @param values - The other things.
+ */
+function mergeOthers<
+  U extends DeepMergeMergeFunctionUtils<M, MM>,
+  M,
+  MM extends DeepMergeBuiltInMetaData
+>(values: ReadonlyArray<unknown>, utils: U, meta: M | undefined) {
+  const result = utils.mergeFunctions.mergeOthers(values, utils, meta);
+
+  if (
+    result === actions.defaultMerge ||
+    (utils.useImplicitDefaultMerging &&
+      result === undefined &&
+      utils.mergeFunctions.mergeOthers !==
+        utils.defaultMergeFunctions.mergeOthers)
+  ) {
+    return utils.defaultMergeFunctions.mergeOthers(values);
+  }
+  return result;
 }
 
 /**
@@ -278,11 +428,17 @@ function defaultMergeRecords<
       parents: values,
     } as unknown as MM);
 
-    result[key] = mergeUnknowns<ReadonlyArray<unknown>, U, MF, M, MM>(
+    const propertyResult = mergeUnknowns<ReadonlyArray<unknown>, U, MF, M, MM>(
       propValues,
       utils,
       updatedMeta
     );
+
+    if (propertyResult === actions.skip) {
+      continue;
+    }
+
+    result[key] = propertyResult;
   }
 
   /* eslint-enable functional/no-loop-statement, functional/no-conditional-statement */

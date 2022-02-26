@@ -384,6 +384,9 @@ test("key path based merging", (t) => {
     ReadonlyArray<PropertyKey>
   >({
     metaDataUpdater: (previousMeta = [], metaMeta) => {
+      if (metaMeta.key === undefined) {
+        return previousMeta;
+      }
       return [...previousMeta, metaMeta.key];
     },
     mergeOthers: (values, utils, meta) => {
@@ -466,7 +469,7 @@ test("key path based array merging", (t) => {
   ) => {
     const mergeSettings: DeepMergeOptions<
       ReadonlyArray<unknown>,
-      Readonly<Partial<{ id: unknown }>>
+      Readonly<{ id: unknown }>
     > = {
       metaDataUpdater: (previousMeta = [], metaMeta) => {
         return [...previousMeta, metaMeta.key ?? metaMeta.id];
@@ -589,4 +592,100 @@ test("custom merge that clones", (t) => {
   t.not(merged.foo.bar.baz.qux, x.foo.bar.baz.qux);
   t.not(merged.bar, y.bar);
   t.not(merged.baz, y.baz);
+});
+
+test("implicit default merging", (t) => {
+  const x = {
+    foo: 1,
+    bar: { baz: [2], qux: new Set([1]), quux: new Map([[1, 2]]) },
+  };
+  const y = {
+    foo: 3,
+    bar: { baz: [4], qux: new Set([2]), quux: new Map([[2, 3]]) },
+  };
+
+  const expected = {
+    foo: 3,
+    bar: {
+      baz: [2, 4],
+      qux: new Set([1, 2]),
+      quux: new Map([
+        [1, 2],
+        [2, 3],
+      ]),
+    },
+  };
+
+  const customizedDeepmerge = deepmergeCustom({
+    enableImplicitDefaultMerging: true,
+    mergeRecords: () => undefined,
+    mergeArrays: () => undefined,
+    mergeSets: () => undefined,
+    mergeMaps: () => undefined,
+    mergeOthers: () => undefined,
+  });
+
+  const merged = customizedDeepmerge(x, y);
+
+  t.deepEqual(merged, expected);
+});
+
+test("default merging using shortcut", (t) => {
+  const x = {
+    foo: 1,
+    bar: { baz: [2], qux: new Set([1]), quux: new Map([[1, 2]]) },
+  };
+  const y = {
+    foo: 3,
+    bar: { baz: [4], qux: new Set([2]), quux: new Map([[2, 3]]) },
+  };
+
+  const expected = {
+    foo: 3,
+    bar: {
+      baz: [2, 4],
+      qux: new Set([1, 2]),
+      quux: new Map([
+        [1, 2],
+        [2, 3],
+      ]),
+    },
+  };
+
+  const customizedDeepmerge = deepmergeCustom({
+    mergeRecords: (value, utils) => utils.actions.defaultMerge,
+    mergeArrays: (value, utils) => utils.actions.defaultMerge,
+    mergeSets: (value, utils) => utils.actions.defaultMerge,
+    mergeMaps: (value, utils) => utils.actions.defaultMerge,
+    mergeOthers: (value, utils) => utils.actions.defaultMerge,
+  });
+
+  const merged = customizedDeepmerge(x, y);
+
+  t.deepEqual(merged, expected);
+});
+
+test("skip property", (t) => {
+  const x = {
+    foo: { bar: 1, baz: 2, qux: ["a"] },
+    bar: [1, 2, 3],
+  };
+  const y = {
+    foo: { bar: 3, baz: 4, qux: ["b"] },
+    bar: [4, 5, 6],
+  };
+
+  const expected = {
+    foo: { baz: 4, qux: ["a", "b"] },
+    bar: [1, 2, 3, 4, 5, 6],
+  };
+
+  const customizedDeepmerge = deepmergeCustom({
+    mergeOthers: (value, utils, meta) =>
+      meta?.key === "bar" ? utils.actions.skip : utils.actions.defaultMerge,
+  });
+
+  const merged = customizedDeepmerge(x, y);
+
+  t.deepEqual(merged, expected);
 });
