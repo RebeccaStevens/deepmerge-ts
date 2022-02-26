@@ -1,6 +1,25 @@
 # Changelog
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
+# [4.0.0](https://github.com/RebeccaStevens/deepmerge-ts/compare/v3.0.1...v4.0.0) (2022-02-26)
+
+
+### Bug Fixes
+
+* improve meta data typings ([#61](https://github.com/RebeccaStevens/deepmerge-ts/issues/61)) ([9a881d3](https://github.com/RebeccaStevens/deepmerge-ts/commit/9a881d3e55762da03b0d0f465d7e958d81fd0958))
+
+
+### Features
+
+* allow for default merging via a special return value ([658d1fd](https://github.com/RebeccaStevens/deepmerge-ts/commit/658d1fd454fe095e6c7f2be22ccf4823fe0ea6ef))
+* allow for implicit default merging ([1d5e617](https://github.com/RebeccaStevens/deepmerge-ts/commit/1d5e617bc4980f64a75fa9da1397979b2310fc06))
+* allow for skipping properties completely via a special return value ([#64](https://github.com/RebeccaStevens/deepmerge-ts/issues/64)) ([676f2f6](https://github.com/RebeccaStevens/deepmerge-ts/commit/676f2f6593d6baf0e1b31f29c83bac7c392e7ce2))
+
+
+### BREAKING CHANGES
+
+* MetaMetaData now must extends DeepMergeBuiltInMetaData
+
 ## [3.0.1](https://github.com/RebeccaStevens/deepmerge-ts/compare/v3.0.0...v3.0.1) (2022-02-22)
 
 
