@@ -95,5 +95,6 @@ export type DeepMergeMergeFunctionUtils<
   useImplicitDefaultMerging: boolean;
   actions: Readonly<{
     defaultMerge: symbol;
+    skip: symbol;
   }>;
 }>;

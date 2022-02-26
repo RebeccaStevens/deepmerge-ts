@@ -202,7 +202,38 @@ declare module "../src/types" {
 }
 ```
 
-## Default Merging
+## Special Actions
+
+We provide a couple of special actions under `utils.actions` that you can use to simplify your custom merge functions.
+
+### Skipping a Property (`utils.actions.skip`)
+
+If you want to skip a property from being included in the result of a merge based on its value or metadata, you can easily do so with this action.
+
+For example, skipping all properties under the key `"skipme"` of type `Date`:
+
+```ts
+const customizedDeepmerge = deepmergeCustom({
+  mergeOthers: (value, utils, meta) => {
+    if (meta?.key === "skipme") {
+      const nonDateValues = values.filter((value) => !(value instanceof Date));
+      if (nonDateValues.length === 0) {
+        return utils.actions.skip; // Completely skip this property
+      }
+
+      // Don't skip the property completely if a non-Date value was found.
+      return utils.defaultMergeFunctions.mergeOthers(nonDateValues);
+    }
+
+    // Perform the default merging (see below).
+    return utils.actions.defaultMerge;
+  },
+});
+```
+
+To do this without any special actions would require using a custom `mergeRecords` which would be a bit more complicated.
+
+### Default Merging (`utils.actions.defaultMerge`)
 
 If you do not want to have to explicitly call the default merging function in your custom merge function;
 you can just return `utils.actions.defaultMerge`. This will automatically apply the default merging strategy.
@@ -231,7 +262,9 @@ const customizedDeepmerge = deepmergeCustom({
 });
 ```
 
-### Implicit
+Note: When using this action, you cannot change the values upon which the default merging will apply.
+
+#### Implicit Default Merging
 
 You can also set the option `enableImplicitDefaultMerging` to `true` to make it so that if any of your
 custom merge functions return `undefined`, then the default merging strategy will automatically be applied.

@@ -664,3 +664,28 @@ test("default merging using shortcut", (t) => {
 
   t.deepEqual(merged, expected);
 });
+
+test("skip property", (t) => {
+  const x = {
+    foo: { bar: 1, baz: 2, qux: ["a"] },
+    bar: [1, 2, 3],
+  };
+  const y = {
+    foo: { bar: 3, baz: 4, qux: ["b"] },
+    bar: [4, 5, 6],
+  };
+
+  const expected = {
+    foo: { baz: 4, qux: ["a", "b"] },
+    bar: [1, 2, 3, 4, 5, 6],
+  };
+
+  const customizedDeepmerge = deepmergeCustom({
+    mergeOthers: (value, utils, meta) =>
+      meta?.key === "bar" ? utils.actions.skip : utils.actions.defaultMerge,
+  });
+
+  const merged = customizedDeepmerge(x, y);
+
+  t.deepEqual(merged, expected);
+});
