@@ -143,12 +143,7 @@
   dependencies:
     "@babel/types" "^7.14.5"
 
-"@babel/helper-validator-identifier@^7.14.5", "@babel/helper-validator-identifier@^7.14.9":
-  version "7.14.9"
-  resolved "https://registry.yarnpkg.com/@babel/helper-validator-identifier/-/helper-validator-identifier-7.14.9.tgz#6654d171b2024f6d8ee151bf2509699919131d48"
-  integrity sha512-pQYxPY0UP6IHISRitNe8bsijHex4TWZXi2HwKVsjPiltzlhse2znVcm9Ace510VT1kxIHjGJCZZQBX2gJDbo0g==
-
-"@babel/helper-validator-identifier@^7.15.7", "@babel/helper-validator-identifier@^7.16.7":
+"@babel/helper-validator-identifier@^7.14.5", "@babel/helper-validator-identifier@^7.14.9", "@babel/helper-validator-identifier@^7.15.7", "@babel/helper-validator-identifier@^7.16.7":
   version "7.16.7"
   resolved "https://registry.yarnpkg.com/@babel/helper-validator-identifier/-/helper-validator-identifier-7.16.7.tgz#e8c602438c4a8195751243da9031d1607d247cad"
   integrity sha512-hsEnFemeiW4D08A5gUAZxLBTXpZ39P+a+DGDsHw1yxqyQ/jzFEnxf5uTEGp+3bzAbNOxU1paTgYS4ECU/IgfDw==
@@ -3151,9 +3146,9 @@ escape-string-regexp@^4.0.0:
   integrity sha512-TtpcNJ3XAzx3Gq8sWRzJaVajRs0uVxA2YAkdb1jm2YkPz4G6egUFAyA3n5vtEIZefPk5Wa4UXbKuS5fKkJWdgA==
 
 eslint-config-prettier@^8.3.0:
-  version "8.3.0"
-  resolved "https://registry.yarnpkg.com/eslint-config-prettier/-/eslint-config-prettier-8.3.0.tgz#f7471b20b6fe8a9a9254cc684454202886a2dd7a"
-  integrity sha512-BgZuLUSeKzvlL/VUjx/Yb787VQ26RU3gGjA3iiFvdsp/2bMfVIWUVP7tjxtjS0e+HP409cPlPvNkQloz8C91ew==
+  version "8.4.0"
+  resolved "https://registry.yarnpkg.com/eslint-config-prettier/-/eslint-config-prettier-8.4.0.tgz#8e6d17c7436649e98c4c2189868562921ef563de"
+  integrity sha512-CFotdUcMY18nGRo5KGsnNxpznzhkopOcOo0InID+sgQssPrzjvsyKZPvOgymTFeHrFuC3Tzdf2YndhXtULK9Iw==
 
 eslint-import-resolver-node@^0.3.6:
   version "0.3.6"
@@ -3313,10 +3308,10 @@ eslint-plugin-tsdoc@^0.2.14:
     "@microsoft/tsdoc" "0.13.2"
     "@microsoft/tsdoc-config" "0.15.2"
 
-eslint-plugin-unicorn@^40.1.0:
-  version "40.1.0"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-unicorn/-/eslint-plugin-unicorn-40.1.0.tgz#48975360e39d23df726e4b33e8dd5d650e184832"
-  integrity sha512-y5doK2DF9Sr5AqKEHbHxjFllJ167nKDRU01HDcWyv4Tnmaoe9iNxMrBnaybZvWZUaE3OC5Unu0lNIevYamloig==
+eslint-plugin-unicorn@^41.0.0:
+  version "41.0.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-unicorn/-/eslint-plugin-unicorn-41.0.0.tgz#bf0974f8551ab4dd4aaae7d9cf53894040defbbd"
+  integrity sha512-xoJCaRc1uy5REg9DkVga1BkZV57jJxoqOcrU28QHZB89Lk5LdSqdVyTIt9JQVfHNKaiyJ7X+3iLlIn+VEHWEzA==
   dependencies:
     "@babel/helper-validator-identifier" "^7.15.7"
     ci-info "^3.3.0"
@@ -6766,12 +6761,7 @@ redeyed@~2.1.0:
   dependencies:
     esprima "~4.0.0"
 
-regexp-tree@^0.1.21, regexp-tree@~0.1.1:
-  version "0.1.23"
-  resolved "https://registry.yarnpkg.com/regexp-tree/-/regexp-tree-0.1.23.tgz#8a8ce1cc5e971acef62213a7ecdb1f6e18a1f1b2"
-  integrity sha512-+7HWfb4Bvu8Rs2eQTUIpX9I/PlQkYOuTNbRpKLJlQpSgwSkzFYh+pUj0gtvglnOZLKB6YgnIgRuJ2/IlpL48qw==
-
-regexp-tree@^0.1.24:
+regexp-tree@^0.1.21, regexp-tree@^0.1.24, regexp-tree@~0.1.1:
   version "0.1.24"
   resolved "https://registry.yarnpkg.com/regexp-tree/-/regexp-tree-0.1.24.tgz#3d6fa238450a4d66e5bc9c4c14bb720e2196829d"
   integrity sha512-s2aEVuLhvnVJW6s/iPgEGK6R+/xngd2jNQ+xy4bXNDKxZKJH6jpPHY6kVeVv1IeLCHgswRj+Kl3ELaDjG6V1iw==
