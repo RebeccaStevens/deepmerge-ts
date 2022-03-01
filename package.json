@@ -126,7 +126,7 @@
     "eslint-plugin-promise": "^6.0.0",
     "eslint-plugin-sonarjs": "^0.11.0",
     "eslint-plugin-tsdoc": "^0.2.14",
-    "eslint-plugin-unicorn": "^40.1.0",
+    "eslint-plugin-unicorn": "^41.0.0",
     "husky": "^7.0.4",
     "lint-staged": "^12.3.3",
     "lodash": "^4.17.21",
