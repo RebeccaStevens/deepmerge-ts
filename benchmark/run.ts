@@ -16,7 +16,7 @@ void (async () => {
     .access(benchmarkDataFile, fsConstants.R_OK)
     .then(async () => {
       console.log("Loading benchmark data file.");
-      const data = await fs.readFile(benchmarkDataFile, { encoding: "utf-8" });
+      const data = await fs.readFile(benchmarkDataFile, { encoding: "utf8" });
       return JSON.parse(data);
     })
     .catch(async (error) => {
@@ -31,7 +31,7 @@ void (async () => {
       ];
 
       await fs.writeFile(benchmarkDataFile, JSON.stringify(data), {
-        encoding: "utf-8",
+        encoding: "utf8",
       });
 
       return data;
