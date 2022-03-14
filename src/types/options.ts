@@ -1,4 +1,5 @@
-import type { DeepMergeMergeFunctionsDefaults } from "@/deepmerge";
+// eslint-disable-next-line import/no-relative-parent-imports -- use "@/deepmerge" once denoify can support it.
+import type { DeepMergeMergeFunctionsDefaults } from "..";
 
 import type { DeepMergeBuiltInMetaData } from "./merging";
 
