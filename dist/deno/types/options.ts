@@ -1,4 +1,5 @@
-import type { DeepMergeMergeFunctionsDefaults } from "@/deepmerge DENOIFY: DEPENDENCY UNMET (BUILTIN)";
+// eslint-disable-next-line import/no-relative-parent-imports -- use "@/deepmerge" once denoify can support it.
+import type { DeepMergeMergeFunctionsDefaults } from "../index.ts";
 
 import type { DeepMergeBuiltInMetaData } from "./merging.ts";
 

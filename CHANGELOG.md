@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
+## [4.0.1](https://github.com/RebeccaStevens/deepmerge-ts/compare/v4.0.0...v4.0.1) (2022-03-14)
+
+
+### Bug Fixes
+
+* **deno:** fix broken import in deno dist files ([#85](https://github.com/RebeccaStevens/deepmerge-ts/issues/85)) ([86faf2a](https://github.com/RebeccaStevens/deepmerge-ts/commit/86faf2a047488be2fbb1ff6a1edd005b5d4670cb))
+
 # [4.0.0](https://github.com/RebeccaStevens/deepmerge-ts/compare/v3.0.1...v4.0.0) (2022-02-26)
 
 
