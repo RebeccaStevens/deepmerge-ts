@@ -539,3 +539,19 @@ test(`merging objects with null prototype`, (t) => {
 
   t.deepEqual(merged, expected);
 });
+
+test("prototype pollution", (t) => {
+  const payload = '{"__proto__":{"a0":true}}';
+
+  const x: any = JSON.parse(payload);
+  const y: any = {};
+
+  const merged: any = deepmerge(x, y);
+
+  t.deepEqual(JSON.stringify(merged), payload);
+
+  t.not(({} as any).a0, true, "Safe POJO");
+  t.not(x.a0, true, "Safe x input");
+  t.not(y.a0, true, "Safe y input");
+  t.not(merged.a0, true, "Safe output");
+});
