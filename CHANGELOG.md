@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
+## [4.0.2](https://github.com/RebeccaStevens/deepmerge-ts/compare/v4.0.1...v4.0.2) (2022-03-31)
+
+
+### Bug Fixes
+
+* protect against prototype pollution ([d637db7](https://github.com/RebeccaStevens/deepmerge-ts/commit/d637db7e4fb2bfb113cb4bc1c85a125936d7081b))
+
 ## [4.0.1](https://github.com/RebeccaStevens/deepmerge-ts/compare/v4.0.0...v4.0.1) (2022-03-14)
 
 

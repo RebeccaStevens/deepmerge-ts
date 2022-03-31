@@ -271,7 +271,17 @@ function defaultMergeRecords(values, utils, meta) {
         if (propertyResult === actions.skip) {
             continue;
         }
-        result[key] = propertyResult;
+        if (key === "__proto__") {
+            Object.defineProperty(result, key, {
+                value: propertyResult,
+                configurable: true,
+                enumerable: true,
+                writable: true,
+            });
+        }
+        else {
+            result[key] = propertyResult;
+        }
     }
     /* eslint-enable functional/no-loop-statement, functional/no-conditional-statement */
     return result;
