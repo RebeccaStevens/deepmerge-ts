@@ -407,7 +407,11 @@ function defaultMergeRecords<
   MF extends DeepMergeMergeFunctionsURIs,
   M,
   MM extends DeepMergeBuiltInMetaData
->(values: Ts, utils: U, meta: M | undefined) {
+>(
+  values: Ts,
+  utils: U,
+  meta: M | undefined
+): DeepMergeRecordsDefaultHKT<Ts, MF, M> {
   const result: Record<PropertyKey, unknown> = {};
 
   /* eslint-disable functional/no-loop-statement, functional/no-conditional-statement -- using a loop here is more performant. */
@@ -464,7 +468,7 @@ function defaultMergeArrays<
   Ts extends ReadonlyArray<ReadonlyArray<unknown>>,
   MF extends DeepMergeMergeFunctionsURIs,
   M
->(values: Ts) {
+>(values: Ts): DeepMergeArraysDefaultHKT<Ts, MF, M> {
   return values.flat() as DeepMergeArraysDefaultHKT<Ts, MF, M>;
 }
 
@@ -475,7 +479,7 @@ function defaultMergeArrays<
  */
 function defaultMergeSets<
   Ts extends ReadonlyArray<Readonly<ReadonlySet<unknown>>>
->(values: Ts) {
+>(values: Ts): DeepMergeSetsDefaultHKT<Ts> {
   return new Set(getIterableOfIterables(values)) as DeepMergeSetsDefaultHKT<Ts>;
 }
 
@@ -486,7 +490,7 @@ function defaultMergeSets<
  */
 function defaultMergeMaps<
   Ts extends ReadonlyArray<Readonly<ReadonlyMap<unknown, unknown>>>
->(values: Ts) {
+>(values: Ts): DeepMergeMapsDefaultHKT<Ts> {
   return new Map(getIterableOfIterables(values)) as DeepMergeMapsDefaultHKT<Ts>;
 }
 

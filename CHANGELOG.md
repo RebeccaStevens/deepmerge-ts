@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
+## [4.0.3](https://github.com/RebeccaStevens/deepmerge-ts/compare/v4.0.2...v4.0.3) (2022-04-06)
+
+
+### Bug Fixes
+
+* use explict return types for function that return a HKT ([eb4183e](https://github.com/RebeccaStevens/deepmerge-ts/commit/eb4183e5441ea8b36bbb8f24ffa38ba850eb389c)), closes [#94](https://github.com/RebeccaStevens/deepmerge-ts/issues/94)
+
 ## [4.0.2](https://github.com/RebeccaStevens/deepmerge-ts/compare/v4.0.1...v4.0.2) (2022-03-31)
 
 
