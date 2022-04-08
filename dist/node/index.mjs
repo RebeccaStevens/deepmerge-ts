@@ -118,7 +118,7 @@ function deepmergeCustom(options, rootMetaData) {
  * @param options - The options the user specified
  */
 function getUtils(options, customizedDeepmerge) {
-    var _a, _b;
+    var _a, _b, _c;
     return {
         defaultMergeFunctions,
         mergeFunctions: {
@@ -130,6 +130,7 @@ function getUtils(options, customizedDeepmerge) {
         metaDataUpdater: ((_a = options.metaDataUpdater) !== null && _a !== void 0 ? _a : defaultMetaDataUpdater),
         deepmerge: customizedDeepmerge,
         useImplicitDefaultMerging: (_b = options.enableImplicitDefaultMerging) !== null && _b !== void 0 ? _b : false,
+        useOverrideUndefinedValues: (_c = options.enableOverrideUndefinedValues) !== null && _c !== void 0 ? _c : true,
         actions,
     };
 }
@@ -148,7 +149,7 @@ function mergeUnknowns(values, utils, meta) {
     const type = getObjectType(values[0]);
     // eslint-disable-next-line functional/no-conditional-statement -- add an early escape for better performance.
     if (type !== 0 /* NOT */ && type !== 5 /* OTHER */) {
-        // eslint-disable-next-line functional/no-loop-statement -- using a loop here is more performant than mapping every value and then testing every value.
+        // eslint-disable-next-line @typescript-eslint/naming-convention, functional/no-loop-statement -- using a loop here is more performant than mapping every value and then testing every value.
         for (let mutableIndex = 1; mutableIndex < values.length; mutableIndex++) {
             if (getObjectType(values[mutableIndex]) === type) {
                 continue;
@@ -259,6 +260,10 @@ function defaultMergeRecords(values, utils, meta) {
         const propValues = [];
         for (const value of values) {
             if (objectHasProperty(value, key)) {
+                if (utils.useOverrideUndefinedValues === false &&
+                    value[key] === undefined) {
+                    continue;
+                }
                 propValues.push(value[key]);
             }
         }

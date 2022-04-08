@@ -689,3 +689,56 @@ test("skip property", (t) => {
 
   t.deepEqual(merged, expected);
 });
+
+test("enable override undefined is false", (t) => {
+  const x = {
+    undefinedVal: undefined,
+    shouldBeDefined: "should be defined on y",
+    somekey: {
+      populated: "im populated",
+      nested: {
+        valueUndefinedOverridedByY: undefined,
+        booleanFalse: false,
+        booleanTrue: true,
+        numberZero: 0,
+      },
+    },
+    arrays: [1, 2, "default", 3, 4, 5],
+  };
+
+  const y = {
+    shouldBeDefined: undefined,
+    somekey: {
+      populated: undefined,
+      nested: {
+        valueUndefinedOverridedByY: "overrided",
+      },
+    },
+    keyb: true,
+    arrays: [1, "new", undefined, 3, 4, 5],
+  };
+
+  const expected = {
+    undefinedVal: undefined,
+    shouldBeDefined: "should be defined on y",
+    somekey: {
+      populated: "im populated",
+      nested: {
+        valueUndefinedOverridedByY: "overrided",
+        booleanFalse: false,
+        booleanTrue: true,
+        numberZero: 0,
+      },
+    },
+    keyb: true,
+    arrays: [1, "new", undefined, 3, 4, 5],
+  };
+
+  const customizedDeepmerge = deepmergeCustom({
+    enableOverrideUndefinedValues: false,
+    mergeArrays: false,
+  });
+  const merged = customizedDeepmerge(x, y);
+
+  t.deepEqual(merged, expected);
+});

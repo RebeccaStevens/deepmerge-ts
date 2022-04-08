@@ -27,6 +27,7 @@ export interface DeepMergeMergeFunctionURItoKind<
   readonly DeepMergeArraysDefaultURI: DeepMergeArraysDefaultHKT<Ts, MF, M>;
   readonly DeepMergeSetsDefaultURI: DeepMergeSetsDefaultHKT<Ts>;
   readonly DeepMergeMapsDefaultURI: DeepMergeMapsDefaultHKT<Ts>;
+  readonly DeepMergeLeafNoUndefinedOverrideURI: DeepMergeLeafNoUndefinedOverride<Ts>;
 }
 
 /**
@@ -182,3 +183,21 @@ export type DeepMergeBuiltInMetaData = Readonly<{
   key: PropertyKey;
   parents: ReadonlyArray<Readonly<Record<PropertyKey, unknown>>>;
 }>;
+
+export type DeepMergeLeafNoUndefinedOverride<
+  Ts extends ReadonlyArray<unknown>
+> = DeepMergeLeaf<FilterOutUnderfined<Ts>>;
+
+export type FilterOutUnderfined<T extends ReadonlyArray<unknown>> =
+  FilterOutUnderfinedHelper<T, []>;
+
+export type FilterOutUnderfinedHelper<
+  T extends ReadonlyArray<unknown>,
+  Acc extends ReadonlyArray<unknown>
+> = T extends readonly []
+  ? Acc
+  : T extends readonly [infer Head, ...infer Rest]
+  ? Head extends undefined
+    ? FilterOutUnderfinedHelper<Rest, Acc>
+    : FilterOutUnderfinedHelper<Rest, [...Acc, Head]>
+  : T;

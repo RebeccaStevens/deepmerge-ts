@@ -27,6 +27,7 @@ type DeepMergeOptionsFull<M, MM extends DeepMergeBuiltInMetaData> = Readonly<{
   mergeOthers: DeepMergeMergeFunctions<M, MM>["mergeOthers"];
   metaDataUpdater: MetaDataUpdater<M, MM>;
   enableImplicitDefaultMerging: boolean;
+  enableOverrideUndefinedValues: boolean;
 }>;
 
 /**
@@ -94,6 +95,7 @@ export type DeepMergeMergeFunctionUtils<
   metaDataUpdater: MetaDataUpdater<M, MM>;
   deepmerge: <Ts extends ReadonlyArray<unknown>>(...values: Ts) => unknown;
   useImplicitDefaultMerging: boolean;
+  useOverrideUndefinedValues: boolean;
   actions: Readonly<{
     defaultMerge: symbol;
     skip: symbol;

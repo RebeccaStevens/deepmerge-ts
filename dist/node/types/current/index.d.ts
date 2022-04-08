@@ -139,6 +139,7 @@ interface DeepMergeMergeFunctionURItoKind<Ts extends ReadonlyArray<unknown>, MF 
     readonly DeepMergeArraysDefaultURI: DeepMergeArraysDefaultHKT<Ts, MF, M>;
     readonly DeepMergeSetsDefaultURI: DeepMergeSetsDefaultHKT<Ts>;
     readonly DeepMergeMapsDefaultURI: DeepMergeMapsDefaultHKT<Ts>;
+    readonly DeepMergeLeafNoUndefinedOverrideURI: DeepMergeLeafNoUndefinedOverride<Ts>;
 }
 /**
  * Get the type of the given merge function via its URI.
@@ -218,6 +219,9 @@ declare type DeepMergeBuiltInMetaData = Readonly<{
     key: PropertyKey;
     parents: ReadonlyArray<Readonly<Record<PropertyKey, unknown>>>;
 }>;
+declare type DeepMergeLeafNoUndefinedOverride<Ts extends ReadonlyArray<unknown>> = DeepMergeLeaf<FilterOutUnderfined<Ts>>;
+declare type FilterOutUnderfined<T extends ReadonlyArray<unknown>> = FilterOutUnderfinedHelper<T, []>;
+declare type FilterOutUnderfinedHelper<T extends ReadonlyArray<unknown>, Acc extends ReadonlyArray<unknown>> = T extends readonly [] ? Acc : T extends readonly [infer Head, ...infer Rest] ? Head extends undefined ? FilterOutUnderfinedHelper<Rest, Acc> : FilterOutUnderfinedHelper<Rest, [...Acc, Head]> : T;
 
 /**
  * The default merge function to merge records with.
@@ -319,6 +323,7 @@ declare type DeepMergeOptionsFull<M, MM extends DeepMergeBuiltInMetaData> = Read
     mergeOthers: DeepMergeMergeFunctions<M, MM>["mergeOthers"];
     metaDataUpdater: MetaDataUpdater<M, MM>;
     enableImplicitDefaultMerging: boolean;
+    enableOverrideUndefinedValues: boolean;
 }>;
 /**
  * All the merge functions that deepmerge uses.
@@ -339,6 +344,7 @@ declare type DeepMergeMergeFunctionUtils<M, MM extends DeepMergeBuiltInMetaData>
     metaDataUpdater: MetaDataUpdater<M, MM>;
     deepmerge: <Ts extends ReadonlyArray<unknown>>(...values: Ts) => unknown;
     useImplicitDefaultMerging: boolean;
+    useOverrideUndefinedValues: boolean;
     actions: Readonly<{
         defaultMerge: symbol;
         skip: symbol;

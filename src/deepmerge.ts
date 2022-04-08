@@ -171,6 +171,7 @@ function getUtils<M, MM extends DeepMergeBuiltInMetaData>(
     >["metaDataUpdater"],
     deepmerge: customizedDeepmerge,
     useImplicitDefaultMerging: options.enableImplicitDefaultMerging ?? false,
+    useOverrideUndefinedValues: options.enableOverrideUndefinedValues ?? true,
     actions,
   };
 }
@@ -202,7 +203,7 @@ function mergeUnknowns<
 
   // eslint-disable-next-line functional/no-conditional-statement -- add an early escape for better performance.
   if (type !== ObjectType.NOT && type !== ObjectType.OTHER) {
-    // eslint-disable-next-line functional/no-loop-statement -- using a loop here is more performant than mapping every value and then testing every value.
+    // eslint-disable-next-line @typescript-eslint/naming-convention, functional/no-loop-statement -- using a loop here is more performant than mapping every value and then testing every value.
     for (let mutableIndex = 1; mutableIndex < values.length; mutableIndex++) {
       if (getObjectType(values[mutableIndex]) === type) {
         continue;
@@ -421,6 +422,12 @@ function defaultMergeRecords<
 
     for (const value of values) {
       if (objectHasProperty(value, key)) {
+        if (
+          utils.useOverrideUndefinedValues === false &&
+          value[key] === undefined
+        ) {
+          continue;
+        }
         propValues.push(value[key]);
       }
     }
