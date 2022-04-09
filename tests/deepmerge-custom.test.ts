@@ -95,14 +95,14 @@ test("custom merge arrays", (t) => {
       const maxLength = Math.max(...arrays.map((array) => array.length));
 
       const result = [];
-      for (let i = 0; i < maxLength; i++) {
-        result[i] = "";
+      for (let m_i = 0; m_i < maxLength; m_i++) {
+        result[m_i] = "";
 
         for (const array of arrays) {
-          if (i >= array.length) {
+          if (m_i >= array.length) {
             break;
           }
-          result[i] += `${array[i]}`;
+          result[m_i] += `${array[m_i]}`;
         }
       }
 
@@ -162,12 +162,12 @@ test("custom merge arrays of records", (t) => {
       const maxLength = Math.max(...arrays.map((array) => array.length));
       const result: unknown[] = [];
 
-      for (let i = 0; i < maxLength; i++) {
+      for (let m_i = 0; m_i < maxLength; m_i++) {
         const never = {};
         result.push(
           utils.deepmerge(
             ...arrays
-              .map((array) => (i < array.length ? array[i] : never))
+              .map((array) => (m_i < array.length ? array[m_i] : never))
               .filter((value) => value !== never)
           )
         );

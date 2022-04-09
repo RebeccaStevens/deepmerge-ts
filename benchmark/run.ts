@@ -37,12 +37,12 @@ void (async () => {
       return data;
     });
 
-  for (let i = 0; i < benchmarkDataSets.length; i++) {
-    const benchmarkData = benchmarkDataSets[i];
+  for (let m_i = 0; m_i < benchmarkDataSets.length; m_i++) {
+    const benchmarkData = benchmarkDataSets[m_i];
     const suite = new Benchmark.Suite();
 
     console.log(
-      `\nRunning benchmarks for data set ${i + 1} of ${
+      `\nRunning benchmarks for data set ${m_i + 1} of ${
         benchmarkDataSets.length
       }:\n`
     );
@@ -75,7 +75,7 @@ void (async () => {
 
         console.log(
           `\nFastest is ${results.filter("fastest").map("name")} for data set ${
-            i + 1
+            m_i + 1
           } of ${benchmarkDataSets.length}`
         );
       })
@@ -86,7 +86,7 @@ void (async () => {
 function generateBenchmarkDataArray(items, maxProperties, maxDepth) {
   const data: object[] = [];
 
-  for (let i = 0; i < items; i++) {
+  for (let m_i = 0; m_i < items; m_i++) {
     data.push(generateBenchmarkDataItem(maxProperties, maxDepth));
   }
 
@@ -104,8 +104,8 @@ function generateBenchmarkDataItem(maxProperties, depth, currentDepth = 0) {
     )
   );
 
-  for (let i = 0; i < properties; i++) {
-    const prop = propertiesOptions[i];
+  for (let m_i = 0; m_i < properties; m_i++) {
+    const prop = propertiesOptions[m_i];
 
     obj[prop] =
       currentDepth < depth
@@ -117,16 +117,16 @@ function generateBenchmarkDataItem(maxProperties, depth, currentDepth = 0) {
 }
 
 function shuffle(array) {
-  let currentIndex = array.length;
-  let randomIndex;
+  let m_currentIndex = array.length;
+  let m_randomIndex;
 
-  while (currentIndex !== 0) {
-    randomIndex = Math.floor(Math.random() * currentIndex);
-    currentIndex--;
+  while (m_currentIndex !== 0) {
+    m_randomIndex = Math.floor(Math.random() * m_currentIndex);
+    m_currentIndex--;
 
-    [array[currentIndex], array[randomIndex]] = [
-      array[randomIndex],
-      array[currentIndex],
+    [array[m_currentIndex], array[m_randomIndex]] = [
+      array[m_randomIndex],
+      array[m_currentIndex],
     ];
   }
 
