@@ -1037,9 +1037,9 @@
     "@octokit/openapi-types" "^9.5.0"
 
 "@rebeccastevens/eslint-config@^1.3.18":
-  version "1.3.18"
-  resolved "https://registry.yarnpkg.com/@rebeccastevens/eslint-config/-/eslint-config-1.3.18.tgz#9142f06f37dfdc6d4eed6255f17e224a02afc575"
-  integrity sha512-HeStLzFpcJxvlgWdZhp041hacPn18dd8bmBd/4A8N+XtEdIh+WuS3n4pu5YngdmQjgBqe7JQN/z/bVg8hKG00w==
+  version "1.3.20"
+  resolved "https://registry.yarnpkg.com/@rebeccastevens/eslint-config/-/eslint-config-1.3.20.tgz#61b2806820e4bd6817960f721fa769709ecb76ad"
+  integrity sha512-wCSUUE01AFtraU6eFTskBrwJsHfl5amBn6M5bozNKFfhi3eeU2sYHb+orwnwCb77G/V7qzxDZkWlAAMSGxMGhQ==
   dependencies:
     deepmerge-ts "^4.0.0"
 
