@@ -33,7 +33,7 @@ jobs:
           node-version: "lts/*"
 
       - name: Install Dependencies
-        run: yarn install --frozen-lockfile
+        run: yarn install --immutable
 
       - name: Run Linting Checks
         run: yarn lint
@@ -70,7 +70,7 @@ jobs:
           node-version: "lts/*"
 
       - name: Install Dependencies
-        run: yarn install --frozen-lockfile
+        run: yarn install --immutable
 
       - name: Build
         run: yarn build
