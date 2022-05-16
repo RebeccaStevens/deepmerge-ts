@@ -60,15 +60,10 @@
     "README.md"
   ],
   "scripts": {
-    "prebenchmark": "yarn build && yarn link",
-    "benchmark": "cd benchmark && yarn benchmark; cd ..",
-    "prebuild": "rimraf build",
-    "build": "yarn build:npm && yarn build:deno",
-    "postbuild": "rimraf build",
-    "pre:build:deno": "rimraf dist/deno",
-    "build:deno": "tsc -p tsconfig.build.deno.json && denoify",
-    "prebuild:npm": "rimraf dist/node types/current",
-    "build:npm": "rollup -c",
+    "benchmark": "yarn build && yarn link & cd benchmark && yarn benchmark; cd ..",
+    "build": "rimraf build && yarn build:npm && yarn build:deno && rimraf build",
+    "build:deno": "rimraf dist/deno && tsc -p tsconfig.build.deno.json && denoify",
+    "build:npm": "rimraf dist/node types/current && rollup -c",
     "check-format": "prettier --list-different \"./**/*.{md,ts,yml}\"",
     "check-spelling": "cspell --config=.cspell.json \"**/*.{md,ts}\"",
     "cz": "git-cz",
@@ -152,6 +147,7 @@
       "is-plain-object": "https://raw.githubusercontent.com/jonschlinkert/is-plain-object/v5.0.0/is-plain-object.js"
     }
   },
+  "packageManager": "yarn@3.2.0",
   "engines": {
     "node": ">=12.4.0"
   }
