@@ -1,0 +1,29 @@
+diff --git a/dist/rollup-plugin-dts.d.cts b/dist/rollup-plugin-dts.d.cts
+new file mode 100644
+index 0000000000000000000000000000000000000000..4196973d82cc07069a47ab2d7c14c90a2c5e8097
+--- /dev/null
++++ b/dist/rollup-plugin-dts.d.cts
+@@ -0,0 +1,2 @@
++export * from "./rollup-plugin-dts";
++export { default } from "./rollup-plugin-dts";
+diff --git a/package.json b/package.json
+index 2448d1eb8d68f4a80c60ba37f7ffaaeec6df2af8..fddf119cb2574d2bcad60decce02f2e1abd6650c 100644
+--- a/package.json
++++ b/package.json
+@@ -27,8 +27,14 @@
+   "type": "module",
+   "main": "./dist/rollup-plugin-dts.cjs",
+   "exports": {
+-    "import": "./dist/rollup-plugin-dts.mjs",
+-    "require": "./dist/rollup-plugin-dts.cjs"
++    "import": {
++      "types": "./dist/rollup-plugin-dts.d.ts",
++      "default": "./dist/rollup-plugin-dts.mjs"
++    },
++    "require": {
++      "types": "./dist/rollup-plugin-dts.d.cts",
++      "default": "./dist/rollup-plugin-dts.cjs"
++    }
+   },
+   "types": "./dist/rollup-plugin-dts.d.ts",
+   "sideEffects": false,

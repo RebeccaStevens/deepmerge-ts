@@ -1,6 +1,5 @@
 import test from "ava";
-
-import { deepmerge } from "@/deepmerge";
+import { deepmerge } from "deepmerge-ts";
 
 test("return undefined when nothing to merge", (t) => {
   // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
@@ -541,6 +540,7 @@ test(`merging objects with null prototype`, (t) => {
 });
 
 test("prototype pollution", (t) => {
+  /* eslint-disable @typescript-eslint/no-explicit-any */
   const payload = '{"__proto__":{"a0":true}}';
 
   const x: any = JSON.parse(payload);
@@ -554,4 +554,5 @@ test("prototype pollution", (t) => {
   t.not(x.a0, true, "Safe x input");
   t.not(y.a0, true, "Safe y input");
   t.not(merged.a0, true, "Safe output");
+  /* eslint-enable @typescript-eslint/no-explicit-any */
 });

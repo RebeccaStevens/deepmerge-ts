@@ -1,32 +1,17 @@
 /* eslint-disable @typescript-eslint/consistent-type-definitions, @typescript-eslint/no-unused-vars */
 
 import test from "ava";
-import _ from "lodash";
-
-import { deepmergeCustom } from "@/deepmerge";
+import { deepmergeCustom } from "deepmerge-ts";
 import type {
   DeepMergeLeafURI,
   DeepMergeMergeFunctionsURIs,
   DeepMergeRecordsDefaultHKT,
   DeepMergeLeaf,
   DeepMergeOptions,
-} from "@/deepmerge";
+} from "deepmerge-ts";
+import _ from "lodash";
 
 import { areAllNumbers, hasProp } from "./utils";
-
-declare module "ava" {
-  interface DeepEqualAssertion {
-    /**
-     * Assert that `actual` is [deeply equal](https://github.com/concordancejs/concordance#comparison-details) to
-     * `expected`, returning a boolean indicating whether the assertion passed.
-     */
-    <Actual extends Expected, Expected>(
-      actual: Actual,
-      expected: Expected,
-      message?: string
-    ): expected is Actual;
-  }
-}
 
 test("works just like non-customized version when no options passed", (t) => {
   const v = { first: true };
@@ -70,7 +55,7 @@ test("custom merge strings", (t) => {
   t.deepEqual(merged, expected);
 });
 
-declare module "../src/types" {
+declare module "deepmerge-ts" {
   interface DeepMergeMergeFunctionURItoKind<
     Ts extends ReadonlyArray<unknown>,
     MF extends DeepMergeMergeFunctionsURIs,
@@ -115,7 +100,7 @@ test("custom merge arrays", (t) => {
   t.deepEqual(merged, expected);
 });
 
-declare module "../src/types" {
+declare module "deepmerge-ts" {
   interface DeepMergeMergeFunctionURItoKind<
     Ts extends ReadonlyArray<unknown>,
     MF extends DeepMergeMergeFunctionsURIs,
@@ -190,7 +175,7 @@ test("custom merge arrays of records", (t) => {
   t.deepEqual(merged, expected);
 });
 
-declare module "../src/types" {
+declare module "deepmerge-ts" {
   interface DeepMergeMergeFunctionURItoKind<
     Ts extends ReadonlyArray<unknown>,
     MF extends DeepMergeMergeFunctionsURIs,
@@ -242,7 +227,7 @@ test("custom merge records", (t) => {
   t.deepEqual(merged, expected);
 });
 
-declare module "../src/types" {
+declare module "deepmerge-ts" {
   interface DeepMergeMergeFunctionURItoKind<
     Ts extends ReadonlyArray<unknown>,
     MF extends DeepMergeMergeFunctionsURIs,
@@ -271,7 +256,7 @@ test("custom don't merge arrays", (t) => {
   t.deepEqual(merged, expected);
 });
 
-declare module "../src/types" {
+declare module "deepmerge-ts" {
   interface DeepMergeMergeFunctionURItoKind<
     Ts extends ReadonlyArray<unknown>,
     MF extends DeepMergeMergeFunctionsURIs,
@@ -350,7 +335,7 @@ test("key based merging", (t) => {
   t.deepEqual(merged, expected);
 });
 
-declare module "../src/types" {
+declare module "deepmerge-ts" {
   interface DeepMergeMergeFunctionURItoKind<
     Ts extends Readonly<ReadonlyArray<unknown>>,
     MF extends DeepMergeMergeFunctionsURIs,

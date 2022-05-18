@@ -2,7 +2,7 @@ const avaConfig = {
   files: ["tests/**/*.test.*"],
   timeout: "5m",
   extensions: ["ts"],
-  require: ["ts-node/register", "tsconfig-paths/register"],
+  require: ["ts-node/register/transpile-only"],
   environmentVariables: {
     TS_NODE_PROJECT: "tests/tsconfig.json",
   },

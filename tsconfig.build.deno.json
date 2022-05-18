@@ -4,10 +4,10 @@
     "outDir": "build/deno/",
   },
   "exclude": [
-    "node_modules",
-    "build/deno/",
-    "dist/",
-    "src/**/*.deno.ts",
-    "src/**/*.deno.tsx",
+    "./node_modules/**/*",
+    "./build/deno/**/*",
+    "./dist/**/*",
+    "./src/**/*.deno.ts",
+    "./src/**/*.deno.tsx",
   ]
 }

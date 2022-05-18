@@ -30,7 +30,8 @@
     "/**/*.md"
   ],
   "rules": {
-    "import/no-relative-parent-imports": "error",
+    "import/no-relative-parent-imports": "off",
+    "import/no-useless-path-segments": "off",
     "unicorn/prefer-at": "off",
     "unicorn/prefer-top-level-await": "off"
   },
@@ -42,6 +43,12 @@
       },
       "rules": {
         "functional/prefer-readonly-type": "off"
+      }
+    },
+    {
+      "files": ["*"],
+      "rules": {
+        "unicorn/prefer-module": "off"
       }
     }
   ]

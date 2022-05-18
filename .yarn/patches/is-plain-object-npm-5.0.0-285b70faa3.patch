@@ -1,0 +1,12 @@
+diff --git a/package.json b/package.json
+index 3ea169a7d0a524f7ec5aad890688c800b6a46049..cb4a39c9e7299cf573a151c6b44ea3f8b931c343 100644
+--- a/package.json
++++ b/package.json
+@@ -25,6 +25,7 @@
+   ],
+   "exports": {
+     ".": {
++      "types": "./is-plain-object.d.ts",
+       "import": "./dist/is-plain-object.mjs",
+       "require": "./dist/is-plain-object.js"
+     },

@@ -4,8 +4,6 @@
     "coverage/": true,
     "build/": true,
     "dist/": true,
-    "ava.config.cjs": true,
-    "rollup.config.cjs": true,
   },
   "files.trimTrailingWhitespace": true,
   "search.exclude": {
@@ -13,8 +11,6 @@
     ".nyc_output/": true,
     ".vscode/": true,
     "dist/": true,
-    "ava.config.cjs": true,
-    "rollup.config.cjs": true,
     "yarn.lock": true,
   },
   "typescript.tsdk": "./node_modules/typescript/lib",
