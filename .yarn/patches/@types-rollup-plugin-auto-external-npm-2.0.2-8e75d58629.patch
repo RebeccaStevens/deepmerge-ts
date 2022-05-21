@@ -1,0 +1,15 @@
+diff --git a/package.json b/package.json
+index 1daa372175f8bd4c095a81b6161e52f934c702cb..c8674ebebb9cf3f53647b7bb11bb9baecc897379 100755
+--- a/package.json
++++ b/package.json
+@@ -19,8 +19,8 @@
+         "directory": "types/rollup-plugin-auto-external"
+     },
+     "scripts": {},
+-    "dependencies": {
+-        "rollup": ">=2.0.0"
++    "peerDependencies": {
++        "rollup": ">=2.70.1"
+     },
+     "typesPublisherContentHash": "e39fb652a63e7ac032e7835c7672519af44631ede3957d56b3dae973e6b19df0",
+     "typeScriptVersion": "3.6"

@@ -1,10 +1,21 @@
 {
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    "rootDir": "./src",
-    "outDir": "dist/",
+    "rootDir": "./src/",
+    "outDir": "./dist/",
+    "baseUrl": "./src/",
+    "paths": {
+      "deepmerge-ts": ["./index"],
+      "deepmerge-ts/presets": ["./presets/index"],
+    },
   },
   "include": [
-    "src",
+    "./src/**/*",
   ],
+  "exclude": [
+    "./benchmark/**/*",
+    "./dist/**/*",
+    "./tests/**/*",
+    "./types-legacy/**/*"
+  ]
 }

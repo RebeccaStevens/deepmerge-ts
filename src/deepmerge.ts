@@ -417,7 +417,7 @@ function defaultMergeRecords<
   /* eslint-disable functional/no-loop-statement, functional/no-conditional-statement -- using a loop here is more performant. */
 
   for (const key of getKeys(values)) {
-    const propValues = [];
+    const propValues: unknown[] = [];
 
     for (const value of values) {
       if (objectHasProperty(value, key)) {
