@@ -121,10 +121,10 @@ declare module "../src/types" {
     MF extends DeepMergeMergeFunctionsURIs,
     M
   > {
-    readonly CustomArrays2: Ts extends Readonly<readonly [...infer Es]>
-      ? Es extends ReadonlyArray<unknown>
-        ? unknown[]
-        : never
+    readonly CustomArrays2: Ts extends Readonly<
+      readonly [ReadonlyArray<unknown>]
+    >
+      ? unknown[]
       : never;
     readonly CustomOthers2: string;
   }

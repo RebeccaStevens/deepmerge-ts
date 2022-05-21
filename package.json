@@ -50,7 +50,12 @@
         "dist/node/types/legacy/v4_0.d.ts"
       ]
     },
-    ">=4.1": {
+    "<4.7": {
+      "*": [
+        "dist/node/types/legacy/v4_6.d.ts"
+      ]
+    },
+    ">=4.7": {
       "*": [
         "dist/node/types/current/index.d.ts"
       ]
