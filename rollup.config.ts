@@ -5,28 +5,12 @@
 import rollupPluginJSON from "@rollup/plugin-json";
 import rollupPluginNodeResolve from "@rollup/plugin-node-resolve";
 import rollupPluginTypescript from "@rollup/plugin-typescript";
+import { defineConfig, type Plugin } from "rollup";
 import rollupPluginAutoExternal from "rollup-plugin-auto-external";
 import rollupPluginCopy from "rollup-plugin-copy";
 import rollupPluginDts from "rollup-plugin-dts";
 
 import pkg from "./package.json";
-
-const common = {
-  input: "src/index.ts",
-
-  output: {
-    sourcemap: false,
-  },
-
-  external: [],
-
-  treeshake: {
-    annotations: true,
-    moduleSideEffects: [],
-    propertyReadSideEffects: false,
-    unknownGlobalSideEffects: false,
-  },
-};
 
 /**
  * Get new instances of all the common plugins.
@@ -41,10 +25,27 @@ function getPlugins() {
     rollupPluginJSON({
       preferConst: true,
     }),
-  ];
+  ] as Plugin[];
 }
 
-const cjs = {
+const common = defineConfig({
+  input: "src/index.ts",
+
+  output: {
+    sourcemap: false,
+  },
+
+  external: [],
+
+  treeshake: {
+    annotations: true,
+    moduleSideEffects: [],
+    propertyReadSideEffects: false,
+    unknownGlobalSideEffects: false,
+  },
+});
+
+const cjs = defineConfig({
   ...common,
 
   output: {
@@ -54,9 +55,9 @@ const cjs = {
   },
 
   plugins: getPlugins(),
-};
+});
 
-const esm = {
+const esm = defineConfig({
   ...common,
 
   output: {
@@ -66,9 +67,9 @@ const esm = {
   },
 
   plugins: getPlugins(),
-};
+});
 
-const dts = {
+const dts = defineConfig({
   ...common,
 
   output: {
@@ -86,7 +87,7 @@ const dts = {
         { src: "types-legacy", dest: "dist/node/types", rename: "legacy" },
       ],
     }),
-  ],
-};
+  ] as Plugin[],
+});
 
 export default [cjs, esm, dts];
