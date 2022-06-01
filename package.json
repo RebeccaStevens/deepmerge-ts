@@ -81,7 +81,7 @@
     "is-plain-object": "^5.0.0"
   },
   "devDependencies": {
-    "@commitlint/cli": "^16.2.3",
+    "@commitlint/cli": "^17.0.2",
     "@commitlint/config-conventional": "^16.2.1",
     "@cspell/dict-cryptocurrencies": "^2.0.0",
     "@istanbuljs/nyc-config-typescript": "^1.0.2",
