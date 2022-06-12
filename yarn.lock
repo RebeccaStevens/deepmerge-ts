@@ -3488,7 +3488,6 @@ __metadata:
     eslint-plugin-unicorn: ^42.0.0
     husky: ^8.0.1
     if-env-defined: ^1.0.0
-    is-plain-object: ^5.0.0
     lint-staged: ^13.0.1
     lodash: ^4.17.21
     markdownlint-cli: ^0.31.1
