@@ -40,13 +40,13 @@ const c = {
   garply: 42,
 } as const;
 
-// $ExpectType { foo: string; baz: { quux: string[]; }; garply: 42; quux: "456"; bar: "123"; }
+// $ExpectType { foo: string; baz: { quux: string[]; }; garply: 42; bar: "123"; quux: "456"; }
 deepmerge(a, c);
 
-// $ExpectType { foo: string; baz: { corge: number; }; garply: 42; grault: number; quux: "456"; bar: "123"; }
+// $ExpectType { foo: string; baz: { corge: number; }; garply: 42; grault: number; bar: "123"; quux: "456"; }
 deepmerge(b, c);
 
-// $ExpectType { foo: string; baz: { quux: string[]; corge: number; }; garply: 42; grault: number; quux: "456"; bar: "123"; }
+// $ExpectType { foo: string; baz: { quux: string[]; corge: number; }; garply: 42; grault: number; bar: "123"; quux: "456"; }
 deepmerge(a, b, c);
 
 // Allow arbitrary arrays of objects to be passes even if we can't determine anything about the result.
@@ -60,7 +60,7 @@ const d = {
   garply: 5,
 } as const;
 
-// $ExpectType { garply: 5; quux: "def"; bar: "abc"; }
+// $ExpectType { garply: 5; bar: "abc"; quux: "def"; }
 deepmerge(c, d);
 
 type E = { readonly foo: ReadonlyArray<number> };
