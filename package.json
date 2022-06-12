@@ -149,7 +149,7 @@
       "is-plain-object": "https://raw.githubusercontent.com/jonschlinkert/is-plain-object/v5.0.0/is-plain-object.js"
     }
   },
-  "packageManager": "yarn@3.2.0",
+  "packageManager": "yarn@3.2.1",
   "engines": {
     "node": ">=12.4.0"
   }
