@@ -573,6 +573,42 @@ test(`merging objects with null prototype`, (t) => {
   t.deepEqual(merged, expected);
 });
 
+test("dectecting valid records", (t) => {
+  const a = { a: 1 };
+  // eslint-disable-next-line no-proto, @typescript-eslint/no-explicit-any
+  (a as any).__proto__.aProto = 1;
+
+  const b = Object.create({ bProto: 2 });
+  b.b = 2;
+
+  const c = Object.create(Object.prototype);
+  c.c = 3;
+
+  const d = Object.create(null);
+  d.d = 4;
+
+  const expected = {
+    a: 1,
+    b: 2,
+    c: 3,
+    d: 4,
+  };
+
+  const merged = deepmerge(a, b, c, d);
+
+  t.deepEqual(merged, expected);
+});
+
+test("dectecting invalid records", (t) => {
+  const expected = {};
+
+  class AClass {}
+  const a = new AClass();
+  (a as any).a = 1;
+
+  t.deepEqual(deepmerge(a, expected), expected);
+});
+
 test("prototype pollution", (t) => {
   /* eslint-disable @typescript-eslint/no-explicit-any */
   const payload = '{"__proto__":{"a0":true}}';
