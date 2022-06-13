@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/consistent-type-definitions, @typescript-eslint/no-unused-vars */
 
 import test from "ava";
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { deepmergeCustom } from "deepmerge-ts";
 import type {
   DeepMergeLeafURI,

@@ -1,4 +1,5 @@
 import test from "ava";
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { deepmerge } from "deepmerge-ts";
 
 test("return undefined when nothing to merge", (t) => {
