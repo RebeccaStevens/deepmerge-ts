@@ -425,7 +425,9 @@ function defaultMergeRecords<
       }
     }
 
-    // assert(propValues.length > 0);
+    if (propValues.length === 0) {
+      continue;
+    }
 
     const updatedMeta = utils.metaDataUpdater(meta, {
       key,
