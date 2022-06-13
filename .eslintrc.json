@@ -43,6 +43,12 @@
       "rules": {
         "functional/prefer-readonly-type": "off"
       }
+    },
+    {
+      "files": "tests/**",
+      "rules": {
+        "import/no-useless-path-segments": "off"
+      }
     }
   ]
 }

@@ -11,7 +11,7 @@ import type {
 } from "deepmerge-ts";
 import _ from "lodash";
 
-import { areAllNumbers, hasProp } from "./utils";
+import { areAllNumbers, hasProp } from "./utils.js";
 
 declare module "ava" {
   interface DeepEqualAssertion {
