@@ -78,9 +78,6 @@
     "test:js": "c8 ava",
     "test:types": "dtslint --localTs node_modules/typescript/lib --expectOnly tests/types"
   },
-  "dependencies": {
-    "is-plain-object": "^5.0.0"
-  },
   "devDependencies": {
     "@commitlint/cli": "^17.0.2",
     "@commitlint/config-conventional": "^17.0.2",

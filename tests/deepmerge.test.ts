@@ -1,3 +1,5 @@
+import { createRequire } from "node:module";
+
 import test from "ava";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { deepmerge } from "deepmerge-ts";
@@ -569,6 +571,74 @@ test(`merging objects with null prototype`, (t) => {
   };
 
   const merged = deepmerge(x, y);
+
+  t.deepEqual(merged, expected);
+});
+
+test("dectecting valid records", (t) => {
+  const a = { a: 1 };
+  // eslint-disable-next-line no-proto, @typescript-eslint/no-explicit-any
+  (a as any).__proto__.aProto = 1;
+
+  const b = Object.create({ bProto: 2 });
+  b.b = 2;
+
+  const c = Object.create(Object.prototype);
+  c.c = 3;
+
+  const d = Object.create(null);
+  d.d = 4;
+
+  const expected = {
+    a: 1,
+    b: 2,
+    c: 3,
+    d: 4,
+  };
+
+  const merged = deepmerge(a, b, c, d);
+
+  t.deepEqual(merged, expected);
+});
+
+test("dectecting invalid records", (t) => {
+  const expected = {};
+
+  class AClass {}
+  const a = new AClass();
+  (a as any).a = 1;
+
+  t.deepEqual(deepmerge(a, expected), expected);
+});
+
+test("merging cjs modules", (t) => {
+  const require = createRequire(import.meta.url);
+
+  /* eslint-disable @typescript-eslint/no-var-requires, unicorn/prefer-module */
+  const a = require("./modules/a.cjs");
+  const b = require("./modules/b.cjs");
+  /* eslint-enable @typescript-eslint/no-var-requires, unicorn/prefer-module */
+
+  const expected = {
+    age: 30,
+    name: "alice",
+  };
+
+  const merged = deepmerge(a, b);
+
+  t.deepEqual(merged, expected);
+});
+
+test("merging esm modules", async (t) => {
+  const a = await import("./modules/a.mjs");
+  const b = await import("./modules/b.mjs");
+
+  const expected = {
+    age: 30,
+    name: "alice",
+  };
+
+  const merged = deepmerge(a, b);
 
   t.deepEqual(merged, expected);
 });
