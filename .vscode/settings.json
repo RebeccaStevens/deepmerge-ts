@@ -5,7 +5,6 @@
     "build/": true,
     "dist/": true,
     "ava.config.cjs": true,
-    "rollup.config.cjs": true,
   },
   "files.trimTrailingWhitespace": true,
   "search.exclude": {

@@ -30,6 +30,7 @@
   },
   "exclude": [
     "benchmark/",
+    "dist/",
     "types-legacy/"
   ]
 }
