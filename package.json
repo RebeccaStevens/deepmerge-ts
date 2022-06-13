@@ -32,6 +32,7 @@
     "email": "rebecca.stevens@outlook.co.nz"
   },
   "sideEffects": false,
+  "type": "module",
   "exports": {
     "import": "./dist/node/index.mjs",
     "require": "./dist/node/index.cjs",
