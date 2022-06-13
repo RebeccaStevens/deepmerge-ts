@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
+## [4.0.4](https://github.com/RebeccaStevens/deepmerge-ts/compare/v4.0.3...v4.0.4) (2022-06-13)
+
+
+### Bug Fixes
+
+* drop keys that have no enumerable properties ([3363570](https://github.com/RebeccaStevens/deepmerge-ts/commit/3363570fcc53488d22a2d4b778b558173c7ee5c9))
+
 ## [4.0.3](https://github.com/RebeccaStevens/deepmerge-ts/compare/v4.0.2...v4.0.3) (2022-04-06)
 
 

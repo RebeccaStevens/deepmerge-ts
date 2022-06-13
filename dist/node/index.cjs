@@ -12,21 +12,21 @@ var isPlainObject = require('is-plain-object');
  */
 function getObjectType(object) {
     if (typeof object !== "object" || object === null) {
-        return 0 /* NOT */;
+        return 0 /* ObjectType.NOT */;
     }
     if (Array.isArray(object)) {
-        return 2 /* ARRAY */;
+        return 2 /* ObjectType.ARRAY */;
     }
     if (isPlainObject.isPlainObject(object)) {
-        return 1 /* RECORD */;
+        return 1 /* ObjectType.RECORD */;
     }
     if (object instanceof Set) {
-        return 3 /* SET */;
+        return 3 /* ObjectType.SET */;
     }
     if (object instanceof Map) {
-        return 4 /* MAP */;
+        return 4 /* ObjectType.MAP */;
     }
-    return 5 /* OTHER */;
+    return 5 /* ObjectType.OTHER */;
 }
 /**
  * Get the keys of the given objects including symbol keys.
@@ -151,23 +151,23 @@ function mergeUnknowns(values, utils, meta) {
     }
     const type = getObjectType(values[0]);
     // eslint-disable-next-line functional/no-conditional-statement -- add an early escape for better performance.
-    if (type !== 0 /* NOT */ && type !== 5 /* OTHER */) {
+    if (type !== 0 /* ObjectType.NOT */ && type !== 5 /* ObjectType.OTHER */) {
         // eslint-disable-next-line functional/no-loop-statement -- using a loop here is more performant than mapping every value and then testing every value.
-        for (let mutableIndex = 1; mutableIndex < values.length; mutableIndex++) {
-            if (getObjectType(values[mutableIndex]) === type) {
+        for (let m_index = 1; m_index < values.length; m_index++) {
+            if (getObjectType(values[m_index]) === type) {
                 continue;
             }
             return mergeOthers(values, utils, meta);
         }
     }
     switch (type) {
-        case 1 /* RECORD */:
+        case 1 /* ObjectType.RECORD */:
             return mergeRecords(values, utils, meta);
-        case 2 /* ARRAY */:
+        case 2 /* ObjectType.ARRAY */:
             return mergeArrays(values, utils, meta);
-        case 3 /* SET */:
+        case 3 /* ObjectType.SET */:
             return mergeSets(values, utils, meta);
-        case 4 /* MAP */:
+        case 4 /* ObjectType.MAP */:
             return mergeMaps(values, utils, meta);
         default:
             return mergeOthers(values, utils, meta);
@@ -266,7 +266,9 @@ function defaultMergeRecords(values, utils, meta) {
                 propValues.push(value[key]);
             }
         }
-        // assert(propValues.length > 0);
+        if (propValues.length === 0) {
+            continue;
+        }
         const updatedMeta = utils.metaDataUpdater(meta, {
             key,
             parents: values,

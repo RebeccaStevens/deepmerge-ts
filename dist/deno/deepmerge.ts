@@ -203,8 +203,8 @@ function mergeUnknowns<
   // eslint-disable-next-line functional/no-conditional-statement -- add an early escape for better performance.
   if (type !== ObjectType.NOT && type !== ObjectType.OTHER) {
     // eslint-disable-next-line functional/no-loop-statement -- using a loop here is more performant than mapping every value and then testing every value.
-    for (let mutableIndex = 1; mutableIndex < values.length; mutableIndex++) {
-      if (getObjectType(values[mutableIndex]) === type) {
+    for (let m_index = 1; m_index < values.length; m_index++) {
+      if (getObjectType(values[m_index]) === type) {
         continue;
       }
 
@@ -425,7 +425,9 @@ function defaultMergeRecords<
       }
     }
 
-    // assert(propValues.length > 0);
+    if (propValues.length === 0) {
+      continue;
+    }
 
     const updatedMeta = utils.metaDataUpdater(meta, {
       key,
