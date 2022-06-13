@@ -465,6 +465,39 @@ test(`supports symbols`, (t) => {
   t.deepEqual(merged[testSymbol3], expected[testSymbol3]);
 });
 
+test("enumerable keys", (t) => {
+  const x = {};
+  const y = {};
+
+  Object.defineProperties(x, {
+    a: {
+      value: 1,
+      enumerable: false,
+    },
+    b: {
+      value: 2,
+      enumerable: true,
+    },
+  });
+
+  Object.defineProperties(y, {
+    a: {
+      value: 3,
+      enumerable: false,
+    },
+    b: {
+      value: 4,
+      enumerable: false,
+    },
+  });
+
+  const expected = { b: 2 };
+
+  const merged = deepmerge(x, y);
+
+  t.deepEqual(merged, expected);
+});
+
 /* eslint-disable no-proto, @typescript-eslint/naming-convention */
 test(`merging objects with own __proto__`, (t) => {
   const a = { key1: "value1" };
