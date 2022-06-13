@@ -1,3 +1,5 @@
+import { createRequire } from "node:module";
+
 import test from "ava";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { deepmerge } from "deepmerge-ts";
@@ -607,6 +609,38 @@ test("dectecting invalid records", (t) => {
   (a as any).a = 1;
 
   t.deepEqual(deepmerge(a, expected), expected);
+});
+
+test("merging cjs modules", (t) => {
+  const require = createRequire(import.meta.url);
+
+  /* eslint-disable @typescript-eslint/no-var-requires, unicorn/prefer-module */
+  const a = require("./modules/a.cjs");
+  const b = require("./modules/b.cjs");
+  /* eslint-enable @typescript-eslint/no-var-requires, unicorn/prefer-module */
+
+  const expected = {
+    age: 30,
+    name: "alice",
+  };
+
+  const merged = deepmerge(a, b);
+
+  t.deepEqual(merged, expected);
+});
+
+test("merging esm modules", async (t) => {
+  const a = await import("./modules/a.mjs");
+  const b = await import("./modules/b.mjs");
+
+  const expected = {
+    age: 30,
+    name: "alice",
+  };
+
+  const merged = deepmerge(a, b);
+
+  t.deepEqual(merged, expected);
 });
 
 test("prototype pollution", (t) => {

@@ -23,6 +23,7 @@
   "ignorePatterns": [
     "/coverage/",
     "/dist/",
+    "/tests/modules/",
     "/tests/types/",
     "/types-legacy/",
     "/**/*.cjs",
