@@ -1,11 +1,8 @@
 {
   "files.exclude": {
-    ".nyc_output/": true,
     "coverage/": true,
     "build/": true,
     "dist/": true,
-    "ava.config.cjs": true,
-    "rollup.config.cjs": true,
   },
   "files.trimTrailingWhitespace": true,
   "search.exclude": {

@@ -31,6 +31,9 @@
   ],
   "rules": {
     "import/no-relative-parent-imports": "error",
+    "node/no-extraneous-import": ["error", {
+      "allowModules": ["deepmerge-ts"]
+    }],
     "unicorn/prefer-at": "off",
     "unicorn/prefer-top-level-await": "off"
   },
@@ -42,6 +45,12 @@
       },
       "rules": {
         "functional/prefer-readonly-type": "off"
+      }
+    },
+    {
+      "files": "tests/**",
+      "rules": {
+        "import/no-useless-path-segments": "off"
       }
     }
   ]

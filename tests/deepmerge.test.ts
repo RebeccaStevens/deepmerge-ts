@@ -1,6 +1,6 @@
 import test from "ava";
-
-import { deepmerge } from "@/deepmerge";
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { deepmerge } from "deepmerge-ts";
 
 test("return undefined when nothing to merge", (t) => {
   // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression

@@ -1,18 +1,18 @@
 /* eslint-disable @typescript-eslint/consistent-type-definitions, @typescript-eslint/no-unused-vars */
 
 import test from "ava";
-import _ from "lodash";
-
-import { deepmergeCustom } from "@/deepmerge";
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { deepmergeCustom } from "deepmerge-ts";
 import type {
   DeepMergeLeafURI,
   DeepMergeMergeFunctionsURIs,
   DeepMergeRecordsDefaultHKT,
   DeepMergeLeaf,
   DeepMergeOptions,
-} from "@/deepmerge";
+} from "deepmerge-ts";
+import _ from "lodash";
 
-import { areAllNumbers, hasProp } from "./utils";
+import { areAllNumbers, hasProp } from "./utils.js";
 
 declare module "ava" {
   interface DeepEqualAssertion {

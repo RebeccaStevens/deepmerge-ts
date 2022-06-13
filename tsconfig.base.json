@@ -25,11 +25,12 @@
     "target": "ES2018",
     "baseUrl": "./src",
     "paths": {
-      "@/deepmerge": ["./index"],
+      "deepmerge-ts": ["./index.js"],
     },
   },
   "exclude": [
     "benchmark/",
+    "dist/",
     "types-legacy/"
   ]
 }
