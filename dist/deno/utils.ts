@@ -1,5 +1,3 @@
-import { isPlainObject } from "https://raw.githubusercontent.com/jonschlinkert/is-plain-object/v5.0.0/is-plain-object.js";
-
 /**
  * The different types of objects deepmerge-ts support.
  */
@@ -27,7 +25,7 @@ export function getObjectType(object: unknown): ObjectType {
     return ObjectType.ARRAY;
   }
 
-  if (isPlainObject(object)) {
+  if (isRecord(object)) {
     return ObjectType.RECORD;
   }
 
@@ -101,4 +99,48 @@ export function getIterableOfIterables<T>(
       }
     },
   };
+}
+
+const validRecordToStringValues = new Set([
+  "[object Object]",
+  "[object Module]",
+]);
+
+/**
+ * Does the given object appear to be a record.
+ */
+function isRecord(value: object): value is Record<PropertyKey, unknown> {
+  // All records are objects.
+  if (!validRecordToStringValues.has(Object.prototype.toString.call(value))) {
+    return false;
+  }
+
+  const { constructor } = value;
+
+  // If has modified constructor.
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  if (constructor === undefined) {
+    return true;
+  }
+
+  // eslint-disable-next-line prefer-destructuring
+  const prototype: unknown = constructor.prototype;
+
+  // If has modified prototype.
+  if (
+    prototype === null ||
+    typeof prototype !== "object" ||
+    !validRecordToStringValues.has(Object.prototype.toString.call(prototype))
+  ) {
+    return false;
+  }
+
+  // If constructor does not have an Object-specific method.
+  // eslint-disable-next-line sonarjs/prefer-single-boolean-return, no-prototype-builtins
+  if (!prototype.hasOwnProperty("isPrototypeOf")) {
+    return false;
+  }
+
+  // Most likely a record.
+  return true;
 }

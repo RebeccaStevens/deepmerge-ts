@@ -1,5 +1,3 @@
-import { isPlainObject } from 'is-plain-object';
-
 /**
  * Get the type of the given object.
  *
@@ -13,7 +11,7 @@ function getObjectType(object) {
     if (Array.isArray(object)) {
         return 2 /* ObjectType.ARRAY */;
     }
-    if (isPlainObject(object)) {
+    if (isRecord(object)) {
         return 1 /* ObjectType.RECORD */;
     }
     if (object instanceof Set) {
@@ -72,6 +70,40 @@ function getIterableOfIterables(iterables) {
             }
         },
     };
+}
+const validRecordToStringValues = new Set([
+    "[object Object]",
+    "[object Module]",
+]);
+/**
+ * Does the given object appear to be a record.
+ */
+function isRecord(value) {
+    // All records are objects.
+    if (!validRecordToStringValues.has(Object.prototype.toString.call(value))) {
+        return false;
+    }
+    const { constructor } = value;
+    // If has modified constructor.
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    if (constructor === undefined) {
+        return true;
+    }
+    // eslint-disable-next-line prefer-destructuring
+    const prototype = constructor.prototype;
+    // If has modified prototype.
+    if (prototype === null ||
+        typeof prototype !== "object" ||
+        !validRecordToStringValues.has(Object.prototype.toString.call(prototype))) {
+        return false;
+    }
+    // If constructor does not have an Object-specific method.
+    // eslint-disable-next-line sonarjs/prefer-single-boolean-return, no-prototype-builtins
+    if (!prototype.hasOwnProperty("isPrototypeOf")) {
+        return false;
+    }
+    // Most likely a record.
+    return true;
 }
 
 const defaultMergeFunctions = {

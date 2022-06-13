@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
+# [4.1.0](https://github.com/RebeccaStevens/deepmerge-ts/compare/v4.0.4...v4.1.0) (2022-06-13)
+
+
+### Features
+
+* treat module imports as records ([20c0dfb](https://github.com/RebeccaStevens/deepmerge-ts/commit/20c0dfb82e4273b10e5a02ba0e74aada42b9bb7a)), closes [#133](https://github.com/RebeccaStevens/deepmerge-ts/issues/133)
+
 ## [4.0.4](https://github.com/RebeccaStevens/deepmerge-ts/compare/v4.0.3...v4.0.4) (2022-06-13)
 
 
