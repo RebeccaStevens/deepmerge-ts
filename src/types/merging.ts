@@ -20,7 +20,7 @@ import type {
 export interface DeepMergeMergeFunctionURItoKind<
   Ts extends ReadonlyArray<unknown>,
   MF extends DeepMergeMergeFunctionsURIs,
-  M
+  in out M
 > {
   readonly DeepMergeLeafURI: DeepMergeLeaf<Ts>;
   readonly DeepMergeRecordsDefaultURI: DeepMergeRecordsDefaultHKT<Ts, MF, M>;

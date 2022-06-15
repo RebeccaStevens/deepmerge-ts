@@ -72,10 +72,16 @@ const esm = defineConfig({
 const dts = defineConfig({
   ...common,
 
-  output: {
-    file: "dist/node/types/current/index.d.ts",
-    format: "es",
-  },
+  output: [
+    {
+      file: pkg.exports.types.import,
+      format: "esm",
+    },
+    {
+      file: pkg.exports.types.require,
+      format: "cjs",
+    },
+  ],
 
   plugins: [
     rollupPluginTypescript({
