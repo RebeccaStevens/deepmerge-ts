@@ -1,6 +1,19 @@
 # Changelog
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
+# [4.2.0](https://github.com/RebeccaStevens/deepmerge-ts/compare/v4.1.0...v4.2.0) (2022-06-15)
+
+
+### Features
+
+* export types for module resolution node 16 ([20241c5](https://github.com/RebeccaStevens/deepmerge-ts/commit/20241c5bdffcc77025ea778257193f1afbe40768))
+
+
+### Performance Improvements
+
+* **ts:** add variance annotations ([cecc9db](https://github.com/RebeccaStevens/deepmerge-ts/commit/cecc9dbcfc68335f04372e2fa339a347f71c90bc))
+* **ts:** use extends constraints on infer ([f053e76](https://github.com/RebeccaStevens/deepmerge-ts/commit/f053e76221fb790f1dead0b2b5c9a9f4432cb1d8))
+
 # [4.1.0](https://github.com/RebeccaStevens/deepmerge-ts/compare/v4.0.4...v4.1.0) (2022-06-13)
 
 
