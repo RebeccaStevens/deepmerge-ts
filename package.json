@@ -57,7 +57,7 @@
     },
     ">=4.7": {
       "*": [
-        "dist/node/types/current/index.d.ts"
+        "dist/node/types/current/index.d.mts"
       ]
     }
   },
