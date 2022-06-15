@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
+## [4.2.1](https://github.com/RebeccaStevens/deepmerge-ts/compare/v4.2.0...v4.2.1) (2022-06-15)
+
+
+### Bug Fixes
+
+* broken type info path ([#146](https://github.com/RebeccaStevens/deepmerge-ts/issues/146)) ([b875711](https://github.com/RebeccaStevens/deepmerge-ts/commit/b8757111ccff257e7403b5d91235b965b4542afd))
+
 # [4.2.0](https://github.com/RebeccaStevens/deepmerge-ts/compare/v4.1.0...v4.2.0) (2022-06-15)
 
 
