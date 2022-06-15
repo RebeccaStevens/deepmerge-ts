@@ -39,7 +39,8 @@
       "require": "./dist/node/types/current/index.d.cts"
     },
     "import": "./dist/node/index.mjs",
-    "require": "./dist/node/index.cjs"
+    "require": "./dist/node/index.cjs",
+    "default": "./dist/node/index.cjs"
   },
   "main": "dist/node/index.cjs",
   "module": "dist/node/index.mjs",
@@ -57,7 +58,7 @@
     },
     ">=4.7": {
       "*": [
-        "dist/node/types/current/index.d.ts"
+        "dist/node/types/current/index.d.mts"
       ]
     }
   },
