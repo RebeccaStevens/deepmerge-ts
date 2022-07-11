@@ -46,7 +46,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@commitlint/cli@npm:^17.0.2":
+"@commitlint/cli@npm:^17.0.3":
   version: 17.0.3
   resolution: "@commitlint/cli@npm:17.0.3"
   dependencies:
@@ -66,7 +66,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@commitlint/config-conventional@npm:^17.0.2":
+"@commitlint/config-conventional@npm:^17.0.3":
   version: 17.0.3
   resolution: "@commitlint/config-conventional@npm:17.0.3"
   dependencies:
@@ -1388,7 +1388,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@semantic-release/github@npm:^8.0.0, @semantic-release/github@npm:^8.0.4":
+"@semantic-release/github@npm:^8.0.0, @semantic-release/github@npm:^8.0.5":
   version: 8.0.5
   resolution: "@semantic-release/github@npm:8.0.5"
   dependencies:
@@ -1593,7 +1593,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:>=12":
+"@types/node@npm:*, @types/node@npm:>=12, @types/node@npm:^18.0.3":
   version: 18.0.3
   resolution: "@types/node@npm:18.0.3"
   checksum: 5dec59fbbc1186c808b53df1ca717dad034dbd6a901c75f5b052c845618b531b05f27217122c6254db99529a68618e4cfc534ae3dbf4e88754e9e572df80defa
@@ -1604,13 +1604,6 @@ __metadata:
   version: 14.18.21
   resolution: "@types/node@npm:14.18.21"
   checksum: 4ed35b76609647a4e36a194702e31cdda9ed42174ddaf7937bc5498984e98a99e8a42ea895ea17dd9c5ec18080112c29ab670c34f90eb9f7a4703b85b31e34fa
-  languageName: node
-  linkType: hard
-
-"@types/node@npm:^17.0.43":
-  version: 17.0.45
-  resolution: "@types/node@npm:17.0.45"
-  checksum: aa04366b9103b7d6cfd6b2ef64182e0eaa7d4462c3f817618486ea0422984c51fc69fd0d436eae6c9e696ddfdbec9ccaa27a917f7c2e8c75c5d57827fe3d95e8
   languageName: node
   linkType: hard
 
@@ -1667,7 +1660,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/eslint-plugin@npm:^5.28.0":
+"@typescript-eslint/eslint-plugin@npm:^5.30.5":
   version: 5.30.5
   resolution: "@typescript-eslint/eslint-plugin@npm:5.30.5"
   dependencies:
@@ -1690,7 +1683,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/parser@npm:^5.28.0":
+"@typescript-eslint/parser@npm:^5.30.5":
   version: 5.30.5
   resolution: "@typescript-eslint/parser@npm:5.30.5"
   dependencies:
@@ -2197,7 +2190,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ava@npm:^4.3.0":
+"ava@npm:^4.3.1":
   version: 4.3.1
   resolution: "ava@npm:4.3.1"
   dependencies:
@@ -3392,7 +3385,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cspell@npm:^6.1.2":
+"cspell@npm:^6.2.3":
   version: 6.2.3
   resolution: "cspell@npm:6.2.3"
   dependencies:
@@ -3562,8 +3555,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "deepmerge-ts@workspace:."
   dependencies:
-    "@commitlint/cli": ^17.0.2
-    "@commitlint/config-conventional": ^17.0.2
+    "@commitlint/cli": ^17.0.3
+    "@commitlint/config-conventional": ^17.0.3
     "@cspell/dict-cryptocurrencies": ^2.0.0
     "@rebeccastevens/eslint-config": ^1.3.21
     "@rollup/plugin-json": ^4.1.0
@@ -3572,56 +3565,56 @@ __metadata:
     "@semantic-release/changelog": ^6.0.1
     "@semantic-release/commit-analyzer": ^9.0.2
     "@semantic-release/git": ^10.0.1
-    "@semantic-release/github": ^8.0.4
+    "@semantic-release/github": ^8.0.5
     "@semantic-release/npm": ^9.0.1
     "@semantic-release/release-notes-generator": ^10.0.3
     "@types/lodash": ^4.14.182
-    "@types/node": ^17.0.43
+    "@types/node": ^18.0.3
     "@types/rollup-plugin-auto-external": ^2.0.2
-    "@typescript-eslint/eslint-plugin": ^5.28.0
-    "@typescript-eslint/parser": ^5.28.0
-    ava: ^4.3.0
+    "@typescript-eslint/eslint-plugin": ^5.30.5
+    "@typescript-eslint/parser": ^5.30.5
+    ava: ^4.3.1
     c8: ^7.11.3
     codecov: ^3.8.3
     commitizen: ^4.2.4
-    cspell: ^6.1.2
-    denoify: ^0.11.0
+    cspell: ^6.2.3
+    denoify: ^0.11.1
     dtslint: ^4.2.1
-    eslint: ^8.17.0
+    eslint: ^8.19.0
     eslint-config-prettier: ^8.5.0
-    eslint-import-resolver-typescript: ^3.1.2
+    eslint-import-resolver-typescript: ^3.2.5
     eslint-plugin-ava: ^13.2.0
     eslint-plugin-eslint-comments: ^3.2.0
-    eslint-plugin-eslint-plugin: ^4.2.0
+    eslint-plugin-eslint-plugin: ^4.4.1
     eslint-plugin-functional: ^4.2.1
     eslint-plugin-import: ^2.26.0
-    eslint-plugin-jsdoc: ^39.3.2
+    eslint-plugin-jsdoc: ^39.3.3
     eslint-plugin-markdown: ^2.2.1
     eslint-plugin-node: ^11.1.0
     eslint-plugin-optimize-regex: ^1.2.1
-    eslint-plugin-prettier: ^4.0.0
+    eslint-plugin-prettier: ^4.2.1
     eslint-plugin-promise: ^6.0.0
     eslint-plugin-sonarjs: ^0.13.0
     eslint-plugin-tsdoc: ^0.2.16
-    eslint-plugin-unicorn: ^43.0.0
+    eslint-plugin-unicorn: ^43.0.1
     husky: ^8.0.1
     if-env-defined: ^1.0.0
-    lint-staged: ^13.0.1
+    lint-staged: ^13.0.3
     lodash: ^4.17.21
     markdownlint-cli: ^0.31.1
     marked: ^4.0.17
-    prettier: ^2.7.0
+    prettier: ^2.7.1
     rimraf: ^3.0.2
-    rollup: ^2.75.6
+    rollup: ^2.76.0
     rollup-plugin-auto-external: ^2.0.0
     rollup-plugin-copy: ^3.4.0
     rollup-plugin-dts: ^4.2.2
     semantic-release: ^19.0.3
     source-map-support: ^0.5.21
-    ts-node: ^10.8.1
+    ts-node: ^10.8.2
     ts-paths-esm-loader: ^1.3.1
     tslib: ^2.4.0
-    typescript: ^4.7.3
+    typescript: ^4.7.4
   languageName: unknown
   linkType: soft
 
@@ -3688,7 +3681,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"denoify@npm:^0.11.0":
+"denoify@npm:^0.11.1":
   version: 0.11.1
   resolution: "denoify@npm:0.11.1"
   dependencies:
@@ -4085,7 +4078,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-import-resolver-typescript@npm:^3.1.2":
+"eslint-import-resolver-typescript@npm:^3.2.5":
   version: 3.2.5
   resolution: "eslint-import-resolver-typescript@npm:3.2.5"
   dependencies:
@@ -4155,7 +4148,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-eslint-plugin@npm:^4.2.0":
+"eslint-plugin-eslint-plugin@npm:^4.4.1":
   version: 4.4.1
   resolution: "eslint-plugin-eslint-plugin@npm:4.4.1"
   dependencies:
@@ -4210,7 +4203,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-jsdoc@npm:^39.3.2":
+"eslint-plugin-jsdoc@npm:^39.3.3":
   version: 39.3.3
   resolution: "eslint-plugin-jsdoc@npm:39.3.3"
   dependencies:
@@ -4263,7 +4256,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-prettier@npm:^4.0.0":
+"eslint-plugin-prettier@npm:^4.2.1":
   version: 4.2.1
   resolution: "eslint-plugin-prettier@npm:4.2.1"
   dependencies:
@@ -4306,7 +4299,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-unicorn@npm:^43.0.0":
+"eslint-plugin-unicorn@npm:^43.0.1":
   version: 43.0.1
   resolution: "eslint-plugin-unicorn@npm:43.0.1"
   dependencies:
@@ -4391,7 +4384,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint@npm:^8.17.0":
+"eslint@npm:^8.19.0":
   version: 8.19.0
   resolution: "eslint@npm:8.19.0"
   dependencies:
@@ -6631,7 +6624,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lint-staged@npm:^13.0.1":
+"lint-staged@npm:^13.0.3":
   version: 13.0.3
   resolution: "lint-staged@npm:13.0.3"
   dependencies:
@@ -8368,7 +8361,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier@npm:^2.7.0":
+"prettier@npm:^2.7.1":
   version: 2.7.1
   resolution: "prettier@npm:2.7.1"
   bin:
@@ -8968,7 +8961,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rollup@npm:>=2.0.0, rollup@npm:^2.75.6":
+"rollup@npm:>=2.0.0, rollup@npm:^2.76.0":
   version: 2.76.0
   resolution: "rollup@npm:2.76.0"
   dependencies:
@@ -9970,7 +9963,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ts-node@npm:^10.8.1":
+"ts-node@npm:^10.8.1, ts-node@npm:^10.8.2":
   version: 10.8.2
   resolution: "ts-node@npm:10.8.2"
   dependencies:
@@ -10202,7 +10195,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:^4.6.4, typescript@npm:^4.7.3":
+"typescript@npm:^4.6.4, typescript@npm:^4.7.4":
   version: 4.7.4
   resolution: "typescript@npm:4.7.4"
   bin:
@@ -10212,7 +10205,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@^4.6.4#~builtin<compat/typescript>, typescript@patch:typescript@^4.7.3#~builtin<compat/typescript>":
+"typescript@patch:typescript@^4.6.4#~builtin<compat/typescript>, typescript@patch:typescript@^4.7.4#~builtin<compat/typescript>":
   version: 4.7.4
   resolution: "typescript@patch:typescript@npm%3A4.7.4#~builtin<compat/typescript>::version=4.7.4&hash=7ad353"
   bin:
