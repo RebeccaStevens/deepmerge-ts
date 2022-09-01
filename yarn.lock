@@ -2689,9 +2689,9 @@ eslint-plugin-eslint-comments@^3.2.0:
     escape-string-regexp "^1.0.5"
     ignore "^5.0.5"
 
-eslint-plugin-eslint-plugin@^4.4.1:
-  version "4.4.1"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-eslint-plugin/-/eslint-plugin-eslint-plugin-4.4.1.tgz#f0b59fd96ebb3828e011fe75a65e9c49df25985a"
+eslint-plugin-eslint-plugin@^5.0.6:
+  version "5.0.6"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-eslint-plugin/-/eslint-plugin-eslint-plugin-5.0.6.tgz#76a32444b90525f5e58b1b7bdf0295110f6573a8"
   dependencies:
     eslint-utils "^3.0.0"
     estraverse "^5.2.0"
