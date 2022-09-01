@@ -40,8 +40,8 @@
     yargs "^17.0.0"
 
 "@commitlint/config-conventional@^17.0.3":
-  version "17.0.3"
-  resolved "https://registry.yarnpkg.com/@commitlint/config-conventional/-/config-conventional-17.0.3.tgz#61e937357ce63ea08a2017e58b918748fcf3abc5"
+  version "17.1.0"
+  resolved "https://registry.yarnpkg.com/@commitlint/config-conventional/-/config-conventional-17.1.0.tgz#9bd852766e08842bfe0fe4deb40e152eb718ec1b"
   dependencies:
     conventional-changelog-conventionalcommits "^5.0.0"
 
