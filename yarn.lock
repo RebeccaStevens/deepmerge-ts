@@ -5832,8 +5832,8 @@ rollup-plugin-dts@^4.2.2:
     "@babel/code-frame" "^7.16.7"
 
 rollup@>=2.0.0, rollup@^2.76.0:
-  version "2.77.2"
-  resolved "https://registry.yarnpkg.com/rollup/-/rollup-2.77.2.tgz#6b6075c55f9cc2040a5912e6e062151e42e2c4e3"
+  version "2.79.0"
+  resolved "https://registry.yarnpkg.com/rollup/-/rollup-2.79.0.tgz#9177992c9f09eb58c5e56cbfa641607a12b57ce2"
   optionalDependencies:
     fsevents "~2.3.2"
 
