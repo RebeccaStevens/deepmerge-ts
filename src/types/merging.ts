@@ -3,7 +3,7 @@ import type {
   DeepMergeArraysDefaultHKT,
   DeepMergeSetsDefaultHKT,
   DeepMergeMapsDefaultHKT,
-} from "./defaults";
+} from "./defaults.js";
 import type {
   EveryIsArray,
   EveryIsMap,
@@ -11,7 +11,7 @@ import type {
   EveryIsSet,
   IsNever,
   IsTuple,
-} from "./utils";
+} from "./utils.js";
 
 /**
  * Mapping of merge function URIs to the merge function type.

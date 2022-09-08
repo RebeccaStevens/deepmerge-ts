@@ -10,14 +10,14 @@ import type {
   DeepMergeSetsDefaultHKT,
   DeepMergeMergeFunctionUtils,
   GetDeepMergeMergeFunctionsURIs,
-} from "./types";
+} from "./types/index.js";
 import {
   getIterableOfIterables,
   getKeys,
   getObjectType,
   ObjectType,
   objectHasProperty,
-} from "./utils";
+} from "./utils.js";
 
 const defaultMergeFunctions = {
   mergeMaps: defaultMergeMaps,
