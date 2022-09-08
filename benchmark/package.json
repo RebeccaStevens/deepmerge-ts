@@ -16,7 +16,7 @@
     "benchmark": "^2.1.4",
     "deepmerge": "^4.2.2",
     "lodash": "^4.17.21",
-    "merge-anything": "^4.0.1",
+    "merge-anything": "^5.0.0",
     "object-accumulator": "^0.0.5"
   },
   "engines": {
