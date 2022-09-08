@@ -3665,17 +3665,18 @@ __metadata:
   linkType: hard
 
 "denoify@npm:^1.0.3":
-  version: 1.0.3
-  resolution: "denoify@npm:1.0.3"
+  version: 1.0.6
+  resolution: "denoify@npm:1.0.6"
   dependencies:
     "@octokit/rest": ^18.0.0
     "@types/comment-json": ^1.1.1
     commander: ^4.1.1
     comment-json: ^3.0.2
-    evt: ^2.4.0
+    evt: ^2.4.1
     get-github-default-branch-name: ^0.0.4
     gitignore-parser: 0.0.2
     glob: ^7.1.6
+    minimal-polyfills: ^2.2.2
     node-fetch: ^2.6.7
     path-depth: ^1.0.0
     scripting-tools: ^0.19.13
@@ -3685,7 +3686,7 @@ __metadata:
     denoify: bin/denoify.js
     enable_short_npm_import_path: bin/enableShortNpmImportPath.js
     remove_deno_dist_from_gitignore: bin/removeDenoDistFromGitignore.js
-  checksum: b2b4656cfb3edf8b015424eaa0d40d0702f4a12115fd7560e1815a44ad81fc7c82d0236ac01ce89fe03f74d68cbdc0d8b702b6b50d900c919d0185e775e20a5f
+  checksum: 3253cd60d05e9c53c628d2fcdca0ab93ea09d66fd7429db65a1f0ece8af0fa3754f6734f1e296451176bf04e94784c5e8e053ca3489c4a392d63ca38f0174410
   languageName: node
   linkType: hard
 
@@ -4505,14 +4506,14 @@ dts-critic@latest:
   languageName: node
   linkType: hard
 
-"evt@npm:^2.4.0":
-  version: 2.4.0
-  resolution: "evt@npm:2.4.0"
+"evt@npm:^2.4.1":
+  version: 2.4.1
+  resolution: "evt@npm:2.4.1"
   dependencies:
     minimal-polyfills: ^2.2.2
     run-exclusive: ^2.2.16
     tsafe: ^1.0.1
-  checksum: 2948b8fa69ebab5eac7d1fe8da7eae0c99035c479ee96821c238fa5b66311dcfe4ff758831136203b9ea22dcdd10cbdf6dfc1fc40525bbe159e813a53006c4f3
+  checksum: 64b133223045c88ffd841efb5b97fda79ab1d9ea0a3409dee24be8882a0e5ec16c0ce3c58c528e16b8f1e07cefab32808e1d547672e4f51597af58629a82d682
   languageName: node
   linkType: hard
 
