@@ -1,7 +1,7 @@
 // eslint-disable-next-line import/no-relative-parent-imports -- use "deepmerge-ts" once denoify can support it.
-import type { DeepMergeMergeFunctionsDefaults } from "..";
+import type { DeepMergeMergeFunctionsDefaults } from "../index.js";
 
-import type { DeepMergeBuiltInMetaData } from "./merging";
+import type { DeepMergeBuiltInMetaData } from "./merging.js";
 
 /**
  * The options the user can pass to customize deepmerge.

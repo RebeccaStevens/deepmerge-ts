@@ -3,7 +3,7 @@ import type {
   DeepMergeLeafURI,
   DeepMergeMergeFunctionsURIs,
   DeepMergeMergeFunctionURItoKind,
-} from "./merging";
+} from "./merging.js";
 import type {
   FlatternAlias,
   FilterOutNever,
@@ -13,7 +13,7 @@ import type {
   UnionMapValues,
   UnionSetValues,
   ValueOfKey,
-} from "./utils";
+} from "./utils.js";
 
 /**
  * The default merge function to merge records with.

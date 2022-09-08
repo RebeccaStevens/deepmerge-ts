@@ -1,16 +1,16 @@
 /* eslint-disable @typescript-eslint/consistent-type-definitions, @typescript-eslint/no-unused-vars */
 
 import test from "ava";
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { deepmergeCustom } from "deepmerge-ts";
+import _ from "lodash";
+
+import { deepmergeCustom } from "../src/index.js";
 import type {
   DeepMergeLeafURI,
   DeepMergeMergeFunctionsURIs,
   DeepMergeRecordsDefaultHKT,
   DeepMergeLeaf,
   DeepMergeOptions,
-} from "deepmerge-ts";
-import _ from "lodash";
+} from "../src/index.js";
 
 import { areAllNumbers, hasProp } from "./utils.js";
 

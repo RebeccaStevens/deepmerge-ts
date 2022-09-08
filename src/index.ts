@@ -1,6 +1,6 @@
-export { deepmerge, deepmergeCustom } from "./deepmerge";
+export { deepmerge, deepmergeCustom } from "./deepmerge.js";
 
-export type { DeepMergeMergeFunctionsDefaults } from "./deepmerge";
+export type { DeepMergeMergeFunctionsDefaults } from "./deepmerge.js";
 export type {
   DeepMergeArraysDefaultHKT,
   DeepMergeBuiltInMetaData,
@@ -16,4 +16,4 @@ export type {
   DeepMergeOptions,
   DeepMergeRecordsDefaultHKT,
   DeepMergeSetsDefaultHKT,
-} from "./types";
+} from "./types/index.js";

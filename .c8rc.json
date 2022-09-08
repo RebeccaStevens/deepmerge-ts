@@ -4,6 +4,7 @@
     "src/**/*"
   ],
   "exclude": [
+    "src/types/**/*"
   ],
   "reporter": [
     "lcov",
