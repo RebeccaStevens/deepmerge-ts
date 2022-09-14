@@ -3665,8 +3665,8 @@ __metadata:
   linkType: hard
 
 "denoify@npm:^1.0.3":
-  version: 1.1.1
-  resolution: "denoify@npm:1.1.1"
+  version: 1.1.2
+  resolution: "denoify@npm:1.1.2"
   dependencies:
     "@octokit/rest": ^18.0.0
     "@types/comment-json": ^1.1.1
@@ -3679,14 +3679,14 @@ __metadata:
     minimal-polyfills: ^2.2.2
     node-fetch: ^2.6.7
     path-depth: ^1.0.0
-    scripting-tools: ^0.19.13
+    scripting-tools: ^0.19.14
     tsafe: ^1.0.1
     url-join: ^4.0.1
   bin:
     denoify: bin/denoify.js
     enable_short_npm_import_path: bin/enableShortNpmImportPath.js
     remove_deno_dist_from_gitignore: bin/removeDenoDistFromGitignore.js
-  checksum: 6e41b4466d9f9826e147763f49e8a997fa2646419e1702355ca4ad9dba50598a43626fc3ae56cdd5b66f61f3dbefd24c6eb7796b329281a91a0b7b2ddd085d48
+  checksum: e1c58a45eba1fb7bde4693f4718b27109de3525710a1d396c85f3a734d907c5cc9b21946fb063f0496586e278e3adae220c5b64cf8092cbbcaa56527a9fb4bb8
   languageName: node
   linkType: hard
 
@@ -9026,10 +9026,10 @@ dts-critic@latest:
   languageName: node
   linkType: hard
 
-"scripting-tools@npm:^0.19.12, scripting-tools@npm:^0.19.13":
-  version: 0.19.13
-  resolution: "scripting-tools@npm:0.19.13"
-  checksum: 45a5cfe1e58d0735a37c6403303dfb8f8c79c6851f61ae8d63b10a18245dd52ab3cb635a2887fac6b86c4b2471a192f951dfd1897d4f411e4eb5cfc5b28a7a07
+"scripting-tools@npm:^0.19.12, scripting-tools@npm:^0.19.14":
+  version: 0.19.14
+  resolution: "scripting-tools@npm:0.19.14"
+  checksum: 88679a29af11d53549925b2d2f4c23110571e0d12d98be54373252be1ea876607fe4f656e771f5cc6c0c606cab8422bdfd4905b51a91e2bdd332c8c423797d47
   languageName: node
   linkType: hard
 
