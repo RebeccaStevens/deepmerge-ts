@@ -3665,8 +3665,8 @@ __metadata:
   linkType: hard
 
 "denoify@npm:^1.0.3":
-  version: 1.1.2
-  resolution: "denoify@npm:1.1.2"
+  version: 1.1.4
+  resolution: "denoify@npm:1.1.4"
   dependencies:
     "@octokit/rest": ^18.0.0
     "@types/comment-json": ^1.1.1
@@ -3686,7 +3686,7 @@ __metadata:
     denoify: bin/denoify.js
     enable_short_npm_import_path: bin/enableShortNpmImportPath.js
     remove_deno_dist_from_gitignore: bin/removeDenoDistFromGitignore.js
-  checksum: e1c58a45eba1fb7bde4693f4718b27109de3525710a1d396c85f3a734d907c5cc9b21946fb063f0496586e278e3adae220c5b64cf8092cbbcaa56527a9fb4bb8
+  checksum: 436334955f303ae414ca5dbe050f626b01ff0515138827de0214f5bee5033196c6aed05bd7f536c7ddf0db30aa4ab9b95cdd128379d8b9458ffd2d343a6b864b
   languageName: node
   linkType: hard
 
