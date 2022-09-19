@@ -1,6 +1,8 @@
 # Changelog
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
+## [4.2.2](https://github.com/RebeccaStevens/deepmerge-ts/compare/v4.2.1...v4.2.2) (2022-09-19)
+
 ## [4.2.1](https://github.com/RebeccaStevens/deepmerge-ts/compare/v4.2.0...v4.2.1) (2022-06-15)
 
 
