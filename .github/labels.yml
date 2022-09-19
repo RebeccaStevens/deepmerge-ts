@@ -111,6 +111,6 @@
 - name: "Status: Released"
   color: c2e0c6
   description: "It's now live."
-- name: "Status: Beta Released"
+- name: "Status: Released on Next"
   color: fef2c0
-  description: "It's now live."
+  description: "It's now live on the next branch."
