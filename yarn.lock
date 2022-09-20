@@ -4144,8 +4144,8 @@ dts-critic@latest:
   linkType: hard
 
 "eslint-plugin-functional@npm:^4.2.1":
-  version: 4.3.2
-  resolution: "eslint-plugin-functional@npm:4.3.2"
+  version: 4.4.0
+  resolution: "eslint-plugin-functional@npm:4.4.0"
   dependencies:
     "@typescript-eslint/utils": ^5.10.2
     deepmerge-ts: ^4.0.3
@@ -4160,7 +4160,7 @@ dts-critic@latest:
       optional: true
     typescript:
       optional: true
-  checksum: 3ce2ea3f6c1294be9035496ba03be0aa04a1a9973263183d4c38c4ae47202d3e74131d7c905ca3c062c8a04c9d2efb1108ab7b0c6307069e98a7c47457a8a4c5
+  checksum: a535e3dc775112d914728af7dda04798d9870d2ef5aed39f861700712a0d45ba0417543ec6fd41f1c6fa1861d21af3d3306ba0f604a3435c92a32a41abdf1d4c
   languageName: node
   linkType: hard
 
