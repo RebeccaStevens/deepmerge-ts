@@ -153,9 +153,6 @@
   },
   "denoify": {
     "out": "dist/deno",
-    "index": "src/index.ts",
-    "ports": {
-      "is-plain-object": "https://raw.githubusercontent.com/jonschlinkert/is-plain-object/v5.0.0/is-plain-object.js"
-    }
+    "index": "src/index.ts"
   }
 }
