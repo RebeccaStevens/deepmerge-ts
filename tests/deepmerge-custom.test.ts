@@ -383,11 +383,11 @@ test("key path based merging", (t) => {
     },
     ReadonlyArray<PropertyKey>
   >({
-    metaDataUpdater: (previousMeta = [], metaMeta) => {
+    metaDataUpdater: (previousMeta, metaMeta) => {
       if (metaMeta.key === undefined) {
-        return previousMeta;
+        return previousMeta ?? [];
       }
-      return [...previousMeta, metaMeta.key];
+      return [...(previousMeta ?? []), metaMeta.key];
     },
     mergeOthers: (values, utils, meta) => {
       if (
@@ -471,8 +471,8 @@ test("key path based array merging", (t) => {
       ReadonlyArray<unknown>,
       Readonly<{ id: unknown }>
     > = {
-      metaDataUpdater: (previousMeta = [], metaMeta) => {
-        return [...previousMeta, metaMeta.key ?? metaMeta.id];
+      metaDataUpdater: (previousMeta, metaMeta) => {
+        return [...(previousMeta ?? []), metaMeta.key ?? metaMeta.id];
       },
       mergeArrays: (values, utils, meta = []) => {
         const idPath = idsPaths.find((idPath) => {

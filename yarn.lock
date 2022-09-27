@@ -1274,9 +1274,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rebeccastevens/eslint-config@npm:^1.3.23":
-  version: 1.3.23
-  resolution: "@rebeccastevens/eslint-config@npm:1.3.23"
+"@rebeccastevens/eslint-config@npm:^1.4.1":
+  version: 1.4.1
+  resolution: "@rebeccastevens/eslint-config@npm:1.4.1"
   dependencies:
     deepmerge-ts: ^4.0.0
   peerDependencies:
@@ -1295,7 +1295,7 @@ __metadata:
     eslint-plugin-sonarjs: "*"
     eslint-plugin-tsdoc: "*"
     eslint-plugin-unicorn: "*"
-  checksum: 30305d84d983bade4d9cc81d285dd4d801703c1f41800747fa40c79f8275f841a021dfc0606eae8cb1b29d11c6c3e962ffa91a85fce13af1e3def02e79799803
+  checksum: 82357ed707c1e828bfc77e349f271964ef8da35fea1eff8cf055c994552a760634380a7d9e0f17fb3d2ef2a90e855f348ff1fa3326a81a8a84116db1b8c1de06
   languageName: node
   linkType: hard
 
@@ -3541,7 +3541,7 @@ __metadata:
     "@commitlint/cli": ^17.0.3
     "@commitlint/config-conventional": ^17.0.3
     "@cspell/dict-cryptocurrencies": ^2.0.0
-    "@rebeccastevens/eslint-config": ^1.3.23
+    "@rebeccastevens/eslint-config": ^1.4.1
     "@rollup/plugin-json": ^4.1.0
     "@rollup/plugin-node-resolve": ^14.0.0
     "@rollup/plugin-typescript": ^8.3.3
@@ -3568,8 +3568,7 @@ __metadata:
     eslint-import-resolver-typescript: ^3.2.5
     eslint-plugin-ava: ^13.2.0
     eslint-plugin-eslint-comments: ^3.2.0
-    eslint-plugin-eslint-plugin: ^5.0.6
-    eslint-plugin-functional: ^4.2.1
+    eslint-plugin-functional: ^5.0.0-beta.3
     eslint-plugin-import: ^2.26.0
     eslint-plugin-jsdoc: ^39.3.3
     eslint-plugin-markdown: ^3.0.0
@@ -4131,36 +4130,25 @@ dts-critic@latest:
   languageName: node
   linkType: hard
 
-"eslint-plugin-eslint-plugin@npm:^5.0.6":
-  version: 5.0.6
-  resolution: "eslint-plugin-eslint-plugin@npm:5.0.6"
-  dependencies:
-    eslint-utils: ^3.0.0
-    estraverse: ^5.2.0
-  peerDependencies:
-    eslint: ">=7.0.0"
-  checksum: 8761571af3e81f7451ff787ac2cf6077d8d093cd3a3fca503d8423ac1d47c7c431ccb1640c1991dd4ed62832e004d9fc8999ac480a59cfd2649bbcf3baf5cee7
-  languageName: node
-  linkType: hard
-
-"eslint-plugin-functional@npm:^4.2.1":
-  version: 4.4.0
-  resolution: "eslint-plugin-functional@npm:4.4.0"
+"eslint-plugin-functional@npm:^5.0.0-beta.3":
+  version: 5.0.0-beta.3
+  resolution: "eslint-plugin-functional@npm:5.0.0-beta.3"
   dependencies:
     "@typescript-eslint/utils": ^5.10.2
     deepmerge-ts: ^4.0.3
     escape-string-regexp: ^4.0.0
+    is-immutable-type: ^1.0.0
     semver: ^7.3.7
   peerDependencies:
     eslint: ^8.0.0
     tsutils: ^3.0.0
-    typescript: ^3.4.1 || ^4.0.0
+    typescript: ">=4.0.2"
   peerDependenciesMeta:
     tsutils:
       optional: true
     typescript:
       optional: true
-  checksum: a535e3dc775112d914728af7dda04798d9870d2ef5aed39f861700712a0d45ba0417543ec6fd41f1c6fa1861d21af3d3306ba0f604a3435c92a32a41abdf1d4c
+  checksum: ae8d711e77dabcc31380d38a95b9bf4e80a24f945f88c35c2e6280614f3e281e099bf9af8ff16548eabe9562013fd8e45b9a9479313594cec2ce6a3001125ef4
   languageName: node
   linkType: hard
 
@@ -5932,6 +5920,18 @@ dts-critic@latest:
   version: 1.0.4
   resolution: "is-hexadecimal@npm:1.0.4"
   checksum: a452e047587b6069332d83130f54d30da4faf2f2ebaa2ce6d073c27b5703d030d58ed9e0b729c8e4e5b52c6f1dab26781bb77b7bc6c7805f14f320e328ff8cd5
+  languageName: node
+  linkType: hard
+
+"is-immutable-type@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "is-immutable-type@npm:1.0.0"
+  peerDependencies:
+    "@typescript-eslint/type-utils": ">=5.30.5"
+    "@typescript-eslint/utils": ">=5.30.5"
+    tsutils: ">=3.21.0"
+    typescript: ">=4.7.4"
+  checksum: 926ebe7ea969d7b08723a01cf91aada6a48a18062fc218d9e84c825df1241bb0ee761f2d138121d64c6367b02b8067f57600d4ef5f79c4a7b2fbd0e3b84573fd
   languageName: node
   linkType: hard
 

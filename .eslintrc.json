@@ -36,7 +36,8 @@
       "allowModules": ["deepmerge-ts"]
     }],
     "unicorn/prefer-at": "off",
-    "unicorn/prefer-top-level-await": "off"
+    "unicorn/prefer-top-level-await": "off",
+    "prefer-object-has-own": "off"
   },
   "overrides": [
     {
