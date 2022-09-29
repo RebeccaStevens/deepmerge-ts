@@ -43,7 +43,7 @@ type DeepMergeMergeFunctions<
     Ts extends ReadonlyArray<Readonly<Record<PropertyKey, unknown>>>,
     U extends DeepMergeMergeFunctionUtils<M, MM>
   >(
-    records: Ts,
+    values: Ts,
     utils: U,
     meta: M | undefined
   ) => unknown;
@@ -52,7 +52,7 @@ type DeepMergeMergeFunctions<
     Ts extends ReadonlyArray<ReadonlyArray<unknown>>,
     U extends DeepMergeMergeFunctionUtils<M, MM>
   >(
-    records: Ts,
+    values: Ts,
     utils: U,
     meta: M | undefined
   ) => unknown;
@@ -61,7 +61,7 @@ type DeepMergeMergeFunctions<
     Ts extends ReadonlyArray<Readonly<ReadonlyMap<unknown, unknown>>>,
     U extends DeepMergeMergeFunctionUtils<M, MM>
   >(
-    records: Ts,
+    values: Ts,
     utils: U,
     meta: M | undefined
   ) => unknown;
@@ -70,7 +70,7 @@ type DeepMergeMergeFunctions<
     Ts extends ReadonlyArray<Readonly<ReadonlySet<unknown>>>,
     U extends DeepMergeMergeFunctionUtils<M, MM>
   >(
-    records: Ts,
+    values: Ts,
     utils: U,
     meta: M | undefined
   ) => unknown;
@@ -79,7 +79,7 @@ type DeepMergeMergeFunctions<
     Ts extends ReadonlyArray<unknown>,
     U extends DeepMergeMergeFunctionUtils<M, MM>
   >(
-    records: Ts,
+    values: Ts,
     utils: U,
     meta: M | undefined
   ) => unknown;
