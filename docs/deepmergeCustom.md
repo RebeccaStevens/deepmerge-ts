@@ -153,7 +153,10 @@ const customizedDeepmerge = deepmergeCustom<
   // Customize what the actual meta data.
   metaDataUpdater: (previousMeta, metaMeta) => {
     if (previousMeta === undefined) {
-      return { keyPath: [] };
+      if (metaMeta.key === undefined) {
+        return { keyPath: [] };
+      }
+      return { keyPath: [metaMeta.key] };
     }
     if (metaMeta.key === undefined) {
       return previousMeta;
