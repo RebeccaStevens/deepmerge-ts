@@ -3663,14 +3663,14 @@ __metadata:
   linkType: hard
 
 "denoify@npm:^1.0.3":
-  version: 1.1.4
-  resolution: "denoify@npm:1.1.4"
+  version: 1.1.5
+  resolution: "denoify@npm:1.1.5"
   dependencies:
     "@octokit/rest": ^18.0.0
     "@types/comment-json": ^1.1.1
     commander: ^4.1.1
     comment-json: ^3.0.2
-    evt: ^2.4.2
+    evt: ^2.4.3
     get-github-default-branch-name: ^0.0.4
     gitignore-parser: 0.0.2
     glob: ^7.1.6
@@ -3678,13 +3678,13 @@ __metadata:
     node-fetch: ^2.6.7
     path-depth: ^1.0.0
     scripting-tools: ^0.19.14
-    tsafe: ^1.0.1
+    tsafe: ^1.1.0
     url-join: ^4.0.1
   bin:
     denoify: bin/denoify.js
     enable_short_npm_import_path: bin/enableShortNpmImportPath.js
     remove_deno_dist_from_gitignore: bin/removeDenoDistFromGitignore.js
-  checksum: 436334955f303ae414ca5dbe050f626b01ff0515138827de0214f5bee5033196c6aed05bd7f536c7ddf0db30aa4ab9b95cdd128379d8b9458ffd2d343a6b864b
+  checksum: 9915788ddd760269e1e1c485892ae957fe5ede1cf223a88f3d54513da787a2691549f59b42fe72837d50f6cdd4ca5b1a9eaa1d4e7418d023854bae3c59324979
   languageName: node
   linkType: hard
 
@@ -4494,14 +4494,14 @@ dts-critic@latest:
   languageName: node
   linkType: hard
 
-"evt@npm:^2.4.2":
-  version: 2.4.2
-  resolution: "evt@npm:2.4.2"
+"evt@npm:^2.4.3":
+  version: 2.4.3
+  resolution: "evt@npm:2.4.3"
   dependencies:
     minimal-polyfills: ^2.2.2
     run-exclusive: ^2.2.16
-    tsafe: ^1.0.1
-  checksum: a20cb259eacd3bb965001a0405a77ff564254c3f8a3257e6b57951b59427866e97989ff14278a00b93b80e067013f7866d8f8c0975c158dea43b029780f51d7a
+    tsafe: ^1.1.0
+  checksum: 588635829db70626bf1362a70af18ac8906c7fde618c81c5ad61bc5c72c7dc99f1756771cf01bf386d7d545de25225e449b9b035b322e428203af48d81ca3757
   languageName: node
   linkType: hard
 
@@ -9915,10 +9915,10 @@ dts-critic@latest:
   languageName: node
   linkType: hard
 
-"tsafe@npm:^1.0.1":
-  version: 1.0.1
-  resolution: "tsafe@npm:1.0.1"
-  checksum: e154d99fb19395c392d5ab5c7d530b10d647203022a0ae807b6072025bac432c387c1267b8b3c0dc8a55fb851d545133874eb3ee7285e2635a3357f3c9c5a2d4
+"tsafe@npm:^1.1.0":
+  version: 1.1.1
+  resolution: "tsafe@npm:1.1.1"
+  checksum: 0fd8ea0cd7ad69accbbbf7d9d9749463e3a6b1fa9b8d9414c95ec7ab494791583f47fdf1f5f09f4ba8f6e0385d4d711445c73ce3d42a4cd64c280db53288b615
   languageName: node
   linkType: hard
 
