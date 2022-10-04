@@ -1275,8 +1275,8 @@ __metadata:
   linkType: hard
 
 "@rebeccastevens/eslint-config@npm:^1.4.1":
-  version: 1.4.1
-  resolution: "@rebeccastevens/eslint-config@npm:1.4.1"
+  version: 1.4.4
+  resolution: "@rebeccastevens/eslint-config@npm:1.4.4"
   dependencies:
     deepmerge-ts: ^4.0.0
   peerDependencies:
@@ -1285,7 +1285,7 @@ __metadata:
     eslint: ">=8.0.0"
     eslint-import-resolver-typescript: "*"
     eslint-plugin-eslint-comments: "*"
-    eslint-plugin-functional: "*"
+    eslint-plugin-functional: ">=5.0.0"
     eslint-plugin-import: "*"
     eslint-plugin-jsdoc: "*"
     eslint-plugin-markdown: "*"
@@ -1295,7 +1295,7 @@ __metadata:
     eslint-plugin-sonarjs: "*"
     eslint-plugin-tsdoc: "*"
     eslint-plugin-unicorn: "*"
-  checksum: 82357ed707c1e828bfc77e349f271964ef8da35fea1eff8cf055c994552a760634380a7d9e0f17fb3d2ef2a90e855f348ff1fa3326a81a8a84116db1b8c1de06
+  checksum: 14f980463dda41db41308702486c1770ab2d9b041b4358a96309b4a9a2bcc25e6b33d29f5478a6638415b8f94433417c62c640e75220f3568a9ce03e5249b5b2
   languageName: node
   linkType: hard
 
