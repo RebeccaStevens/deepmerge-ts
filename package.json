@@ -69,22 +69,23 @@
     "README.md"
   ],
   "scripts": {
-    "benchmark": "yarn build && yarn link & cd benchmark && yarn benchmark; cd ..",
-    "build": "rimraf build && yarn build:npm && yarn build:deno && rimraf build && if-env-defined CI || yarn build:assume-unchanged",
+    "benchmark": "npm run build && npm run link & cd benchmark && npm run benchmark; cd ..",
+    "build": "rimraf build && npm run build:node && npm run build:deno && rimraf build && if-env-defined CI || npm run build:assume-unchanged",
     "build:assume-unchanged": "cd dist; git update-index --assume-unchanged $(git ls-files | tr '\n' ' '); cd ..",
     "build:deno": "rimraf dist/deno && tsc -p tsconfig.build.deno.json && denoify",
-    "build:npm": "rimraf dist/node types/current && rollup -c rollup.config.ts --configPlugin @rollup/plugin-typescript",
+    "build:node": "rimraf dist/node && rollup -c rollup.config.ts --configPlugin @rollup/plugin-typescript",
+    "build:types": "rimraf types/current && BUILD_TYPES_ONLY=1 rollup -c rollup.config.ts --configPlugin @rollup/plugin-typescript",
     "check-format": "prettier --list-different \"./**/*.{md,ts,yml}\"",
     "check-spelling": "cspell --config=.cspell.json \"**/*.{md,ts}\"",
     "cz": "git-cz",
     "format": "prettier --write \"./**/*.{md,ts,yml}\"",
-    "lint": "yarn lint:js && yarn lint:md",
+    "lint": "npm run lint:js && npm run lint:md",
     "lint:js": "eslint .",
     "lint:md": "markdownlint \"**/*.md\" --config=.markdownlint.json --ignore-path=.markdownlintignore",
     "prepare": "husky install",
-    "test": "yarn test:js && yarn test:types",
+    "test": "npm run test:js && npm run test:types",
     "test:js": "c8 ava",
-    "test:types": "dtslint --localTs node_modules/typescript/lib --expectOnly tests/types"
+    "test:types": "npm run build:types && tsd -f 'tests/**/*.test-d.ts'"
   },
   "devDependencies": {
     "@commitlint/cli": "17.0.3",
@@ -111,7 +112,6 @@
     "commitizen": "4.2.4",
     "cspell": "6.2.3",
     "denoify": "1.0.3",
-    "dtslint": "4.2.1",
     "eslint": "8.19.0",
     "eslint-config-prettier": "8.5.0",
     "eslint-import-resolver-typescript": "3.2.5",
@@ -144,6 +144,7 @@
     "semantic-release": "19.0.3",
     "source-map-support": "0.5.21",
     "ts-node": "10.8.2",
+    "tsd": "0.24.1",
     "tslib": "2.4.0",
     "typescript": "4.7.4"
   },

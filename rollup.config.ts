@@ -13,6 +13,23 @@ import rollupPluginDts from "rollup-plugin-dts";
 import pkg from "./package.json";
 
 /**
+ * Get the intended boolean value from the given string.
+ */
+function getBoolean(value: unknown) {
+  if (value === undefined) {
+    return false;
+  }
+  const asNumber = Number(value);
+  return Number.isNaN(asNumber)
+    ? String(value).toLowerCase() === "false"
+      ? false
+      : Boolean(String(value))
+    : Boolean(asNumber);
+}
+
+const buildTypesOnly = getBoolean(process.env.BUILD_TYPES_ONLY);
+
+/**
  * Get new instances of all the common plugins.
  */
 function getPlugins() {
@@ -96,4 +113,4 @@ const dts = defineConfig({
   ] as Plugin[],
 });
 
-export default [cjs, esm, dts];
+export default buildTypesOnly ? dts : [cjs, esm, dts];
