@@ -135,6 +135,7 @@
     "markdownlint-cli": "0.32.1",
     "marked": "4.0.17",
     "prettier": "2.7.1",
+    "prettier-plugin-packagejson": "2.3.0",
     "rimraf": "3.0.2",
     "rollup": "2.76.0",
     "rollup-plugin-auto-external": "2.0.0",
