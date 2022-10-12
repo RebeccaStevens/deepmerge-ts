@@ -23,6 +23,6 @@
     "node": ">=12.4.0"
   },
   "devDependencies": {
-    "ts-node": "^10.2.1"
+    "ts-node": "10.9.1"
   }
 }
