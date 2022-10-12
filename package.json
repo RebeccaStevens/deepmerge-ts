@@ -109,7 +109,7 @@
     "ava": "4.3.3",
     "c8": "7.11.3",
     "codecov": "3.8.3",
-    "commitizen": "4.2.4",
+    "commitizen": "4.2.5",
     "cspell": "6.2.3",
     "denoify": "1.0.3",
     "eslint": "8.25.0",
