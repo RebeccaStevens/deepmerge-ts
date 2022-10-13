@@ -3442,7 +3442,7 @@ __metadata:
     eslint-plugin-node: 11.1.0
     eslint-plugin-optimize-regex: 1.2.1
     eslint-plugin-prettier: 4.2.1
-    eslint-plugin-promise: 6.0.0
+    eslint-plugin-promise: 6.1.0
     eslint-plugin-sonarjs: 0.15.0
     eslint-plugin-tsdoc: 0.2.16
     eslint-plugin-unicorn: 43.0.1
@@ -4062,12 +4062,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-promise@npm:6.0.0":
-  version: 6.0.0
-  resolution: "eslint-plugin-promise@npm:6.0.0"
+"eslint-plugin-promise@npm:6.1.0":
+  version: 6.1.0
+  resolution: "eslint-plugin-promise@npm:6.1.0"
   peerDependencies:
     eslint: ^7.0.0 || ^8.0.0
-  checksum: 7e761507c51267b77e4ad710e7c8938aa4f8f69b975886034e57497a1816e9527eda364e25aac03d1b4e0df2e738ba98e49ad075d028824fcfea533a1419751c
+  checksum: 01c55f6c4ddbb3c1ac6ccd1e834365bf12d3aaf91b562ee9027b1ae3943eb86673d44a68ea3a303a93b9ce43dd51114751c3e644da27a6d4ee4d66c8f67ff72d
   languageName: node
   linkType: hard
 
