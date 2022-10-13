@@ -126,7 +126,7 @@
     "eslint-plugin-prettier": "4.2.1",
     "eslint-plugin-promise": "6.1.0",
     "eslint-plugin-sonarjs": "0.15.0",
-    "eslint-plugin-tsdoc": "0.2.16",
+    "eslint-plugin-tsdoc": "0.2.17",
     "eslint-plugin-unicorn": "43.0.1",
     "husky": "8.0.1",
     "if-env-defined": "1.0.0",
