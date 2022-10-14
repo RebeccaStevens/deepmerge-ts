@@ -140,7 +140,7 @@
     "rollup": "2.76.0",
     "rollup-plugin-auto-external": "2.0.0",
     "rollup-plugin-copy": "3.4.0",
-    "rollup-plugin-dts": "4.2.2",
+    "rollup-plugin-dts": "4.2.3",
     "semantic-release": "19.0.3",
     "source-map-support": "0.5.21",
     "ts-node": "10.8.2",
