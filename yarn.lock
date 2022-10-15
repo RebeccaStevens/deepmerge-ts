@@ -3429,7 +3429,7 @@ __metadata:
     codecov: 3.8.3
     commitizen: 4.2.5
     cspell: 6.2.3
-    denoify: 1.2.4
+    denoify: 1.2.5
     eslint: 8.25.0
     eslint-config-prettier: 8.5.0
     eslint-import-resolver-typescript: 3.2.5
@@ -3524,16 +3524,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"denoify@npm:1.2.4":
-  version: 1.2.4
-  resolution: "denoify@npm:1.2.4"
+"denoify@npm:1.2.5":
+  version: 1.2.5
+  resolution: "denoify@npm:1.2.5"
   dependencies:
     "@octokit/rest": ^18.0.0
     "@types/comment-json": ^1.1.1
     commander: ^4.1.1
     comment-json: ^3.0.2
     cosmiconfig: ^7.0.1
-    evt: ^2.4.5
+    evt: ^2.4.6
     get-github-default-branch-name: ^0.0.4
     gitignore-parser: 0.0.2
     glob: ^7.1.6
@@ -3548,7 +3548,7 @@ __metadata:
     denoify: bin/denoify.js
     enable_short_npm_import_path: bin/enable_short_npm_import_path.js
     remove_deno_dist_from_gitignore: bin/remove_deno_dist_from_gitignore.js
-  checksum: fdc4c4d3b415059198659a7c792f544e417fac801eb8997b8e8414734d64281d583abff497d78c21eec8be9e7f18aeae7c1d0bf907ce2200afd0f0c04e2afeda
+  checksum: 0b7c0085f0e05b89568ad7c3e70026b4ba2160c1e361529763d273aa023be7f5aec4629c4d1dc84998bcc1f80b329fa8768c334e423653f900fbd234e3911c4c
   languageName: node
   linkType: hard
 
@@ -4322,7 +4322,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"evt@npm:^2.4.5":
+"evt@npm:^2.4.6":
   version: 2.4.6
   resolution: "evt@npm:2.4.6"
   dependencies:
