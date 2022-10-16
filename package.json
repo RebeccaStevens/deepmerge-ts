@@ -93,7 +93,7 @@
     "@cspell/dict-cryptocurrencies": "2.0.0",
     "@rebeccastevens/eslint-config": "1.3.23",
     "@rollup/plugin-json": "4.1.0",
-    "@rollup/plugin-node-resolve": "14.0.0",
+    "@rollup/plugin-node-resolve": "14.1.0",
     "@rollup/plugin-typescript": "8.3.3",
     "@semantic-release/changelog": "6.0.1",
     "@semantic-release/commit-analyzer": "9.0.2",
