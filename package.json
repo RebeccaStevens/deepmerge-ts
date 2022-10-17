@@ -114,7 +114,7 @@
     "denoify": "1.2.5",
     "eslint": "8.25.0",
     "eslint-config-prettier": "8.5.0",
-    "eslint-import-resolver-typescript": "3.2.5",
+    "eslint-import-resolver-typescript": "3.5.1",
     "eslint-plugin-ava": "13.2.0",
     "eslint-plugin-eslint-comments": "3.2.0",
     "eslint-plugin-functional": "4.4.1",
