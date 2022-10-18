@@ -143,7 +143,7 @@
     "rollup-plugin-dts": "4.2.3",
     "semantic-release": "19.0.5",
     "source-map-support": "0.5.21",
-    "ts-node": "10.8.2",
+    "ts-node": "10.9.1",
     "tsd": "0.24.1",
     "tslib": "2.4.0",
     "typescript": "4.7.4"
