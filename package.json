@@ -124,7 +124,7 @@
     "eslint-plugin-node": "11.1.0",
     "eslint-plugin-optimize-regex": "1.2.1",
     "eslint-plugin-prettier": "4.2.1",
-    "eslint-plugin-promise": "6.1.0",
+    "eslint-plugin-promise": "6.1.1",
     "eslint-plugin-sonarjs": "0.16.0",
     "eslint-plugin-tsdoc": "0.2.17",
     "eslint-plugin-unicorn": "43.0.2",
