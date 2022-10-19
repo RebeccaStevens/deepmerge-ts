@@ -3347,7 +3347,7 @@ __metadata:
     codecov: 3.8.3
     commitizen: 4.2.5
     cspell: 6.12.0
-    denoify: 1.2.5
+    denoify: 1.2.6
     eslint: 8.25.0
     eslint-config-prettier: 8.5.0
     eslint-import-resolver-typescript: 3.5.1
@@ -3442,9 +3442,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"denoify@npm:1.2.5":
-  version: 1.2.5
-  resolution: "denoify@npm:1.2.5"
+"denoify@npm:1.2.6":
+  version: 1.2.6
+  resolution: "denoify@npm:1.2.6"
   dependencies:
     "@octokit/rest": ^18.0.0
     "@types/comment-json": ^1.1.1
@@ -3466,7 +3466,7 @@ __metadata:
     denoify: bin/denoify.js
     enable_short_npm_import_path: bin/enable_short_npm_import_path.js
     remove_deno_dist_from_gitignore: bin/remove_deno_dist_from_gitignore.js
-  checksum: 0b7c0085f0e05b89568ad7c3e70026b4ba2160c1e361529763d273aa023be7f5aec4629c4d1dc84998bcc1f80b329fa8768c334e423653f900fbd234e3911c4c
+  checksum: 4bcf4c25cb72f0011321a8d120eb1a075a2c1781e9c286ad0a1bf8f32468d75a284f9f8c406c2d578c97cc8531fd8bb989f3160cc150c0e22494e20bb98b2844
   languageName: node
   linkType: hard
 
