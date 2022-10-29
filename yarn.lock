@@ -3339,7 +3339,7 @@ __metadata:
     codecov: 3.8.3
     commitizen: 4.2.5
     cspell: 6.13.1
-    denoify: 1.4.1
+    denoify: 1.4.2
     eslint: 8.26.0
     eslint-config-prettier: 8.5.0
     eslint-import-resolver-typescript: 3.5.2
@@ -3434,9 +3434,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"denoify@npm:1.4.1":
-  version: 1.4.1
-  resolution: "denoify@npm:1.4.1"
+"denoify@npm:1.4.2":
+  version: 1.4.2
+  resolution: "denoify@npm:1.4.2"
   dependencies:
     "@octokit/rest": ^18.0.0
     "@types/comment-json": ^1.1.1
@@ -3449,15 +3449,16 @@ __metadata:
     glob: ^7.1.6
     minimal-polyfills: ^2.2.2
     node-fetch: ^2.6.7
+    parse-dont-validate: ^4.0.1
     path-depth: ^1.0.0
     scripting-tools: ^0.19.14
-    tsafe: ^1.1.3
+    tsafe: ^1.2.1
     url-join: ^4.0.1
   bin:
     denoify: bin/denoify.js
     enable_short_npm_import_path: bin/enable_short_npm_import_path.js
     remove_deno_dist_from_gitignore: bin/remove_deno_dist_from_gitignore.js
-  checksum: 3477cf26c2313e11de356bf63ebfa7ff909e7bac86ae2a9cfd2d19df0259f099701dc3ab4712c4842341f46838cf5985b145da1200903e5b58fa18033a525e98
+  checksum: edf51f1ca976a37446c7ded77e238ce8b4a87c2d9d875b03f6dbc68948d6962322fa50c22504df60451bbb810260a35705713aee9c64688fb483ce3204134f73
   languageName: node
   linkType: hard
 
@@ -7602,6 +7603,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"parse-dont-validate@npm:^4.0.1":
+  version: 4.0.1
+  resolution: "parse-dont-validate@npm:4.0.1"
+  checksum: b07f0978f8bb9605dd53b5140bccafd2d991a917a91f2da2ddd1fe8387717a2fcba66cf7c635b0e67fb0c2c3a8914573f686db57d1787df4b62848d3371f65e2
+  languageName: node
+  linkType: hard
+
 "parse-entities@npm:^2.0.0":
   version: 2.0.0
   resolution: "parse-entities@npm:2.0.0"
@@ -9311,7 +9319,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tsafe@npm:^1.1.3, tsafe@npm:^1.2.1":
+"tsafe@npm:^1.2.1":
   version: 1.2.1
   resolution: "tsafe@npm:1.2.1"
   checksum: eafaf8836383a7eb2315835e706cdaf3418c2474ba6c043edfa540793f797f14559f02043314dbfda65112e733addd849a0f19e8fc73c0ca0873dce9f04823f7
