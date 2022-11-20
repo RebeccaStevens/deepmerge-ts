@@ -3370,7 +3370,7 @@ __metadata:
     lint-staged: 13.0.3
     lodash: 4.17.21
     markdownlint-cli: 0.32.2
-    marked: 4.2.2
+    marked: 4.2.3
     prettier: 2.7.1
     prettier-plugin-packagejson: 2.3.0
     rimraf: 3.0.2
@@ -6527,12 +6527,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"marked@npm:4.2.2, marked@npm:^4.0.10":
-  version: 4.2.2
-  resolution: "marked@npm:4.2.2"
+"marked@npm:4.2.3, marked@npm:^4.0.10":
+  version: 4.2.3
+  resolution: "marked@npm:4.2.3"
   bin:
     marked: bin/marked.js
-  checksum: 1593e0632ff8dee1b9c8b669f26c8ce41e675bcb08ef75052845d4943db2c4d887edacd5b2120cf99a2cc06e9fbffc346ebaf98a7555273fda6a935adbfacf50
+  checksum: 21b9f6cc4e7695b5e1f251b7b6c98fdc29c25f7ee6c8f4d5c51654856ea36d6222e9a5a227a9b89ccba717dcf7a722022f099aa0dc7caad8e041c996906c23d0
   languageName: node
   linkType: hard
 
