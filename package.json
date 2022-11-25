@@ -130,7 +130,7 @@
     "eslint-plugin-unicorn": "43.0.2",
     "husky": "8.0.2",
     "if-env-defined": "1.0.0",
-    "lint-staged": "13.0.3",
+    "lint-staged": "13.0.4",
     "lodash": "4.17.21",
     "markdownlint-cli": "0.32.2",
     "marked": "4.2.3",
