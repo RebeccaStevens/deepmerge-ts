@@ -92,7 +92,7 @@
     "@commitlint/config-conventional": "17.3.0",
     "@cspell/dict-cryptocurrencies": "3.0.1",
     "@rebeccastevens/eslint-config": "1.3.23",
-    "@rollup/plugin-json": "5.0.1",
+    "@rollup/plugin-json": "5.0.2",
     "@rollup/plugin-node-resolve": "15.0.1",
     "@rollup/plugin-typescript": "9.0.2",
     "@semantic-release/changelog": "6.0.1",
