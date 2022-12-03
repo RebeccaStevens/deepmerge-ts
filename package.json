@@ -112,7 +112,7 @@
     "commitizen": "4.2.5",
     "cspell": "6.16.0",
     "denoify": "1.4.5",
-    "eslint": "8.28.0",
+    "eslint": "8.29.0",
     "eslint-config-prettier": "8.5.0",
     "eslint-import-resolver-typescript": "3.5.2",
     "eslint-plugin-ava": "13.2.0",
