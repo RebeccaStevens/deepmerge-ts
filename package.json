@@ -134,7 +134,7 @@
     "lodash": "4.17.21",
     "markdownlint-cli": "0.32.2",
     "marked": "4.2.4",
-    "prettier": "2.8.0",
+    "prettier": "2.8.1",
     "prettier-plugin-packagejson": "2.3.0",
     "rimraf": "3.0.2",
     "rollup": "2.79.1",
