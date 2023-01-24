@@ -3465,7 +3465,7 @@ __metadata:
     rollup-plugin-auto-external: 2.0.0
     rollup-plugin-copy: 3.4.0
     rollup-plugin-dts: 4.2.3
-    semantic-release: 20.0.3
+    semantic-release: 20.0.4
     source-map-support: 0.5.21
     ts-node: 10.9.1
     tsd: 0.25.0
@@ -8791,9 +8791,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"semantic-release@npm:20.0.3":
-  version: 20.0.3
-  resolution: "semantic-release@npm:20.0.3"
+"semantic-release@npm:20.0.4":
+  version: 20.0.4
+  resolution: "semantic-release@npm:20.0.4"
   dependencies:
     "@semantic-release/commit-analyzer": ^9.0.2
     "@semantic-release/error": ^3.0.0
@@ -8825,7 +8825,7 @@ __metadata:
     yargs: ^17.5.1
   bin:
     semantic-release: bin/semantic-release.js
-  checksum: e114fb6d696e7968924bea52d968dbd4814c88059effdf60e70b2194eb979045c2454bb1b615adb8b5b7814236487d3b838b1c3e514dd2e63cbc4a441a457262
+  checksum: b8cdfae4dfad1dcdcec84452b2736c7419b34950c46e9c8bb4872829d70c044c8ddccf30a449d1ba030f48c66f82559675a6d9bb1681b2e167ecd75e858025b7
   languageName: node
   linkType: hard
 
