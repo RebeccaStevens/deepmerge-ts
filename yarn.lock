@@ -3436,7 +3436,7 @@ __metadata:
     codecov: 3.8.3
     commitizen: 4.3.0
     cspell: 6.19.2
-    denoify: 1.4.8
+    denoify: 1.4.9
     eslint: 8.33.0
     eslint-config-prettier: 8.6.0
     eslint-import-resolver-typescript: 3.5.3
@@ -3531,9 +3531,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"denoify@npm:1.4.8":
-  version: 1.4.8
-  resolution: "denoify@npm:1.4.8"
+"denoify@npm:1.4.9":
+  version: 1.4.9
+  resolution: "denoify@npm:1.4.9"
   dependencies:
     "@octokit/rest": ^18.0.0
     "@types/comment-json": ^1.1.1
@@ -3549,13 +3549,13 @@ __metadata:
     parse-dont-validate: ^4.0.1
     path-depth: ^1.0.0
     scripting-tools: ^0.19.14
-    tsafe: ^1.4.1
+    tsafe: ^1.4.2
     url-join: ^4.0.1
   bin:
     denoify: bin/denoify.js
     enable_short_npm_import_path: bin/enable_short_npm_import_path.js
     remove_deno_dist_from_gitignore: bin/remove_deno_dist_from_gitignore.js
-  checksum: 9affcd8283c7c0162016fefd43298421ca9bb4b46596a7774d95ae7821eb7881dbd6d784ecd397af838628af53f572f681dd3f821fdaea67cf2f16c342231d5d
+  checksum: 0b0d48a1d682da2376ca0ddf8cd63786e0d73708646570798d531f3ac4793402af99784a7a1d4822dde28165987a46a6dc49fa51a0471e27a0e3c70c53af9cf3
   languageName: node
   linkType: hard
 
@@ -9609,10 +9609,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tsafe@npm:^1.4.1":
-  version: 1.4.1
-  resolution: "tsafe@npm:1.4.1"
-  checksum: 0cc2afc7b6f2f09f8182acb4ae335e19c81eebf7de165dccd503e0c48a9a36ce4304ffa2ef38b830fbaabbe6131cf3c9ffa10cf15457a61c794f73e21b77df1b
+"tsafe@npm:^1.4.1, tsafe@npm:^1.4.2":
+  version: 1.4.2
+  resolution: "tsafe@npm:1.4.2"
+  checksum: 44cfa1d0baea7388840f0918b758a746420563826a3c79a3035036b0444641a4f0722655560e088d4da63241eb3edb3f5401691c30bf62cd7c46936a41035748
   languageName: node
   linkType: hard
 
