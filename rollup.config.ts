@@ -10,7 +10,7 @@ import rollupPluginAutoExternal from "rollup-plugin-auto-external";
 import rollupPluginCopy from "rollup-plugin-copy";
 import rollupPluginDts from "rollup-plugin-dts";
 
-import pkg from "./package.json";
+import pkg from "./package.json" assert { type: "json" };
 
 /**
  * Get the intended boolean value from the given string.
