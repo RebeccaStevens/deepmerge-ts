@@ -200,9 +200,9 @@ function mergeUnknowns<
 
   const type = getObjectType(values[0]);
 
-  // eslint-disable-next-line functional/no-conditional-statement -- add an early escape for better performance.
+  // eslint-disable-next-line functional/no-conditional-statements -- add an early escape for better performance.
   if (type !== ObjectType.NOT && type !== ObjectType.OTHER) {
-    // eslint-disable-next-line functional/no-loop-statement -- using a loop here is more performant than mapping every value and then testing every value.
+    // eslint-disable-next-line functional/no-loop-statements -- using a loop here is more performant than mapping every value and then testing every value.
     for (let m_index = 1; m_index < values.length; m_index++) {
       if (getObjectType(values[m_index]) === type) {
         continue;
@@ -217,40 +217,45 @@ function mergeUnknowns<
   }
 
   switch (type) {
-    case ObjectType.RECORD:
+    case ObjectType.RECORD: {
       return mergeRecords<U, MF, M, MM>(
         values as ReadonlyArray<Readonly<Record<PropertyKey, unknown>>>,
         utils,
         meta
       ) as DeepMergeHKT<Ts, MF, M>;
+    }
 
-    case ObjectType.ARRAY:
+    case ObjectType.ARRAY: {
       return mergeArrays<U, M, MM>(
         values as ReadonlyArray<Readonly<ReadonlyArray<unknown>>>,
         utils,
         meta
       ) as DeepMergeHKT<Ts, MF, M>;
+    }
 
-    case ObjectType.SET:
+    case ObjectType.SET: {
       return mergeSets<U, M, MM>(
         values as ReadonlyArray<Readonly<ReadonlySet<unknown>>>,
         utils,
         meta
       ) as DeepMergeHKT<Ts, MF, M>;
+    }
 
-    case ObjectType.MAP:
+    case ObjectType.MAP: {
       return mergeMaps<U, M, MM>(
         values as ReadonlyArray<Readonly<ReadonlyMap<unknown, unknown>>>,
         utils,
         meta
       ) as DeepMergeHKT<Ts, MF, M>;
+    }
 
-    default:
+    default: {
       return mergeOthers<U, M, MM>(values, utils, meta) as DeepMergeHKT<
         Ts,
         MF,
         M
       >;
+    }
   }
 }
 
@@ -414,7 +419,7 @@ function defaultMergeRecords<
 ): DeepMergeRecordsDefaultHKT<Ts, MF, M> {
   const result: Record<PropertyKey, unknown> = {};
 
-  /* eslint-disable functional/no-loop-statement, functional/no-conditional-statement -- using a loop here is more performant. */
+  /* eslint-disable functional/no-loop-statements, functional/no-conditional-statements -- using a loop here is more performant. */
 
   for (const key of getKeys(values)) {
     const propValues = [];
@@ -456,7 +461,7 @@ function defaultMergeRecords<
     }
   }
 
-  /* eslint-enable functional/no-loop-statement, functional/no-conditional-statement */
+  /* eslint-enable functional/no-loop-statements, functional/no-conditional-statements */
 
   return result as DeepMergeRecordsDefaultHKT<Ts, MF, M>;
 }
