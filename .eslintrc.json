@@ -52,7 +52,14 @@
     {
       "files": "tests/**",
       "rules": {
-        "import/no-useless-path-segments": "off"
+        "import/no-useless-path-segments": "off",
+        "lines-between-class-members":"off"
+      }
+    },
+    {
+      "files": "tests/**/*.test-d.ts",
+      "rules": {
+        "@typescript-eslint/naming-convention":"off"
       }
     }
   ]

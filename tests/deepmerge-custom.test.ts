@@ -689,3 +689,63 @@ test("skip property", (t) => {
 
   t.deepEqual(merged, expected);
 });
+
+declare module "../src/types" {
+  interface DeepMergeMergeFunctionURItoKind<
+    Ts extends ReadonlyArray<unknown>,
+    MF extends DeepMergeMergeFunctionsURIs,
+    M
+  > {
+    readonly CustomOthers3: Ts[number] extends object
+      ? DeepMergeRecordsDefaultHKT<
+          {
+            [I in keyof Ts]: {
+              [J in keyof Ts[I]]: Ts[I][J];
+            };
+          },
+          MF,
+          M
+        >
+      : DeepMergeLeaf<Ts>;
+  }
+}
+
+test("merging class object as record", (t) => {
+  class Klass {
+    public readonly prop1 = 1 as const;
+    public readonly prop2 = 2 as const;
+  }
+
+  const x = new Klass();
+  const y = { foo: false };
+
+  const expected = {
+    prop1: 1,
+    prop2: 2,
+    foo: false,
+  };
+
+  const customizedDeepmerge = deepmergeCustom<{
+    DeepMergeOthersURI: "CustomOthers3";
+  }>({
+    mergeOthers: (values, utils, meta) => {
+      let m_allRecords = true;
+      const records = values.map((v) => {
+        if (typeof v === "object" && v !== null) {
+          return { ...v };
+        }
+        m_allRecords = false;
+        return false;
+      });
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      if (m_allRecords) {
+        return utils.mergeFunctions.mergeRecords(records, utils, meta);
+      }
+      return utils.actions.defaultMerge;
+    },
+  });
+
+  const merged = customizedDeepmerge(x, y);
+
+  t.deepEqual(merged, expected);
+});
