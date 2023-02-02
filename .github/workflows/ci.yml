@@ -51,8 +51,6 @@ jobs:
         os:
           - "ubuntu-latest"
         node_version:
-          - "12"
-          - "14"
           - "16"
           - "18"
     runs-on: ${{ matrix.os }}
