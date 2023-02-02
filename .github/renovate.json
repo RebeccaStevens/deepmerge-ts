@@ -1,6 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:js-lib", "helpers:disableTypesNodeMajor"],
+  "extends": ["config:js-lib", "helpers:disableTypesNodeMajor", "schedule:monthly"],
   "postUpdateOptions": ["yarnDedupeHighest"],
   "labels": ["Type: Maintenance", ":blue_heart:"],
   "automerge": true,
