@@ -28,10 +28,13 @@ Deeply merge 2 or more objects respecting type information.
 
 ```sh
 # Install with npm
-npm install deepmerge-ts --save-dev
+npm install deepmerge-ts
+
+# Install with pnpm
+pnpm add deepmerge-ts
 
 # Install with yarn
-yarn add -D deepmerge-ts
+yarn add deepmerge-ts
 ```
 
 ### Deno

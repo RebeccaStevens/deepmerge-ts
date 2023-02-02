@@ -1,6 +1,18 @@
 # Changelog
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
+# [5.0.0-next.1](https://github.com/RebeccaStevens/deepmerge-ts/compare/v4.2.2...v5.0.0-next.1) (2023-02-02)
+
+
+### chore
+
+* drop support for node 12 and 14 ([77016f7](https://github.com/RebeccaStevens/deepmerge-ts/commit/77016f70664b6f5857b9f278912a31aa219be80d))
+
+
+### BREAKING CHANGES
+
+* drop support for node 12 and 14
+
 ## [4.2.2](https://github.com/RebeccaStevens/deepmerge-ts/compare/v4.2.1...v4.2.2) (2022-09-19)
 
 ## [4.2.1](https://github.com/RebeccaStevens/deepmerge-ts/compare/v4.2.0...v4.2.1) (2022-06-15)

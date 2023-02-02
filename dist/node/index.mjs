@@ -32,7 +32,7 @@ function getObjectType(object) {
  */
 function getKeys(objects) {
     const keys = new Set();
-    /* eslint-disable functional/no-loop-statement -- using a loop here is more efficient. */
+    /* eslint-disable functional/no-loop-statements -- using a loop here is more efficient. */
     for (const object of objects) {
         for (const key of [
             ...Object.keys(object),
@@ -41,7 +41,7 @@ function getKeys(objects) {
             keys.add(key);
         }
     }
-    /* eslint-enable functional/no-loop-statement */
+    /* eslint-enable functional/no-loop-statements */
     return keys;
 }
 /**
@@ -61,9 +61,9 @@ function objectHasProperty(object, property) {
 function getIterableOfIterables(iterables) {
     return {
         *[Symbol.iterator]() {
-            // eslint-disable-next-line functional/no-loop-statement
+            // eslint-disable-next-line functional/no-loop-statements
             for (const iterable of iterables) {
-                // eslint-disable-next-line functional/no-loop-statement
+                // eslint-disable-next-line functional/no-loop-statements
                 for (const value of iterable) {
                     yield value;
                 }
@@ -178,9 +178,9 @@ function mergeUnknowns(values, utils, meta) {
         return mergeOthers(values, utils, meta);
     }
     const type = getObjectType(values[0]);
-    // eslint-disable-next-line functional/no-conditional-statement -- add an early escape for better performance.
+    // eslint-disable-next-line functional/no-conditional-statements -- add an early escape for better performance.
     if (type !== 0 /* ObjectType.NOT */ && type !== 5 /* ObjectType.OTHER */) {
-        // eslint-disable-next-line functional/no-loop-statement -- using a loop here is more performant than mapping every value and then testing every value.
+        // eslint-disable-next-line functional/no-loop-statements -- using a loop here is more performant than mapping every value and then testing every value.
         for (let m_index = 1; m_index < values.length; m_index++) {
             if (getObjectType(values[m_index]) === type) {
                 continue;
@@ -189,16 +189,21 @@ function mergeUnknowns(values, utils, meta) {
         }
     }
     switch (type) {
-        case 1 /* ObjectType.RECORD */:
+        case 1 /* ObjectType.RECORD */: {
             return mergeRecords(values, utils, meta);
-        case 2 /* ObjectType.ARRAY */:
+        }
+        case 2 /* ObjectType.ARRAY */: {
             return mergeArrays(values, utils, meta);
-        case 3 /* ObjectType.SET */:
+        }
+        case 3 /* ObjectType.SET */: {
             return mergeSets(values, utils, meta);
-        case 4 /* ObjectType.MAP */:
+        }
+        case 4 /* ObjectType.MAP */: {
             return mergeMaps(values, utils, meta);
-        default:
+        }
+        default: {
             return mergeOthers(values, utils, meta);
+        }
     }
 }
 /**
@@ -286,7 +291,7 @@ function mergeOthers(values, utils, meta) {
  */
 function defaultMergeRecords(values, utils, meta) {
     const result = {};
-    /* eslint-disable functional/no-loop-statement, functional/no-conditional-statement -- using a loop here is more performant. */
+    /* eslint-disable functional/no-loop-statements, functional/no-conditional-statements -- using a loop here is more performant. */
     for (const key of getKeys(values)) {
         const propValues = [];
         for (const value of values) {
@@ -317,7 +322,7 @@ function defaultMergeRecords(values, utils, meta) {
             result[key] = propertyResult;
         }
     }
-    /* eslint-enable functional/no-loop-statement, functional/no-conditional-statement */
+    /* eslint-enable functional/no-loop-statements, functional/no-conditional-statements */
     return result;
 }
 /**
