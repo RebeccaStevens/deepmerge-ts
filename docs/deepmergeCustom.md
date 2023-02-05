@@ -93,7 +93,7 @@ const customizedDeepmerge = deepmergeCustom({
 });
 ```
 
-## Customizing the return type
+## Customizing the Return Type
 
 If you want to customize the deepmerge function, you probably also want the return type of the result to be correct too.\
 Unfortunately however, due to TypeScript limitations, we can not automatically infer this.
@@ -298,4 +298,75 @@ declare module "../src/types" {
 
 ## API
 
-[See deepmerge custom API](./API.md#deepmergecustomoptions-rootmetadata).
+See [deepmerge custom API](./API.md#deepmergecustomoptions-rootmetadata).
+
+# Deepmerge Into Custom
+
+`deepmergeIntoCustom` as the name suggests, works just like `deepmergeCustom`, only for `deepmergeInto` instead of `deepmerge`.
+But there are some differences to be aware of.
+
+## Merge Functions
+
+The signature of merging functions for `deepmergeIntoCustom` looks like this:
+
+```ts
+(target: DeepMergeValueReference<T>, values: Ts, utils: U, meta: M | undefined) => void | symbol;
+```
+
+Instead of returning a value like with `deepmergeCustom`'s merge functions, mutations should be made to `target.value`.\
+You can however still return an action.
+
+Note: `values` includes all the values, including the target's value (if there is one).
+
+### Special Actions
+
+#### No Skip Action (`utils.actions.skip`)
+
+This action doesn't make sense with in the context of merging into a target.
+Use `delete target.value[key]` instead if you don't want the property to exists on the target.
+
+#### No Implicit Default Merging
+
+It doesn't make sense to have implicit default merging here as all merge functions should return `undefined` (if not returning an action).
+
+## Customizing the Return Type
+
+The return type of a custom `deepmergeInto` should be void, so you don't need to customize it's return type like you would with a regular custom `deepmerge` function.
+
+However, you may want to use an assertion function if the target's type is not the same as the inputs.
+This is by no means required though.
+But if you want to do this then you'll simply need to explicity declare a type annotation for your customized `deepmergeInto` function that makes such an assertion.
+
+Here's an example:
+
+```ts
+type CustomizedDeepmergeInto = <
+  Target extends object,
+  Ts extends ReadonlyArray<object>
+>(
+  target: Target,
+  ...objects: Ts
+) => asserts target is Target & // Unioning with `Target` is essentially required to make TypeScript happy.
+  DeepMergeHKT<
+    [Target, ...Ts], // Don't forget to pass the `Target` type here too.
+    {
+      DeepMergeRecordsURI: DeepMergeMergeFunctionsDefaultURIs["DeepMergeRecordsURI"]; // Use default behavior.
+      DeepMergeArraysURI: DeepMergeMergeFunctionsDefaultURIs["DeepMergeArraysURI"]; // Use default behavior.
+      DeepMergeSetsURI: DeepMergeMergeFunctionsDefaultURIs["DeepMergeSetsURI"]; // Use default behavior.
+      DeepMergeMapsURI: DeepMergeMergeFunctionsDefaultURIs["DeepMergeMapsURI"]; // Use default behavior.
+      DeepMergeOthersURI: "CustomDeepMergeOthersURI"; // Use custom behavior (see deepmergeCustom's docs above for details).
+    },
+    DeepMergeBuiltInMetaData // Use default meta data.
+  >;
+
+export const customizedDeepmergeInto: CustomizedDeepmergeInto =
+  deepmergeIntoCustom({
+    mergeOthers: (source, values, utils, meta) => {
+      /* ... */
+    },
+  });
+```
+
+## API
+
+See [deepmerge into custom API](./API.md#deepmergeintocustomoptions-rootmetadata).
