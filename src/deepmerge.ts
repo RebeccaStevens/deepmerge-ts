@@ -1,54 +1,16 @@
+import { actions } from "./actions.js";
+import { defaultMetaDataUpdater } from "./defaults/meta-data-updater.js";
+import * as defaultMergeFunctions from "./defaults/vanilla.js";
 import type {
   DeepMergeBuiltInMetaData,
   DeepMergeHKT,
-  DeepMergeArraysDefaultHKT,
   DeepMergeMergeFunctionsDefaultURIs,
-  DeepMergeMapsDefaultHKT,
   DeepMergeMergeFunctionsURIs,
   DeepMergeOptions,
-  DeepMergeRecordsDefaultHKT,
-  DeepMergeSetsDefaultHKT,
   DeepMergeMergeFunctionUtils,
   GetDeepMergeMergeFunctionsURIs,
 } from "./types/index.js";
-import {
-  getIterableOfIterables,
-  getKeys,
-  getObjectType,
-  ObjectType,
-  objectHasProperty,
-} from "./utils.js";
-
-const defaultMergeFunctions = {
-  mergeMaps: defaultMergeMaps,
-  mergeSets: defaultMergeSets,
-  mergeArrays: defaultMergeArrays,
-  mergeRecords: defaultMergeRecords,
-  mergeOthers: leaf,
-} as const;
-
-/**
- * Special values that tell deepmerge-ts to perform a certain action.
- */
-const actions = {
-  defaultMerge: Symbol("deepmerge-ts: default merge"),
-  skip: Symbol("deepmerge-ts: skip"),
-} as const;
-
-/**
- * The default function to update meta data.
- */
-function defaultMetaDataUpdater<M>(
-  previousMeta: M,
-  metaMeta: DeepMergeBuiltInMetaData
-): DeepMergeBuiltInMetaData {
-  return metaMeta;
-}
-
-/**
- * The default merge functions.
- */
-export type DeepMergeMergeFunctionsDefaults = typeof defaultMergeFunctions;
+import { getObjectType, ObjectType } from "./utils.js";
 
 /**
  * Deeply merge objects.
@@ -142,7 +104,7 @@ export function deepmergeCustom<
 }
 
 /**
- * The the full options with defaults apply.
+ * The the utils that are available to the merge functions.
  *
  * @param options - The options the user specified
  */
@@ -160,7 +122,9 @@ function getUtils<M, MM extends DeepMergeBuiltInMetaData>(
             Object.prototype.hasOwnProperty.call(defaultMergeFunctions, key)
           )
           .map(([key, option]) =>
-            option === false ? [key, leaf] : [key, option]
+            option === false
+              ? [key, defaultMergeFunctions.mergeOthers]
+              : [key, option]
           )
       ),
     } as DeepMergeMergeFunctionUtils<M, MM>["mergeFunctions"],
@@ -180,7 +144,7 @@ function getUtils<M, MM extends DeepMergeBuiltInMetaData>(
  *
  * @param values - The values.
  */
-function mergeUnknowns<
+export function mergeUnknowns<
   Ts extends ReadonlyArray<unknown>,
   U extends DeepMergeMergeFunctionUtils<M, MM>,
   MF extends DeepMergeMergeFunctionsURIs,
@@ -399,111 +363,4 @@ function mergeOthers<
     return utils.defaultMergeFunctions.mergeOthers(values);
   }
   return result;
-}
-
-/**
- * The default strategy to merge records.
- *
- * @param values - The records.
- */
-function defaultMergeRecords<
-  Ts extends ReadonlyArray<Record<PropertyKey, unknown>>,
-  U extends DeepMergeMergeFunctionUtils<M, MM>,
-  MF extends DeepMergeMergeFunctionsURIs,
-  M,
-  MM extends DeepMergeBuiltInMetaData
->(
-  values: Ts,
-  utils: U,
-  meta: M | undefined
-): DeepMergeRecordsDefaultHKT<Ts, MF, M> {
-  const result: Record<PropertyKey, unknown> = {};
-
-  /* eslint-disable functional/no-loop-statements, functional/no-conditional-statements -- using a loop here is more performant. */
-
-  for (const key of getKeys(values)) {
-    const propValues = [];
-
-    for (const value of values) {
-      if (objectHasProperty(value, key)) {
-        propValues.push(value[key]);
-      }
-    }
-
-    if (propValues.length === 0) {
-      continue;
-    }
-
-    const updatedMeta = utils.metaDataUpdater(meta, {
-      key,
-      parents: values,
-    } as unknown as MM);
-
-    const propertyResult = mergeUnknowns<ReadonlyArray<unknown>, U, MF, M, MM>(
-      propValues,
-      utils,
-      updatedMeta
-    );
-
-    if (propertyResult === actions.skip) {
-      continue;
-    }
-
-    if (key === "__proto__") {
-      Object.defineProperty(result, key, {
-        value: propertyResult,
-        configurable: true,
-        enumerable: true,
-        writable: true,
-      });
-    } else {
-      result[key] = propertyResult;
-    }
-  }
-
-  /* eslint-enable functional/no-loop-statements, functional/no-conditional-statements */
-
-  return result as DeepMergeRecordsDefaultHKT<Ts, MF, M>;
-}
-
-/**
- * The default strategy to merge arrays.
- *
- * @param values - The arrays.
- */
-function defaultMergeArrays<
-  Ts extends ReadonlyArray<ReadonlyArray<unknown>>,
-  MF extends DeepMergeMergeFunctionsURIs,
-  M
->(values: Ts): DeepMergeArraysDefaultHKT<Ts, MF, M> {
-  return values.flat() as DeepMergeArraysDefaultHKT<Ts, MF, M>;
-}
-
-/**
- * The default strategy to merge sets.
- *
- * @param values - The sets.
- */
-function defaultMergeSets<
-  Ts extends ReadonlyArray<Readonly<ReadonlySet<unknown>>>
->(values: Ts): DeepMergeSetsDefaultHKT<Ts> {
-  return new Set(getIterableOfIterables(values)) as DeepMergeSetsDefaultHKT<Ts>;
-}
-
-/**
- * The default strategy to merge maps.
- *
- * @param values - The maps.
- */
-function defaultMergeMaps<
-  Ts extends ReadonlyArray<Readonly<ReadonlyMap<unknown, unknown>>>
->(values: Ts): DeepMergeMapsDefaultHKT<Ts> {
-  return new Map(getIterableOfIterables(values)) as DeepMergeMapsDefaultHKT<Ts>;
-}
-
-/**
- * Get the last value in the given array.
- */
-function leaf<Ts extends ReadonlyArray<unknown>>(values: Ts) {
-  return values[values.length - 1];
 }

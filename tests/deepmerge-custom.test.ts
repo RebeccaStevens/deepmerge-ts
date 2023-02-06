@@ -630,7 +630,7 @@ test("implicit default merging", (t) => {
   t.deepEqual(merged, expected);
 });
 
-test("default merging using shortcut", (t) => {
+test("default merging using actions", (t) => {
   const x = {
     foo: 1,
     bar: { baz: [2], qux: new Set([1]), quux: new Map([[1, 2]]) },

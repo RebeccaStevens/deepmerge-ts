@@ -31,7 +31,7 @@
     "/**/*.md"
   ],
   "rules": {
-    "import/no-relative-parent-imports": "error",
+    "import/no-relative-parent-imports": "off",
     "node/no-extraneous-import": ["error", {
       "allowModules": ["deepmerge-ts"]
     }],
