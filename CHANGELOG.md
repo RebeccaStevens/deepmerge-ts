@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
+# [4.3.0](https://github.com/RebeccaStevens/deepmerge-ts/compare/v4.2.2...v4.3.0) (2023-02-06)
+
+
+### Features
+
+* create deepmergeInto function ([9c350a0](https://github.com/RebeccaStevens/deepmerge-ts/commit/9c350a051c16534907da459ff466a353b90d5505)), closes [#51](https://github.com/RebeccaStevens/deepmerge-ts/issues/51)
+
 ## [4.2.2](https://github.com/RebeccaStevens/deepmerge-ts/compare/v4.2.1...v4.2.2) (2022-09-19)
 
 ## [4.2.1](https://github.com/RebeccaStevens/deepmerge-ts/compare/v4.2.0...v4.2.1) (2022-06-15)

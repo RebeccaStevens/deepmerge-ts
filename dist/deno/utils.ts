@@ -51,7 +51,7 @@ export function getObjectType(object: unknown): ObjectType {
 export function getKeys(objects: ReadonlyArray<object>): Set<PropertyKey> {
   const keys = new Set<PropertyKey>();
 
-  /* eslint-disable functional/no-loop-statement -- using a loop here is more efficient. */
+  /* eslint-disable functional/no-loop-statements -- using a loop here is more efficient. */
   for (const object of objects) {
     for (const key of [
       ...Object.keys(object),
@@ -60,7 +60,7 @@ export function getKeys(objects: ReadonlyArray<object>): Set<PropertyKey> {
       keys.add(key);
     }
   }
-  /* eslint-enable functional/no-loop-statement */
+  /* eslint-enable functional/no-loop-statements */
 
   return keys;
 }
@@ -90,9 +90,9 @@ export function getIterableOfIterables<T>(
 ): Iterable<T> {
   return {
     *[Symbol.iterator]() {
-      // eslint-disable-next-line functional/no-loop-statement
+      // eslint-disable-next-line functional/no-loop-statements
       for (const iterable of iterables) {
-        // eslint-disable-next-line functional/no-loop-statement
+        // eslint-disable-next-line functional/no-loop-statements
         for (const value of iterable) {
           yield value;
         }

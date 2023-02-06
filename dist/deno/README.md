@@ -28,10 +28,13 @@ Deeply merge 2 or more objects respecting type information.
 
 ```sh
 # Install with npm
-npm install deepmerge-ts --save-dev
+npm install deepmerge-ts
+
+# Install with pnpm
+pnpm add deepmerge-ts
 
 # Install with yarn
-yarn add -D deepmerge-ts
+yarn add deepmerge-ts
 ```
 
 ### Deno
@@ -111,9 +114,20 @@ console.log(merged);
 
 You can try out this example at [codesandbox.io](https://codesandbox.io/s/deepmerge-ts-example-iltxby?file=/src/example.ts).
 
-### Using customized config
+### Merging into a Target
 
-[See deepmerge custom docs](./docs/deepmergeCustom.md).
+You can use `deepmergeInto` if you want to update a target object with the merge result instead of creating a new object.
+
+This function is best used with objects that are all of the same type.
+
+Note: If the target object's type is different to the input objects, we'll assert that the target's type has changed (this is not done automatically with `deepmergeIntoCustom`).
+
+### Customized the Merging Process
+
+We provide a customizer function for each of our main deepmerge functions: `deepmergeCustom` and `deepmergeIntoCustom`.
+You can use these to customize the details of how values should be merged together.
+
+See [deepmerge custom docs](./docs/deepmergeCustom.md) for more details.
 
 ## Performance
 
@@ -137,4 +151,4 @@ In addition to performance improvements, this strategy merges multiple inputs at
 
 ## API
 
-[See API docs](./docs/API.md).
+See [API docs](./docs/API.md).
