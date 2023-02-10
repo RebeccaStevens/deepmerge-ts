@@ -13,7 +13,6 @@
     "workarounds:typesNodeVersioning",
     "schedule:weekly"
   ],
-  "postUpdateOptions": ["yarnDedupeHighest"],
   "labels": ["Type: Maintenance", ":blue_heart:"],
   "automergeStrategy": "rebase",
   "packageRules": [

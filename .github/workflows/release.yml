@@ -22,16 +22,16 @@ jobs:
           node-version: "lts/*"
 
       - name: Install dependencies
-        run: yarn install --immutable --ignore-scripts
+        run: pnpm install --immutable --ignore-scripts
 
       - name: Build
-        run: yarn build
+        run: pnpm build
 
       - name: Test
-        run: yarn test
+        run: pnpm test
 
       - name: Release
-        run: yarn semantic-release
+        run: pnpm semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

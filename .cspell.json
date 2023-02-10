@@ -8,7 +8,7 @@
     "**/**/CHANGELOG.md",
     "**/*.{json}",
     ".cspell.json",
-    "yarn.lock",
+    "pnpm-lock.yaml",
     ".github/workflows/**",
     ".vscode/*.json"
   ],
