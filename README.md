@@ -14,7 +14,7 @@
 
 Deeply merge 2 or more objects respecting type information.
 
-![classic merge animation](./assets/header.png)
+![smart merge diagram](./assets/header.png)
 
 </div>
 
