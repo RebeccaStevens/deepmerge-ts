@@ -111,7 +111,7 @@
     "codecov": "3.8.3",
     "commitizen": "4.3.0",
     "cspell": "6.20.1",
-    "denoify": "1.4.9",
+    "denoify": "1.4.10",
     "eslint": "8.33.0",
     "eslint-config-prettier": "8.6.0",
     "eslint-import-resolver-typescript": "3.5.3",
