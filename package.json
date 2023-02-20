@@ -88,8 +88,8 @@
     "test:types": "npm run build:types && tsd -f 'tests/**/*.test-d.ts'"
   },
   "devDependencies": {
-    "@commitlint/cli": "17.4.2",
-    "@commitlint/config-conventional": "17.4.2",
+    "@commitlint/cli": "17.4.4",
+    "@commitlint/config-conventional": "17.4.4",
     "@cspell/dict-cryptocurrencies": "3.0.1",
     "@rebeccastevens/eslint-config": "1.5.2",
     "@rollup/plugin-json": "6.0.0",
