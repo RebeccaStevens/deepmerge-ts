@@ -1,0 +1,66 @@
+{
+  "version": "0.2",
+  "language": "en",
+  "ignorePaths": [
+    ".github/workflows/**",
+    "**/*.json",
+    "**/*.jsonc",
+    "**/CHANGELOG.md",
+    "**/coverage/**",
+    "**/dist/**",
+    "**/node_modules/**",
+    "pnpm-lock.yaml"
+  ],
+  "dictionaries": [
+    "typescript",
+    "softwareTerms",
+    "node",
+    "en_US",
+    "npm",
+    "misc",
+    "filetypes"
+  ],
+  "import": ["./node_modules/@cspell/dict-cryptocurrencies/cspell-ext.json"],
+  "ignoreRegExpList": [
+    "/```[\\w\\W]*?```/",
+    "/~~~[\\w\\W]*?~~~/",
+    "/``[\\w\\W]*?``/",
+    "/`[^`]*`/",
+    "/\\STS\\S+/",
+    "\\(#.+?\\)",
+    "// @ts-.*",
+    "/[A-Za-z0-9]{32,}/",
+    "/[A-Fa-f0-9]{6}/"
+  ],
+  "words": [
+    "bar",
+    "baz",
+    "corge",
+    "foo",
+    "fred",
+    "garply",
+    "grault",
+    "litecoin",
+    "monero",
+    "noreply",
+    "plugh",
+    "quux",
+    "qux",
+    "Rebecca",
+    "rebeccastevens",
+    "sonarjs",
+    "thud",
+    "waldo",
+    "xyzzy"
+  ],
+  "overrides": [
+    {
+      "filename": "**/*.{ts,js}",
+      "ignoreRegExpList": ["/@[a-z]+/", "/#(end)?region/"],
+      "includeRegExpList": [
+        "/\\/\\*[\\s\\S]*?\\*\\/|([^\\\\:]|^)\\/\\/.*$/",
+        "/(\\/\\/[^\\n\\r]*[\\n\\r]+)/"
+      ]
+    }
+  ]
+}
