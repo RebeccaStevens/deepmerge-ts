@@ -37,7 +37,7 @@ specifiers:
   eslint-plugin-sonarjs: 0.18.0
   eslint-plugin-unicorn: 45.0.2
   husky: 8.0.3
-  knip: ^1.12.3
+  knip: 1.14.1
   lint-staged: 13.1.2
   markdownlint-cli: 0.33.0
   prettier: 2.8.4
@@ -87,7 +87,7 @@ devDependencies:
   eslint-plugin-sonarjs: 0.18.0_eslint@8.34.0
   eslint-plugin-unicorn: 45.0.2_eslint@8.34.0
   husky: 8.0.3
-  knip: 1.12.3
+  knip: 1.14.1
   lint-staged: 13.1.2
   markdownlint-cli: 0.33.0
   prettier: 2.8.4
@@ -2240,7 +2240,7 @@ packages:
     dev: true
 
   /concat-map/0.0.1:
-    resolution: {integrity: sha1-2Klr13/Wjfd5OnMDajug1UBdR3s=}
+    resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
     dev: true
 
   /concordance/5.0.4:
@@ -4538,8 +4538,8 @@ packages:
       graceful-fs: 4.2.10
     dev: true
 
-  /knip/1.12.3:
-    resolution: {integrity: sha512-EZH0RIiyw7IhFKlKAp0DZfZkRAO2PkyPkyJxh2KYly8NN0WSYvYdHBoUfokT/LTqHc9Gv2eBJ/nU6uvDJ22SGA==}
+  /knip/1.14.1:
+    resolution: {integrity: sha512-I9AGE/MOWil+p6DY9PMRMkshTmPJSu2SHiVjnYYy4r7mLY5Yydfuedm9gPujGhS+nhemSDedB8lNAX2LR3qP9w==}
     engines: {node: '>=16.17.0 <17 || >=18.6.0'}
     hasBin: true
     requiresBuild: true
@@ -4552,7 +4552,6 @@ packages:
       easy-table: 1.2.0
       esbuild: 0.17.10
       esbuild-register: 3.4.2_esbuild@0.17.10
-      eslint: 8.34.0
       fast-glob: 3.2.12
       get-tsconfig: 4.4.0
       globby: 13.1.3
