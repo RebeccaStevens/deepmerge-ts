@@ -50,7 +50,7 @@ jobs:
 
       - name: Release
         run: echo "Do Release Here"
-        # run: pnpm run semantic-release
+        # run: pnpm semantic-release
         # env:
         #   GITHUB_TOKEN: ${{ github.token }}
         #   NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
