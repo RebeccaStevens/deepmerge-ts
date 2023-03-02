@@ -15,6 +15,7 @@
   ],
   "labels": ["Type: Maintenance", ":blue_heart:"],
   "automergeStrategy": "rebase",
+  "postUpdateOptions": ["pnpmDedupe"],
   "packageRules": [
     {
       "matchManagers": ["npm"],
