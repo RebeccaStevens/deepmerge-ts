@@ -78,7 +78,7 @@
     "eslint-plugin-eslint-comments": "3.2.0",
     "eslint-plugin-functional": "5.0.4",
     "eslint-plugin-import": "2.27.5",
-    "eslint-plugin-jsdoc": "40.0.0",
+    "eslint-plugin-jsdoc": "40.0.1",
     "eslint-plugin-markdown": "3.0.0",
     "eslint-plugin-node": "11.1.0",
     "eslint-plugin-optimize-regex": "1.2.1",
