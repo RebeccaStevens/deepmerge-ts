@@ -12,25 +12,26 @@
     "pnpm-lock.yaml"
   ],
   "dictionaries": [
-    "typescript",
-    "softwareTerms",
-    "node",
     "en_US",
-    "npm",
+    "filetypes",
     "misc",
-    "filetypes"
+    "node",
+    "npm",
+    "softwareTerms",
+    "typescript"
   ],
   "import": ["./node_modules/@cspell/dict-cryptocurrencies/cspell-ext.json"],
   "ignoreRegExpList": [
+    "/[^\\s@]+@([^\\s@]+\\.)+[^\\s@]{2,4}/",
+    "/[A-Fa-f0-9]{6}/",
+    "/[A-Za-z0-9]{32,}/",
+    "// @ts-.*",
+    "/\\STS\\S+/",
+    "/`[^`]*`/",
+    "/``[\\w\\W]*?``/",
     "/```[\\w\\W]*?```/",
     "/~~~[\\w\\W]*?~~~/",
-    "/``[\\w\\W]*?``/",
-    "/`[^`]*`/",
-    "/\\STS\\S+/",
-    "\\(#.+?\\)",
-    "// @ts-.*",
-    "/[A-Za-z0-9]{32,}/",
-    "/[A-Fa-f0-9]{6}/"
+    "\\(#.+?\\)"
   ],
   "words": [
     "bar",
