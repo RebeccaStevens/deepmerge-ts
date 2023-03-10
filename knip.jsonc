@@ -1,17 +1,5 @@
 {
   "$schema": "https://unpkg.com/knip@next/schema.json",
-  "entry": ["src/index.ts", "tests/**/*.test.ts"],
-  "ignoreDependencies": [
-    "@commitlint/config-conventional",
-    "@cspell/dict-cryptocurrencies",
-    "semantic-release",
-    "@semantic-release/changelog",
-    "@semantic-release/commit-analyzer",
-    "@semantic-release/git",
-    "@semantic-release/github",
-    "@semantic-release/npm",
-    "@semantic-release/release-notes-generator",
-    "ts-node"
-  ],
-  "project": ["{src,tests}/**/*.ts"]
+  "entry": ["src/index.ts!"],
+  "project": ["src/**/*.ts!"]
 }
