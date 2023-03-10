@@ -36,7 +36,7 @@
     "build": "pnpm run build:node",
     "build:node": "rimraf dist && rollup -c rollup.config.ts --configPlugin @rollup/plugin-typescript",
     "cz": "git-cz",
-    "lint": "pnpm run lint:js && pnpm run lint:md && pnpm run lint:knip && pnpm run lint:spelling",
+    "lint": "pnpm run lint:js && pnpm run lint:md && pnpm run lint:prettier && pnpm run lint:knip && pnpm run lint:spelling",
     "lint:js": "eslint .",
     "lint:js-fix": "eslint . --fix",
     "lint:knip": "knip --config knip.jsonc --production --exclude exports",
