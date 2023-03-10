@@ -1,15 +1,8 @@
 {
   "all": true,
-  "include": [
-    "src/**/*"
-  ],
-  "exclude": [
-    "src/types/**/*"
-  ],
-  "reporter": [
-    "lcov",
-    "text"
-  ],
+  "include": ["src/**/*"],
+  "exclude": ["src/types/**/*"],
+  "reporter": ["lcov", "text"],
   "check-coverage": false,
   "watermarks": {
     "lines": [80, 95],
