@@ -482,7 +482,7 @@ test(`merging objects with plain and non-plain properties`, (t) => {
   deepmergeInto(x, y);
 
   t.false(
-    Object.prototype.hasOwnProperty.call(x, "parentKey"),
+    Object.hasOwn(x, "parentKey"),
     `inherited properties of target should be removed, not target or ignored`
   );
   t.is(

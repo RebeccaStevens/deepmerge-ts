@@ -6,7 +6,7 @@ const avaConfig = {
   },
   nodeArguments: ["--loader=ts-node/esm"],
   environmentVariables: {
-    TS_NODE_PROJECT: "tests/tsconfig.json",
+    TS_NODE_PROJECT: "tsconfig.json",
   },
 };
 

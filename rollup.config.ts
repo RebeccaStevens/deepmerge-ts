@@ -27,7 +27,7 @@ function getBoolean(value: unknown) {
     : Boolean(asNumber);
 }
 
-const buildTypesOnly = getBoolean(process.env.BUILD_TYPES_ONLY);
+const buildTypesOnly = getBoolean(process.env["BUILD_TYPES_ONLY"]);
 
 /**
  * Get new instances of all the common plugins.

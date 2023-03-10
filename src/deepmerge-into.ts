@@ -154,7 +154,7 @@ function getIntoUtils<M, MM extends DeepMergeBuiltInMetaData>(
       ...Object.fromEntries(
         Object.entries(options)
           .filter(([key, option]) =>
-            Object.prototype.hasOwnProperty.call(defaultMergeIntoFunctions, key)
+            Object.hasOwn(defaultMergeIntoFunctions, key)
           )
           .map(([key, option]) =>
             option === false

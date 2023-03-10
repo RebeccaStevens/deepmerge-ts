@@ -2,6 +2,10 @@
 
 Any donations would be much appreciated. 😄
 
+## Real money
+
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/K3K2ALYW6)
+
 ## Cryptocurrencies
 
 <details>
@@ -27,15 +31,3 @@ bc1qgr2xwvkpztsaq9kplud84r3dfz4g3e7d5c5lxm
 ltc1qxr7p6z4hrh87g9mjjk67chyduwrh2nfrpxksjv
 
 </details>
-
-<details>
-<summary><img src="https://raw.githubusercontent.com/get-icon/geticon/master/icons/monero.svg" height="16"> Monero</summary>
-
-![monero address QR code](https://github.com/RebeccaStevens/RebeccaStevens/blob/main/assets/cryptocurrencies/wallets/monero.png)\
-441qae5ovobcXCpcR7SKzX11r7vinzMgsiyAFKUFBaZgHvzgrna9WSeJeAH46gXR5AXrE3zKALfWx3ayobyexnDX1gie1Qd
-
-</details>
-
-## Real money
-
-[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/K3K2ALYW6)
