@@ -39,7 +39,7 @@
     "lint": "pnpm run lint:js && pnpm run lint:md && pnpm run lint:prettier && pnpm run lint:knip && pnpm run lint:spelling",
     "lint:js": "eslint .",
     "lint:js-fix": "eslint . --fix",
-    "lint:knip": "knip --config knip.jsonc --production --exclude exports",
+    "lint:knip": "knip --production --strict --exclude exports",
     "lint:md": "markdownlint \"**/*.md\" --config=.markdownlint.json --ignore-path=.markdownlintignore",
     "lint:prettier": "prettier \"**/*\" --ignore-unknown --list-different",
     "lint:prettier-fix": "prettier \"**/*\" --ignore-unknown --write",
