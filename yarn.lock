@@ -1282,11 +1282,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rebeccastevens/eslint-config@npm:1.5.2":
-  version: 1.5.2
-  resolution: "@rebeccastevens/eslint-config@npm:1.5.2"
+"@rebeccastevens/eslint-config@npm:1.5.6":
+  version: 1.5.6
+  resolution: "@rebeccastevens/eslint-config@npm:1.5.6"
   dependencies:
-    deepmerge-ts: ^4.2.2
+    deepmerge-ts: ^4.3.0
   peerDependencies:
     "@typescript-eslint/eslint-plugin": "*"
     "@typescript-eslint/parser": "*"
@@ -1302,7 +1302,7 @@ __metadata:
     eslint-plugin-promise: "*"
     eslint-plugin-sonarjs: "*"
     eslint-plugin-unicorn: "*"
-  checksum: 9205881cd9f9ac2878c74c4cbb77652d492a6b60584f972ba463c8798ebd5fd8a2a2764cb1eedd9f9edde2da01c8fe8e0017131857f4065e431ae17b460cbca1
+  checksum: 40d0e44aca3858f887aa8f2fcd357ff917e4b951daa5458110cd1f474a76f923169e778047c812510374252a996f4441ca14e2604b75a19f9b2a91ecb128d0a8
   languageName: node
   linkType: hard
 
@@ -3417,10 +3417,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"deepmerge-ts@npm:^4.2.2":
-  version: 4.2.2
-  resolution: "deepmerge-ts@npm:4.2.2"
-  checksum: 137c3650519d9b1a220db7e23a3f56304cd02e7f97b2b8392e2767251055a29318425bacdb2ab2ff175a4645f7179643acf0e038d5dafbfdbc11bdf322f79697
+"deepmerge-ts@npm:^4.2.2, deepmerge-ts@npm:^4.3.0":
+  version: 4.3.0
+  resolution: "deepmerge-ts@npm:4.3.0"
+  checksum: d5f8a96df9a2bc7177d59544b9390ba76e50fb725f776669068ca04eef319e98ee8870cf7b7ecca9f636b711d57cea571ac61553ee01101a614c045f7a86e0be
   languageName: node
   linkType: hard
 
@@ -3431,7 +3431,7 @@ __metadata:
     "@commitlint/cli": 17.4.4
     "@commitlint/config-conventional": 17.4.4
     "@cspell/dict-cryptocurrencies": 3.0.1
-    "@rebeccastevens/eslint-config": 1.5.2
+    "@rebeccastevens/eslint-config": 1.5.6
     "@rollup/plugin-json": 6.0.0
     "@rollup/plugin-node-resolve": 15.0.1
     "@rollup/plugin-typescript": 11.0.0
