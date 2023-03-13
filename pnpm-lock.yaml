@@ -42,7 +42,7 @@ specifiers:
   markdownlint-cli: 0.33.0
   prettier: 2.8.4
   prettier-plugin-packagejson: 2.4.3
-  rimraf: 4.3.0
+  rimraf: 4.4.0
   rollup: 3.18.0
   rollup-plugin-auto-external: 2.0.0
   rollup-plugin-dts: 5.2.0
@@ -92,7 +92,7 @@ devDependencies:
   markdownlint-cli: 0.33.0
   prettier: 2.8.4
   prettier-plugin-packagejson: 2.4.3_prettier@2.8.4
-  rimraf: 4.3.0
+  rimraf: 4.4.0
   rollup: 3.18.0
   rollup-plugin-auto-external: 2.0.0_rollup@3.18.0
   rollup-plugin-dts: 5.2.0_fn2onl6nbsljlgjr3jlzr6w7we
@@ -5663,10 +5663,9 @@ packages:
       glob: 7.2.3
     dev: true
 
-  /rimraf/4.3.0:
-    resolution: {integrity: sha512-5qVDXPbByA1qSJEWMv1qAwKsoS22vVpsL2QyxCKBw4gf6XiFo1K3uRLY6uSOOBFDwnqAZtnbILqWKKlzh8bkGg==}
+  /rimraf/4.4.0:
+    resolution: {integrity: sha512-X36S+qpCUR0HjXlkDe4NAOhS//aHH0Z+h8Ckf2auGJk3PTnx5rLmrHkwNdbVQuCSUhOyFrlRvFEllZOYE+yZGQ==}
     engines: {node: '>=14'}
-    deprecated: Please upgrade to 4.3.1 or higher to fix a potentially damaging issue regarding symbolic link following. See https://github.com/isaacs/rimraf/issues/259 for details.
     hasBin: true
     dependencies:
       glob: 9.2.1
