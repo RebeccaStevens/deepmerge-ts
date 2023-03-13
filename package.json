@@ -53,7 +53,7 @@
     "@commitlint/cli": "17.4.4",
     "@commitlint/config-conventional": "17.4.4",
     "@cspell/dict-cryptocurrencies": "3.0.1",
-    "@rebeccastevens/eslint-config": "1.5.2",
+    "@rebeccastevens/eslint-config": "1.5.6",
     "@rollup/plugin-node-resolve": "15.0.1",
     "@rollup/plugin-typescript": "11.0.0",
     "@semantic-release/changelog": "6.0.2",
