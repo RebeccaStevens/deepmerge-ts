@@ -1548,10 +1548,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tsd/typescript@npm:~4.9.3":
-  version: 4.9.3
-  resolution: "@tsd/typescript@npm:4.9.3"
-  checksum: 35d4d89583c848b1d8e02ea231d5dc8c63de6c647c2f39d3a8f055fd34b93e827a28a981455b42975f40c0696ea9ea0dc306bd25f852331719f0a92c53b38ff4
+"@tsd/typescript@npm:~4.9.5":
+  version: 4.9.5
+  resolution: "@tsd/typescript@npm:4.9.5"
+  checksum: f9f01ecf2094e0ac83e56cc57430bdf81da82aa20424280002b44ea29cdc171388a9777262257f550800bf76567774521728e1ef6e191633ae6f723ee64d396a
   languageName: node
   linkType: hard
 
@@ -3484,7 +3484,7 @@ __metadata:
     semantic-release: 20.1.1
     source-map-support: 0.5.21
     ts-node: 10.9.1
-    tsd: 0.25.0
+    tsd: 0.27.0
     tslib: 2.5.0
     typescript: 4.9.5
   languageName: unknown
@@ -9679,11 +9679,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tsd@npm:0.25.0":
-  version: 0.25.0
-  resolution: "tsd@npm:0.25.0"
+"tsd@npm:0.27.0":
+  version: 0.27.0
+  resolution: "tsd@npm:0.27.0"
   dependencies:
-    "@tsd/typescript": ~4.9.3
+    "@tsd/typescript": ~4.9.5
     eslint-formatter-pretty: ^4.1.0
     globby: ^11.0.1
     meow: ^9.0.0
@@ -9691,7 +9691,7 @@ __metadata:
     read-pkg-up: ^7.0.0
   bin:
     tsd: dist/cli.js
-  checksum: 9600551d0274847442462121822e04654195513a831c4a234955637fe758e69655ae205d256635b47f4c65781d1ee39a7cbd6d4a9dcd07edec92dcd79de1b439
+  checksum: 0387fb2b23ec67e6c45dfd29960f6b3c08d8c387b6ae8fe62f92cbb295427261f87af86012f243fb6b0226bd747b34d4840fab3db0ed2ceec5f41422604b02a0
   languageName: node
   linkType: hard
 

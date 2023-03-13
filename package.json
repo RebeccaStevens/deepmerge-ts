@@ -143,7 +143,7 @@
     "semantic-release": "20.1.1",
     "source-map-support": "0.5.21",
     "ts-node": "10.9.1",
-    "tsd": "0.25.0",
+    "tsd": "0.27.0",
     "tslib": "2.5.0",
     "typescript": "4.9.5"
   },
