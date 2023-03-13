@@ -76,7 +76,7 @@
     "eslint-import-resolver-typescript": "3.5.3",
     "eslint-plugin-ava": "14.0.0",
     "eslint-plugin-eslint-comments": "3.2.0",
-    "eslint-plugin-functional": "5.0.4",
+    "eslint-plugin-functional": "5.0.6",
     "eslint-plugin-import": "2.27.5",
     "eslint-plugin-jsdoc": "40.0.1",
     "eslint-plugin-markdown": "3.0.0",

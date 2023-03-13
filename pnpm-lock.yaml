@@ -26,7 +26,7 @@ specifiers:
   eslint-import-resolver-typescript: 3.5.3
   eslint-plugin-ava: 14.0.0
   eslint-plugin-eslint-comments: 3.2.0
-  eslint-plugin-functional: 5.0.4
+  eslint-plugin-functional: 5.0.6
   eslint-plugin-import: 2.27.5
   eslint-plugin-jsdoc: 40.0.1
   eslint-plugin-markdown: 3.0.0
@@ -54,7 +54,7 @@ devDependencies:
   '@commitlint/cli': 17.4.4
   '@commitlint/config-conventional': 17.4.4
   '@cspell/dict-cryptocurrencies': 3.0.1
-  '@rebeccastevens/eslint-config': 1.5.6_zcjio5yzdflcmmumdi243uvrki
+  '@rebeccastevens/eslint-config': 1.5.6_3r7uvidim2jclewpzfhjw3azxi
   '@rollup/plugin-node-resolve': 15.0.1_rollup@3.18.0
   '@rollup/plugin-typescript': 11.0.0_fn2onl6nbsljlgjr3jlzr6w7we
   '@semantic-release/changelog': 6.0.2_semantic-release@20.1.1
@@ -76,7 +76,7 @@ devDependencies:
   eslint-import-resolver-typescript: 3.5.3_yckic57kx266ph64dhq6ozvb54
   eslint-plugin-ava: 14.0.0_eslint@8.35.0
   eslint-plugin-eslint-comments: 3.2.0_eslint@8.35.0
-  eslint-plugin-functional: 5.0.4_ycpbpc6yetojsgtrx3mwntkhsu
+  eslint-plugin-functional: 5.0.6_ycpbpc6yetojsgtrx3mwntkhsu
   eslint-plugin-import: 2.27.5_tqrcrxlenpngfto46ddarus52y
   eslint-plugin-jsdoc: 40.0.1_eslint@8.35.0
   eslint-plugin-markdown: 3.0.0_eslint@8.35.0
@@ -840,7 +840,7 @@ packages:
       config-chain: 1.1.13
     dev: true
 
-  /@rebeccastevens/eslint-config/1.5.6_zcjio5yzdflcmmumdi243uvrki:
+  /@rebeccastevens/eslint-config/1.5.6_3r7uvidim2jclewpzfhjw3azxi:
     resolution: {integrity: sha512-+q7CG5usyGxVBDWiTRXLad4ExJQlxiqdzHVzyQyiVuTWyqyE4FPY6MYtozuBvMCukB3KmIfafWZvnUcFoyq4Ug==}
     engines: {node: ^14.17.0 || >=16.0.0}
     peerDependencies:
@@ -865,7 +865,7 @@ packages:
       eslint: 8.35.0
       eslint-import-resolver-typescript: 3.5.3_yckic57kx266ph64dhq6ozvb54
       eslint-plugin-eslint-comments: 3.2.0_eslint@8.35.0
-      eslint-plugin-functional: 5.0.4_ycpbpc6yetojsgtrx3mwntkhsu
+      eslint-plugin-functional: 5.0.6_ycpbpc6yetojsgtrx3mwntkhsu
       eslint-plugin-import: 2.27.5_tqrcrxlenpngfto46ddarus52y
       eslint-plugin-jsdoc: 40.0.1_eslint@8.35.0
       eslint-plugin-markdown: 3.0.0_eslint@8.35.0
@@ -2739,8 +2739,8 @@ packages:
       ignore: 5.2.4
     dev: true
 
-  /eslint-plugin-functional/5.0.4_ycpbpc6yetojsgtrx3mwntkhsu:
-    resolution: {integrity: sha512-vV5jUAWfFQfe4OfE1YM99mUYX5AW0uL7tJa+rYIwwTRzeQc39j6SfvGdLUg2sXkTpmcfO3VwBLD7Ij5yjpRM8w==}
+  /eslint-plugin-functional/5.0.6_ycpbpc6yetojsgtrx3mwntkhsu:
+    resolution: {integrity: sha512-7/NzMapT2BwveBgSmxL9v14bRm00ZCZsOiAb6VtFNomVWFhxkmYLg3zsH5H+TA9Zm5COsgePUe1c5ABsuW8Akw==}
     engines: {node: '>=16.10.0'}
     peerDependencies:
       eslint: ^8.0.0
@@ -2754,7 +2754,7 @@ packages:
       deepmerge-ts: 4.3.0
       escape-string-regexp: 4.0.0
       eslint: 8.35.0
-      is-immutable-type: 1.2.4_z2yb534ermga4zob7scjbedqxu
+      is-immutable-type: 1.2.5_z2yb534ermga4zob7scjbedqxu
       semver: 7.3.8
       typescript: 4.9.5
     transitivePeerDependencies:
@@ -3924,8 +3924,8 @@ packages:
     resolution: {integrity: sha512-gyPJuv83bHMpocVYoqof5VDiZveEoGoFL8m3BXNb2VW8Xs+rz9kqO8LOQ5DH6EsuvilT1ApazU0pyl+ytbPtlw==}
     dev: true
 
-  /is-immutable-type/1.2.4_z2yb534ermga4zob7scjbedqxu:
-    resolution: {integrity: sha512-H/famjtztrVEl/P9izGTFLEJjmKsDoj+WBMVo+oSSDEuNTZpJFDn37/ovEb+3a3K5UU8zdkVUwBgddeBPH41pA==}
+  /is-immutable-type/1.2.5_z2yb534ermga4zob7scjbedqxu:
+    resolution: {integrity: sha512-g4jIDuO6GniCVCQy+ypA9BD9L7SplQJtGjr4QjF1DfxnMn9S5vBj9xuMjfhBkTCKuctw2ErM/ZRJn+NBRMLQHQ==}
     peerDependencies:
       '@typescript-eslint/type-utils': '>=5.30.5'
       '@typescript-eslint/utils': '>=5.30.5'
