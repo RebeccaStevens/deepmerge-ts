@@ -1,4 +1,4 @@
-name: Lint Knip
+name: Lint Knip (Production)
 
 on:
   pull_request:
@@ -6,9 +6,9 @@ on:
   workflow_call:
 
 jobs:
-  lint_knip:
+  lint_knip_prod:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/prepare
-      - run: pnpm run lint:knip
+      - run: pnpm run lint:knip:production
