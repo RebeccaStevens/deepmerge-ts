@@ -346,7 +346,7 @@ type CustomizedDeepmergeInto = <
 >(
   target: Target,
   ...objects: Ts
-) => asserts target is Target & // Unioning with `Target` is essentially required to make TypeScript happy.
+) => asserts target is Target & // Intercepting with `Target` is essentially required to make TypeScript happy.
   DeepMergeHKT<
     [Target, ...Ts], // Don't forget to pass the `Target` type here too.
     {
