@@ -140,7 +140,10 @@ export function deepmergeIntoCustom<
  *
  * @param options - The options the user specified
  */
-function getIntoUtils<M, MM extends DeepMergeBuiltInMetaData>(
+function getIntoUtils<
+  M,
+  MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData
+>(
   options: DeepMergeIntoOptions<M, MM>,
   customizedDeepmergeInto: DeepMergeMergeIntoFunctionUtils<
     M,
@@ -183,7 +186,7 @@ export function mergeUnknownsInto<
   Ts extends ReadonlyArray<unknown>,
   U extends DeepMergeMergeIntoFunctionUtils<M, MM>,
   M,
-  MM extends DeepMergeBuiltInMetaData
+  MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData
 >(
   m_target: Reference<unknown>,
   values: Ts,
@@ -262,7 +265,7 @@ export function mergeUnknownsInto<
 function mergeRecordsInto<
   U extends DeepMergeMergeIntoFunctionUtils<M, MM>,
   M,
-  MM extends DeepMergeBuiltInMetaData
+  MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData
 >(
   m_target: Reference<Record<PropertyKey, unknown>>,
   values: ReadonlyArray<Readonly<Record<PropertyKey, unknown>>>,
@@ -295,7 +298,7 @@ function mergeRecordsInto<
 function mergeArraysInto<
   U extends DeepMergeMergeIntoFunctionUtils<M, MM>,
   M,
-  MM extends DeepMergeBuiltInMetaData
+  MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData
 >(
   m_target: Reference<unknown[]>,
   values: ReadonlyArray<ReadonlyArray<unknown>>,
@@ -323,7 +326,7 @@ function mergeArraysInto<
 function mergeSetsInto<
   U extends DeepMergeMergeIntoFunctionUtils<M, MM>,
   M,
-  MM extends DeepMergeBuiltInMetaData
+  MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData
 >(
   m_target: Reference<Set<unknown>>,
   values: ReadonlyArray<Readonly<ReadonlySet<unknown>>>,
@@ -346,7 +349,7 @@ function mergeSetsInto<
 function mergeMapsInto<
   U extends DeepMergeMergeIntoFunctionUtils<M, MM>,
   M,
-  MM extends DeepMergeBuiltInMetaData
+  MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData
 >(
   m_target: Reference<Map<unknown, unknown>>,
   values: ReadonlyArray<Readonly<ReadonlyMap<unknown, unknown>>>,
@@ -369,7 +372,7 @@ function mergeMapsInto<
 function mergeOthersInto<
   U extends DeepMergeMergeIntoFunctionUtils<M, MM>,
   M,
-  MM extends DeepMergeBuiltInMetaData
+  MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData
 >(
   m_target: Reference<unknown>,
   values: ReadonlyArray<unknown>,

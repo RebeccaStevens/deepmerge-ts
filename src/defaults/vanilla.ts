@@ -36,7 +36,7 @@ export function mergeRecords<
   U extends DeepMergeMergeFunctionUtils<M, MM>,
   MF extends DeepMergeMergeFunctionsURIs,
   M,
-  MM extends DeepMergeBuiltInMetaData
+  MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData
 >(
   values: Ts,
   utils: U,

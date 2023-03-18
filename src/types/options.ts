@@ -8,7 +8,7 @@ import type { DeepMergeBuiltInMetaData } from "./merging.js";
  */
 export type DeepMergeOptions<
   in out M,
-  MM extends Readonly<Record<PropertyKey, unknown>> = DeepMergeBuiltInMetaData
+  MM extends Readonly<Record<PropertyKey, unknown>> = {}
 > = Partial<DeepMergeOptionsFull<M, MM & DeepMergeBuiltInMetaData>>;
 
 /**
@@ -16,20 +16,20 @@ export type DeepMergeOptions<
  */
 export type DeepMergeIntoOptions<
   in out M,
-  MM extends Readonly<Record<PropertyKey, unknown>> = DeepMergeBuiltInMetaData
+  MM extends Readonly<Record<PropertyKey, unknown>> = {}
 > = Partial<DeepMergeIntoOptionsFull<M, MM & DeepMergeBuiltInMetaData>>;
 
-type MetaDataUpdater<in out M, MM extends DeepMergeBuiltInMetaData> = (
-  previousMeta: M | undefined,
-  metaMeta: Readonly<Partial<MM>>
-) => M;
+type MetaDataUpdater<
+  in out M,
+  MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData
+> = (previousMeta: M | undefined, metaMeta: Readonly<Partial<MM>>) => M;
 
 /**
  * All the options the user can pass to customize deepmerge.
  */
 type DeepMergeOptionsFull<
   in out M,
-  MM extends DeepMergeBuiltInMetaData
+  MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData
 > = Readonly<{
   mergeRecords: DeepMergeMergeFunctions<M, MM>["mergeRecords"] | false;
   mergeArrays: DeepMergeMergeFunctions<M, MM>["mergeArrays"] | false;
@@ -45,7 +45,7 @@ type DeepMergeOptionsFull<
  */
 type DeepMergeIntoOptionsFull<
   in out M,
-  MM extends DeepMergeBuiltInMetaData
+  MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData
 > = Readonly<{
   mergeRecords: DeepMergeMergeIntoFunctions<M, MM>["mergeRecords"] | false;
   mergeArrays: DeepMergeMergeIntoFunctions<M, MM>["mergeArrays"] | false;
@@ -67,7 +67,7 @@ export type Reference<T> = {
  */
 type DeepMergeMergeFunctions<
   in M,
-  MM extends DeepMergeBuiltInMetaData
+  MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData
 > = Readonly<{
   mergeRecords: <
     Ts extends ReadonlyArray<Readonly<Record<PropertyKey, unknown>>>,
@@ -123,7 +123,7 @@ type DeepMergeMergeIntoFunctionsReturnType = void | symbol;
  */
 type DeepMergeMergeIntoFunctions<
   in M,
-  MM extends DeepMergeBuiltInMetaData
+  MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData
 > = Readonly<{
   mergeRecords: <
     Ts extends ReadonlyArray<Readonly<Record<PropertyKey, unknown>>>,
@@ -182,7 +182,7 @@ type DeepMergeMergeIntoFunctions<
 // eslint-disable-next-line functional/no-mixed-types
 export type DeepMergeMergeFunctionUtils<
   in out M,
-  MM extends DeepMergeBuiltInMetaData
+  MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData
 > = Readonly<{
   mergeFunctions: DeepMergeMergeFunctions<M, MM>;
   defaultMergeFunctions: MergeFunctions;
@@ -201,7 +201,7 @@ export type DeepMergeMergeFunctionUtils<
 // eslint-disable-next-line functional/no-mixed-types
 export type DeepMergeMergeIntoFunctionUtils<
   in out M,
-  MM extends DeepMergeBuiltInMetaData
+  MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData
 > = Readonly<{
   mergeFunctions: DeepMergeMergeIntoFunctions<M, MM>;
   defaultMergeFunctions: MergeIntoFunctions;
