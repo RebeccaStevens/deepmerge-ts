@@ -1,6 +1,14 @@
 # Changelog
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
+# [5.0.0-next.4](https://github.com/RebeccaStevens/deepmerge-ts/compare/v5.0.0-next.3...v5.0.0-next.4) (2023-03-18)
+
+
+### Bug Fixes
+
+* remove unneeded eslint disable ([be28290](https://github.com/RebeccaStevens/deepmerge-ts/commit/be28290a3efb533ab339ef88e297b3e057708603))
+* use default MM generics ([944b428](https://github.com/RebeccaStevens/deepmerge-ts/commit/944b428e3779904c32d071a2761753872ab717f4)), closes [#304](https://github.com/RebeccaStevens/deepmerge-ts/issues/304)
+
 # [5.0.0-next.3](https://github.com/RebeccaStevens/deepmerge-ts/compare/v5.0.0-next.2...v5.0.0-next.3) (2023-03-18)
 
 
