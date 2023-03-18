@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
+# [5.0.0-next.3](https://github.com/RebeccaStevens/deepmerge-ts/compare/v5.0.0-next.2...v5.0.0-next.3) (2023-03-18)
+
+
+### Bug Fixes
+
+* add missing dev dep ([df4add2](https://github.com/RebeccaStevens/deepmerge-ts/commit/df4add2a0aba101b0b00527cb105d194e17bdfaf))
+
 # [5.0.0-next.2](https://github.com/RebeccaStevens/deepmerge-ts/compare/v5.0.0-next.1...v5.0.0-next.2) (2023-02-06)
 
 

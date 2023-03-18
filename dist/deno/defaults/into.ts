@@ -129,5 +129,5 @@ export function mergeOthers<Ts extends ReadonlyArray<unknown>>(
   m_target: Reference<unknown>,
   values: Ts
 ) {
-  m_target.value = values[values.length - 1];
+  m_target.value = values.at(-1);
 }

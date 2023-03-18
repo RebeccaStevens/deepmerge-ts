@@ -500,14 +500,14 @@ declare function deepmergeCustom<PMF extends Partial<DeepMergeMergeFunctionsURIs
 /**
  * Deeply merge objects into a target.
  *
- * @param target  - This object will be mutated with the merge result.
+ * @param target - This object will be mutated with the merge result.
  * @param objects - The objects to merge into the target.
  */
 declare function deepmergeInto<T extends object>(target: T, ...objects: ReadonlyArray<T>): void;
 /**
  * Deeply merge objects into a target.
  *
- * @param target  - This object will be mutated with the merge result.
+ * @param target - This object will be mutated with the merge result.
  * @param objects - The objects to merge into the target.
  */
 declare function deepmergeInto<Target extends object, Ts extends ReadonlyArray<unknown>>(target: Target, ...objects: Ts): asserts target is FlatternAlias<Target & DeepMergeHKT<[

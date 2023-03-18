@@ -198,7 +198,7 @@ function mergeMaps$2(values) {
  * Get the last value in the given array.
  */
 function mergeOthers$2(values) {
-    return values[values.length - 1];
+    return values.at(-1);
 }
 
 var defaultMergeFunctions = /*#__PURE__*/Object.freeze({
@@ -234,20 +234,20 @@ function deepmergeCustom(options, rootMetaData) {
  * @param options - The options the user specified
  */
 function getUtils(options, customizedDeepmerge) {
-    var _a, _b;
     return {
         defaultMergeFunctions,
         mergeFunctions: {
             ...defaultMergeFunctions,
             ...Object.fromEntries(Object.entries(options)
-                .filter(([key, option]) => Object.prototype.hasOwnProperty.call(defaultMergeFunctions, key))
+                .filter(([key, option]) => Object.hasOwn(defaultMergeFunctions, key))
                 .map(([key, option]) => option === false
                 ? [key, mergeOthers$2]
                 : [key, option])),
         },
-        metaDataUpdater: ((_a = options.metaDataUpdater) !== null && _a !== void 0 ? _a : defaultMetaDataUpdater),
+        metaDataUpdater: (options.metaDataUpdater ??
+            defaultMetaDataUpdater),
         deepmerge: customizedDeepmerge,
-        useImplicitDefaultMerging: (_b = options.enableImplicitDefaultMerging) !== null && _b !== void 0 ? _b : false,
+        useImplicitDefaultMerging: options.enableImplicitDefaultMerging ?? false,
         actions,
     };
 }
@@ -444,7 +444,7 @@ function mergeMaps(m_target, values) {
  * Set the target to the last value.
  */
 function mergeOthers(m_target, values) {
-    m_target.value = values[values.length - 1];
+    m_target.value = values.at(-1);
 }
 
 var defaultMergeIntoFunctions = /*#__PURE__*/Object.freeze({
@@ -475,18 +475,18 @@ function deepmergeIntoCustom(options, rootMetaData) {
  * @param options - The options the user specified
  */
 function getIntoUtils(options, customizedDeepmergeInto) {
-    var _a;
     return {
         defaultMergeFunctions: defaultMergeIntoFunctions,
         mergeFunctions: {
             ...defaultMergeIntoFunctions,
             ...Object.fromEntries(Object.entries(options)
-                .filter(([key, option]) => Object.prototype.hasOwnProperty.call(defaultMergeIntoFunctions, key))
+                .filter(([key, option]) => Object.hasOwn(defaultMergeIntoFunctions, key))
                 .map(([key, option]) => option === false
                 ? [key, mergeOthers]
                 : [key, option])),
         },
-        metaDataUpdater: ((_a = options.metaDataUpdater) !== null && _a !== void 0 ? _a : defaultMetaDataUpdater),
+        metaDataUpdater: (options.metaDataUpdater ??
+            defaultMetaDataUpdater),
         deepmergeInto: customizedDeepmergeInto,
         actions: actionsInto,
     };
@@ -507,9 +507,7 @@ function mergeUnknownsInto(m_target, values, utils, meta
         return void mergeOthersInto(m_target, values, utils, meta);
     }
     const type = getObjectType(m_target.value);
-    // eslint-disable-next-line functional/no-conditional-statements -- add an early escape for better performance.
     if (type !== 0 /* ObjectType.NOT */ && type !== 5 /* ObjectType.OTHER */) {
-        // eslint-disable-next-line functional/no-loop-statements -- using a loop here is more performant than mapping every value and then testing every value.
         for (let m_index = 1; m_index < values.length; m_index++) {
             if (getObjectType(values[m_index]) === type) {
                 continue;
