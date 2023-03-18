@@ -4,7 +4,7 @@ specifiers:
   '@commitlint/cli': 17.4.4
   '@commitlint/config-conventional': 17.4.4
   '@cspell/dict-cryptocurrencies': 3.0.1
-  '@rebeccastevens/eslint-config': 1.5.6
+  '@rebeccastevens/eslint-config': 1.6.0
   '@rollup/plugin-node-resolve': 15.0.1
   '@rollup/plugin-typescript': 11.0.0
   '@semantic-release/changelog': 6.0.2
@@ -54,7 +54,7 @@ devDependencies:
   '@commitlint/cli': 17.4.4
   '@commitlint/config-conventional': 17.4.4
   '@cspell/dict-cryptocurrencies': 3.0.1
-  '@rebeccastevens/eslint-config': 1.5.6_yukwe7fa4tu7igmoevdkt7dp4q
+  '@rebeccastevens/eslint-config': 1.6.0_yukwe7fa4tu7igmoevdkt7dp4q
   '@rollup/plugin-node-resolve': 15.0.1_rollup@3.19.1
   '@rollup/plugin-typescript': 11.0.0_7iejawhbqmte5pthjozf4tfuqy
   '@semantic-release/changelog': 6.0.2_semantic-release@20.1.1
@@ -845,9 +845,9 @@ packages:
       config-chain: 1.1.13
     dev: true
 
-  /@rebeccastevens/eslint-config/1.5.6_yukwe7fa4tu7igmoevdkt7dp4q:
-    resolution: {integrity: sha512-+q7CG5usyGxVBDWiTRXLad4ExJQlxiqdzHVzyQyiVuTWyqyE4FPY6MYtozuBvMCukB3KmIfafWZvnUcFoyq4Ug==}
-    engines: {node: ^14.17.0 || >=16.0.0}
+  /@rebeccastevens/eslint-config/1.6.0_yukwe7fa4tu7igmoevdkt7dp4q:
+    resolution: {integrity: sha512-9qMzJZf84Ogt9WdffSVp3xNcwvHgTwHh08W6hFzJd331BfWEsX9WJIGrO2Ud08PC+Xl0mua/jkubJxTv+gi5Hg==}
+    engines: {node: '>=18.12.1'}
     peerDependencies:
       '@typescript-eslint/eslint-plugin': '*'
       '@typescript-eslint/parser': '*'

@@ -15,9 +15,6 @@
     "project": ["./tsconfig.json"]
   },
   "ignorePatterns": ["/coverage/", "/dist/"],
-  "rules": {
-    "import/no-relative-parent-imports": "off"
-  },
   "overrides": [
     {
       "files": ["**/*.test.ts"],
