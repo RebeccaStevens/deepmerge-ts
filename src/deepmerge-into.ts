@@ -15,7 +15,7 @@ import { getObjectType, ObjectType } from "./utils.js";
 /**
  * Deeply merge objects into a target.
  *
- * @param target  - This object will be mutated with the merge result.
+ * @param target - This object will be mutated with the merge result.
  * @param objects - The objects to merge into the target.
  */
 export function deepmergeInto<T extends object>(
@@ -26,7 +26,7 @@ export function deepmergeInto<T extends object>(
 /**
  * Deeply merge objects into a target.
  *
- * @param target  - This object will be mutated with the merge result.
+ * @param target - This object will be mutated with the merge result.
  * @param objects - The objects to merge into the target.
  */
 export function deepmergeInto<
@@ -200,9 +200,7 @@ export function mergeUnknownsInto<
 
   const type = getObjectType(m_target.value);
 
-  // eslint-disable-next-line functional/no-conditional-statements -- add an early escape for better performance.
   if (type !== ObjectType.NOT && type !== ObjectType.OTHER) {
-    // eslint-disable-next-line functional/no-loop-statements -- using a loop here is more performant than mapping every value and then testing every value.
     for (let m_index = 1; m_index < values.length; m_index++) {
       if (getObjectType(values[m_index]) === type) {
         continue;
