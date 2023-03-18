@@ -1,7 +1,6 @@
 import type { MergeFunctions as MergeIntoFunctions } from "../defaults/into.js";
 import type { MergeFunctions } from "../defaults/vanilla.js";
 
-// eslint-disable-next-line import/no-relative-parent-imports -- use "deepmerge-ts" once denoify can support it.
 import type { DeepMergeBuiltInMetaData } from "./merging.js";
 
 /**
