@@ -26,10 +26,6 @@
     "/types-legacy/",
     "/**/*.md"
   ],
-  "rules": {
-    "import/no-relative-parent-imports": "off",
-    "node/no-extraneous-import": "error"
-  },
   "overrides": [
     {
       "files": "src/**",
