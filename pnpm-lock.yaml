@@ -21,6 +21,7 @@ specifiers:
   c8: 7.13.0
   commitizen: 4.3.0
   cspell: 6.29.1
+  cz-conventional-changelog: ^3.3.0
   eslint: 8.36.0
   eslint-config-prettier: 8.7.0
   eslint-import-resolver-typescript: 3.5.3
@@ -71,6 +72,7 @@ devDependencies:
   c8: 7.13.0
   commitizen: 4.3.0
   cspell: 6.29.1
+  cz-conventional-changelog: 3.3.0
   eslint: 8.36.0
   eslint-config-prettier: 8.7.0_eslint@8.36.0
   eslint-import-resolver-typescript: 3.5.3_eakrjjutlgqjxe5ydhtnd4qdmy
