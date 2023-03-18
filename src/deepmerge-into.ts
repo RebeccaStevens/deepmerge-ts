@@ -15,7 +15,7 @@ import { getObjectType, ObjectType } from "./utils.js";
 /**
  * Deeply merge objects into a target.
  *
- * @param target  - This object will be mutated with the merge result.
+ * @param target - This object will be mutated with the merge result.
  * @param objects - The objects to merge into the target.
  */
 export function deepmergeInto<T extends object>(
@@ -26,7 +26,7 @@ export function deepmergeInto<T extends object>(
 /**
  * Deeply merge objects into a target.
  *
- * @param target  - This object will be mutated with the merge result.
+ * @param target - This object will be mutated with the merge result.
  * @param objects - The objects to merge into the target.
  */
 export function deepmergeInto<
@@ -140,7 +140,10 @@ export function deepmergeIntoCustom<
  *
  * @param options - The options the user specified
  */
-function getIntoUtils<M, MM extends DeepMergeBuiltInMetaData>(
+function getIntoUtils<
+  M,
+  MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData
+>(
   options: DeepMergeIntoOptions<M, MM>,
   customizedDeepmergeInto: DeepMergeMergeIntoFunctionUtils<
     M,
@@ -154,7 +157,7 @@ function getIntoUtils<M, MM extends DeepMergeBuiltInMetaData>(
       ...Object.fromEntries(
         Object.entries(options)
           .filter(([key, option]) =>
-            Object.prototype.hasOwnProperty.call(defaultMergeIntoFunctions, key)
+            Object.hasOwn(defaultMergeIntoFunctions, key)
           )
           .map(([key, option]) =>
             option === false
@@ -183,7 +186,7 @@ export function mergeUnknownsInto<
   Ts extends ReadonlyArray<unknown>,
   U extends DeepMergeMergeIntoFunctionUtils<M, MM>,
   M,
-  MM extends DeepMergeBuiltInMetaData
+  MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData
 >(
   m_target: Reference<unknown>,
   values: Ts,
@@ -200,9 +203,7 @@ export function mergeUnknownsInto<
 
   const type = getObjectType(m_target.value);
 
-  // eslint-disable-next-line functional/no-conditional-statements -- add an early escape for better performance.
   if (type !== ObjectType.NOT && type !== ObjectType.OTHER) {
-    // eslint-disable-next-line functional/no-loop-statements -- using a loop here is more performant than mapping every value and then testing every value.
     for (let m_index = 1; m_index < values.length; m_index++) {
       if (getObjectType(values[m_index]) === type) {
         continue;
@@ -264,7 +265,7 @@ export function mergeUnknownsInto<
 function mergeRecordsInto<
   U extends DeepMergeMergeIntoFunctionUtils<M, MM>,
   M,
-  MM extends DeepMergeBuiltInMetaData
+  MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData
 >(
   m_target: Reference<Record<PropertyKey, unknown>>,
   values: ReadonlyArray<Readonly<Record<PropertyKey, unknown>>>,
@@ -297,7 +298,7 @@ function mergeRecordsInto<
 function mergeArraysInto<
   U extends DeepMergeMergeIntoFunctionUtils<M, MM>,
   M,
-  MM extends DeepMergeBuiltInMetaData
+  MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData
 >(
   m_target: Reference<unknown[]>,
   values: ReadonlyArray<ReadonlyArray<unknown>>,
@@ -325,7 +326,7 @@ function mergeArraysInto<
 function mergeSetsInto<
   U extends DeepMergeMergeIntoFunctionUtils<M, MM>,
   M,
-  MM extends DeepMergeBuiltInMetaData
+  MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData
 >(
   m_target: Reference<Set<unknown>>,
   values: ReadonlyArray<Readonly<ReadonlySet<unknown>>>,
@@ -348,7 +349,7 @@ function mergeSetsInto<
 function mergeMapsInto<
   U extends DeepMergeMergeIntoFunctionUtils<M, MM>,
   M,
-  MM extends DeepMergeBuiltInMetaData
+  MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData
 >(
   m_target: Reference<Map<unknown, unknown>>,
   values: ReadonlyArray<Readonly<ReadonlyMap<unknown, unknown>>>,
@@ -371,7 +372,7 @@ function mergeMapsInto<
 function mergeOthersInto<
   U extends DeepMergeMergeIntoFunctionUtils<M, MM>,
   M,
-  MM extends DeepMergeBuiltInMetaData
+  MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData
 >(
   m_target: Reference<unknown>,
   values: ReadonlyArray<unknown>,

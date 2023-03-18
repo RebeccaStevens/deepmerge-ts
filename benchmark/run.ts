@@ -11,77 +11,75 @@ import { merge as lodashMerge } from "lodash";
 
 const benchmarkDataFile = path.join(__dirname, "data.json");
 
-void (async () => {
-  const benchmarkDataSets: any[][] = await fs
-    .access(benchmarkDataFile, fsConstants.R_OK)
-    .then(async () => {
-      console.log("Loading benchmark data file.");
-      const data = await fs.readFile(benchmarkDataFile, { encoding: "utf8" });
-      return JSON.parse(data);
-    })
-    .catch(async (error) => {
-      if (error?.code !== "ENOENT") {
-        throw error;
-      }
-      console.log("No benchmark data file found. Generating benchmark data.");
+const benchmarkDataSets: any[][] = await fs
+  .access(benchmarkDataFile, fsConstants.R_OK)
+  .then(async () => {
+    console.log("Loading benchmark data file.");
+    const data = await fs.readFile(benchmarkDataFile, { encoding: "utf8" });
+    return JSON.parse(data);
+  })
+  .catch(async (error) => {
+    if (error?.code !== "ENOENT") {
+      throw error;
+    }
+    console.log("No benchmark data file found. Generating benchmark data.");
 
-      const data = [
-        generateBenchmarkDataArray(2, 4, 15),
-        generateBenchmarkDataArray(100, 10, 4),
-      ];
+    const data = [
+      generateBenchmarkDataArray(2, 4, 15),
+      generateBenchmarkDataArray(100, 10, 4),
+    ];
 
-      await fs.writeFile(benchmarkDataFile, JSON.stringify(data), {
-        encoding: "utf8",
-      });
-
-      return data;
+    await fs.writeFile(benchmarkDataFile, JSON.stringify(data), {
+      encoding: "utf8",
     });
 
-  for (let m_i = 0; m_i < benchmarkDataSets.length; m_i++) {
-    const benchmarkData = benchmarkDataSets[m_i];
-    const suite = new Benchmark.Suite();
+    return data;
+  });
 
-    console.log(
-      `\nRunning benchmarks for data set ${m_i + 1} of ${
-        benchmarkDataSets.length
-      }:\n`
-    );
+for (let m_i = 0; m_i < benchmarkDataSets.length; m_i++) {
+  const benchmarkData = benchmarkDataSets[m_i];
+  const suite = new Benchmark.Suite();
 
-    // add tests
-    suite
-      .add("deepmerge-ts", () => {
-        deepmergeTs(...benchmarkData);
-      })
-      .add("deepmerge", () => {
-        deepmerge(benchmarkData);
-      })
-      .add("merge-anything", () => {
-        (mergeAnything as any)(...benchmarkData);
-      })
-      .add("object-accumulator", () => {
-        ObjectAccumulator.from(benchmarkData).merge();
-      })
-      .add("lowdash merge", () => {
-        lodashMerge({}, benchmarkData);
-      })
-      .on("cycle", (event: any) => {
-        console.log(String(event.target));
-      })
-      // eslint-disable-next-line func-names
-      .on("complete", function () {
-        // @ts-expect-error When need to access the "this" value
-        // eslint-disable-next-line unicorn/no-this-assignment, @typescript-eslint/no-this-alias, no-invalid-this
-        const results = this;
+  console.log(
+    `\nRunning benchmarks for data set ${m_i + 1} of ${
+      benchmarkDataSets.length
+    }:\n`
+  );
 
-        console.log(
-          `\nFastest is ${results.filter("fastest").map("name")} for data set ${
-            m_i + 1
-          } of ${benchmarkDataSets.length}`
-        );
-      })
-      .run({ async: false });
-  }
-})();
+  // add tests
+  suite
+    .add("deepmerge-ts", () => {
+      deepmergeTs(...benchmarkData);
+    })
+    .add("deepmerge", () => {
+      deepmerge(benchmarkData);
+    })
+    .add("merge-anything", () => {
+      (mergeAnything as any)(...benchmarkData);
+    })
+    .add("object-accumulator", () => {
+      ObjectAccumulator.from(benchmarkData).merge();
+    })
+    .add("lowdash merge", () => {
+      lodashMerge({}, benchmarkData);
+    })
+    .on("cycle", (event: any) => {
+      console.log(String(event.target));
+    })
+    // eslint-disable-next-line func-names
+    .on("complete", function () {
+      // @ts-expect-error When need to access the "this" value
+      // eslint-disable-next-line unicorn/no-this-assignment, @typescript-eslint/no-this-alias, no-invalid-this
+      const results = this;
+
+      console.log(
+        `\nFastest is ${results.filter("fastest").map("name")} for data set ${
+          m_i + 1
+        } of ${benchmarkDataSets.length}`
+      );
+    })
+    .run({ async: false });
+}
 
 function generateBenchmarkDataArray(items, maxProperties, maxDepth) {
   const data: object[] = [];

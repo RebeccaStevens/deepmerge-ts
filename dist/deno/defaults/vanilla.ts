@@ -36,7 +36,7 @@ export function mergeRecords<
   U extends DeepMergeMergeFunctionUtils<M, MM>,
   MF extends DeepMergeMergeFunctionsURIs,
   M,
-  MM extends DeepMergeBuiltInMetaData
+  MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData
 >(
   values: Ts,
   utils: U,
@@ -130,5 +130,5 @@ export function mergeMaps<
  * Get the last value in the given array.
  */
 export function mergeOthers<Ts extends ReadonlyArray<unknown>>(values: Ts) {
-  return values[values.length - 1];
+  return values.at(-1);
 }

@@ -1,6 +1,39 @@
 # Changelog
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
+# [5.0.0-next.4](https://github.com/RebeccaStevens/deepmerge-ts/compare/v5.0.0-next.3...v5.0.0-next.4) (2023-03-18)
+
+
+### Bug Fixes
+
+* remove unneeded eslint disable ([be28290](https://github.com/RebeccaStevens/deepmerge-ts/commit/be28290a3efb533ab339ef88e297b3e057708603))
+* use default MM generics ([944b428](https://github.com/RebeccaStevens/deepmerge-ts/commit/944b428e3779904c32d071a2761753872ab717f4)), closes [#304](https://github.com/RebeccaStevens/deepmerge-ts/issues/304)
+
+# [5.0.0-next.3](https://github.com/RebeccaStevens/deepmerge-ts/compare/v5.0.0-next.2...v5.0.0-next.3) (2023-03-18)
+
+
+### Bug Fixes
+
+* add missing dev dep ([df4add2](https://github.com/RebeccaStevens/deepmerge-ts/commit/df4add2a0aba101b0b00527cb105d194e17bdfaf))
+
+# [5.0.0-next.2](https://github.com/RebeccaStevens/deepmerge-ts/compare/v5.0.0-next.1...v5.0.0-next.2) (2023-02-06)
+
+
+### Features
+
+* create deepmergeInto function ([9c350a0](https://github.com/RebeccaStevens/deepmerge-ts/commit/9c350a051c16534907da459ff466a353b90d5505)), closes [#51](https://github.com/RebeccaStevens/deepmerge-ts/issues/51)
+
+# [5.0.0-next.1](https://github.com/RebeccaStevens/deepmerge-ts/compare/v4.2.2...v5.0.0-next.1) (2023-02-02)
+
+
+### chore
+
+* drop support for node 12 and 14 ([77016f7](https://github.com/RebeccaStevens/deepmerge-ts/commit/77016f70664b6f5857b9f278912a31aa219be80d))
+
+
+### BREAKING CHANGES
+
+* drop support for node 12 and 14
 # [4.3.0](https://github.com/RebeccaStevens/deepmerge-ts/compare/v4.2.2...v4.3.0) (2023-02-06)
 
 

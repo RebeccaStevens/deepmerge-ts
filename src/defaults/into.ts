@@ -31,7 +31,7 @@ export function mergeRecords<
   Ts extends ReadonlyArray<Record<PropertyKey, unknown>>,
   U extends DeepMergeMergeIntoFunctionUtils<M, MM>,
   M,
-  MM extends DeepMergeBuiltInMetaData
+  MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData
 >(
   m_target: Reference<Record<PropertyKey, unknown>>,
   values: Ts,
@@ -129,5 +129,5 @@ export function mergeOthers<Ts extends ReadonlyArray<unknown>>(
   m_target: Reference<unknown>,
   values: Ts
 ) {
-  m_target.value = values[values.length - 1];
+  m_target.value = values.at(-1);
 }

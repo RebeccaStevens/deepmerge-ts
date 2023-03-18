@@ -1,3 +1,6 @@
+/benchmark/data.json
 /CHANGELOG.md
+/coverage
 /dist/
 /types-legacy/
+pnpm-lock.yaml

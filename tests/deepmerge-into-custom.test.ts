@@ -12,20 +12,6 @@ import { getKeys } from "../src/utils.js";
 
 import { areAllNumbers, hasProp } from "./utils.js";
 
-declare module "ava" {
-  interface DeepEqualAssertion {
-    /**
-     * Assert that `actual` is [deeply equal](https://github.com/concordancejs/concordance#comparison-details) to
-     * `expected`, returning a boolean indicating whether the assertion passed.
-     */
-    <Actual extends Expected, Expected>(
-      actual: Actual,
-      expected: Expected,
-      message?: string
-    ): expected is Actual;
-  }
-}
-
 test("works just like non-customized version when no options passed", (t) => {
   const v = { first: true };
   const x = { second: false };
@@ -305,8 +291,8 @@ test("key path based merging", (t) => {
       if (
         meta !== undefined &&
         meta.length >= 2 &&
-        meta[meta.length - 2] === "bar" &&
-        meta[meta.length - 1] === "baz"
+        meta.at(-2) === "bar" &&
+        meta.at(-1) === "baz"
       ) {
         target.value = "special merge";
         return;
@@ -400,7 +386,7 @@ test("key path based array merging", (t) => {
           return;
         }
 
-        const id = idPath[idPath.length - 1];
+        const id = idPath.at(-1)!;
         const valuesById = values.reduce<
           Map<unknown, Array<Record<PropertyKey, unknown>>>
         >((carry, current) => {
@@ -462,7 +448,7 @@ test("custom merge with parents", (t) => {
 
         const goodValues = values.filter(
           (value, index): value is number =>
-            parents[index].isBadObject !== true && typeof value === "number"
+            parents[index]!["isBadObject"] !== true && typeof value === "number"
         );
 
         if (key === "sum") {

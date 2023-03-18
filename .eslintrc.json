@@ -3,9 +3,7 @@
   "env": {
     "node": true
   },
-  "plugins": [
-    "prettier"
-  ],
+  "plugins": ["prettier"],
   "extends": [
     "@rebeccastevens/eslint-config/modern",
     "@rebeccastevens/eslint-config/typescript",
@@ -26,39 +24,35 @@
     "/tests/modules/",
     "/tests/types/",
     "/types-legacy/",
-    "/**/*.cjs",
-    "/**/*.js",
     "/**/*.md"
   ],
-  "rules": {
-    "import/no-relative-parent-imports": "off",
-    "node/no-extraneous-import": ["error", {
-      "allowModules": ["deepmerge-ts"]
-    }],
-    "unicorn/prefer-at": "off",
-    "unicorn/prefer-top-level-await": "off",
-    "prefer-object-has-own": "off"
-  },
   "overrides": [
     {
       "files": "src/**",
       "env": {
         "node": false
-      },
-      "rules": {
       }
     },
     {
-      "files": "tests/**",
+      "files": ["**/*.test.ts"],
+      "plugins": ["ava"],
+      "extends": ["plugin:ava/recommended", "plugin:functional/off"],
       "rules": {
-        "import/no-useless-path-segments": "off",
-        "lines-between-class-members":"off"
-      }
-    },
-    {
-      "files": "tests/**/*.test-d.ts",
-      "rules": {
-        "@typescript-eslint/naming-convention":"off"
+        "@typescript-eslint/no-empty-function": "off",
+        "@typescript-eslint/no-unsafe-argument": "off",
+        "@typescript-eslint/no-unsafe-assignment": "off",
+        "@typescript-eslint/no-unsafe-call": "off",
+        "@typescript-eslint/no-unsafe-member-access": "off",
+        "@typescript-eslint/no-unsafe-return": "off",
+        "@typescript-eslint/restrict-template-expressions": "off",
+        "eslint-comments/disable-enable-pair": "off",
+        "import/no-relative-parent-imports": "off",
+        "jsdoc/require-jsdoc": "off",
+        "lines-between-class-members": "off",
+        "max-classes-per-file": "off",
+        "sonarjs/no-duplicate-string": "off",
+        "sonarjs/no-identical-functions": "off",
+        "unicorn/consistent-function-scoping": "off"
       }
     }
   ]

@@ -4,7 +4,7 @@
 
 [![npm version](https://img.shields.io/npm/v/deepmerge-ts.svg)](https://www.npmjs.com/package/deepmerge-ts)
 [![deno version](https://img.shields.io/github/v/tag/RebeccaStevens/deepmerge-ts?label=deno&sort=semver)](https://deno.land/x/deepmergets)
-[![CI](https://github.com/RebeccaStevens/deepmerge-ts/actions/workflows/ci.yml/badge.svg)](https://github.com/RebeccaStevens/deepmerge-ts/actions/workflows/ci.yml)
+[![CI](https://github.com/RebeccaStevens/deepmerge-ts/actions/workflows/release.yml/badge.svg)](https://github.com/RebeccaStevens/deepmerge-ts/actions/workflows/release.yml)
 [![Coverage Status](https://codecov.io/gh/RebeccaStevens/deepmerge-ts/branch/main/graph/badge.svg?token=MVpR1oAbIT)](https://codecov.io/gh/RebeccaStevens/deepmerge-ts)\
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 [![GitHub Discussions](https://img.shields.io/github/discussions/RebeccaStevens/deepmerge-ts?style=flat-square)](https://github.com/RebeccaStevens/deepmerge-ts/discussions)
@@ -14,7 +14,7 @@
 
 Deeply merge 2 or more objects respecting type information.
 
-![classic merge animation](./assets/header.png)
+![smart merge diagram](./assets/header.png)
 
 </div>
 
