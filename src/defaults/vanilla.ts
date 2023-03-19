@@ -44,7 +44,7 @@ export function mergeRecords<
 ): DeepMergeRecordsDefaultHKT<Ts, MF, M> {
   const result: Record<PropertyKey, unknown> = {};
 
-  /* eslint-disable functional/no-loop-statements, functional/no-conditional-statements -- using a loop here is more performant. */
+  /* eslint-disable functional/no-loop-statements, functional/no-conditional-statements, functional/no-expression-statements, functional/immutable-data -- using imperative code here is more performant. */
 
   for (const key of getKeys(values)) {
     const propValues = [];
@@ -86,7 +86,7 @@ export function mergeRecords<
     }
   }
 
-  /* eslint-enable functional/no-loop-statements, functional/no-conditional-statements */
+  /* eslint-enable functional/no-loop-statements, functional/no-conditional-statements, functional/no-expression-statements, functional/immutable-data */
 
   return result as DeepMergeRecordsDefaultHKT<Ts, MF, M>;
 }

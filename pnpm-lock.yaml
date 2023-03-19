@@ -4,7 +4,7 @@ specifiers:
   '@commitlint/cli': 17.4.4
   '@commitlint/config-conventional': 17.4.4
   '@cspell/dict-cryptocurrencies': 3.0.1
-  '@rebeccastevens/eslint-config': 1.6.2
+  '@rebeccastevens/eslint-config': 1.6.3
   '@rollup/plugin-json': 6.0.0
   '@rollup/plugin-node-resolve': 15.0.1
   '@rollup/plugin-typescript': 11.0.0
@@ -62,7 +62,7 @@ devDependencies:
   '@commitlint/cli': 17.4.4
   '@commitlint/config-conventional': 17.4.4
   '@cspell/dict-cryptocurrencies': 3.0.1
-  '@rebeccastevens/eslint-config': 1.6.2_smu2lgjfaepawd5ahztsu4r23e
+  '@rebeccastevens/eslint-config': 1.6.3_smu2lgjfaepawd5ahztsu4r23e
   '@rollup/plugin-json': 6.0.0_rollup@3.19.1
   '@rollup/plugin-node-resolve': 15.0.1_rollup@3.19.1
   '@rollup/plugin-typescript': 11.0.0_fdjuvc2nv6pux6mopwweaawpgm
@@ -978,8 +978,8 @@ packages:
       config-chain: 1.1.13
     dev: true
 
-  /@rebeccastevens/eslint-config/1.6.2_smu2lgjfaepawd5ahztsu4r23e:
-    resolution: {integrity: sha512-nAzjLbqzsTDg9vrkKq1AXsbTFo0hWoH9MjN0XQE/HROOQP6sbAmhrMlObRDMwYAhOjFJBb8NCHQOczxbqdDMwQ==}
+  /@rebeccastevens/eslint-config/1.6.3_smu2lgjfaepawd5ahztsu4r23e:
+    resolution: {integrity: sha512-P2L91cRfT6h4OdtOZ+YjIYVfEmh1NkHhYih2dsUzl7Gj2LgidAWs5IOfN6NeGhF35sT/9ylJmZaU/5CKenC90g==}
     engines: {node: '>=18.12.1'}
     peerDependencies:
       '@typescript-eslint/eslint-plugin': '*'
@@ -999,7 +999,7 @@ packages:
     dependencies:
       '@typescript-eslint/eslint-plugin': 5.55.0_qsnvknysi52qtaxqdyqyohkcku
       '@typescript-eslint/parser': 5.55.0_j4766f7ecgqbon3u7zlxn5zszu
-      deepmerge-ts: 4.3.0
+      deepmerge-ts: 5.0.0
       eslint: 8.36.0
       eslint-import-resolver-typescript: 3.5.3_eakrjjutlgqjxe5ydhtnd4qdmy
       eslint-plugin-eslint-comments: 3.2.0_eslint@8.36.0
@@ -2702,6 +2702,11 @@ packages:
   /deepmerge-ts/4.3.0:
     resolution: {integrity: sha512-if3ZYdkD2dClhnXR5reKtG98cwyaRT1NeugQoAPTTfsOpV9kqyeiBF9Qa5RHjemb3KzD5ulqygv6ED3t5j9eJw==}
     engines: {node: '>=12.4.0'}
+    dev: true
+
+  /deepmerge-ts/5.0.0:
+    resolution: {integrity: sha512-esq9xUO8+CQCG63IlpkoOBNlpm1m4WBm0NRLFrGL/dcgzqWi1tmTLfG7QTvffqYt6T+dS+xaxrHxdexqGWkV1g==}
+    engines: {node: '>=16.0.0'}
     dev: true
 
   /deepmerge/4.3.0:

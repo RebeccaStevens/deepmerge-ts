@@ -179,7 +179,7 @@ type DeepMergeMergeIntoFunctions<
 /**
  * The utils provided to the merge functions.
  */
-// eslint-disable-next-line functional/no-mixed-types
+
 export type DeepMergeMergeFunctionUtils<
   in out M,
   MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData
@@ -209,7 +209,7 @@ export type DeepMergeMergeIntoFunctionUtils<
   deepmergeInto: <Target extends object, Ts extends ReadonlyArray<unknown>>(
     target: Target,
     ...values: Ts
-  ) => void;
+  ) => void; // eslint-disable-line functional/no-return-void
   actions: Readonly<{
     defaultMerge: symbol;
   }>;
