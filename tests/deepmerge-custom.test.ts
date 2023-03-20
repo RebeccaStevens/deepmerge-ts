@@ -74,9 +74,12 @@ test("custom merge arrays", (t) => {
     foo: { bar: { baz: { qux: ["1a", "2b", "3c"] } } },
   };
 
-  const customizedDeepmerge = deepmergeCustom<{
-    DeepMergeArraysURI: "CustomArrays1";
-  }>({
+  const customizedDeepmerge = deepmergeCustom<
+    unknown,
+    {
+      DeepMergeArraysURI: "CustomArrays1";
+    }
+  >({
     mergeArrays: (arrays) => {
       const maxLength = Math.max(...arrays.map((array) => array.length));
 
@@ -140,10 +143,13 @@ test("custom merge arrays of records", (t) => {
     ],
   };
 
-  const customizedDeepmerge = deepmergeCustom<{
-    DeepMergeArraysURI: "CustomArrays2";
-    DeepMergeOthersURI: "CustomOthers2";
-  }>({
+  const customizedDeepmerge = deepmergeCustom<
+    unknown,
+    {
+      DeepMergeArraysURI: "CustomArrays2";
+      DeepMergeOthersURI: "CustomOthers2";
+    }
+  >({
     mergeArrays: (arrays, utils) => {
       const maxLength = Math.max(...arrays.map((array) => array.length));
       const result: unknown[] = [];
@@ -214,9 +220,12 @@ test("custom merge records", (t) => {
     ],
   ];
 
-  const customizedDeepmerge = deepmergeCustom<{
-    DeepMergeRecordsURI: "CustomRecords3";
-  }>({
+  const customizedDeepmerge = deepmergeCustom<
+    unknown,
+    {
+      DeepMergeRecordsURI: "CustomRecords3";
+    }
+  >({
     mergeRecords: (records, utils, meta) =>
       Object.entries(
         utils.defaultMergeFunctions.mergeRecords(records, utils, meta)
@@ -246,9 +255,12 @@ test("custom don't merge arrays", (t) => {
 
   const expected = { foo: [7, 8] } as const;
 
-  const customizedDeepmerge = deepmergeCustom<{
-    DeepMergeArraysURI: DeepMergeLeafURI;
-  }>({
+  const customizedDeepmerge = deepmergeCustom<
+    unknown,
+    {
+      DeepMergeArraysURI: DeepMergeLeafURI;
+    }
+  >({
     mergeArrays: false,
   });
 
@@ -282,9 +294,12 @@ test("custom merge dates", (t) => {
 
   const expected = { foo: [x.foo, y.foo, z.foo] } as const;
 
-  const customizedDeepmerge = deepmergeCustom<{
-    DeepMergeOthersURI: "MergeDates1";
-  }>({
+  const customizedDeepmerge = deepmergeCustom<
+    unknown,
+    {
+      DeepMergeOthersURI: "MergeDates1";
+    }
+  >({
     mergeOthers: (values, utils) => {
       if (values.every((value) => value instanceof Date)) {
         return values;
@@ -364,6 +379,7 @@ test("key path based merging", (t) => {
   };
 
   const customizedDeepmerge = deepmergeCustom<
+    unknown,
     {
       DeepMergeOthersURI: "KeyPathBasedMerge";
     },
@@ -711,9 +727,12 @@ test("merging class object as record", (t) => {
     foo: false,
   };
 
-  const customizedDeepmerge = deepmergeCustom<{
-    DeepMergeOthersURI: "CustomOthers3";
-  }>({
+  const customizedDeepmerge = deepmergeCustom<
+    unknown,
+    {
+      DeepMergeOthersURI: "CustomOthers3";
+    }
+  >({
     mergeOthers: (values, utils, meta) => {
       let m_allRecords = true;
       const records = values.map((v) => {

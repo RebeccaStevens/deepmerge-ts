@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/consistent-type-definitions, @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 
 import test from "ava";
 import _ from "lodash";
@@ -280,7 +280,10 @@ test("key path based merging", (t) => {
     bar: { baz: "special merge", qux: 9 },
   };
 
-  const customizedDeepmerge = deepmergeIntoCustom<ReadonlyArray<PropertyKey>>({
+  const customizedDeepmerge = deepmergeIntoCustom<
+    unknown,
+    ReadonlyArray<PropertyKey>
+  >({
     metaDataUpdater: (previousMeta, metaMeta) => {
       if (metaMeta.key === undefined) {
         return previousMeta ?? [];
