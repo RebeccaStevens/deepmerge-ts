@@ -3,14 +3,14 @@
 import test from "ava";
 import _ from "lodash";
 
-import { deepmergeCustom } from "../src/index.js";
+import { deepmergeCustom } from "deepmerge-ts";
 import type {
   DeepMergeLeafURI,
   DeepMergeMergeFunctionsURIs,
   DeepMergeRecordsDefaultHKT,
   DeepMergeLeaf,
   DeepMergeOptions,
-} from "../src/index.js";
+} from "deepmerge-ts";
 
 import { areAllNumbers, hasProp } from "./utils.js";
 
