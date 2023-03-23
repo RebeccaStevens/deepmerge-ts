@@ -26,13 +26,11 @@ function getBoolean(value: unknown) {
 const buildTypesOnly = getBoolean(process.env["BUILD_TYPES_ONLY"]);
 
 const common = defineConfig({
-  input: "src/index.ts",
-
   output: {
     sourcemap: false,
   },
 
-  external: [],
+  external: ["deepmerge-ts"],
 
   treeshake: {
     annotations: true,
@@ -42,22 +40,7 @@ const common = defineConfig({
   },
 });
 
-const runtimes = defineConfig({
-  ...common,
-
-  output: [
-    {
-      ...common.output,
-      file: pkg.exports.import,
-      format: "esm",
-    },
-    {
-      ...common.output,
-      file: pkg.exports.require,
-      format: "cjs",
-    },
-  ],
-
+const commonRuntimes = defineConfig({
   plugins: [
     rollupPluginAutoExternal(),
     rollupPluginNodeResolve(),
@@ -70,20 +53,7 @@ const runtimes = defineConfig({
   ],
 });
 
-const types = defineConfig({
-  ...common,
-
-  output: [
-    {
-      file: pkg.exports.types.import,
-      format: "esm",
-    },
-    {
-      file: pkg.exports.types.require,
-      format: "cjs",
-    },
-  ],
-
+const commonTypes = defineConfig({
   plugins: [
     rollupPluginTypescript({
       tsconfig: "tsconfig.build.json",
@@ -97,4 +67,82 @@ const types = defineConfig({
   ] as Plugin[],
 });
 
-export default buildTypesOnly ? types : [runtimes, types];
+const runtimes = defineConfig({
+  ...common,
+  ...commonRuntimes,
+
+  input: "src/index.ts",
+
+  output: [
+    {
+      ...common.output,
+      file: pkg.exports["."].import,
+      format: "esm",
+    },
+    {
+      ...common.output,
+      file: pkg.exports["."].require,
+      format: "cjs",
+    },
+  ],
+});
+
+const types = defineConfig({
+  ...common,
+  ...commonTypes,
+
+  input: "src/index.ts",
+
+  output: [
+    {
+      file: pkg.exports["."].types.import,
+      format: "esm",
+    },
+    {
+      file: pkg.exports["."].types.require,
+      format: "cjs",
+    },
+  ],
+});
+
+const presetRuntimes = defineConfig({
+  ...common,
+  ...commonRuntimes,
+
+  input: "src/presets/index.ts",
+
+  output: [
+    {
+      ...common.output,
+      file: pkg.exports["./presets"].import,
+      format: "esm",
+    },
+    {
+      ...common.output,
+      file: pkg.exports["./presets"].require,
+      format: "cjs",
+    },
+  ],
+});
+
+const presetTypes = defineConfig({
+  ...common,
+  ...commonTypes,
+
+  input: "src/presets/index.ts",
+
+  output: [
+    {
+      file: pkg.exports["./presets"].types.import,
+      format: "esm",
+    },
+    {
+      file: pkg.exports["./presets"].types.require,
+      format: "cjs",
+    },
+  ],
+});
+
+export default buildTypesOnly
+  ? [types, presetTypes]
+  : [runtimes, presetRuntimes, types, presetTypes];

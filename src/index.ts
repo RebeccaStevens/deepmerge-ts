@@ -21,4 +21,5 @@ export type {
   DeepMergeRecordsDefaultHKT,
   DeepMergeSetsDefaultHKT,
   Reference as DeepMergeValueReference,
+  GetDeepMergeMergeFunctionsURIs,
 } from "./types/index.js";

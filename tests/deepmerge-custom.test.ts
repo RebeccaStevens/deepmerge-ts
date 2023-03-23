@@ -56,11 +56,11 @@ test("custom merge strings", (t) => {
   t.deepEqual(merged, expected);
 });
 
-declare module "../src/types" {
+declare module "deepmerge-ts" {
   interface DeepMergeMergeFunctionURItoKind<
     Ts extends ReadonlyArray<unknown>,
     MF extends DeepMergeMergeFunctionsURIs,
-    M
+    in out M
   > {
     readonly CustomArrays1: string[];
   }
@@ -101,11 +101,11 @@ test("custom merge arrays", (t) => {
   t.deepEqual(merged, expected);
 });
 
-declare module "../src/types" {
+declare module "deepmerge-ts" {
   interface DeepMergeMergeFunctionURItoKind<
     Ts extends ReadonlyArray<unknown>,
     MF extends DeepMergeMergeFunctionsURIs,
-    M
+    in out M
   > {
     readonly CustomArrays2: Ts extends Readonly<
       readonly [ReadonlyArray<unknown>]
@@ -176,11 +176,11 @@ test("custom merge arrays of records", (t) => {
   t.deepEqual(merged, expected);
 });
 
-declare module "../src/types" {
+declare module "deepmerge-ts" {
   interface DeepMergeMergeFunctionURItoKind<
     Ts extends ReadonlyArray<unknown>,
     MF extends DeepMergeMergeFunctionsURIs,
-    M
+    in out M
   > {
     readonly CustomRecords3: Entries<DeepMergeRecordsDefaultHKT<Ts, MF, M>>;
   }
@@ -228,11 +228,11 @@ test("custom merge records", (t) => {
   t.deepEqual(merged, expected);
 });
 
-declare module "../src/types" {
+declare module "deepmerge-ts" {
   interface DeepMergeMergeFunctionURItoKind<
     Ts extends ReadonlyArray<unknown>,
     MF extends DeepMergeMergeFunctionsURIs,
-    M
+    in out M
   > {
     readonly NoArrayMerge1: DeepMergeLeaf<Ts>;
   }
@@ -257,11 +257,11 @@ test("custom don't merge arrays", (t) => {
   t.deepEqual(merged, expected);
 });
 
-declare module "../src/types" {
+declare module "deepmerge-ts" {
   interface DeepMergeMergeFunctionURItoKind<
     Ts extends ReadonlyArray<unknown>,
     MF extends DeepMergeMergeFunctionsURIs,
-    M
+    in out M
   > {
     readonly MergeDates1: EveryIsDate<Ts> extends true ? Ts : DeepMergeLeaf<Ts>;
   }
@@ -336,7 +336,7 @@ test("key based merging", (t) => {
   t.deepEqual(merged, expected);
 });
 
-declare module "../src/types" {
+declare module "deepmerge-ts" {
   interface DeepMergeMergeFunctionURItoKind<
     Ts extends Readonly<ReadonlyArray<unknown>>,
     MF extends DeepMergeMergeFunctionsURIs,
@@ -676,11 +676,11 @@ test("skip property", (t) => {
   t.deepEqual(merged, expected);
 });
 
-declare module "../src/types" {
+declare module "deepmerge-ts" {
   interface DeepMergeMergeFunctionURItoKind<
     Ts extends ReadonlyArray<unknown>,
     MF extends DeepMergeMergeFunctionsURIs,
-    M
+    in out M
   > {
     readonly CustomOthers3: Ts[number] extends object
       ? DeepMergeRecordsDefaultHKT<

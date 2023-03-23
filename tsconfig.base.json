@@ -23,7 +23,12 @@
     "sourceMap": false,
     "strict": true,
     "target": "ES2022",
-    "useUnknownInCatchVariables": true
+    "useUnknownInCatchVariables": true,
+    "rootDir": ".",
+    "paths": {
+      "deepmerge-ts": ["./src/index.ts"],
+      "deepmerge-ts/presets": ["./src/presets/index.ts"]
+    }
   },
   "exclude": ["benchmark/", "dist/", "types-legacy/"]
 }
