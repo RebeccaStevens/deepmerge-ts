@@ -2,7 +2,7 @@ import { createRequire } from "node:module";
 
 import test from "ava";
 
-import { deepmergeInto } from "../src/index.js";
+import { deepmergeInto } from "deepmerge-ts";
 
 test("does not modify the target when nothing to merge", (t) => {
   const target = { prop: 1 };

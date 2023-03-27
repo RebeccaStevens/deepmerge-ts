@@ -1,13 +1,14 @@
-/* eslint-disable @typescript-eslint/consistent-type-definitions, @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 
 import test from "ava";
 import _ from "lodash";
 
-import { deepmergeIntoCustom } from "../src/index.js";
+import { deepmergeIntoCustom } from "deepmerge-ts";
 import type {
   DeepMergeValueReference,
   DeepMergeIntoOptions,
-} from "../src/index.js";
+} from "deepmerge-ts";
+
 import { getKeys } from "../src/utils.js";
 
 import { areAllNumbers, hasProp } from "./utils.js";

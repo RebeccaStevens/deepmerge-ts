@@ -2,7 +2,7 @@ import { createRequire } from "node:module";
 
 import test from "ava";
 
-import { deepmerge } from "../src/index.js";
+import { deepmerge } from "deepmerge-ts";
 
 test("return undefined when nothing to merge", (t) => {
   // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
