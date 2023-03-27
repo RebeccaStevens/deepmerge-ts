@@ -4,10 +4,11 @@ const avaConfig = {
   extensions: {
     ts: "module",
   },
-  nodeArguments: ["--loader=ts-node/esm"],
-  environmentVariables: {
-    TS_NODE_PROJECT: "tsconfig.json",
-  },
+  nodeArguments: [
+    "--no-warnings",
+    "--loader=ts-paths-esm-loader/transpile-only",
+    "--experimental-specifier-resolution=node",
+  ],
 };
 
 export default avaConfig;
