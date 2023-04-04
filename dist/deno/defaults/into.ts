@@ -1,14 +1,10 @@
 import { mergeUnknownsInto } from "../deepmerge-into.ts";
-import type {
-  DeepMergeBuiltInMetaData,
-  DeepMergeMergeIntoFunctionUtils,
-  Reference,
-} from "../types/index.ts";
 import {
-  getIterableOfIterables,
-  getKeys,
-  objectHasProperty,
-} from "../utils.ts";
+  type DeepMergeBuiltInMetaData,
+  type DeepMergeMergeIntoFunctionUtils,
+  type Reference,
+} from "../types/index.ts";
+import { getIterableOfIterables, getKeys, objectHasProperty } from "../utils.ts";
 
 /**
  * The default merge functions.
@@ -38,8 +34,6 @@ export function mergeRecords<
   utils: U,
   meta: M | undefined
 ): void {
-  /* eslint-disable functional/no-loop-statements, functional/no-conditional-statements -- using a loop here is more performant. */
-
   for (const key of getKeys(values)) {
     const propValues = [];
 
@@ -77,8 +71,6 @@ export function mergeRecords<
       m_target.value[key] = propertyTarget.value;
     }
   }
-
-  /* eslint-enable functional/no-loop-statements, functional/no-conditional-statements */
 }
 
 /**

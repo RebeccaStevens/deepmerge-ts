@@ -1,18 +1,18 @@
-import type {
-  DeepMergeHKT,
-  DeepMergeLeafURI,
-  DeepMergeMergeFunctionsURIs,
-  DeepMergeMergeFunctionURItoKind,
+import {
+  type DeepMergeHKT,
+  type DeepMergeLeafURI,
+  type DeepMergeMergeFunctionsURIs,
+  type DeepMergeMergeFunctionURItoKind,
 } from "./merging.ts";
-import type {
-  FlatternAlias,
-  FilterOutNever,
-  OptionalKeysOf,
-  RequiredKeysOf,
-  UnionMapKeys,
-  UnionMapValues,
-  UnionSetValues,
-  ValueOfKey,
+import {
+  type FlatternAlias,
+  type FilterOutNever,
+  type OptionalKeysOf,
+  type RequiredKeysOf,
+  type UnionMapKeys,
+  type UnionMapValues,
+  type UnionSetValues,
+  type ValueOfKey,
 } from "./utils.ts";
 
 /**

@@ -1,4 +1,4 @@
-import type { DeepMergeBuiltInMetaData } from "../types/index.ts";
+import { type DeepMergeBuiltInMetaData } from "../types/index.ts";
 
 /**
  * The default function to update meta data.

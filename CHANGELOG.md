@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
+# [5.1.0](https://github.com/RebeccaStevens/deepmerge-ts/compare/v5.0.0...v5.1.0) (2023-04-04)
+
+
+### Features
+
+* expose some of the internal utils ([a11a03d](https://github.com/RebeccaStevens/deepmerge-ts/commit/a11a03d0fcd5e1caad371c5eb5a19052b8980691))
+
 # [5.0.0](https://github.com/RebeccaStevens/deepmerge-ts/compare/v4.3.0...v5.0.0) (2023-03-18)
 
 

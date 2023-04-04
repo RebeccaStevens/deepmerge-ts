@@ -53,7 +53,7 @@ function getObjectType(object) {
  */
 function getKeys(objects) {
     const keys = new Set();
-    /* eslint-disable functional/no-loop-statements -- using a loop here is more efficient. */
+    /* eslint-disable functional/no-loop-statements, functional/no-expression-statements -- using a loop here is more efficient. */
     for (const object of objects) {
         for (const key of [
             ...Object.keys(object),
@@ -62,7 +62,7 @@ function getKeys(objects) {
             keys.add(key);
         }
     }
-    /* eslint-enable functional/no-loop-statements */
+    /* eslint-enable functional/no-loop-statements, functional/no-expression-statements */
     return keys;
 }
 /**
@@ -81,6 +81,7 @@ function objectHasProperty(object, property) {
  */
 function getIterableOfIterables(iterables) {
     return {
+        // eslint-disable-next-line functional/functional-parameters
         *[Symbol.iterator]() {
             // eslint-disable-next-line functional/no-loop-statements
             for (const iterable of iterables) {
@@ -134,7 +135,7 @@ function isRecord(value) {
  */
 function mergeRecords$2(values, utils, meta) {
     const result = {};
-    /* eslint-disable functional/no-loop-statements, functional/no-conditional-statements -- using a loop here is more performant. */
+    /* eslint-disable functional/no-loop-statements, functional/no-conditional-statements, functional/no-expression-statements, functional/immutable-data -- using imperative code here is more performant. */
     for (const key of getKeys(values)) {
         const propValues = [];
         for (const value of values) {
@@ -165,7 +166,7 @@ function mergeRecords$2(values, utils, meta) {
             result[key] = propertyResult;
         }
     }
-    /* eslint-enable functional/no-loop-statements, functional/no-conditional-statements */
+    /* eslint-enable functional/no-loop-statements, functional/no-conditional-statements, functional/no-expression-statements, functional/immutable-data */
     return result;
 }
 /**
@@ -213,7 +214,9 @@ var defaultMergeFunctions = /*#__PURE__*/Object.freeze({
  *
  * @param objects - The objects to merge.
  */
-function deepmerge(...objects) {
+function deepmerge(
+// eslint-disable-next-line functional/functional-parameters
+...objects) {
     return deepmergeCustom({})(...objects);
 }
 function deepmergeCustom(options, rootMetaData) {
@@ -221,7 +224,9 @@ function deepmergeCustom(options, rootMetaData) {
     /**
      * The customized deepmerge function.
      */
-    function customizedDeepmerge(...objects) {
+    function customizedDeepmerge(
+    // eslint-disable-next-line functional/functional-parameters
+    ...objects) {
         return mergeUnknowns(objects, utils, rootMetaData);
     }
     return customizedDeepmerge;
@@ -262,9 +267,8 @@ function mergeUnknowns(values, utils, meta) {
         return mergeOthers$1(values, utils, meta);
     }
     const type = getObjectType(values[0]);
-    // eslint-disable-next-line functional/no-conditional-statements -- add an early escape for better performance.
+    /* eslint-disable functional/no-loop-statements, functional/no-conditional-statements -- using imperative code here is more performant. */
     if (type !== 0 /* ObjectType.NOT */ && type !== 5 /* ObjectType.OTHER */) {
-        // eslint-disable-next-line functional/no-loop-statements -- using a loop here is more performant than mapping every value and then testing every value.
         for (let m_index = 1; m_index < values.length; m_index++) {
             if (getObjectType(values[m_index]) === type) {
                 continue;
@@ -272,6 +276,7 @@ function mergeUnknowns(values, utils, meta) {
             return mergeOthers$1(values, utils, meta);
         }
     }
+    /* eslint-enable functional/no-loop-statements, functional/no-conditional-statements */
     switch (type) {
         case 1 /* ObjectType.RECORD */: {
             return mergeRecords$1(values, utils, meta);
@@ -376,7 +381,6 @@ function mergeOthers$1(values, utils, meta) {
  * @param values - The records (including the target's value if there is one).
  */
 function mergeRecords(m_target, values, utils, meta) {
-    /* eslint-disable functional/no-loop-statements, functional/no-conditional-statements -- using a loop here is more performant. */
     for (const key of getKeys(values)) {
         const propValues = [];
         for (const value of values) {
@@ -405,7 +409,6 @@ function mergeRecords(m_target, values, utils, meta) {
             m_target.value[key] = propertyTarget.value;
         }
     }
-    /* eslint-enable functional/no-loop-statements, functional/no-conditional-statements */
 }
 /**
  * The default strategy to merge arrays into a target array.
@@ -593,4 +596,4 @@ function mergeOthersInto(m_target, values, utils, meta) {
     }
 }
 
-export { deepmerge, deepmergeCustom, deepmergeInto, deepmergeIntoCustom };
+export { deepmerge, deepmergeCustom, deepmergeInto, deepmergeIntoCustom, getKeys, getObjectType, objectHasProperty };

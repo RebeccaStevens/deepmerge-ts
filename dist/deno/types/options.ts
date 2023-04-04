@@ -1,7 +1,7 @@
-import type { MergeFunctions as MergeIntoFunctions } from "../defaults/into.ts";
-import type { MergeFunctions } from "../defaults/vanilla.ts";
+import { type MergeFunctions as MergeIntoFunctions } from "../defaults/into.ts";
+import { type MergeFunctions } from "../defaults/vanilla.ts";
 
-import type { DeepMergeBuiltInMetaData } from "./merging.ts";
+import { type DeepMergeBuiltInMetaData } from "./merging.ts";
 
 /**
  * The options the user can pass to customize deepmerge.
@@ -179,7 +179,6 @@ type DeepMergeMergeIntoFunctions<
 /**
  * The utils provided to the merge functions.
  */
-// eslint-disable-next-line functional/no-mixed-types
 export type DeepMergeMergeFunctionUtils<
   in out M,
   MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData
@@ -209,7 +208,7 @@ export type DeepMergeMergeIntoFunctionUtils<
   deepmergeInto: <Target extends object, Ts extends ReadonlyArray<unknown>>(
     target: Target,
     ...values: Ts
-  ) => void;
+  ) => void; // eslint-disable-line functional/no-return-void
   actions: Readonly<{
     defaultMerge: symbol;
   }>;

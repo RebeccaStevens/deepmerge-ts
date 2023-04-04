@@ -528,4 +528,40 @@ declare function deepmergeIntoCustom(options: DeepMergeIntoOptions<DeepMergeBuil
  */
 declare function deepmergeIntoCustom<MetaData, MetaMetaData extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData>(options: DeepMergeIntoOptions<MetaData, MetaMetaData>, rootMetaData?: MetaData): <Target extends object, Ts extends ReadonlyArray<unknown>>(target: Target, ...objects: Ts) => void;
 
-export { DeepMergeArraysDefaultHKT, DeepMergeBuiltInMetaData, DeepMergeHKT, DeepMergeIntoOptions, DeepMergeLeaf, DeepMergeLeafHKT, DeepMergeLeafURI, DeepMergeMapsDefaultHKT, DeepMergeMergeFunctionURItoKind, DeepMergeMergeFunctionUtils, DeepMergeMergeFunctionsDefaultURIs, MergeFunctions as DeepMergeMergeFunctionsDefaults, DeepMergeMergeFunctionsURIs, DeepMergeMergeIntoFunctionUtils, MergeFunctions$1 as DeepMergeMergeIntoFunctionsDefaults, DeepMergeOptions, DeepMergeRecordsDefaultHKT, DeepMergeSetsDefaultHKT, Reference as DeepMergeValueReference, deepmerge, deepmergeCustom, deepmergeInto, deepmergeIntoCustom };
+/**
+ * The different types of objects deepmerge-ts support.
+ */
+declare const enum ObjectType {
+    NOT = 0,
+    RECORD = 1,
+    ARRAY = 2,
+    SET = 3,
+    MAP = 4,
+    OTHER = 5
+}
+/**
+ * Get the type of the given object.
+ *
+ * @param object - The object to get the type of.
+ * @returns The type of the given object.
+ */
+declare function getObjectType(object: unknown): ObjectType;
+/**
+ * Get the keys of the given objects including symbol keys.
+ *
+ * Note: Only keys to enumerable properties are returned.
+ *
+ * @param objects - An array of objects to get the keys of.
+ * @returns A set containing all the keys of all the given objects.
+ */
+declare function getKeys(objects: ReadonlyArray<object>): Set<PropertyKey>;
+/**
+ * Does the given object have the given property.
+ *
+ * @param object - The object to test.
+ * @param property - The property to test.
+ * @returns Whether the object has the property.
+ */
+declare function objectHasProperty(object: object, property: PropertyKey): boolean;
+
+export { DeepMergeArraysDefaultHKT, DeepMergeBuiltInMetaData, DeepMergeHKT, DeepMergeIntoOptions, DeepMergeLeaf, DeepMergeLeafHKT, DeepMergeLeafURI, DeepMergeMapsDefaultHKT, DeepMergeMergeFunctionURItoKind, DeepMergeMergeFunctionUtils, DeepMergeMergeFunctionsDefaultURIs, MergeFunctions as DeepMergeMergeFunctionsDefaults, DeepMergeMergeFunctionsURIs, DeepMergeMergeIntoFunctionUtils, MergeFunctions$1 as DeepMergeMergeIntoFunctionsDefaults, DeepMergeOptions, DeepMergeRecordsDefaultHKT, DeepMergeSetsDefaultHKT, Reference as DeepMergeValueReference, GetDeepMergeMergeFunctionsURIs, ObjectType, deepmerge, deepmergeCustom, deepmergeInto, deepmergeIntoCustom, getKeys, getObjectType, objectHasProperty };

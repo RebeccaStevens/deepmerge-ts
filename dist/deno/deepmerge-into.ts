@@ -1,15 +1,15 @@
 import { actionsInto as actions } from "./actions.ts";
 import * as defaultMergeIntoFunctions from "./defaults/into.ts";
 import { defaultMetaDataUpdater } from "./defaults/meta-data-updater.ts";
-import type {
-  DeepMergeBuiltInMetaData,
-  DeepMergeIntoOptions,
-  DeepMergeMergeIntoFunctionUtils,
-  Reference,
-  DeepMergeHKT,
-  DeepMergeMergeFunctionsDefaultURIs,
+import {
+  type DeepMergeBuiltInMetaData,
+  type DeepMergeIntoOptions,
+  type DeepMergeMergeIntoFunctionUtils,
+  type Reference,
+  type DeepMergeHKT,
+  type DeepMergeMergeFunctionsDefaultURIs,
 } from "./types/index.ts";
-import type { FlatternAlias } from "./types/utils.ts";
+import { type FlatternAlias } from "./types/utils.ts";
 import { getObjectType, ObjectType } from "./utils.ts";
 
 /**

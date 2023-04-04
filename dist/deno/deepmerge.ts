@@ -1,14 +1,14 @@
 import { actions } from "./actions.ts";
 import { defaultMetaDataUpdater } from "./defaults/meta-data-updater.ts";
 import * as defaultMergeFunctions from "./defaults/vanilla.ts";
-import type {
-  DeepMergeBuiltInMetaData,
-  DeepMergeHKT,
-  DeepMergeMergeFunctionsDefaultURIs,
-  DeepMergeMergeFunctionsURIs,
-  DeepMergeOptions,
-  DeepMergeMergeFunctionUtils,
-  GetDeepMergeMergeFunctionsURIs,
+import {
+  type DeepMergeBuiltInMetaData,
+  type DeepMergeHKT,
+  type DeepMergeMergeFunctionsDefaultURIs,
+  type DeepMergeMergeFunctionsURIs,
+  type DeepMergeOptions,
+  type DeepMergeMergeFunctionUtils,
+  type GetDeepMergeMergeFunctionsURIs,
 } from "./types/index.ts";
 import { getObjectType, ObjectType } from "./utils.ts";
 
@@ -18,6 +18,7 @@ import { getObjectType, ObjectType } from "./utils.ts";
  * @param objects - The objects to merge.
  */
 export function deepmerge<Ts extends Readonly<ReadonlyArray<unknown>>>(
+  // eslint-disable-next-line functional/functional-parameters
   ...objects: readonly [...Ts]
 ): DeepMergeHKT<
   Ts,
@@ -90,7 +91,10 @@ export function deepmergeCustom<
   /**
    * The customized deepmerge function.
    */
-  function customizedDeepmerge(...objects: ReadonlyArray<unknown>) {
+  function customizedDeepmerge(
+    // eslint-disable-next-line functional/functional-parameters
+    ...objects: ReadonlyArray<unknown>
+  ) {
     return mergeUnknowns<
       ReadonlyArray<unknown>,
       typeof utils,
@@ -165,9 +169,8 @@ export function mergeUnknowns<
 
   const type = getObjectType(values[0]);
 
-  // eslint-disable-next-line functional/no-conditional-statements -- add an early escape for better performance.
+  /* eslint-disable functional/no-loop-statements, functional/no-conditional-statements -- using imperative code here is more performant. */
   if (type !== ObjectType.NOT && type !== ObjectType.OTHER) {
-    // eslint-disable-next-line functional/no-loop-statements -- using a loop here is more performant than mapping every value and then testing every value.
     for (let m_index = 1; m_index < values.length; m_index++) {
       if (getObjectType(values[m_index]) === type) {
         continue;
@@ -180,6 +183,7 @@ export function mergeUnknowns<
       >;
     }
   }
+  /* eslint-enable functional/no-loop-statements, functional/no-conditional-statements */
 
   switch (type) {
     case ObjectType.RECORD: {

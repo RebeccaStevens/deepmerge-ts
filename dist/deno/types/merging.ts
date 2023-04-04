@@ -1,16 +1,16 @@
-import type {
-  DeepMergeRecordsDefaultHKT,
-  DeepMergeArraysDefaultHKT,
-  DeepMergeSetsDefaultHKT,
-  DeepMergeMapsDefaultHKT,
+import {
+  type DeepMergeRecordsDefaultHKT,
+  type DeepMergeArraysDefaultHKT,
+  type DeepMergeSetsDefaultHKT,
+  type DeepMergeMapsDefaultHKT,
 } from "./defaults.ts";
-import type {
-  EveryIsArray,
-  EveryIsMap,
-  EveryIsRecord,
-  EveryIsSet,
-  IsNever,
-  IsTuple,
+import {
+  type EveryIsArray,
+  type EveryIsMap,
+  type EveryIsRecord,
+  type EveryIsSet,
+  type IsNever,
+  type IsTuple,
 } from "./utils.ts";
 
 /**
