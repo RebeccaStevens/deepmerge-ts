@@ -2,7 +2,7 @@ import { createRequire } from "node:module";
 
 import test from "ava";
 
-import { deepmerge } from "../src/index.js";
+import { deepmerge } from "../src";
 
 test("return undefined when nothing to merge", (t) => {
   // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
@@ -468,10 +468,10 @@ test(`supports symbols`, (t) => {
 });
 
 test("enumerable keys", (t) => {
-  const x = {};
-  const y = {};
+  const m_x = {};
+  const m_y = {};
 
-  Object.defineProperties(x, {
+  Object.defineProperties(m_x, {
     a: {
       value: 1,
       enumerable: false,
@@ -482,7 +482,7 @@ test("enumerable keys", (t) => {
     },
   });
 
-  Object.defineProperties(y, {
+  Object.defineProperties(m_y, {
     a: {
       value: 3,
       enumerable: false,
@@ -495,7 +495,7 @@ test("enumerable keys", (t) => {
 
   const expected = { b: 2 };
 
-  const merged = deepmerge(x, y);
+  const merged = deepmerge(m_x, m_y);
 
   t.deepEqual(merged, expected);
 });
@@ -506,9 +506,9 @@ test(`merging objects with plain and non-plain properties`, (t) => {
     parentKey: `should be undefined`,
   };
 
-  const x = Object.create(parent);
-  x.plainKey = `should be replaced`;
-  x[plainSymbolKey] = `should also be replaced`;
+  const m_x = Object.create(parent);
+  m_x.plainKey = `should be replaced`;
+  m_x[plainSymbolKey] = `should also be replaced`;
 
   const y = {
     plainKey: `bar`,
@@ -516,7 +516,7 @@ test(`merging objects with plain and non-plain properties`, (t) => {
     [plainSymbolKey]: `qux`,
   };
 
-  const merged = deepmerge(x, y);
+  const merged = deepmerge(m_x, y);
 
   t.false(
     Object.hasOwn(merged, "parentKey"),
@@ -536,13 +536,13 @@ test(`merging objects with plain and non-plain properties`, (t) => {
 });
 
 test(`merging objects with null prototype`, (t) => {
-  const x = Object.create(null);
-  x.a = 1;
-  x.b = { c: [2] };
+  const m_x = Object.create(null);
+  m_x.a = 1;
+  m_x.b = { c: [2] };
 
-  const y = Object.create(null);
-  y.b = { c: [3] };
-  y.d = 4;
+  const m_y = Object.create(null);
+  m_y.b = { c: [3] };
+  m_y.d = 4;
 
   const expected = {
     a: 1,
@@ -552,24 +552,24 @@ test(`merging objects with null prototype`, (t) => {
     d: 4,
   };
 
-  const merged = deepmerge(x, y);
+  const merged = deepmerge(m_x, m_y);
 
   t.deepEqual(merged, expected);
 });
 
 test("dectecting valid records", (t) => {
-  const a = { a: 1 };
-  // eslint-disable-next-line no-proto, @typescript-eslint/no-explicit-any
-  (a as any).__proto__.aProto = 1;
+  const m_a = { a: 1 };
+  // eslint-disable-next-line no-proto, @typescript-eslint/no-explicit-any, functional/immutable-data
+  (m_a as any).__proto__.aProto = 1;
 
-  const b = Object.create({ bProto: 2 });
-  b.b = 2;
+  const m_b = Object.create({ bProto: 2 });
+  m_b.b = 2;
 
-  const c = Object.create(Object.prototype);
-  c.c = 3;
+  const m_c = Object.create(Object.prototype);
+  m_c.c = 3;
 
-  const d = Object.create(null);
-  d.d = 4;
+  const m_d = Object.create(null);
+  m_d.d = 4;
 
   const expected = {
     a: 1,
@@ -578,7 +578,7 @@ test("dectecting valid records", (t) => {
     d: 4,
   };
 
-  const merged = deepmerge(a, b, c, d);
+  const merged = deepmerge(m_a, m_b, m_c, m_d);
 
   t.deepEqual(merged, expected);
 });
@@ -587,19 +587,18 @@ test("dectecting invalid records", (t) => {
   const expected = {};
 
   class AClass {}
-  const a = new AClass();
-  (a as any).a = 1;
+  const m_a = new AClass();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any, functional/immutable-data
+  (m_a as any).a = 1;
 
-  t.deepEqual(deepmerge(a, expected), expected);
+  t.deepEqual(deepmerge(m_a, expected), expected);
 });
 
 test("merging cjs modules", (t) => {
   const require = createRequire(import.meta.url);
 
-  /* eslint-disable @typescript-eslint/no-var-requires, unicorn/prefer-module */
   const a = require("./modules/a.cjs");
   const b = require("./modules/b.cjs");
-  /* eslint-enable @typescript-eslint/no-var-requires, unicorn/prefer-module */
 
   const expected = {
     age: 30,
@@ -612,8 +611,10 @@ test("merging cjs modules", (t) => {
 });
 
 test("merging esm modules", async (t) => {
+  /* eslint-disable import/extensions */
   const a = await import("./modules/a.mjs");
   const b = await import("./modules/b.mjs");
+  /* eslint-enable */
 
   const expected = {
     age: 30,

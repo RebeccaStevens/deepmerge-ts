@@ -1,7 +1,7 @@
-import type { MergeFunctions as MergeIntoFunctions } from "../defaults/into.js";
-import type { MergeFunctions } from "../defaults/vanilla.js";
+import { type MergeFunctions as MergeIntoFunctions } from "../defaults/into";
+import { type MergeFunctions } from "../defaults/vanilla";
 
-import type { DeepMergeBuiltInMetaData } from "./merging.js";
+import { type DeepMergeBuiltInMetaData } from "./merging";
 
 /**
  * The options the user can pass to customize deepmerge.
@@ -179,7 +179,6 @@ type DeepMergeMergeIntoFunctions<
 /**
  * The utils provided to the merge functions.
  */
-
 export type DeepMergeMergeFunctionUtils<
   in out M,
   MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData

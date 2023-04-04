@@ -1,6 +1,9 @@
 import { expectType, expectAssignable } from "tsd";
 
-import type { DeepMergeMapsDefaultHKT, DeepMergeSetsDefaultHKT } from "../src";
+import {
+  type DeepMergeMapsDefaultHKT,
+  type DeepMergeSetsDefaultHKT,
+} from "../src";
 import { deepmerge } from "../src";
 
 const a = {

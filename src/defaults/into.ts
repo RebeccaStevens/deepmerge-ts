@@ -1,14 +1,10 @@
-import { mergeUnknownsInto } from "../deepmerge-into.js";
-import type {
-  DeepMergeBuiltInMetaData,
-  DeepMergeMergeIntoFunctionUtils,
-  Reference,
-} from "../types";
+import { mergeUnknownsInto } from "../deepmerge-into";
 import {
-  getIterableOfIterables,
-  getKeys,
-  objectHasProperty,
-} from "../utils.js";
+  type DeepMergeBuiltInMetaData,
+  type DeepMergeMergeIntoFunctionUtils,
+  type Reference,
+} from "../types";
+import { getIterableOfIterables, getKeys, objectHasProperty } from "../utils";
 
 /**
  * The default merge functions.

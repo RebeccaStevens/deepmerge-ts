@@ -1,16 +1,16 @@
-import { actions } from "./actions.js";
-import { defaultMetaDataUpdater } from "./defaults/meta-data-updater.js";
-import * as defaultMergeFunctions from "./defaults/vanilla.js";
-import type {
-  DeepMergeBuiltInMetaData,
-  DeepMergeHKT,
-  DeepMergeMergeFunctionsDefaultURIs,
-  DeepMergeMergeFunctionsURIs,
-  DeepMergeOptions,
-  DeepMergeMergeFunctionUtils,
-  GetDeepMergeMergeFunctionsURIs,
-} from "./types/index.js";
-import { getObjectType, ObjectType } from "./utils.js";
+import { actions } from "./actions";
+import { defaultMetaDataUpdater } from "./defaults/meta-data-updater";
+import * as defaultMergeFunctions from "./defaults/vanilla";
+import {
+  type DeepMergeBuiltInMetaData,
+  type DeepMergeHKT,
+  type DeepMergeMergeFunctionsDefaultURIs,
+  type DeepMergeMergeFunctionsURIs,
+  type DeepMergeOptions,
+  type DeepMergeMergeFunctionUtils,
+  type GetDeepMergeMergeFunctionsURIs,
+} from "./types";
+import { getObjectType, ObjectType } from "./utils";
 
 /**
  * Deeply merge objects.

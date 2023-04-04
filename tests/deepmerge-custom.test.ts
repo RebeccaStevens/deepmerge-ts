@@ -3,16 +3,16 @@
 import test from "ava";
 import _ from "lodash";
 
-import { deepmergeCustom } from "../src/index.js";
-import type {
-  DeepMergeLeafURI,
-  DeepMergeMergeFunctionsURIs,
-  DeepMergeRecordsDefaultHKT,
-  DeepMergeLeaf,
-  DeepMergeOptions,
-} from "../src/index.js";
+import { deepmergeCustom } from "../src";
+import {
+  type DeepMergeLeafURI,
+  type DeepMergeMergeFunctionsURIs,
+  type DeepMergeRecordsDefaultHKT,
+  type DeepMergeLeaf,
+  type DeepMergeOptions,
+} from "../src";
 
-import { areAllNumbers, hasProp } from "./utils.js";
+import { areAllNumbers, hasProp } from "./utils";
 
 test("works just like non-customized version when no options passed", (t) => {
   const v = { first: true };
@@ -81,9 +81,11 @@ test("custom merge arrays", (t) => {
       const maxLength = Math.max(...arrays.map((array) => array.length));
 
       const result = [];
+      // eslint-disable-next-line functional/no-loop-statements
       for (let m_i = 0; m_i < maxLength; m_i++) {
         result[m_i] = "";
 
+        // eslint-disable-next-line functional/no-loop-statements
         for (const array of arrays) {
           if (m_i >= array.length) {
             break;
@@ -146,11 +148,12 @@ test("custom merge arrays of records", (t) => {
   }>({
     mergeArrays: (arrays, utils) => {
       const maxLength = Math.max(...arrays.map((array) => array.length));
-      const result: unknown[] = [];
+      const m_result: unknown[] = [];
 
+      // eslint-disable-next-line functional/no-loop-statements
       for (let m_i = 0; m_i < maxLength; m_i++) {
         const never = {};
-        result.push(
+        m_result.push(
           utils.deepmerge(
             ...arrays
               .map((array) => (m_i < array.length ? array[m_i] : never))
@@ -159,7 +162,7 @@ test("custom merge arrays of records", (t) => {
         );
       }
 
-      return result;
+      return m_result;
     },
     mergeOthers: (values) => {
       if (values.every((value) => typeof value === "number")) {
@@ -476,6 +479,7 @@ test("key path based array merging", (t) => {
         const valuesById = values.reduce<Map<unknown, unknown[]>>(
           (carry, current) => {
             const currentElementsById = new Map<unknown, unknown>();
+            // eslint-disable-next-line functional/no-loop-statements
             for (const element of current) {
               if (!hasProp(element, id)) {
                 throw new Error("Invalid element type");

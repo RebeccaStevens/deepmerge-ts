@@ -1,17 +1,17 @@
-import type {
-  DeepMergeRecordsDefaultHKT,
-  DeepMergeArraysDefaultHKT,
-  DeepMergeSetsDefaultHKT,
-  DeepMergeMapsDefaultHKT,
-} from "./defaults.js";
-import type {
-  EveryIsArray,
-  EveryIsMap,
-  EveryIsRecord,
-  EveryIsSet,
-  IsNever,
-  IsTuple,
-} from "./utils.js";
+import {
+  type DeepMergeRecordsDefaultHKT,
+  type DeepMergeArraysDefaultHKT,
+  type DeepMergeSetsDefaultHKT,
+  type DeepMergeMapsDefaultHKT,
+} from "./defaults";
+import {
+  type EveryIsArray,
+  type EveryIsMap,
+  type EveryIsRecord,
+  type EveryIsSet,
+  type IsNever,
+  type IsTuple,
+} from "./utils";
 
 /**
  * Mapping of merge function URIs to the merge function type.

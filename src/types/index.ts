@@ -1,3 +1,3 @@
-export * from "./defaults.js";
-export * from "./merging.js";
-export * from "./options.js";
+export * from "./defaults";
+export * from "./merging";
+export * from "./options";

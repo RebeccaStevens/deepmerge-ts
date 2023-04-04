@@ -1,16 +1,16 @@
-import { actionsInto as actions } from "./actions.js";
-import * as defaultMergeIntoFunctions from "./defaults/into.js";
-import { defaultMetaDataUpdater } from "./defaults/meta-data-updater.js";
-import type {
-  DeepMergeBuiltInMetaData,
-  DeepMergeIntoOptions,
-  DeepMergeMergeIntoFunctionUtils,
-  Reference,
-  DeepMergeHKT,
-  DeepMergeMergeFunctionsDefaultURIs,
-} from "./types/index.js";
-import type { FlatternAlias } from "./types/utils.js";
-import { getObjectType, ObjectType } from "./utils.js";
+import { actionsInto as actions } from "./actions";
+import * as defaultMergeIntoFunctions from "./defaults/into";
+import { defaultMetaDataUpdater } from "./defaults/meta-data-updater";
+import {
+  type DeepMergeBuiltInMetaData,
+  type DeepMergeIntoOptions,
+  type DeepMergeMergeIntoFunctionUtils,
+  type Reference,
+  type DeepMergeHKT,
+  type DeepMergeMergeFunctionsDefaultURIs,
+} from "./types";
+import { type FlatternAlias } from "./types/utils";
+import { getObjectType, ObjectType } from "./utils";
 
 /**
  * Deeply merge objects into a target.

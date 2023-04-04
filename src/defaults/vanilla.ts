@@ -1,19 +1,15 @@
-import { actions } from "../actions.js";
-import { mergeUnknowns } from "../deepmerge.js";
-import type {
-  DeepMergeArraysDefaultHKT,
-  DeepMergeBuiltInMetaData,
-  DeepMergeMapsDefaultHKT,
-  DeepMergeMergeFunctionsURIs,
-  DeepMergeMergeFunctionUtils,
-  DeepMergeRecordsDefaultHKT,
-  DeepMergeSetsDefaultHKT,
-} from "../types";
+import { actions } from "../actions";
+import { mergeUnknowns } from "../deepmerge";
 import {
-  getKeys,
-  objectHasProperty,
-  getIterableOfIterables,
-} from "../utils.js";
+  type DeepMergeArraysDefaultHKT,
+  type DeepMergeBuiltInMetaData,
+  type DeepMergeMapsDefaultHKT,
+  type DeepMergeMergeFunctionsURIs,
+  type DeepMergeMergeFunctionUtils,
+  type DeepMergeRecordsDefaultHKT,
+  type DeepMergeSetsDefaultHKT,
+} from "../types";
+import { getKeys, objectHasProperty, getIterableOfIterables } from "../utils";
 
 /**
  * The default merge functions.

@@ -2,7 +2,7 @@ import { createRequire } from "node:module";
 
 import test from "ava";
 
-import { deepmergeInto } from "../src/index.js";
+import { deepmergeInto } from "../src";
 
 test("does not modify the target when nothing to merge", (t) => {
   const target = { prop: 1 };
@@ -427,10 +427,10 @@ test(`supports symbols`, (t) => {
 });
 
 test("enumerable keys", (t) => {
-  const x = {};
-  const y = {};
+  const m_x = {};
+  const m_y = {};
 
-  Object.defineProperties(x, {
+  Object.defineProperties(m_x, {
     a: {
       value: 1,
       enumerable: false,
@@ -441,7 +441,7 @@ test("enumerable keys", (t) => {
     },
   });
 
-  Object.defineProperties(y, {
+  Object.defineProperties(m_y, {
     a: {
       value: 3,
       enumerable: false,
@@ -455,11 +455,11 @@ test("enumerable keys", (t) => {
   const expected = { b: 2 };
 
   const target = {};
-  deepmergeInto(target, x, y);
-  t.deepEqual(x, expected);
+  deepmergeInto(target, m_x, m_y);
+  t.deepEqual(m_x, expected);
 
   t.throws(() => {
-    deepmergeInto(x, y);
+    deepmergeInto(m_x, m_y);
   });
 });
 
@@ -469,9 +469,9 @@ test(`merging objects with plain and non-plain properties`, (t) => {
     parentKey: `should be undefined`,
   };
 
-  const x = Object.create(parent);
-  x.plainKey = `should be replaced`;
-  x[plainSymbolKey] = `should also be replaced`;
+  const m_x = Object.create(parent);
+  m_x.plainKey = `should be replaced`;
+  m_x[plainSymbolKey] = `should also be replaced`;
 
   const y = {
     plainKey: `bar`,
@@ -479,33 +479,33 @@ test(`merging objects with plain and non-plain properties`, (t) => {
     [plainSymbolKey]: `qux`,
   };
 
-  deepmergeInto(x, y);
+  deepmergeInto(m_x, y);
 
   t.false(
-    Object.hasOwn(x, "parentKey"),
+    Object.hasOwn(m_x, "parentKey"),
     `inherited properties of target should be removed, not target or ignored`
   );
   t.is(
-    x.plainKey,
+    m_x.plainKey,
     `bar`,
     `enumerable own properties of target should be target`
   );
-  t.is(x.newKey, `baz`, `property should be target`);
+  t.is(m_x.newKey, `baz`, `property should be target`);
   t.is(
-    x[plainSymbolKey],
+    m_x[plainSymbolKey],
     `qux`,
     `enumerable own symbol properties should be target`
   );
 });
 
 test(`merging objects with null prototype`, (t) => {
-  const x = Object.create(null);
-  x.a = 1;
-  x.b = { c: [2] };
+  const m_x = Object.create(null);
+  m_x.a = 1;
+  m_x.b = { c: [2] };
 
-  const y = Object.create(null);
-  y.b = { c: [3] };
-  y.d = 4;
+  const m_y = Object.create(null);
+  m_y.b = { c: [3] };
+  m_y.d = 4;
 
   const expected = {
     a: 1,
@@ -515,24 +515,24 @@ test(`merging objects with null prototype`, (t) => {
     d: 4,
   };
 
-  deepmergeInto(x, y);
+  deepmergeInto(m_x, m_y);
 
-  t.deepEqual(x, expected);
+  t.deepEqual(m_x, expected);
 });
 
 test("dectecting valid records", (t) => {
-  const a = { a: 1 };
-  // eslint-disable-next-line no-proto, @typescript-eslint/no-explicit-any
-  (a as any).__proto__.aProto = 1;
+  const m_a = { a: 1 };
+  // eslint-disable-next-line no-proto, @typescript-eslint/no-explicit-any, functional/immutable-data
+  (m_a as any).__proto__.aProto = 1;
 
-  const b = Object.create({ bProto: 2 });
-  b.b = 2;
+  const m_b = Object.create({ bProto: 2 });
+  m_b.b = 2;
 
-  const c = Object.create(Object.prototype);
-  c.c = 3;
+  const m_c = Object.create(Object.prototype);
+  m_c.c = 3;
 
-  const d = Object.create(null);
-  d.d = 4;
+  const m_d = Object.create(null);
+  m_d.d = 4;
 
   const expected = {
     a: 1,
@@ -541,33 +541,32 @@ test("dectecting valid records", (t) => {
     d: 4,
   };
 
-  deepmergeInto(a, b, c, d);
+  deepmergeInto(m_a, m_b, m_c, m_d);
 
-  t.deepEqual(a, expected);
+  t.deepEqual(m_a, expected);
 });
 
 test("dectecting invalid records", (t) => {
   const a = {};
 
   class AClass {}
-  const b = new AClass();
-  (b as any).a = 1;
+  const m_b = new AClass();
+  // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-explicit-any
+  (m_b as any).a = 1;
 
   const c = {};
 
   const expected = {};
 
-  deepmergeInto(a, b, c);
+  deepmergeInto(a, m_b, c);
   t.deepEqual(a, expected);
 });
 
 test("merging cjs modules", (t) => {
   const require = createRequire(import.meta.url);
 
-  /* eslint-disable @typescript-eslint/no-var-requires, unicorn/prefer-module */
   const a = require("./modules/a.cjs");
   const b = require("./modules/b.cjs");
-  /* eslint-enable @typescript-eslint/no-var-requires, unicorn/prefer-module */
 
   const expected = {
     age: 30,
@@ -580,8 +579,10 @@ test("merging cjs modules", (t) => {
 });
 
 test("merging esm modules", async (t) => {
+  /* eslint-disable import/extensions */
   const a = await import("./modules/a.mjs");
   const b = await import("./modules/b.mjs");
+  /* eslint-enable */
 
   const expected = {
     age: 30,

@@ -1,19 +1,19 @@
-import type {
-  DeepMergeHKT,
-  DeepMergeLeafURI,
-  DeepMergeMergeFunctionsURIs,
-  DeepMergeMergeFunctionURItoKind,
-} from "./merging.js";
-import type {
-  FlatternAlias,
-  FilterOutNever,
-  OptionalKeysOf,
-  RequiredKeysOf,
-  UnionMapKeys,
-  UnionMapValues,
-  UnionSetValues,
-  ValueOfKey,
-} from "./utils.js";
+import {
+  type DeepMergeHKT,
+  type DeepMergeLeafURI,
+  type DeepMergeMergeFunctionsURIs,
+  type DeepMergeMergeFunctionURItoKind,
+} from "./merging";
+import {
+  type FlatternAlias,
+  type FilterOutNever,
+  type OptionalKeysOf,
+  type RequiredKeysOf,
+  type UnionMapKeys,
+  type UnionMapValues,
+  type UnionSetValues,
+  type ValueOfKey,
+} from "./utils";
 
 /**
  * The default merge function to merge records with.

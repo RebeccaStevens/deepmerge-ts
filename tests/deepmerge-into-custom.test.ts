@@ -1,16 +1,16 @@
-/* eslint-disable @typescript-eslint/consistent-type-definitions, @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 
 import test from "ava";
 import _ from "lodash";
 
-import { deepmergeIntoCustom } from "../src/index.js";
-import type {
-  DeepMergeValueReference,
-  DeepMergeIntoOptions,
-} from "../src/index.js";
-import { getKeys } from "../src/utils.js";
+import { deepmergeIntoCustom } from "../src";
+import {
+  type DeepMergeValueReference,
+  type DeepMergeIntoOptions,
+} from "../src";
+import { getKeys } from "../src/utils";
 
-import { areAllNumbers, hasProp } from "./utils.js";
+import { areAllNumbers, hasProp } from "./utils";
 
 test("works just like non-customized version when no options passed", (t) => {
   const v = { first: true };
@@ -41,12 +41,12 @@ test("custom merge strings", (t) => {
   };
 
   const customizedDeepmerge = deepmergeIntoCustom({
-    mergeOthers: (target, values, utils) => {
+    mergeOthers: (m_target, values, utils) => {
       if (values.every((value) => typeof value === "string")) {
-        target.value = values.join(" ");
+        m_target.value = values.join(" ");
         return;
       }
-      utils.defaultMergeFunctions.mergeOthers(target, values);
+      utils.defaultMergeFunctions.mergeOthers(m_target, values);
     },
   });
 
@@ -64,13 +64,15 @@ test("custom merge arrays", (t) => {
   };
 
   const customizedDeepmerge = deepmergeIntoCustom({
-    mergeArrays: (target, arrays) => {
+    mergeArrays: (m_target, arrays) => {
       const maxLength = Math.max(...arrays.map((array) => array.length));
 
       const result = [];
+      // eslint-disable-next-line functional/no-loop-statements
       for (let m_i = 0; m_i < maxLength; m_i++) {
         result[m_i] = "";
 
+        // eslint-disable-next-line functional/no-loop-statements
         for (const array of arrays) {
           if (m_i >= array.length) {
             break;
@@ -79,7 +81,7 @@ test("custom merge arrays", (t) => {
         }
       }
 
-      target.value = result;
+      m_target.value = result;
     },
   });
 
@@ -113,10 +115,11 @@ test("custom merge arrays of records", (t) => {
   };
 
   const customizedDeepmerge = deepmergeIntoCustom({
-    mergeArrays: (target, arrays, utils) => {
+    mergeArrays: (m_target, arrays, utils) => {
       const maxLength = Math.max(...arrays.map((array) => array.length));
-      const result: unknown[] = [];
+      const m_result: unknown[] = [];
 
+      // eslint-disable-next-line functional/no-loop-statements
       for (let m_i = 0; m_i < maxLength; m_i++) {
         const never = {};
         const s = {};
@@ -126,19 +129,19 @@ test("custom merge arrays of records", (t) => {
             .map((array) => (m_i < array.length ? array[m_i] : never))
             .filter((value) => value !== never)
         );
-        result.push(s);
+        m_result.push(s);
       }
 
-      target.value = result;
+      m_target.value = m_result;
     },
-    mergeOthers: (target, values) => {
+    mergeOthers: (m_target, values) => {
       if (values.every((value) => typeof value === "number")) {
-        target.value = String.fromCodePoint(
+        m_target.value = String.fromCodePoint(
           values.reduce<number>((carry, value) => carry + (value as number), 0)
         );
         return;
       }
-      target.value = "";
+      m_target.value = "";
     },
   });
 
@@ -164,9 +167,10 @@ test("custom merge records", (t) => {
   };
 
   const customizedDeepmerge = deepmergeIntoCustom({
-    mergeRecords: (target, records, utils, meta) => {
+    mergeRecords: (m_target, records, utils, meta) => {
+      // eslint-disable-next-line functional/no-loop-statements
       for (const key of getKeys(records)) {
-        target.value[key] = key;
+        m_target.value[key] = key;
       }
     },
   });
@@ -209,12 +213,12 @@ test("custom merge dates", (t) => {
   const expected = { foo: [x.foo, y.foo, z.foo] } as const;
 
   const customizedDeepmerge = deepmergeIntoCustom({
-    mergeOthers: (target, values, utils) => {
+    mergeOthers: (m_target, values, utils) => {
       if (values.every((value) => value instanceof Date)) {
-        target.value = values;
+        m_target.value = values;
         return;
       }
-      utils.defaultMergeFunctions.mergeOthers(target, values);
+      utils.defaultMergeFunctions.mergeOthers(m_target, values);
     },
   });
 
@@ -236,27 +240,27 @@ test("key based merging", (t) => {
   };
 
   const customizedDeepmerge = deepmergeIntoCustom({
-    mergeOthers: (target, values, utils, meta) => {
+    mergeOthers: (m_target, values, utils, meta) => {
       if (meta !== undefined && areAllNumbers(values)) {
         const { key } = meta;
         const numbers: ReadonlyArray<number> = values;
 
         if (key === "sum") {
-          target.value = numbers.reduce((sum, value) => sum + value);
+          m_target.value = numbers.reduce((sum, value) => sum + value);
           return;
         }
         if (key === "product") {
-          target.value = numbers.reduce((prod, value) => prod * value);
+          m_target.value = numbers.reduce((prod, value) => prod * value);
           return;
         }
         if (key === "mean") {
-          target.value =
+          m_target.value =
             numbers.reduce((sum, value) => sum + value) / numbers.length;
           return;
         }
       }
 
-      utils.defaultMergeFunctions.mergeOthers(target, values);
+      utils.defaultMergeFunctions.mergeOthers(m_target, values);
     },
   });
 
@@ -287,18 +291,18 @@ test("key path based merging", (t) => {
       }
       return [...(previousMeta ?? []), metaMeta.key];
     },
-    mergeOthers: (target, values, utils, meta): void => {
+    mergeOthers: (m_target, values, utils, meta): void => {
       if (
         meta !== undefined &&
         meta.length >= 2 &&
         meta.at(-2) === "bar" &&
         meta.at(-1) === "baz"
       ) {
-        target.value = "special merge";
+        m_target.value = "special merge";
         return;
       }
 
-      utils.defaultMergeFunctions.mergeOthers(target, values);
+      utils.defaultMergeFunctions.mergeOthers(m_target, values);
     },
   });
 
@@ -373,7 +377,7 @@ test("key path based array merging", (t) => {
       metaDataUpdater: (previousMeta, metaMeta) => {
         return [...(previousMeta ?? []), metaMeta.key ?? metaMeta.id];
       },
-      mergeArrays: (target, values, utils, meta = []) => {
+      mergeArrays: (m_target, values, utils, meta = []) => {
         const idPath = idsPaths.find((idPath) => {
           const parentPath = idPath.slice(0, -1);
           return (
@@ -382,7 +386,7 @@ test("key path based array merging", (t) => {
           );
         });
         if (idPath === undefined) {
-          utils.defaultMergeFunctions.mergeArrays(target, values);
+          utils.defaultMergeFunctions.mergeArrays(m_target, values);
           return;
         }
 
@@ -391,6 +395,7 @@ test("key path based array merging", (t) => {
           Map<unknown, Array<Record<PropertyKey, unknown>>>
         >((carry, current) => {
           const currentElementsById = new Map<unknown, unknown>();
+          // eslint-disable-next-line functional/no-loop-statements
           for (const element of current) {
             if (!hasProp(element, id)) {
               throw new Error("Invalid element type");
@@ -406,7 +411,7 @@ test("key path based array merging", (t) => {
           return carry;
         }, new Map<unknown, Array<Record<PropertyKey, unknown>>>());
 
-        target.value = [...valuesById.entries()].reduce<unknown[]>(
+        m_target.value = [...valuesById.entries()].reduce<unknown[]>(
           (carry, [id, values]) => {
             const childMeta = utils.metaDataUpdater(meta, { id });
             const s = {};
@@ -438,11 +443,11 @@ test("custom merge with parents", (t) => {
   };
 
   const customizedDeepmerge = deepmergeIntoCustom({
-    mergeOthers: (target, values, utils, meta): void => {
+    mergeOthers: (m_target, values, utils, meta): void => {
       if (meta !== undefined) {
         const { key, parents } = meta;
         if (key === "isBadObject") {
-          target.value = false;
+          m_target.value = false;
           return;
         }
 
@@ -452,11 +457,11 @@ test("custom merge with parents", (t) => {
         );
 
         if (key === "sum") {
-          target.value = goodValues.reduce((sum, value) => sum + value, 0);
+          m_target.value = goodValues.reduce((sum, value) => sum + value, 0);
           return;
         }
       }
-      utils.defaultMergeFunctions.mergeOthers(target, values);
+      utils.defaultMergeFunctions.mergeOthers(m_target, values);
     },
   });
 
@@ -517,7 +522,7 @@ test("merging class object as record", (t) => {
   };
 
   const customizedDeepmerge = deepmergeIntoCustom({
-    mergeOthers: (target, values, utils, meta) => {
+    mergeOthers: (m_target, values, utils, meta) => {
       let m_allRecords = true;
       const records = values.map((v) => {
         if (typeof v === "object" && v !== null) {
@@ -529,14 +534,14 @@ test("merging class object as record", (t) => {
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (m_allRecords) {
         utils.mergeFunctions.mergeRecords(
-          target as DeepMergeValueReference<Record<PropertyKey, unknown>>,
+          m_target as DeepMergeValueReference<Record<PropertyKey, unknown>>,
           records,
           utils,
           meta
         );
         return;
       }
-      target.value = utils.actions.defaultMerge;
+      m_target.value = utils.actions.defaultMerge;
     },
   });
 
