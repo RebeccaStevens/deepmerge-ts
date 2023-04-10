@@ -68,8 +68,8 @@ devDependencies:
     specifier: 6.30.2
     version: 6.30.2
   denoify:
-    specifier: 1.5.1
-    version: 1.5.1
+    specifier: 1.5.3
+    version: 1.5.3
   eslint:
     specifier: 8.36.0
     version: 8.36.0
@@ -2741,8 +2741,8 @@ packages:
       slash: 4.0.0
     dev: true
 
-  /denoify@1.5.1:
-    resolution: {integrity: sha512-YfbNYXp83+xXoqg/m0vBFEulQA9JBE8rsDthGf1vNZwA0Yse1BKENy96qfCxE7/UTtwMn8GVuvoze2YRm1mzhQ==}
+  /denoify@1.5.3:
+    resolution: {integrity: sha512-CFXRRBeTfggSdPuhUmfrjnzmrvfY3Cn5YHFt7abTHfYoVBq7gV51k/V2dwwiIMsqplW/xfwPX3wO2TNej/4o+g==}
     hasBin: true
     dependencies:
       '@octokit/rest': 18.12.0
