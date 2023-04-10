@@ -94,7 +94,7 @@
     "type-check": "tsc --noEmit"
   },
   "devDependencies": {
-    "@commitlint/cli": "17.4.4",
+    "@commitlint/cli": "17.5.1",
     "@commitlint/config-conventional": "17.4.4",
     "@cspell/dict-cryptocurrencies": "3.0.1",
     "@rebeccastevens/eslint-config": "1.7.4",
