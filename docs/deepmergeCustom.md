@@ -24,7 +24,7 @@ For example, skipping all properties under the key `"skipme"` of type `Date`:
 
 ```ts
 const customizedDeepmerge = deepmergeCustom({
-  mergeOthers: (value, utils, meta) => {
+  mergeOthers: (values, utils, meta) => {
     if (meta?.key === "skipme") {
       const nonDateValues = values.filter((value) => !(value instanceof Date));
       if (nonDateValues.length === 0) {
