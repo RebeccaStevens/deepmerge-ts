@@ -150,7 +150,7 @@
     "ts-paths-esm-loader": "1.4.1",
     "tsconfig-paths": "4.2.0",
     "tsd": "0.28.1",
-    "tslib": "2.5.0",
+    "tslib": "2.6.2",
     "typescript": "5.0.4"
   },
   "packageManager": "pnpm@8.2.0",
