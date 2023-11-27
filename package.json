@@ -112,7 +112,7 @@
     "@types/rollup-plugin-auto-external": "2.0.2",
     "@typescript-eslint/eslint-plugin": "6.13.0",
     "@typescript-eslint/parser": "6.13.0",
-    "ava": "5.2.0",
+    "ava": "5.3.1",
     "c8": "7.13.0",
     "commitizen": "4.3.0",
     "cspell": "6.31.1",
