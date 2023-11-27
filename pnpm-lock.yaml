@@ -149,8 +149,8 @@ devDependencies:
     specifier: 2.0.0
     version: 2.0.0(rollup@3.20.3)
   rollup-plugin-copy:
-    specifier: 3.4.0
-    version: 3.4.0
+    specifier: 3.5.0
+    version: 3.5.0
   rollup-plugin-dts:
     specifier: 5.3.0
     version: 5.3.0(rollup@3.20.3)(typescript@5.0.4)
@@ -6327,8 +6327,8 @@ packages:
       semver: 5.7.1
     dev: true
 
-  /rollup-plugin-copy@3.4.0:
-    resolution: {integrity: sha512-rGUmYYsYsceRJRqLVlE9FivJMxJ7X6jDlP79fmFkL8sJs7VVMSVyA2yfyL+PGyO/vJs4A87hwhgVfz61njI+uQ==}
+  /rollup-plugin-copy@3.5.0:
+    resolution: {integrity: sha512-wI8D5dvYovRMx/YYKtUNt3Yxaw4ORC9xo6Gt9t22kveWz1enG9QrhVlagzwrxSC455xD1dHMKhIJkbsQ7d48BA==}
     engines: {node: '>=8.3'}
     dependencies:
       '@types/fs-extra': 8.1.2
