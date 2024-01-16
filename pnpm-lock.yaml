@@ -68,8 +68,8 @@ devDependencies:
     specifier: 6.31.1
     version: 6.31.1
   denoify:
-    specifier: 1.5.3
-    version: 1.5.3
+    specifier: 1.6.9
+    version: 1.6.9
   eslint:
     specifier: 8.38.0
     version: 8.38.0
@@ -2819,8 +2819,8 @@ packages:
       slash: 4.0.0
     dev: true
 
-  /denoify@1.5.3:
-    resolution: {integrity: sha512-CFXRRBeTfggSdPuhUmfrjnzmrvfY3Cn5YHFt7abTHfYoVBq7gV51k/V2dwwiIMsqplW/xfwPX3wO2TNej/4o+g==}
+  /denoify@1.6.9:
+    resolution: {integrity: sha512-/X5rewN7sCNRNx46b8JDnbohTPT+KK2TBQBlnsOktPyny5Zy70iwLvFNToPJ183vVFNBe91NeF9aCRTLZDiqsQ==}
     hasBin: true
     dependencies:
       '@octokit/rest': 18.12.0
@@ -2828,16 +2828,15 @@ packages:
       commander: 4.1.1
       comment-json: 3.0.3
       cosmiconfig: 7.1.0
-      evt: 2.4.18
-      get-github-default-branch-name: 0.0.4
+      evt: 2.5.7
+      get-github-default-branch-name: 1.0.0
       gitignore-parser: 0.0.2
       glob: 7.2.3
-      minimal-polyfills: 2.2.2
+      minimal-polyfills: 2.2.3
       node-fetch: 2.6.9
-      parse-dont-validate: 4.1.0
       path-depth: 1.0.0
       scripting-tools: 0.19.14
-      tsafe: 1.6.0
+      tsafe: 1.6.6
       url-join: 4.0.1
     transitivePeerDependencies:
       - encoding
@@ -3522,12 +3521,12 @@ packages:
       through: 2.3.8
     dev: true
 
-  /evt@2.4.18:
-    resolution: {integrity: sha512-kMYW3DPrUWvFsOUf3cN1NMdg0MEFYLMLqC7hPSasNs8TOZCOBsDgazr6nXda2iUur/2L6BtRu0oCl2++oGYZxA==}
+  /evt@2.5.7:
+    resolution: {integrity: sha512-dr7Wd16ry5F8WNU1xXLKpFpO3HsoAGg8zC48e08vDdzMzGWCP9/QFGt1PQptEEDh8SwYP3EL8M+d/Gb0kgUp6g==}
     dependencies:
-      minimal-polyfills: 2.2.2
-      run-exclusive: 2.2.18
-      tsafe: 1.6.0
+      minimal-polyfills: 2.2.3
+      run-exclusive: 2.2.19
+      tsafe: 1.6.6
     dev: true
 
   /execa@5.1.1:
@@ -3837,8 +3836,8 @@ packages:
     engines: {node: 6.* || 8.* || >= 10.*}
     dev: true
 
-  /get-github-default-branch-name@0.0.4:
-    resolution: {integrity: sha512-ltOGC9Jk0k8boe48Gk7SkJErwxt7MhwXtbNrBUyNCZcwcXSmGRdkKb2u0YO250PGvPsUtdqRjg7lVuIk1VtpCg==}
+  /get-github-default-branch-name@1.0.0:
+    resolution: {integrity: sha512-BqOokYoLjPIgkehneFPUZW9nNtU0LCXVMJ87YKaHGMWgCSZkTBHWGa76xsyVeXg+nQzRJBi9KDwQbTH3HLntwQ==}
     dependencies:
       '@octokit/rest': 18.12.0
       scripting-tools: 0.19.14
@@ -5320,8 +5319,8 @@ packages:
     engines: {node: '>=4'}
     dev: true
 
-  /minimal-polyfills@2.2.2:
-    resolution: {integrity: sha512-eEOUq/LH/DbLWihrxUP050Wi7H/N/I2dQT98Ep6SqOpmIbk4sXOI4wqalve66QoZa+6oljbZWU6I6T4dehQGmw==}
+  /minimal-polyfills@2.2.3:
+    resolution: {integrity: sha512-oxdmJ9cL+xV72h0xYxp4tP2d5/fTBpP45H8DIOn9pASuF8a3IYTf+25fMGDYGiWW+MFsuog6KD6nfmhZJQ+uUw==}
     dev: true
 
   /minimatch@3.1.2:
@@ -5811,10 +5810,6 @@ packages:
     engines: {node: '>=8'}
     dependencies:
       callsites: 3.1.0
-    dev: true
-
-  /parse-dont-validate@4.1.0:
-    resolution: {integrity: sha512-MrrhzYT4A6Ft3vf6W5DaGt/i8/p3/YgISC2FQxJ+cENp7C08sln8hcP2eU9fsTf9VG3m0AE/VH/x7R/4nuWafQ==}
     dev: true
 
   /parse-entities@2.0.0:
@@ -6375,10 +6370,10 @@ packages:
       strip-json-comments: 3.1.1
     dev: true
 
-  /run-exclusive@2.2.18:
-    resolution: {integrity: sha512-TXr1Gkl1iEAOCCpBTRm/2m0+1KGjORcWpZZ+VGGTe7dYX8E4y8/fMvrHk0zf+kclec2R//tpvdBxgG0bDgaJfw==}
+  /run-exclusive@2.2.19:
+    resolution: {integrity: sha512-K3mdoAi7tjJ/qT7Flj90L7QyPozwUaAG+CVhkdDje4HLKXUYC3N/Jzkau3flHVDLQVhiHBtcimVodMjN9egYbA==}
     dependencies:
-      minimal-polyfills: 2.2.2
+      minimal-polyfills: 2.2.3
     dev: true
 
   /run-parallel@1.2.0:
@@ -7014,8 +7009,8 @@ packages:
       tsconfig-paths: 4.2.0
     dev: true
 
-  /tsafe@1.6.0:
-    resolution: {integrity: sha512-wlUeRBnyN3EN2chXznpLm7vBEvJLEOziDU+MN6NRlD99AkwmXgtChNQhp+V97VyRa3Bp05IaL4Cocsc7JlyEUg==}
+  /tsafe@1.6.6:
+    resolution: {integrity: sha512-gzkapsdbMNwBnTIjgO758GujLCj031IgHK/PKr2mrmkCSJMhSOR5FeOuSxKLMUoYc0vAA4RGEYYbjt/v6afD3g==}
     dev: true
 
   /tsconfig-paths@3.14.1:
