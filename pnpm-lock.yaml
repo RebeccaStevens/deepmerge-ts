@@ -167,8 +167,8 @@ devDependencies:
     specifier: 4.2.0
     version: 4.2.0
   tsd:
-    specifier: 0.28.1
-    version: 0.28.1
+    specifier: 0.30.4
+    version: 0.30.4
   tslib:
     specifier: 2.5.0
     version: 2.5.0
@@ -1298,8 +1298,9 @@ packages:
     resolution: {integrity: sha512-yOlFc+7UtL/89t2ZhjPvvB/DeAr3r+Dq58IgzsFkOAvVC6NMJXmCGjbptdXdR9qsX7pKcTL+s87FtYREi2dEEQ==}
     dev: true
 
-  /@tsd/typescript@5.0.2:
-    resolution: {integrity: sha512-UgFiSalbDaWrkMBQv8rHetnlwj3HVZtJo6i2aGLe50I6XdlPZFdGRfM2GOaP+i3Tm6p+YcyEql3yoi3ZPs/6Pw==}
+  /@tsd/typescript@5.3.3:
+    resolution: {integrity: sha512-CQlfzol0ldaU+ftWuG52vH29uRoKboLinLy84wS8TQOu+m+tWoaUfk4svL4ij2V8M5284KymJBlHUusKj6k34w==}
+    engines: {node: '>=14.17'}
     dev: true
 
   /@types/comment-json@1.1.1:
@@ -7036,12 +7037,12 @@ packages:
       strip-bom: 3.0.0
     dev: true
 
-  /tsd@0.28.1:
-    resolution: {integrity: sha512-FeYrfJ05QgEMW/qOukNCr4fAJHww4SaKnivAXRv4g5kj4FeLpNV7zH4dorzB9zAfVX4wmA7zWu/wQf7kkcvfbw==}
+  /tsd@0.30.4:
+    resolution: {integrity: sha512-ncC4SwAeUk0OTcXt5h8l0/gOLHJSp9ogosvOADT6QYzrl0ITm398B3wkz8YESqefIsEEwvYAU8bvo7/rcN/M0Q==}
     engines: {node: '>=14.16'}
     hasBin: true
     dependencies:
-      '@tsd/typescript': 5.0.2
+      '@tsd/typescript': 5.3.3
       eslint-formatter-pretty: 4.1.0
       globby: 11.1.0
       jest-diff: 29.5.0
