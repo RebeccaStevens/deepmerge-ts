@@ -22,6 +22,13 @@ Deeply merge 2 or more objects respecting type information.
 
 [Any donations would be much appreciated](./DONATIONS.md). 😄
 
+### Enterprise Users
+
+`deepmerge-ts` is available as part of the Tidelift Subscription.
+
+Tidelift is working with the maintainers of `deepmerge-ts` and a growing network of open source maintainers to ensure your open source software supply chain meets enterprise standards now and into the future.
+[Learn more.](https://tidelift.com/subscription/pkg/npm-deepmerge-ts?utm_source=npm-deepmerge-ts&utm_medium=referral&utm_campaign=enterprise&utm_term=repo)
+
 ## Installation
 
 ### Node
