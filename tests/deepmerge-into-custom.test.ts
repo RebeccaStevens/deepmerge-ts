@@ -284,7 +284,10 @@ test("key path based merging", (t) => {
     bar: { baz: "special merge", qux: 9 },
   };
 
-  const customizedDeepmerge = deepmergeIntoCustom<ReadonlyArray<PropertyKey>>({
+  const customizedDeepmerge = deepmergeIntoCustom<
+    unknown,
+    ReadonlyArray<PropertyKey>
+  >({
     metaDataUpdater: (previousMeta, metaMeta) => {
       if (metaMeta.key === undefined) {
         return previousMeta ?? [];

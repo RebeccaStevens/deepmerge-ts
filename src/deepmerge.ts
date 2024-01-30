@@ -38,10 +38,11 @@ export function deepmerge<Ts extends Readonly<ReadonlyArray<unknown>>>(
  * @param options - The options on how to customize the merge function.
  */
 export function deepmergeCustom<
-  PMF extends Partial<DeepMergeMergeFunctionsURIs>
+  BaseTs = unknown,
+  PMF extends Partial<DeepMergeMergeFunctionsURIs> = {}
 >(
   options: DeepMergeOptions<DeepMergeBuiltInMetaData, DeepMergeBuiltInMetaData>
-): <Ts extends ReadonlyArray<unknown>>(
+): <Ts extends ReadonlyArray<BaseTs>>(
   ...objects: Ts
 ) => DeepMergeHKT<
   Ts,
@@ -56,24 +57,26 @@ export function deepmergeCustom<
  * @param rootMetaData - The meta data passed to the root items' being merged.
  */
 export function deepmergeCustom<
-  PMF extends Partial<DeepMergeMergeFunctionsURIs>,
-  MetaData,
+  BaseTs = unknown,
+  PMF extends Partial<DeepMergeMergeFunctionsURIs> = {},
+  MetaData = DeepMergeBuiltInMetaData,
   MetaMetaData extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData
 >(
   options: DeepMergeOptions<MetaData, MetaMetaData>,
   rootMetaData?: MetaData
-): <Ts extends ReadonlyArray<unknown>>(
+): <Ts extends ReadonlyArray<BaseTs>>(
   ...objects: Ts
 ) => DeepMergeHKT<Ts, GetDeepMergeMergeFunctionsURIs<PMF>, MetaData>;
 
 export function deepmergeCustom<
+  BaseTs,
   PMF extends Partial<DeepMergeMergeFunctionsURIs>,
   MetaData,
   MetaMetaData extends DeepMergeBuiltInMetaData
 >(
   options: DeepMergeOptions<MetaData, MetaMetaData>,
   rootMetaData?: MetaData
-): <Ts extends ReadonlyArray<unknown>>(
+): <Ts extends ReadonlyArray<BaseTs>>(
   ...objects: Ts
 ) => DeepMergeHKT<Ts, GetDeepMergeMergeFunctionsURIs<PMF>, MetaData> {
   /**

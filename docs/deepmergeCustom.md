@@ -93,6 +93,38 @@ const customizedDeepmerge = deepmergeCustom({
 });
 ```
 
+## Restricting the Parameter Types
+
+By default, anything can be passed into a deepmerge function.
+If your custom version relies on certain input types, you can restrict the parameters that can be passed.
+This is done with the first generic that can be passed into `deepmergeCustom`.
+
+For example:
+
+```ts
+import { deepmergeCustom } from "deepmerge-ts";
+
+type Foo = {
+  foo: {
+    bar: string;
+    baz?: number;
+  };
+};
+
+const customDeepmerge = deepmergeCustom<
+  Foo // <-- Only parameters of type Foo to be passed into the function.
+>({});
+
+const x = { foo: { bar: "bar-1", baz: 3 } };
+const y = { foo: { bar: "bar-2" } };
+
+customDeepmerge(x, y); // => { foo: { bar: "bar-2", baz: 3 } }
+
+const z = { bar: "bar" };
+
+customDeepmerge(x, z); // Argument of type '{ bar: string; }' is not assignable to parameter of type 'Foo'.
+```
+
 ## Customizing the Return Type
 
 If you want to customize the deepmerge function, you probably also want the return type of the result to be correct too.\
@@ -108,9 +140,12 @@ Here's a simple example that creates a custom deepmerge function that does not m
 import type { DeepMergeLeafURI } from "deepmerge-ts";
 import { deepmergeCustom } from "deepmerge-ts";
 
-const customDeepmerge = deepmergeCustom<{
-  DeepMergeArraysURI: DeepMergeLeafURI; // <-- Needed for correct output type.
-}>({
+const customDeepmerge = deepmergeCustom<
+  unknown,                                // <-- Types that can be passed into the function.
+  {
+    DeepMergeArraysURI: DeepMergeLeafURI; // <-- Needed for correct output type.
+  }
+>({
   mergeArrays: false,
 });
 
@@ -140,9 +175,12 @@ Here's an example of creating a custom deepmerge function that amalgamates dates
 import type { DeepMergeLeaf, DeepMergeMergeFunctionURItoKind, DeepMergeMergeFunctionsURIs } from "deepmerge-ts";
 import { deepmergeCustom } from "deepmerge-ts";
 
-const customizedDeepmerge = deepmergeCustom<{
-  DeepMergeOthersURI: "MyDeepMergeDatesURI"; // <-- Needed for correct output type.
-}>({
+const customizedDeepmerge = deepmergeCustom<
+  unknown,                                      // <-- Types that can be passed into the function.
+  {
+    DeepMergeOthersURI: "MyDeepMergeDatesURI";  // <-- Needed for correct output type.
+  }
+>({
   mergeOthers: (values, utils, meta) => {
     // If every value is a date, the return the amalgamated array.
     if (values.every((value) => value instanceof Date)) {
@@ -232,6 +270,8 @@ import type { DeepMergeLeaf, DeepMergeMergeFunctionURItoKind, DeepMergeMergeFunc
 import { deepmergeCustom } from "deepmerge-ts";
 
 const customizedDeepmerge = deepmergeCustom<
+  // Allow any value to be passed into the function.
+  unknown,
   // Change the return type of `mergeOthers`.
   {
     DeepMergeOthersURI: "KeyPathBasedMerge";
