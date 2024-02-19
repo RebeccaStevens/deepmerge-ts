@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Get files changed
-        uses: dorny/paths-filter@v2
+        uses: dorny/paths-filter@v3
         id: filter
         with:
           # Base branch used to get changed files
