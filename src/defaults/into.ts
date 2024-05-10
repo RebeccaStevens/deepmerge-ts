@@ -115,11 +115,17 @@ export function mergeMaps<
 }
 
 /**
- * Set the target to the last value.
+ * Set the target to the last non-undefined value.
  */
 export function mergeOthers<Ts extends ReadonlyArray<unknown>>(
   m_target: Reference<unknown>,
   values: Ts,
 ) {
-  m_target.value = values.at(-1);
+  for (let i = values.length - 1; i >= 0; i--) {
+    if (values[i] !== undefined) {
+      m_target.value = values[i];
+      return;
+    }
+  }
+  m_target.value = undefined;
 }

@@ -119,8 +119,13 @@ export function mergeMaps<
 }
 
 /**
- * Get the last value in the given array.
+ * Get the last non-undefined value in the given array.
  */
 export function mergeOthers<Ts extends ReadonlyArray<unknown>>(values: Ts) {
-  return values.at(-1);
+  for (let i = values.length - 1; i >= 0; i--) {
+    if (values[i] !== undefined) {
+      return values[i];
+    }
+  }
+  return undefined;
 }

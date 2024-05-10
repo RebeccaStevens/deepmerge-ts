@@ -300,18 +300,18 @@ describe("deepmerge", () => {
     const x = { key1: undefined };
     const y = { key1: { subkey: `one` } };
 
-    const expected = { key1: { subkey: `one` } };
+    const expected = { key1: y.key1 };
 
     const merged = deepmerge(x, y);
 
     expect(merged).toStrictEqual(expected);
   });
 
-  it(`replaces records with undefined`, () => {
+  it(`doesn't replaces records with undefined`, () => {
     const x = { key1: { subkey: `one` } };
     const y = { key1: undefined };
 
-    const expected = { key1: undefined };
+    const expected = { key1: x.key1 };
 
     const merged = deepmerge(x, y);
 

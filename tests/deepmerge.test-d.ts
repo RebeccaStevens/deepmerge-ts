@@ -163,7 +163,7 @@ const i = {
 };
 
 const test13 = deepmerge(a, i);
-expectType<{ foo: undefined; baz: { quux: string[] }; garply: number }>(test13);
+expectType<{ foo: string; baz: { quux: string[] }; garply: number }>(test13);
 
 const j = {
   foo: new Set([1, 2]),
