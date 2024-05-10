@@ -35,25 +35,11 @@
   "type": "module",
   "exports": {
     "types": {
-      "import": "./dist/node/types/current/index.d.mts",
-      "require": "./dist/node/types/current/index.d.cts"
+      "import": "./dist/node/index.d.mts",
+      "require": "./dist/node/index.d.cts"
     },
     "import": "./dist/node/index.mjs",
     "require": "./dist/node/index.cjs"
-  },
-  "main": "dist/node/index.cjs",
-  "module": "dist/node/index.mjs",
-  "types": "dist/node/types/legacy/v4_0.d.ts",
-  "typesVersions": {
-    "<4.1": {
-      "*": ["dist/node/types/legacy/v4_0.d.ts"]
-    },
-    "<4.7": {
-      "*": ["dist/node/types/legacy/v4_6.d.ts"]
-    },
-    ">=4.7": {
-      "*": ["dist/node/types/current/index.d.mts"]
-    }
   },
   "files": [
     "dist/node/",
@@ -89,7 +75,7 @@
     "test": "pnpm run test:js && pnpm run test:types",
     "test:js": "vitest --coverage --run",
     "test:js:watch": "vitest",
-    "test:types": "pnpm run build:node && tsd -f 'tests/**/*.test-d.ts'",
+    "test:types": "pnpm run build:node && tsd -f 'tests/**/*.test-d.ts' -t 'dist/node/index.d.mts'",
     "type-check": "tsc --noEmit -p tsconfig.build.json"
   },
   "devDependencies": {
@@ -148,7 +134,6 @@
     "prettier-plugin-packagejson": "2.5.0",
     "rimraf": "5.0.7",
     "rollup": "4.17.2",
-    "rollup-plugin-copy": "3.5.0",
     "rollup-plugin-ts": "3.4.5",
     "semantic-release": "23.1.1",
     "tsc-files": "1.1.4",

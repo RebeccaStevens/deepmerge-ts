@@ -14,12 +14,7 @@ export default rsEslint(
     markdown: true,
     stylistic: true,
     yaml: true,
-    ignores: [
-      "tests/modules",
-      "tests/types",
-      "types-legacy",
-      "benchmark/data.json",
-    ],
+    ignores: ["tests/modules", "tests/types", "benchmark/data.json"],
   },
   {
     files: ["tests/utils.ts"],
