@@ -66,12 +66,12 @@ export function deepmergeInto<
  *
  * @param options - The options on how to customize the merge function.
  */
-export function deepmergeIntoCustom(
+export function deepmergeIntoCustom<BaseTs = unknown>(
   options: DeepMergeIntoOptions<
     DeepMergeBuiltInMetaData,
     DeepMergeBuiltInMetaData
   >,
-): <Target extends object, Ts extends ReadonlyArray<unknown>>(
+): <Target extends object, Ts extends ReadonlyArray<BaseTs>>(
   target: Target,
   ...objects: Ts
 ) => void;
@@ -83,23 +83,25 @@ export function deepmergeIntoCustom(
  * @param rootMetaData - The meta data passed to the root items' being merged.
  */
 export function deepmergeIntoCustom<
-  MetaData,
+  BaseTs = unknown,
+  MetaData = DeepMergeBuiltInMetaData,
   MetaMetaData extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData,
 >(
   options: DeepMergeIntoOptions<MetaData, MetaMetaData>,
   rootMetaData?: MetaData,
-): <Target extends object, Ts extends ReadonlyArray<unknown>>(
+): <Target extends object, Ts extends ReadonlyArray<BaseTs>>(
   target: Target,
   ...objects: Ts
 ) => void;
 
 export function deepmergeIntoCustom<
+  BaseTs,
   MetaData,
   MetaMetaData extends DeepMergeBuiltInMetaData,
 >(
   options: DeepMergeIntoOptions<MetaData, MetaMetaData>,
   rootMetaData?: MetaData,
-): <Target extends object, Ts extends ReadonlyArray<unknown>>(
+): <Target extends object, Ts extends ReadonlyArray<BaseTs>>(
   target: Target,
   ...objects: Ts
 ) => void {
