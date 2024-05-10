@@ -9,8 +9,10 @@ import {
   type EveryIsMap,
   type EveryIsRecord,
   type EveryIsSet,
+  type Is,
   type IsNever,
   type IsTuple,
+  type Or,
 } from "./utils";
 
 /**
@@ -169,7 +171,7 @@ export type DeepMergeLeaf<Ts extends ReadonlyArray<unknown>> =
     : Ts extends readonly [infer T]
       ? T
       : Ts extends readonly [...infer Rest, infer Tail]
-        ? IsNever<Tail> extends true
+        ? Or<IsNever<Tail>, Is<Tail, undefined>> extends true
           ? Rest extends ReadonlyArray<unknown>
             ? DeepMergeLeaf<Rest>
             : never

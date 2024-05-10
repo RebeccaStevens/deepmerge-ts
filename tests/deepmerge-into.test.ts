@@ -266,11 +266,11 @@ describe("deepmergeInto", () => {
     expect(x).toStrictEqual(expected);
   });
 
-  it(`replaces records with undefined`, () => {
+  it(`doesn't replaces records with undefined`, () => {
     const x = { key1: { subkey: `one` } };
     const y = { key1: undefined };
 
-    const expected = { key1: undefined };
+    const expected = { key1: { subkey: `one` } };
 
     deepmergeInto(x, y);
 
