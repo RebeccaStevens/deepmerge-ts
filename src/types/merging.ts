@@ -156,14 +156,6 @@ export type DeepMergeLeafURI = "DeepMergeLeafURI";
 
 /**
  * Get the leaf type from many types that can't be merged.
- *
- * @deprecated Use `DeepMergeLeaf` instead.
- */
-export type DeepMergeLeafHKT<Ts extends ReadonlyArray<unknown>> =
-  DeepMergeLeaf<Ts>;
-
-/**
- * Get the leaf type from many types that can't be merged.
  */
 export type DeepMergeLeaf<Ts extends ReadonlyArray<unknown>> =
   Ts extends readonly []
