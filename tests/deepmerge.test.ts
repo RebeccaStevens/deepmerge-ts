@@ -1,645 +1,641 @@
 import { createRequire } from "node:module";
 
-import test from "ava";
+import { describe, expect, it } from "vitest";
 
 import { deepmerge } from "../src";
 
-test("return undefined when nothing to merge", (t) => {
-  // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
-  const merged = deepmerge();
-  t.is(merged, undefined);
-});
-
-test("return the same object if only 1 is passed", (t) => {
-  const foo = { prop: 1 };
-  const merged = deepmerge(foo);
-  t.is(merged, foo);
-});
-
-test("return the same array if only 1 is passed", (t) => {
-  const foo = [1];
-  const merged = deepmerge(foo);
-  t.is(merged, foo);
-});
-
-test("return the same set if only 1 is passed", (t) => {
-  const foo = new Set([1]);
-  const merged = deepmerge(foo);
-  t.is(merged, foo);
-});
-
-test("return the same map if only 1 is passed", (t) => {
-  const foo = new Map([[1, 2]]);
-  const merged = deepmerge(foo);
-  t.is(merged, foo);
-});
-
-test("return the same date if only 1 is passed", (t) => {
-  const foo = new Date();
-  const merged = deepmerge(foo);
-  t.is(merged, foo);
-});
-
-test("can merge 2 objects with different props", (t) => {
-  const x = { first: true };
-  const y = { second: false };
-
-  const expected = {
-    first: true,
-    second: false,
-  };
-
-  const merged = deepmerge(x, y);
-
-  t.deepEqual(merged, expected);
-});
-
-test("can merge many objects with different props", (t) => {
-  const v = { first: true };
-  const x = { second: false };
-  const y = { third: 123 };
-  const z = { fourth: "abc" };
-
-  const expected = {
-    first: true,
-    second: false,
-    third: 123,
-    fourth: "abc",
-  };
-
-  const merged = deepmerge(v, x, y, z);
-
-  t.deepEqual(merged, expected);
-});
-
-test("can merge many objects with same props", (t) => {
-  const x = { key1: "value1", key2: "value2" };
-  const y = { key1: "changed", key3: "value3" };
-  const z = { key3: "changed", key4: "value4" };
-
-  const expected = {
-    key1: "changed",
-    key2: "value2",
-    key3: "changed",
-    key4: "value4",
-  };
-
-  const merged = deepmerge(x, y, z);
-
-  t.deepEqual(merged, expected);
-});
-
-test("does not clone any elements", (t) => {
-  const x = { a: { d: 123 } };
-  const y = { b: { e: true } };
-  const z = { c: { f: "string" } };
-
-  const merged = deepmerge(x, y, z);
-
-  t.is(merged.a, x.a);
-  t.is(merged.b, y.b);
-  t.is(merged.c, z.c);
-});
-
-test("does not mutate inputs", (t) => {
-  const x = { a: { d: 123 } };
-  const y = { b: { e: true } };
-  const z = { c: { f: "string" } };
-
-  deepmerge(x, y, z);
-
-  t.deepEqual(x, { a: { d: 123 } });
-  t.deepEqual(y, { b: { e: true } });
-  t.deepEqual(z, { c: { f: "string" } });
-});
-
-test("merging with empty object shallow clones the object", (t) => {
-  const value = { a: { d: 123 } };
-
-  const merged = deepmerge({}, value);
-
-  t.deepEqual(merged, value);
-  t.not(merged, value, "Value should be shallow cloned.");
-  t.is(merged.a, value.a, "Value should not be deep cloned.");
-});
-
-test(`can merge nested objects`, (t) => {
-  const x = {
-    key1: {
-      subkey1: `value1`,
-      subkey2: `value2`,
-    },
-  };
-  const y = {
-    key1: {
-      subkey1: `changed`,
-      subkey3: `added`,
-    },
-  };
-
-  const expected = {
-    key1: {
-      subkey1: `changed`,
-      subkey2: `value2`,
-      subkey3: `added`,
-    },
-  };
-
-  const merged = deepmerge(x, y);
-
-  t.deepEqual(x, {
-    key1: {
-      subkey1: `value1`,
-      subkey2: `value2`,
-    },
+describe("deepmerge", () => {
+  it("return undefined when nothing to merge", () => {
+    // eslint-disable-next-line ts/no-confusing-void-expression
+    const merged = deepmerge();
+    expect(merged).toBe(undefined);
   });
-  t.deepEqual(merged, expected);
-});
 
-test(`replaces simple prop with nested object`, (t) => {
-  const x = {
-    key1: `value1`,
-    key2: `value2`,
-  };
-  const y = {
-    key1: {
-      subkey1: `subvalue1`,
-      subkey2: `subvalue2`,
-    },
-  };
-
-  const expected = {
-    key1: {
-      subkey1: `subvalue1`,
-      subkey2: `subvalue2`,
-    },
-    key2: `value2`,
-  };
-
-  const merged = deepmerge(x, y);
-
-  t.deepEqual(merged, expected);
-});
-
-test(`should add nested object in target`, (t) => {
-  const x = {
-    a: {},
-  };
-  const y = {
-    b: {
-      c: {},
-    },
-  };
-
-  const expected = {
-    a: {},
-    b: {
-      c: {},
-    },
-  };
-
-  const merged = deepmerge(x, y);
-
-  t.deepEqual(merged, expected);
-  t.is(merged.b, y.b, "Value should not be deep cloned.");
-});
-
-test(`replaces nested object with simple prop`, (t) => {
-  const x = {
-    key1: {
-      subkey1: `subvalue1`,
-      subkey2: `subvalue2`,
-    },
-    key2: `value2`,
-  };
-  const y = { key1: `value1` };
-
-  const expected = { key1: `value1`, key2: `value2` };
-
-  const merged = deepmerge(x, y);
-
-  t.deepEqual(x, {
-    key1: {
-      subkey1: `subvalue1`,
-      subkey2: `subvalue2`,
-    },
-    key2: `value2`,
+  it("return the same object if only 1 is passed", () => {
+    const foo = { prop: 1 };
+    const merged = deepmerge(foo);
+    expect(merged).toBe(foo);
   });
-  t.deepEqual(merged, expected);
-});
 
-test(`replaces records with arrays`, (t) => {
-  const x = { key1: { subkey: `one` } };
-  const y = { key1: [`subkey`] };
+  it("return the same array if only 1 is passed", () => {
+    const foo = [1];
+    const merged = deepmerge(foo);
+    expect(merged).toBe(foo);
+  });
 
-  const expected = { key1: [`subkey`] };
+  it("return the same set if only 1 is passed", () => {
+    const foo = new Set([1]);
+    const merged = deepmerge(foo);
+    expect(merged).toBe(foo);
+  });
 
-  const merged = deepmerge(x, y);
+  it("return the same map if only 1 is passed", () => {
+    const foo = new Map([[1, 2]]);
+    const merged = deepmerge(foo);
+    expect(merged).toBe(foo);
+  });
 
-  t.deepEqual(merged, expected);
-});
+  it("return the same date if only 1 is passed", () => {
+    const foo = new Date();
+    const merged = deepmerge(foo);
+    expect(merged).toBe(foo);
+  });
 
-test(`replaces arrays with records`, (t) => {
-  const x = { key1: [`subkey`] };
-  const y = { key1: { subkey: `one` } };
+  it("can merge 2 objects with different props", () => {
+    const x = { first: true };
+    const y = { second: false };
 
-  const expected = { key1: { subkey: `one` } };
+    const expected = {
+      first: true,
+      second: false,
+    };
 
-  const merged = deepmerge(x, y);
+    const merged = deepmerge(x, y);
 
-  t.deepEqual(merged, expected);
-});
+    expect(merged).toStrictEqual(expected);
+  });
 
-test(`replaces dates with records`, (t) => {
-  const x = { key1: new Date() };
-  const y = { key1: { subkey: `one` } };
+  it("can merge many objects with different props", () => {
+    const v = { first: true };
+    const x = { second: false };
+    const y = { third: 123 };
+    const z = { fourth: "abc" };
 
-  const expected = { key1: { subkey: `one` } };
+    const expected = {
+      first: true,
+      second: false,
+      third: 123,
+      fourth: "abc",
+    };
 
-  const merged = deepmerge(x, y);
+    const merged = deepmerge(v, x, y, z);
 
-  t.deepEqual(merged, expected);
-});
+    expect(merged).toStrictEqual(expected);
+  });
 
-test(`replaces records with dates`, (t) => {
-  const date = new Date();
-  const x = { key1: { subkey: `one` } };
-  const y = { key1: date };
+  it("can merge many objects with same props", () => {
+    const x = { key1: "value1", key2: "value2" };
+    const y = { key1: "changed", key3: "value3" };
+    const z = { key3: "changed", key4: "value4" };
 
-  const expected = { key1: date };
+    const expected = {
+      key1: "changed",
+      key2: "value2",
+      key3: "changed",
+      key4: "value4",
+    };
 
-  const merged = deepmerge(x, y);
+    const merged = deepmerge(x, y, z);
 
-  t.deepEqual(merged, expected);
-});
+    expect(merged).toStrictEqual(expected);
+  });
 
-test(`replaces null with records`, (t) => {
-  const x = { key1: null };
-  const y = { key1: { subkey: `one` } };
+  it("does not clone any elements", () => {
+    const x = { a: { d: 123 } };
+    const y = { b: { e: true } };
+    const z = { c: { f: "string" } };
 
-  const expected = { key1: { subkey: `one` } };
+    const merged = deepmerge(x, y, z);
 
-  const merged = deepmerge(x, y);
+    expect(merged.a).toBe(x.a);
+    expect(merged.b).toBe(y.b);
+    expect(merged.c).toBe(z.c);
+  });
 
-  t.deepEqual(merged, expected);
-});
+  it("does not mutate inputs", () => {
+    const x = { a: { d: 123 } };
+    const y = { b: { e: true } };
+    const z = { c: { f: "string" } };
 
-test(`replaces records with null`, (t) => {
-  const x = { key1: { subkey: `one` } };
-  const y = { key1: null };
+    deepmerge(x, y, z);
 
-  const expected = { key1: null };
+    expect(x).toStrictEqual({ a: { d: 123 } });
+    expect(y).toStrictEqual({ b: { e: true } });
+    expect(z).toStrictEqual({ c: { f: "string" } });
+  });
 
-  const merged = deepmerge(x, y);
+  it("merging with empty object shallow clones the object", () => {
+    const value = { a: { d: 123 } };
 
-  t.deepEqual(merged, expected);
-});
+    const merged = deepmerge({}, value);
 
-test(`replaces undefined with records`, (t) => {
-  const x = { key1: undefined };
-  const y = { key1: { subkey: `one` } };
+    expect(merged).toStrictEqual(value);
+    expect(merged, "Value should be shallow cloned.").not.toBe(value);
+    expect(merged.a, "Value should not be deep cloned.").toBe(value.a);
+  });
 
-  const expected = { key1: { subkey: `one` } };
+  it(`can merge nested objects`, () => {
+    const x = {
+      key1: {
+        subkey1: `value1`,
+        subkey2: `value2`,
+      },
+    };
+    const y = {
+      key1: {
+        subkey1: `changed`,
+        subkey3: `added`,
+      },
+    };
 
-  const merged = deepmerge(x, y);
+    const expected = {
+      key1: {
+        subkey1: `changed`,
+        subkey2: `value2`,
+        subkey3: `added`,
+      },
+    };
 
-  t.deepEqual(merged, expected);
-});
+    const merged = deepmerge(x, y);
 
-test(`replaces records with undefined`, (t) => {
-  const x = { key1: { subkey: `one` } };
-  const y = { key1: undefined };
+    expect(x).toStrictEqual({
+      key1: {
+        subkey1: `value1`,
+        subkey2: `value2`,
+      },
+    });
+    expect(merged).toStrictEqual(expected);
+  });
 
-  const expected = { key1: undefined };
+  it(`replaces simple prop with nested object`, () => {
+    const x = {
+      key1: `value1`,
+      key2: `value2`,
+    };
+    const y = {
+      key1: {
+        subkey1: `subvalue1`,
+        subkey2: `subvalue2`,
+      },
+    };
 
-  const merged = deepmerge(x, y);
+    const expected = {
+      key1: {
+        subkey1: `subvalue1`,
+        subkey2: `subvalue2`,
+      },
+      key2: `value2`,
+    };
 
-  t.deepEqual(merged, expected);
-});
+    const merged = deepmerge(x, y);
 
-test(`can merge arrays`, (t) => {
-  const x = [`one`, `two`];
-  const y = [`one`, `three`];
+    expect(merged).toStrictEqual(expected);
+  });
 
-  const expected = [`one`, `two`, `one`, `three`];
+  it(`should add nested object in target`, () => {
+    const x = {
+      a: {},
+    };
+    const y = {
+      b: {
+        c: {},
+      },
+    };
 
-  const merged = deepmerge(x, y);
+    const expected = {
+      a: {},
+      b: {
+        c: {},
+      },
+    };
 
-  t.deepEqual(merged, expected);
-  t.true(Array.isArray(merged));
-});
+    const merged = deepmerge(x, y);
 
-test(`can merge sets`, (t) => {
-  const x = new Set([`one`, `two`]);
-  const y = new Set([`one`, `three`]);
+    expect(merged).toStrictEqual(expected);
+    expect(merged.b, "Value should not be deep cloned.").toBe(y.b);
+  });
 
-  const expected = new Set([`one`, `two`, `three`]);
+  it(`replaces nested object with simple prop`, () => {
+    const x = {
+      key1: {
+        subkey1: `subvalue1`,
+        subkey2: `subvalue2`,
+      },
+      key2: `value2`,
+    };
+    const y = { key1: `value1` };
 
-  const merged = deepmerge(x, y);
+    const expected = { key1: `value1`, key2: `value2` };
 
-  t.deepEqual(merged, expected);
-  t.true(merged instanceof Set);
-});
+    const merged = deepmerge(x, y);
 
-test(`can merge maps`, (t) => {
-  const x = new Map([
-    ["key1", "value1"],
-    ["key2", "value2"],
-  ]);
-  const y = new Map([
-    ["key1", "changed"],
-    ["key3", "value3"],
-  ]);
+    expect(x).toStrictEqual({
+      key1: {
+        subkey1: `subvalue1`,
+        subkey2: `subvalue2`,
+      },
+      key2: `value2`,
+    });
+    expect(merged).toStrictEqual(expected);
+  });
 
-  const expected = new Map([
-    ["key1", "changed"],
-    ["key2", "value2"],
-    ["key3", "value3"],
-  ]);
+  it(`replaces records with arrays`, () => {
+    const x = { key1: { subkey: `one` } };
+    const y = { key1: [`subkey`] };
 
-  const merged = deepmerge(x, y);
+    const expected = { key1: [`subkey`] };
 
-  t.deepEqual(merged, expected);
-  t.true(merged instanceof Map);
-});
+    const merged = deepmerge(x, y);
 
-test(`can merge array props`, (t) => {
-  const x = { a: [`one`, `two`] };
-  const y = { a: [`one`, `three`], b: [null] };
+    expect(merged).toStrictEqual(expected);
+  });
 
-  const expected = { a: [`one`, `two`, `one`, `three`], b: [null] };
+  it(`replaces arrays with records`, () => {
+    const x = { key1: [`subkey`] };
+    const y = { key1: { subkey: `one` } };
 
-  const merged = deepmerge(x, y);
+    const expected = { key1: { subkey: `one` } };
 
-  t.deepEqual(merged, expected);
-  t.true(Array.isArray(merged.a));
-  t.true(Array.isArray(merged.b));
-});
+    const merged = deepmerge(x, y);
 
-test(`can merge set props`, (t) => {
-  const x = { a: new Set([`one`, `two`]) };
-  const y = { a: new Set([`one`, `three`]) };
+    expect(merged).toStrictEqual(expected);
+  });
 
-  const expected = { a: new Set([`one`, `two`, `three`]) };
+  it(`replaces dates with records`, () => {
+    const x = { key1: new Date() };
+    const y = { key1: { subkey: `one` } };
 
-  const merged = deepmerge(x, y);
+    const expected = { key1: { subkey: `one` } };
 
-  t.deepEqual(merged, expected);
-  t.true(merged.a instanceof Set);
-});
+    const merged = deepmerge(x, y);
 
-test(`can merge map props`, (t) => {
-  const x = {
-    a: new Map([
+    expect(merged).toStrictEqual(expected);
+  });
+
+  it(`replaces records with dates`, () => {
+    const date = new Date();
+    const x = { key1: { subkey: `one` } };
+    const y = { key1: date };
+
+    const expected = { key1: date };
+
+    const merged = deepmerge(x, y);
+
+    expect(merged).toStrictEqual(expected);
+  });
+
+  it(`replaces null with records`, () => {
+    const x = { key1: null };
+    const y = { key1: { subkey: `one` } };
+
+    const expected = { key1: { subkey: `one` } };
+
+    const merged = deepmerge(x, y);
+
+    expect(merged).toStrictEqual(expected);
+  });
+
+  it(`replaces records with null`, () => {
+    const x = { key1: { subkey: `one` } };
+    const y = { key1: null };
+
+    const expected = { key1: null };
+
+    const merged = deepmerge(x, y);
+
+    expect(merged).toStrictEqual(expected);
+  });
+
+  it(`replaces undefined with records`, () => {
+    const x = { key1: undefined };
+    const y = { key1: { subkey: `one` } };
+
+    const expected = { key1: { subkey: `one` } };
+
+    const merged = deepmerge(x, y);
+
+    expect(merged).toStrictEqual(expected);
+  });
+
+  it(`replaces records with undefined`, () => {
+    const x = { key1: { subkey: `one` } };
+    const y = { key1: undefined };
+
+    const expected = { key1: undefined };
+
+    const merged = deepmerge(x, y);
+
+    expect(merged).toStrictEqual(expected);
+  });
+
+  it(`can merge arrays`, () => {
+    const x = [`one`, `two`];
+    const y = [`one`, `three`];
+
+    const expected = [`one`, `two`, `one`, `three`];
+
+    const merged = deepmerge(x, y);
+
+    expect(merged).toStrictEqual(expected);
+    expect(merged).toBeInstanceOf(Array);
+  });
+
+  it(`can merge sets`, () => {
+    const x = new Set([`one`, `two`]);
+    const y = new Set([`one`, `three`]);
+
+    const expected = new Set([`one`, `two`, `three`]);
+
+    const merged = deepmerge(x, y);
+
+    expect(merged).toStrictEqual(expected);
+    expect(merged).toBeInstanceOf(Set);
+  });
+
+  it(`can merge maps`, () => {
+    const x = new Map([
       ["key1", "value1"],
       ["key2", "value2"],
-    ]),
-  };
-  const y = {
-    a: new Map([
+    ]);
+    const y = new Map([
       ["key1", "changed"],
       ["key3", "value3"],
-    ]),
-  };
+    ]);
 
-  const expected = {
-    a: new Map([
+    const expected = new Map([
       ["key1", "changed"],
       ["key2", "value2"],
       ["key3", "value3"],
-    ]),
-  };
+    ]);
 
-  const merged = deepmerge(x, y);
+    const merged = deepmerge(x, y);
 
-  t.deepEqual(merged, expected);
-  t.true(merged.a instanceof Map);
-});
-
-test(`works with regular expressions`, (t) => {
-  const x = { key1: /abc/u };
-  const y = { key1: /efg/u };
-
-  const expected = { key1: /efg/u };
-
-  const merged = deepmerge(x, y);
-
-  t.deepEqual(merged, expected);
-  t.true(merged.key1 instanceof RegExp);
-  t.true(merged.key1.test(`efg`));
-});
-
-test(`works with dates`, (t) => {
-  const x = { key1: new Date() };
-  const y = { key1: new Date() };
-
-  const expected = { key1: y.key1 };
-
-  const merged = deepmerge(x, y);
-
-  t.deepEqual(merged, expected);
-  t.true(merged.key1 instanceof Date);
-});
-
-test(`supports symbols`, (t) => {
-  const testSymbol1 = Symbol("test symbol 1");
-  const testSymbol2 = Symbol("test symbol 2");
-  const testSymbol3 = Symbol("test symbol 3");
-
-  const x = { [testSymbol1]: `value1`, [testSymbol2]: `value2` };
-  const y = { [testSymbol1]: `changed`, [testSymbol3]: `value3` };
-
-  const expected = {
-    [testSymbol1]: `changed`,
-    [testSymbol2]: `value2`,
-    [testSymbol3]: `value3`,
-  };
-
-  const merged = deepmerge(x, y);
-
-  t.deepEqual(
-    Object.getOwnPropertySymbols(merged),
-    Object.getOwnPropertySymbols(expected)
-  );
-
-  t.deepEqual(merged[testSymbol1], expected[testSymbol1]);
-  t.deepEqual(merged[testSymbol2], expected[testSymbol2]);
-  t.deepEqual(merged[testSymbol3], expected[testSymbol3]);
-});
-
-test("enumerable keys", (t) => {
-  const m_x = {};
-  const m_y = {};
-
-  Object.defineProperties(m_x, {
-    a: {
-      value: 1,
-      enumerable: false,
-    },
-    b: {
-      value: 2,
-      enumerable: true,
-    },
+    expect(merged).toStrictEqual(expected);
+    expect(merged).toBeInstanceOf(Map);
   });
 
-  Object.defineProperties(m_y, {
-    a: {
-      value: 3,
-      enumerable: false,
-    },
-    b: {
-      value: 4,
-      enumerable: false,
-    },
+  it(`can merge array props`, () => {
+    const x = { a: [`one`, `two`] };
+    const y = { a: [`one`, `three`], b: [null] };
+
+    const expected = { a: [`one`, `two`, `one`, `three`], b: [null] };
+
+    const merged = deepmerge(x, y);
+
+    expect(merged).toStrictEqual(expected);
+    expect(merged.a).toBeInstanceOf(Array);
+    expect(merged.b).toBeInstanceOf(Array);
   });
 
-  const expected = { b: 2 };
+  it(`can merge set props`, () => {
+    const x = { a: new Set([`one`, `two`]) };
+    const y = { a: new Set([`one`, `three`]) };
 
-  const merged = deepmerge(m_x, m_y);
+    const expected = { a: new Set([`one`, `two`, `three`]) };
 
-  t.deepEqual(merged, expected);
-});
+    const merged = deepmerge(x, y);
 
-test(`merging objects with plain and non-plain properties`, (t) => {
-  const plainSymbolKey = Symbol(`plainSymbolKey`);
-  const parent = {
-    parentKey: `should be undefined`,
-  };
+    expect(merged).toStrictEqual(expected);
+    expect(merged.a).toBeInstanceOf(Set);
+  });
 
-  const m_x = Object.create(parent);
-  m_x.plainKey = `should be replaced`;
-  m_x[plainSymbolKey] = `should also be replaced`;
+  it(`can merge map props`, () => {
+    const x = {
+      a: new Map([
+        ["key1", "value1"],
+        ["key2", "value2"],
+      ]),
+    };
+    const y = {
+      a: new Map([
+        ["key1", "changed"],
+        ["key3", "value3"],
+      ]),
+    };
 
-  const y = {
-    plainKey: `bar`,
-    newKey: `baz`,
-    [plainSymbolKey]: `qux`,
-  };
+    const expected = {
+      a: new Map([
+        ["key1", "changed"],
+        ["key2", "value2"],
+        ["key3", "value3"],
+      ]),
+    };
 
-  const merged = deepmerge(m_x, y);
+    const merged = deepmerge(x, y);
 
-  t.false(
-    Object.hasOwn(merged, "parentKey"),
-    `inherited properties of target should be removed, not merged or ignored`
-  );
-  t.is(
-    merged.plainKey,
-    `bar`,
-    `enumerable own properties of target should be merged`
-  );
-  t.is(merged.newKey, `baz`, `property should be merged`);
-  t.is(
-    merged[plainSymbolKey],
-    `qux`,
-    `enumerable own symbol properties should be merged`
-  );
-});
+    expect(merged).toStrictEqual(expected);
+    expect(merged.a).toBeInstanceOf(Map);
+  });
 
-test(`merging objects with null prototype`, (t) => {
-  const m_x = Object.create(null);
-  m_x.a = 1;
-  m_x.b = { c: [2] };
+  it(`works with regular expressions`, () => {
+    const x = { key1: /abc/u };
+    const y = { key1: /efg/u };
 
-  const m_y = Object.create(null);
-  m_y.b = { c: [3] };
-  m_y.d = 4;
+    const expected = { key1: /efg/u };
 
-  const expected = {
-    a: 1,
-    b: {
-      c: [2, 3],
-    },
-    d: 4,
-  };
+    const merged = deepmerge(x, y);
 
-  const merged = deepmerge(m_x, m_y);
+    expect(merged).toStrictEqual(expected);
+    expect(merged.key1).toBeInstanceOf(RegExp);
+    expect(merged.key1.test("efg")).toBe(true);
+  });
 
-  t.deepEqual(merged, expected);
-});
+  it(`works with dates`, () => {
+    const x = { key1: new Date() };
+    const y = { key1: new Date() };
 
-test("dectecting valid records", (t) => {
-  const m_a = { a: 1 };
-  // eslint-disable-next-line no-proto, @typescript-eslint/no-explicit-any, functional/immutable-data
-  (m_a as any).__proto__.aProto = 1;
+    const expected = { key1: y.key1 };
 
-  const m_b = Object.create({ bProto: 2 });
-  m_b.b = 2;
+    const merged = deepmerge(x, y);
 
-  const m_c = Object.create(Object.prototype);
-  m_c.c = 3;
+    expect(merged).toStrictEqual(expected);
+    expect(merged.key1).toBeInstanceOf(Date);
+  });
 
-  const m_d = Object.create(null);
-  m_d.d = 4;
+  it(`supports symbols`, () => {
+    const testSymbol1 = Symbol("test symbol 1");
+    const testSymbol2 = Symbol("test symbol 2");
+    const testSymbol3 = Symbol("test symbol 3");
 
-  const expected = {
-    a: 1,
-    b: 2,
-    c: 3,
-    d: 4,
-  };
+    const x = { [testSymbol1]: `value1`, [testSymbol2]: `value2` };
+    const y = { [testSymbol1]: `changed`, [testSymbol3]: `value3` };
 
-  const merged = deepmerge(m_a, m_b, m_c, m_d);
+    const expected = {
+      [testSymbol1]: `changed`,
+      [testSymbol2]: `value2`,
+      [testSymbol3]: `value3`,
+    };
 
-  t.deepEqual(merged, expected);
-});
+    const merged = deepmerge(x, y);
 
-test("dectecting invalid records", (t) => {
-  const expected = {};
+    expect(Object.getOwnPropertySymbols(merged)).toStrictEqual(
+      Object.getOwnPropertySymbols(expected),
+    );
 
-  class AClass {}
-  const m_a = new AClass();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any, functional/immutable-data
-  (m_a as any).a = 1;
+    expect(merged[testSymbol1]).toStrictEqual(expected[testSymbol1]);
+    expect(merged[testSymbol2]).toStrictEqual(expected[testSymbol2]);
+    expect(merged[testSymbol3]).toStrictEqual(expected[testSymbol3]);
+  });
 
-  t.deepEqual(deepmerge(m_a, expected), expected);
-});
+  it("enumerable keys", () => {
+    const m_x = {};
+    const m_y = {};
 
-test("merging cjs modules", (t) => {
-  const require = createRequire(import.meta.url);
+    Object.defineProperties(m_x, {
+      a: {
+        value: 1,
+        enumerable: false,
+      },
+      b: {
+        value: 2,
+        enumerable: true,
+      },
+    });
 
-  const a = require("./modules/a.cjs");
-  const b = require("./modules/b.cjs");
+    Object.defineProperties(m_y, {
+      a: {
+        value: 3,
+        enumerable: false,
+      },
+      b: {
+        value: 4,
+        enumerable: false,
+      },
+    });
 
-  const expected = {
-    age: 30,
-    name: "alice",
-  };
+    const expected = { b: 2 };
 
-  const merged = deepmerge(a, b);
+    const merged = deepmerge(m_x, m_y);
 
-  t.deepEqual(merged, expected);
-});
+    expect(merged).toStrictEqual(expected);
+  });
 
-test("merging esm modules", async (t) => {
-  /* eslint-disable import/extensions */
-  const a = await import("./modules/a.mjs");
-  const b = await import("./modules/b.mjs");
-  /* eslint-enable */
+  it(`merging objects with plain and non-plain properties`, () => {
+    const plainSymbolKey = Symbol(`plainSymbolKey`);
+    const parent = {
+      parentKey: `should be undefined`,
+    };
 
-  const expected = {
-    age: 30,
-    name: "alice",
-  };
+    const m_x = Object.create(parent);
+    m_x.plainKey = `should be replaced`;
+    m_x[plainSymbolKey] = `should also be replaced`;
 
-  const merged = deepmerge(a, b);
+    const y = {
+      plainKey: `bar`,
+      newKey: `baz`,
+      [plainSymbolKey]: `qux`,
+    };
 
-  t.deepEqual(merged, expected);
-});
+    const merged = deepmerge(m_x, y);
 
-test("prototype pollution", (t) => {
-  /* eslint-disable @typescript-eslint/no-explicit-any */
-  const payload = '{"__proto__":{"a0":true}}';
+    expect(
+      Object.hasOwn(merged, "parentKey"),
+      `inherited properties of target should be removed, not merged or ignored`,
+    ).toBe(false);
+    expect(
+      merged.plainKey,
+      `enumerable own properties of target should be merged`,
+    ).toBe("bar");
+    expect(merged.newKey, `property should be merged`).toBe("baz");
+    expect(
+      merged[plainSymbolKey],
+      `enumerable own symbol properties should be merged`,
+    ).toBe("qux");
+  });
 
-  const x: any = JSON.parse(payload);
-  const y: any = {};
+  it(`merging objects with null prototype`, () => {
+    const m_x = Object.create(null);
+    m_x.a = 1;
+    m_x.b = { c: [2] };
 
-  const merged: any = deepmerge(x, y);
+    const m_y = Object.create(null);
+    m_y.b = { c: [3] };
+    m_y.d = 4;
 
-  t.deepEqual(JSON.stringify(merged), payload);
+    const expected = {
+      a: 1,
+      b: {
+        c: [2, 3],
+      },
+      d: 4,
+    };
 
-  t.not(({} as any).a0, true, "Safe POJO");
-  t.not(x.a0, true, "Safe x input");
-  t.not(y.a0, true, "Safe y input");
-  t.not(merged.a0, true, "Safe output");
-  /* eslint-enable @typescript-eslint/no-explicit-any */
+    const merged = deepmerge(m_x, m_y);
+
+    expect(merged).toStrictEqual(expected);
+  });
+
+  it("detecting valid records", () => {
+    const m_a = { a: 1 };
+    // eslint-disable-next-line no-proto, no-restricted-properties
+    (m_a as any).__proto__.aProto = 1;
+
+    const m_b = Object.create({ bProto: 2 });
+    m_b.b = 2;
+
+    const m_c = Object.create(Object.prototype);
+    m_c.c = 3;
+
+    const m_d = Object.create(null);
+    m_d.d = 4;
+
+    const expected = {
+      a: 1,
+      b: 2,
+      c: 3,
+      d: 4,
+    };
+
+    const merged = deepmerge(m_a, m_b, m_c, m_d);
+
+    expect(merged).toStrictEqual(expected);
+  });
+
+  it("detecting invalid records", () => {
+    const expected = {};
+
+    // eslint-disable-next-line ts/no-extraneous-class
+    class AClass {}
+    const m_a = new AClass();
+
+    (m_a as any).a = 1;
+
+    expect(deepmerge(m_a, expected)).toStrictEqual(expected);
+  });
+
+  it("merging cjs modules", () => {
+    const require = createRequire(import.meta.url);
+
+    const a = require("./modules/a.cjs");
+    const b = require("./modules/b.cjs");
+
+    const expected = {
+      age: 30,
+      name: "alice",
+    };
+
+    const merged = deepmerge(a, b);
+
+    expect(merged).toStrictEqual(expected);
+  });
+
+  it("merging esm modules", async () => {
+    const a = await import("./modules/a.mjs");
+    const b = await import("./modules/b.mjs");
+
+    const expected = {
+      age: 30,
+      name: "alice",
+    };
+
+    const merged = deepmerge(a, b);
+
+    expect(merged).toStrictEqual(expected);
+  });
+
+  it("prototype pollution", () => {
+    const payload = '{"__proto__":{"a0":true}}';
+
+    const x: any = JSON.parse(payload);
+    const y: any = {};
+
+    const merged: any = deepmerge(x, y);
+
+    expect(JSON.stringify(merged)).toStrictEqual(payload);
+
+    expect(({} as any).a0, "Safe POJO").not.toBe(true);
+    expect(x.a0, "Safe x input").not.toBe(true);
+    expect(y.a0, "Safe y input").not.toBe(true);
+    expect(merged.a0, "Safe output").not.toBe(true);
+  });
 });

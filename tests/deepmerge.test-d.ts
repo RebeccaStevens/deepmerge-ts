@@ -1,10 +1,10 @@
-import { expectType, expectAssignable } from "tsd";
+import { expectAssignable, expectType } from "tsd";
 
 import {
   type DeepMergeMapsDefaultHKT,
   type DeepMergeSetsDefaultHKT,
+  deepmerge,
 } from "../src";
-import { deepmerge } from "../src";
 
 const a = {
   foo: "abc",
@@ -95,8 +95,8 @@ const d = {
 const test8 = deepmerge(c, d);
 expectType<{ garply: 5; bar: "abc"; quux: "def" }>(test8);
 
-type E = { readonly foo: ReadonlyArray<number> };
-type F = { readonly foo: ReadonlyArray<string> };
+type E = Readonly<{ foo: ReadonlyArray<number> }>;
+type F = Readonly<{ foo: ReadonlyArray<string> }>;
 
 const e = {
   foo: [1, 2, 3],
@@ -207,7 +207,7 @@ expectType<
       Map<
         number,
         Map<number, { foo: string; baz: { corge: number }; grault: number }>
-      >
+      >,
     ]
   >
 >(test15);
@@ -226,5 +226,5 @@ const fourth = { fourth: "abc" };
 
 const test16 = deepmerge(first, second, third, fourth);
 expectType<{ first: boolean; second: boolean; third: number; fourth: string }>(
-  test16
+  test16,
 );

@@ -4,12 +4,12 @@ import {
   type DeepMergeArraysDefaultHKT,
   type DeepMergeBuiltInMetaData,
   type DeepMergeMapsDefaultHKT,
-  type DeepMergeMergeFunctionsURIs,
   type DeepMergeMergeFunctionUtils,
+  type DeepMergeMergeFunctionsURIs,
   type DeepMergeRecordsDefaultHKT,
   type DeepMergeSetsDefaultHKT,
 } from "../types";
-import { getKeys, objectHasProperty, getIterableOfIterables } from "../utils";
+import { getIterableOfIterables, getKeys, objectHasProperty } from "../utils";
 
 /**
  * The default merge functions.
@@ -32,15 +32,13 @@ export function mergeRecords<
   U extends DeepMergeMergeFunctionUtils<M, MM>,
   MF extends DeepMergeMergeFunctionsURIs,
   M,
-  MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData
+  MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData,
 >(
   values: Ts,
   utils: U,
-  meta: M | undefined
+  meta: M | undefined,
 ): DeepMergeRecordsDefaultHKT<Ts, MF, M> {
   const result: Record<PropertyKey, unknown> = {};
-
-  /* eslint-disable functional/no-loop-statements, functional/no-conditional-statements, functional/no-expression-statements, functional/immutable-data -- using imperative code here is more performant. */
 
   for (const key of getKeys(values)) {
     const propValues = [];
@@ -63,7 +61,7 @@ export function mergeRecords<
     const propertyResult = mergeUnknowns<ReadonlyArray<unknown>, U, MF, M, MM>(
       propValues,
       utils,
-      updatedMeta
+      updatedMeta,
     );
 
     if (propertyResult === actions.skip) {
@@ -82,8 +80,6 @@ export function mergeRecords<
     }
   }
 
-  /* eslint-enable functional/no-loop-statements, functional/no-conditional-statements, functional/no-expression-statements, functional/immutable-data */
-
   return result as DeepMergeRecordsDefaultHKT<Ts, MF, M>;
 }
 
@@ -95,7 +91,7 @@ export function mergeRecords<
 export function mergeArrays<
   Ts extends ReadonlyArray<ReadonlyArray<unknown>>,
   MF extends DeepMergeMergeFunctionsURIs,
-  M
+  M,
 >(values: Ts): DeepMergeArraysDefaultHKT<Ts, MF, M> {
   return values.flat() as DeepMergeArraysDefaultHKT<Ts, MF, M>;
 }
@@ -106,7 +102,7 @@ export function mergeArrays<
  * @param values - The sets.
  */
 export function mergeSets<
-  Ts extends ReadonlyArray<Readonly<ReadonlySet<unknown>>>
+  Ts extends ReadonlyArray<Readonly<ReadonlySet<unknown>>>,
 >(values: Ts): DeepMergeSetsDefaultHKT<Ts> {
   return new Set(getIterableOfIterables(values)) as DeepMergeSetsDefaultHKT<Ts>;
 }
@@ -117,7 +113,7 @@ export function mergeSets<
  * @param values - The maps.
  */
 export function mergeMaps<
-  Ts extends ReadonlyArray<Readonly<ReadonlyMap<unknown, unknown>>>
+  Ts extends ReadonlyArray<Readonly<ReadonlyMap<unknown, unknown>>>,
 >(values: Ts): DeepMergeMapsDefaultHKT<Ts> {
   return new Map(getIterableOfIterables(values)) as DeepMergeMapsDefaultHKT<Ts>;
 }

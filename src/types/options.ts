@@ -8,7 +8,7 @@ import { type DeepMergeBuiltInMetaData } from "./merging";
  */
 export type DeepMergeOptions<
   in out M,
-  MM extends Readonly<Record<PropertyKey, unknown>> = {}
+  MM extends Readonly<Record<PropertyKey, unknown>> = {},
 > = Partial<DeepMergeOptionsFull<M, MM & DeepMergeBuiltInMetaData>>;
 
 /**
@@ -16,12 +16,12 @@ export type DeepMergeOptions<
  */
 export type DeepMergeIntoOptions<
   in out M,
-  MM extends Readonly<Record<PropertyKey, unknown>> = {}
+  MM extends Readonly<Record<PropertyKey, unknown>> = {},
 > = Partial<DeepMergeIntoOptionsFull<M, MM & DeepMergeBuiltInMetaData>>;
 
 type MetaDataUpdater<
   in out M,
-  MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData
+  MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData,
 > = (previousMeta: M | undefined, metaMeta: Readonly<Partial<MM>>) => M;
 
 /**
@@ -29,7 +29,7 @@ type MetaDataUpdater<
  */
 type DeepMergeOptionsFull<
   in out M,
-  MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData
+  MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData,
 > = Readonly<{
   mergeRecords: DeepMergeMergeFunctions<M, MM>["mergeRecords"] | false;
   mergeArrays: DeepMergeMergeFunctions<M, MM>["mergeArrays"] | false;
@@ -45,7 +45,7 @@ type DeepMergeOptionsFull<
  */
 type DeepMergeIntoOptionsFull<
   in out M,
-  MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData
+  MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData,
 > = Readonly<{
   mergeRecords: DeepMergeMergeIntoFunctions<M, MM>["mergeRecords"] | false;
   mergeArrays: DeepMergeMergeIntoFunctions<M, MM>["mergeArrays"] | false;
@@ -67,55 +67,55 @@ export type Reference<T> = {
  */
 type DeepMergeMergeFunctions<
   in M,
-  MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData
+  MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData,
 > = Readonly<{
   mergeRecords: <
     Ts extends ReadonlyArray<Readonly<Record<PropertyKey, unknown>>>,
-    U extends DeepMergeMergeFunctionUtils<M, MM>
+    U extends DeepMergeMergeFunctionUtils<M, MM>,
   >(
     values: Ts,
     utils: U,
-    meta: M | undefined
+    meta: M | undefined,
   ) => unknown;
 
   mergeArrays: <
     Ts extends ReadonlyArray<ReadonlyArray<unknown>>,
-    U extends DeepMergeMergeFunctionUtils<M, MM>
+    U extends DeepMergeMergeFunctionUtils<M, MM>,
   >(
     values: Ts,
     utils: U,
-    meta: M | undefined
+    meta: M | undefined,
   ) => unknown;
 
   mergeMaps: <
     Ts extends ReadonlyArray<Readonly<ReadonlyMap<unknown, unknown>>>,
-    U extends DeepMergeMergeFunctionUtils<M, MM>
+    U extends DeepMergeMergeFunctionUtils<M, MM>,
   >(
     values: Ts,
     utils: U,
-    meta: M | undefined
+    meta: M | undefined,
   ) => unknown;
 
   mergeSets: <
     Ts extends ReadonlyArray<Readonly<ReadonlySet<unknown>>>,
-    U extends DeepMergeMergeFunctionUtils<M, MM>
+    U extends DeepMergeMergeFunctionUtils<M, MM>,
   >(
     values: Ts,
     utils: U,
-    meta: M | undefined
+    meta: M | undefined,
   ) => unknown;
 
   mergeOthers: <
     Ts extends ReadonlyArray<unknown>,
-    U extends DeepMergeMergeFunctionUtils<M, MM>
+    U extends DeepMergeMergeFunctionUtils<M, MM>,
   >(
     values: Ts,
     utils: U,
-    meta: M | undefined
+    meta: M | undefined,
   ) => unknown;
 }>;
 
-// eslint-disable-next-line @typescript-eslint/no-invalid-void-type
+// eslint-disable-next-line ts/no-invalid-void-type
 type DeepMergeMergeIntoFunctionsReturnType = void | symbol;
 
 /**
@@ -123,56 +123,56 @@ type DeepMergeMergeIntoFunctionsReturnType = void | symbol;
  */
 type DeepMergeMergeIntoFunctions<
   in M,
-  MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData
+  MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData,
 > = Readonly<{
   mergeRecords: <
     Ts extends ReadonlyArray<Readonly<Record<PropertyKey, unknown>>>,
-    U extends DeepMergeMergeIntoFunctionUtils<M, MM>
+    U extends DeepMergeMergeIntoFunctionUtils<M, MM>,
   >(
     m_target: Reference<Record<PropertyKey, unknown>>,
     values: Ts,
     utils: U,
-    meta: M | undefined
+    meta: M | undefined,
   ) => DeepMergeMergeIntoFunctionsReturnType;
 
   mergeArrays: <
     Ts extends ReadonlyArray<ReadonlyArray<unknown>>,
-    U extends DeepMergeMergeIntoFunctionUtils<M, MM>
+    U extends DeepMergeMergeIntoFunctionUtils<M, MM>,
   >(
     m_target: Reference<unknown[]>,
     values: Ts,
     utils: U,
-    meta: M | undefined
+    meta: M | undefined,
   ) => DeepMergeMergeIntoFunctionsReturnType;
 
   mergeMaps: <
     Ts extends ReadonlyArray<Readonly<ReadonlyMap<unknown, unknown>>>,
-    U extends DeepMergeMergeIntoFunctionUtils<M, MM>
+    U extends DeepMergeMergeIntoFunctionUtils<M, MM>,
   >(
     m_target: Reference<Map<unknown, unknown>>,
     values: Ts,
     utils: U,
-    meta: M | undefined
+    meta: M | undefined,
   ) => DeepMergeMergeIntoFunctionsReturnType;
 
   mergeSets: <
     Ts extends ReadonlyArray<Readonly<ReadonlySet<unknown>>>,
-    U extends DeepMergeMergeIntoFunctionUtils<M, MM>
+    U extends DeepMergeMergeIntoFunctionUtils<M, MM>,
   >(
     m_target: Reference<Set<unknown>>,
     values: Ts,
     utils: U,
-    meta: M | undefined
+    meta: M | undefined,
   ) => DeepMergeMergeIntoFunctionsReturnType;
 
   mergeOthers: <
     Ts extends ReadonlyArray<unknown>,
-    U extends DeepMergeMergeIntoFunctionUtils<M, MM>
+    U extends DeepMergeMergeIntoFunctionUtils<M, MM>,
   >(
     m_target: Reference<unknown>,
     values: Ts,
     utils: U,
-    meta: M | undefined
+    meta: M | undefined,
   ) => DeepMergeMergeIntoFunctionsReturnType;
 }>;
 
@@ -181,7 +181,7 @@ type DeepMergeMergeIntoFunctions<
  */
 export type DeepMergeMergeFunctionUtils<
   in out M,
-  MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData
+  MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData,
 > = Readonly<{
   mergeFunctions: DeepMergeMergeFunctions<M, MM>;
   defaultMergeFunctions: MergeFunctions;
@@ -197,10 +197,9 @@ export type DeepMergeMergeFunctionUtils<
 /**
  * The utils provided to the merge functions.
  */
-// eslint-disable-next-line functional/no-mixed-types
 export type DeepMergeMergeIntoFunctionUtils<
   in out M,
-  MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData
+  MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData,
 > = Readonly<{
   mergeFunctions: DeepMergeMergeIntoFunctions<M, MM>;
   defaultMergeFunctions: MergeIntoFunctions;
@@ -208,7 +207,7 @@ export type DeepMergeMergeIntoFunctionUtils<
   deepmergeInto: <Target extends object, Ts extends ReadonlyArray<unknown>>(
     target: Target,
     ...values: Ts
-  ) => void; // eslint-disable-line functional/no-return-void
+  ) => void;
   actions: Readonly<{
     defaultMerge: symbol;
   }>;

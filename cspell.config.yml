@@ -1,0 +1,66 @@
+$schema: https://raw.githubusercontent.com/streetsidesoftware/cspell/main/cspell.schema.json
+version: "0.2"
+
+language: en-US
+
+dictionaryDefinitions:
+  - name: project-dictionary
+    path: ./project-dictionary.txt
+    addWords: true
+
+allowCompoundWords: true
+caseSensitive: false
+useGitignore: true
+
+dictionaries:
+  - en_US
+  - bash
+  - filetypes
+  - fonts
+  - html
+  - misc
+  - node
+  - npm
+  - softwareTerms
+  - typescript
+  - project-dictionary
+
+import:
+  - "@cspell/dict-cryptocurrencies/cspell-ext.json"
+
+ignorePaths:
+  - .eslintrc.json
+  - .git
+  - .gitattributes
+  - .gitignore
+  - .husky
+  - .lintstagedrc.yml
+  - .markdownlint.json
+  - .npmrc
+  - .prettierignore
+  - .prettierrc.yml
+  - .vscode
+  - CHANGELOG.md
+  - coverage
+  - cspell.config.yml
+  - dist
+  - node_modules
+  - package.json
+  - patches
+  - pnpm-lock.yaml
+  - project-dictionary.txt
+
+ignoreRegExpList:
+  - /\b[a-f0-9]{6}\b/ui # ignore hex color codes
+  - /\b[a-z0-9]{32,}\b/ui # ignore long string of hex characters
+  - /`[^`]*`/u # ignore things in `...`
+  - /```[\w\W]*?```/u # ignore things in ```...```
+
+overrides:
+  - filename: "**/*.yml"
+    ignoreRegExpList:
+      - /^\s*(?:[a-z0-9]|-|_|\"|')+:/ui # ignore keys
+
+  - filename: ".github/(actions|workflows)/*.yml"
+    ignoreRegExpList:
+      - /\b(?:[A-Za-z0-9\-_])+\/(?:[A-Za-z0-9\-_])+@v\d+(?:\.\d+){0,2}\b/ui # ignore action

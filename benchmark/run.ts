@@ -1,13 +1,12 @@
-import Benchmark from "benchmark";
-
-import { constants as fsConstants, promises as fs } from "node:fs";
+import { promises as fs, constants as fsConstants } from "node:fs";
 import * as path from "node:path";
 
-import { deepmerge as deepmergeTs } from "deepmerge-ts";
+import Benchmark from "benchmark";
 import { all as deepmerge } from "deepmerge";
+import { deepmerge as deepmergeTs } from "deepmerge-ts";
+import { merge as lodashMerge } from "lodash";
 import { merge as mergeAnything } from "merge-anything";
 import { Accumulator as ObjectAccumulator } from "object-accumulator";
-import { merge as lodashMerge } from "lodash";
 
 const benchmarkDataFile = path.join(__dirname, "data.json");
 
@@ -18,7 +17,7 @@ const benchmarkDataSets: any[][] = await fs
     const data = await fs.readFile(benchmarkDataFile, { encoding: "utf8" });
     return JSON.parse(data);
   })
-  .catch(async (error) => {
+  .catch(async (error: unknown) => {
     if (error?.code !== "ENOENT") {
       throw error;
     }
@@ -43,7 +42,7 @@ for (let m_i = 0; m_i < benchmarkDataSets.length; m_i++) {
   console.log(
     `\nRunning benchmarks for data set ${m_i + 1} of ${
       benchmarkDataSets.length
-    }:\n`
+    }:\n`,
   );
 
   // add tests
@@ -69,13 +68,13 @@ for (let m_i = 0; m_i < benchmarkDataSets.length; m_i++) {
     // eslint-disable-next-line func-names
     .on("complete", function () {
       // @ts-expect-error When need to access the "this" value
-      // eslint-disable-next-line unicorn/no-this-assignment, @typescript-eslint/no-this-alias, no-invalid-this
+      // eslint-disable-next-line unicorn/no-this-assignment, ts/no-this-alias
       const results = this;
 
       console.log(
         `\nFastest is ${results.filter("fastest").map("name")} for data set ${
           m_i + 1
-        } of ${benchmarkDataSets.length}`
+        } of ${benchmarkDataSets.length}`,
       );
     })
     .run({ async: false });
@@ -98,8 +97,8 @@ function generateBenchmarkDataItem(maxProperties, depth, currentDepth = 0) {
 
   const propertiesOptions = shuffle(
     Array.from({ length: maxProperties }, (_, i) =>
-      String.fromCodePoint(i + 65)
-    )
+      String.fromCodePoint(i + 65),
+    ),
   );
 
   for (let m_i = 0; m_i < properties; m_i++) {

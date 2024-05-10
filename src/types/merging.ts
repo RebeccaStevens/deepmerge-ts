@@ -1,8 +1,8 @@
 import {
-  type DeepMergeRecordsDefaultHKT,
   type DeepMergeArraysDefaultHKT,
-  type DeepMergeSetsDefaultHKT,
   type DeepMergeMapsDefaultHKT,
+  type DeepMergeRecordsDefaultHKT,
+  type DeepMergeSetsDefaultHKT,
 } from "./defaults";
 import {
   type EveryIsArray,
@@ -16,11 +16,11 @@ import {
 /**
  * Mapping of merge function URIs to the merge function type.
  */
-// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+// eslint-disable-next-line ts/consistent-type-definitions
 export interface DeepMergeMergeFunctionURItoKind<
   Ts extends ReadonlyArray<unknown>,
   MF extends DeepMergeMergeFunctionsURIs,
-  in out M
+  in out M,
 > {
   readonly DeepMergeLeafURI: DeepMergeLeaf<Ts>;
   readonly DeepMergeRecordsDefaultURI: DeepMergeRecordsDefaultHKT<Ts, MF, M>;
@@ -36,7 +36,7 @@ type DeepMergeMergeFunctionKind<
   URI extends DeepMergeMergeFunctionURIs,
   Ts extends ReadonlyArray<unknown>,
   MF extends DeepMergeMergeFunctionsURIs,
-  M
+  M,
 > = DeepMergeMergeFunctionURItoKind<Ts, MF, M>[URI];
 
 /**
@@ -84,22 +84,23 @@ export type DeepMergeMergeFunctionsURIs = Readonly<{
 export type DeepMergeHKT<
   Ts extends ReadonlyArray<unknown>,
   MF extends DeepMergeMergeFunctionsURIs,
-  M
-> = IsTuple<Ts> extends true
-  ? Ts extends readonly []
-    ? undefined
-    : Ts extends readonly [infer T1]
-    ? T1
-    : EveryIsArray<Ts> extends true
-    ? DeepMergeArraysHKT<Ts, MF, M>
-    : EveryIsMap<Ts> extends true
-    ? DeepMergeMapsHKT<Ts, MF, M>
-    : EveryIsSet<Ts> extends true
-    ? DeepMergeSetsHKT<Ts, MF, M>
-    : EveryIsRecord<Ts> extends true
-    ? DeepMergeRecordsHKT<Ts, MF, M>
-    : DeepMergeOthersHKT<Ts, MF, M>
-  : unknown;
+  M,
+> =
+  IsTuple<Ts> extends true
+    ? Ts extends readonly []
+      ? undefined
+      : Ts extends readonly [infer T1]
+        ? T1
+        : EveryIsArray<Ts> extends true
+          ? DeepMergeArraysHKT<Ts, MF, M>
+          : EveryIsMap<Ts> extends true
+            ? DeepMergeMapsHKT<Ts, MF, M>
+            : EveryIsSet<Ts> extends true
+              ? DeepMergeSetsHKT<Ts, MF, M>
+              : EveryIsRecord<Ts> extends true
+                ? DeepMergeRecordsHKT<Ts, MF, M>
+                : DeepMergeOthersHKT<Ts, MF, M>
+    : unknown;
 
 /**
  * Deep merge records.
@@ -107,7 +108,7 @@ export type DeepMergeHKT<
 type DeepMergeRecordsHKT<
   Ts extends ReadonlyArray<unknown>,
   MF extends DeepMergeMergeFunctionsURIs,
-  M
+  M,
 > = DeepMergeMergeFunctionKind<MF["DeepMergeRecordsURI"], Ts, MF, M>;
 
 /**
@@ -116,7 +117,7 @@ type DeepMergeRecordsHKT<
 type DeepMergeArraysHKT<
   Ts extends ReadonlyArray<unknown>,
   MF extends DeepMergeMergeFunctionsURIs,
-  M
+  M,
 > = DeepMergeMergeFunctionKind<MF["DeepMergeArraysURI"], Ts, MF, M>;
 
 /**
@@ -125,7 +126,7 @@ type DeepMergeArraysHKT<
 type DeepMergeSetsHKT<
   Ts extends ReadonlyArray<unknown>,
   MF extends DeepMergeMergeFunctionsURIs,
-  M
+  M,
 > = DeepMergeMergeFunctionKind<MF["DeepMergeSetsURI"], Ts, MF, M>;
 
 /**
@@ -134,7 +135,7 @@ type DeepMergeSetsHKT<
 type DeepMergeMapsHKT<
   Ts extends ReadonlyArray<unknown>,
   MF extends DeepMergeMergeFunctionsURIs,
-  M
+  M,
 > = DeepMergeMergeFunctionKind<MF["DeepMergeMapsURI"], Ts, MF, M>;
 
 /**
@@ -143,7 +144,7 @@ type DeepMergeMapsHKT<
 type DeepMergeOthersHKT<
   Ts extends ReadonlyArray<unknown>,
   MF extends DeepMergeMergeFunctionsURIs,
-  M
+  M,
 > = DeepMergeMergeFunctionKind<MF["DeepMergeOthersURI"], Ts, MF, M>;
 
 /**
@@ -166,14 +167,14 @@ export type DeepMergeLeaf<Ts extends ReadonlyArray<unknown>> =
   Ts extends readonly []
     ? never
     : Ts extends readonly [infer T]
-    ? T
-    : Ts extends readonly [...infer Rest, infer Tail]
-    ? IsNever<Tail> extends true
-      ? Rest extends ReadonlyArray<unknown>
-        ? DeepMergeLeaf<Rest>
-        : never
-      : Tail
-    : never;
+      ? T
+      : Ts extends readonly [...infer Rest, infer Tail]
+        ? IsNever<Tail> extends true
+          ? Rest extends ReadonlyArray<unknown>
+            ? DeepMergeLeaf<Rest>
+            : never
+          : Tail
+        : never;
 
 /**
  * The meta data deepmerge is able to provide.

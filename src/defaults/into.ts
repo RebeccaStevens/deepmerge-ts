@@ -27,12 +27,12 @@ export function mergeRecords<
   Ts extends ReadonlyArray<Record<PropertyKey, unknown>>,
   U extends DeepMergeMergeIntoFunctionUtils<M, MM>,
   M,
-  MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData
+  MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData,
 >(
   m_target: Reference<Record<PropertyKey, unknown>>,
   values: Ts,
   utils: U,
-  meta: M | undefined
+  meta: M | undefined,
 ): void {
   for (const key of getKeys(values)) {
     const propValues = [];
@@ -57,7 +57,7 @@ export function mergeRecords<
       propertyTarget,
       propValues,
       utils,
-      updatedMeta
+      updatedMeta,
     );
 
     if (key === "__proto__") {
@@ -81,7 +81,7 @@ export function mergeRecords<
  */
 export function mergeArrays<Ts extends ReadonlyArray<ReadonlyArray<unknown>>>(
   m_target: Reference<unknown[]>,
-  values: Ts
+  values: Ts,
 ): void {
   m_target.value.push(...values.slice(1).flat());
 }
@@ -93,7 +93,7 @@ export function mergeArrays<Ts extends ReadonlyArray<ReadonlyArray<unknown>>>(
  * @param values - The sets (including the target's value if there is one).
  */
 export function mergeSets<
-  Ts extends ReadonlyArray<Readonly<ReadonlySet<unknown>>>
+  Ts extends ReadonlyArray<Readonly<ReadonlySet<unknown>>>,
 >(m_target: Reference<Set<unknown>>, values: Ts): void {
   for (const value of getIterableOfIterables(values.slice(1))) {
     m_target.value.add(value);
@@ -107,7 +107,7 @@ export function mergeSets<
  * @param values - The maps (including the target's value if there is one).
  */
 export function mergeMaps<
-  Ts extends ReadonlyArray<Readonly<ReadonlyMap<unknown, unknown>>>
+  Ts extends ReadonlyArray<Readonly<ReadonlyMap<unknown, unknown>>>,
 >(m_target: Reference<Map<unknown, unknown>>, values: Ts): void {
   for (const [key, value] of getIterableOfIterables(values.slice(1))) {
     m_target.value.set(key, value);
@@ -119,7 +119,7 @@ export function mergeMaps<
  */
 export function mergeOthers<Ts extends ReadonlyArray<unknown>>(
   m_target: Reference<unknown>,
-  values: Ts
+  values: Ts,
 ) {
   m_target.value = values.at(-1);
 }

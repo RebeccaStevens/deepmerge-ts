@@ -2,16 +2,15 @@
  * Flatten a complex type such as a union or intersection of objects into a
  * single object.
  */
-export type FlatternAlias<T> = Is<T, unknown> extends true
-  ? T
-  : { [P in keyof T]: T[P] } & {};
+export type FlatternAlias<T> =
+  Is<T, unknown> extends true ? T : { [P in keyof T]: T[P] } & {};
 
 /**
  * Get the value of the given key in the given object.
  */
 export type ValueOfKey<
   T extends Record<PropertyKey, unknown>,
-  K extends PropertyKey
+  K extends PropertyKey,
 > = K extends keyof T ? T[K] : never;
 
 /**
@@ -73,12 +72,12 @@ export type EveryIsArray<Ts extends ReadonlyArray<unknown>> =
   Ts extends readonly [infer T1]
     ? IsArray<T1>
     : Ts extends readonly [infer Head, ...infer Rest]
-    ? IsArray<Head> extends true
-      ? Rest extends readonly [unknown, ...ReadonlyArray<unknown>]
-        ? EveryIsArray<Rest>
+      ? IsArray<Head> extends true
+        ? Rest extends readonly [unknown, ...ReadonlyArray<unknown>]
+          ? EveryIsArray<Rest>
+          : false
         : false
-      : false
-    : false;
+      : false;
 
 /**
  * Returns whether or not the given type is an set.
@@ -95,17 +94,16 @@ export type IsSet<T> = And<
  *
  * Note: This may also return true if all are maps.
  */
-export type EveryIsSet<Ts extends ReadonlyArray<unknown>> = Ts extends Readonly<
-  readonly [infer T1]
->
-  ? IsSet<T1>
-  : Ts extends readonly [infer Head, ...infer Rest]
-  ? IsSet<Head> extends true
-    ? Rest extends readonly [unknown, ...ReadonlyArray<unknown>]
-      ? EveryIsSet<Rest>
-      : false
-    : false
-  : false;
+export type EveryIsSet<Ts extends ReadonlyArray<unknown>> =
+  Ts extends Readonly<readonly [infer T1]>
+    ? IsSet<T1>
+    : Ts extends readonly [infer Head, ...infer Rest]
+      ? IsSet<Head> extends true
+        ? Rest extends readonly [unknown, ...ReadonlyArray<unknown>]
+          ? EveryIsSet<Rest>
+          : false
+        : false
+      : false;
 
 /**
  * Returns whether or not the given type is an map.
@@ -118,17 +116,16 @@ export type IsMap<T> = And<
 /**
  * Returns whether or not all the given types are maps.
  */
-export type EveryIsMap<Ts extends ReadonlyArray<unknown>> = Ts extends Readonly<
-  readonly [infer T1]
->
-  ? IsMap<T1>
-  : Ts extends readonly [infer Head, ...infer Rest]
-  ? IsMap<Head> extends true
-    ? Rest extends readonly [unknown, ...ReadonlyArray<unknown>]
-      ? EveryIsMap<Rest>
-      : false
-    : false
-  : false;
+export type EveryIsMap<Ts extends ReadonlyArray<unknown>> =
+  Ts extends Readonly<readonly [infer T1]>
+    ? IsMap<T1>
+    : Ts extends readonly [infer Head, ...infer Rest]
+      ? IsMap<Head> extends true
+        ? Rest extends readonly [unknown, ...ReadonlyArray<unknown>]
+          ? EveryIsMap<Rest>
+          : false
+        : false
+      : false;
 
 /**
  * And operator for types.
@@ -160,7 +157,7 @@ export type UnionSetValues<Ts extends ReadonlyArray<unknown>> =
  */
 type UnionSetValuesHelper<
   Ts extends ReadonlyArray<unknown>,
-  Acc
+  Acc,
 > = Ts extends readonly [infer Head, ...infer Rest]
   ? Head extends Readonly<ReadonlySet<infer V1>>
     ? Rest extends ReadonlyArray<unknown>
@@ -180,7 +177,7 @@ export type UnionMapKeys<Ts extends ReadonlyArray<unknown>> =
  */
 type UnionMapKeysHelper<
   Ts extends ReadonlyArray<unknown>,
-  Acc
+  Acc,
 > = Ts extends readonly [infer Head, ...infer Rest]
   ? Head extends Readonly<ReadonlyMap<infer K1, unknown>>
     ? Rest extends readonly []
@@ -200,7 +197,7 @@ export type UnionMapValues<Ts extends ReadonlyArray<unknown>> =
  */
 type UnionMapValuesHelper<
   Ts extends ReadonlyArray<unknown>,
-  Acc
+  Acc,
 > = Ts extends readonly [infer Head, ...infer Rest]
   ? Head extends Readonly<ReadonlyMap<unknown, infer V1>>
     ? Rest extends readonly []
@@ -219,7 +216,7 @@ export type KeysOf<Ts extends ReadonlyArray<unknown>> = KeysOfHelper<Ts, never>;
  */
 type KeysOfHelper<
   Ts extends ReadonlyArray<unknown>,
-  Acc
+  Acc,
 > = Ts extends readonly [infer Head, ...infer Rest]
   ? Head extends Record<PropertyKey, unknown>
     ? Rest extends ReadonlyArray<unknown>
@@ -247,7 +244,7 @@ type RequiredKeys<T> = Exclude<
  * Get all the required keys on the types in the tuple.
  */
 export type RequiredKeysOf<
-  Ts extends readonly [unknown, ...ReadonlyArray<unknown>]
+  Ts extends readonly [unknown, ...ReadonlyArray<unknown>],
 > = RequiredKeysOfHelper<Ts, never>;
 
 /**
@@ -255,7 +252,7 @@ export type RequiredKeysOf<
  */
 type RequiredKeysOfHelper<
   Ts extends readonly [unknown, ...ReadonlyArray<unknown>],
-  Acc
+  Acc,
 > = Ts extends readonly [infer Head, ...infer Rest]
   ? Head extends Record<PropertyKey, unknown>
     ? Rest extends readonly [unknown, ...ReadonlyArray<unknown>]
@@ -273,7 +270,7 @@ type OptionalKeys<T> = Exclude<keyof T, RequiredKeys<T>>;
  * Get all the optional keys on the types in the tuple.
  */
 export type OptionalKeysOf<
-  Ts extends readonly [unknown, ...ReadonlyArray<unknown>]
+  Ts extends readonly [unknown, ...ReadonlyArray<unknown>],
 > = OptionalKeysOfHelper<Ts, never>;
 
 /**
@@ -281,7 +278,7 @@ export type OptionalKeysOf<
  */
 type OptionalKeysOfHelper<
   Ts extends readonly [unknown, ...ReadonlyArray<unknown>],
-  Acc
+  Acc,
 > = Ts extends readonly [infer Head, ...infer Rest]
   ? Head extends Record<PropertyKey, unknown>
     ? Rest extends readonly [unknown, ...ReadonlyArray<unknown>]
@@ -301,14 +298,14 @@ export type FilterOutNever<T extends ReadonlyArray<unknown>> =
  */
 type FilterOutNeverHelper<
   T extends ReadonlyArray<unknown>,
-  Acc extends ReadonlyArray<unknown>
+  Acc extends ReadonlyArray<unknown>,
 > = T extends readonly []
   ? Acc
   : T extends readonly [infer Head, ...infer Rest]
-  ? IsNever<Head> extends true
-    ? FilterOutNeverHelper<Rest, Acc>
-    : FilterOutNeverHelper<Rest, [...Acc, Head]>
-  : T;
+    ? IsNever<Head> extends true
+      ? FilterOutNeverHelper<Rest, Acc>
+      : FilterOutNeverHelper<Rest, [...Acc, Head]>
+    : T;
 
 /**
  * Is the type a tuple?
@@ -316,5 +313,5 @@ type FilterOutNeverHelper<
 export type IsTuple<T extends ReadonlyArray<unknown>> = T extends readonly []
   ? true
   : T extends readonly [unknown, ...ReadonlyArray<unknown>]
-  ? true
-  : false;
+    ? true
+    : false;

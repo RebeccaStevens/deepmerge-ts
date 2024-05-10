@@ -1,100 +1,81 @@
-import rollupPluginJSON from "@rollup/plugin-json";
-import rollupPluginNodeResolve from "@rollup/plugin-node-resolve";
-import rollupPluginTypescript from "@rollup/plugin-typescript";
-import { defineConfig, type Plugin } from "rollup";
-import rollupPluginAutoExternal from "rollup-plugin-auto-external";
+import { dirname, join, relative } from "node:path";
+import { fileURLToPath } from "node:url";
+
+import rollupPluginReplace from "@rollup/plugin-replace";
+import { rollupPlugin as rollupPluginDeassert } from "deassert";
+import { type RollupOptions } from "rollup";
 import rollupPluginCopy from "rollup-plugin-copy";
-import rollupPluginDts from "rollup-plugin-dts";
+import rollupPluginTs from "rollup-plugin-ts";
 
-import pkg from "./package.json" assert { type: "json" };
+import p from "./package.json" assert { type: "json" };
 
-/**
- * Get the intended boolean value from the given string.
- */
-function getBoolean(value: unknown) {
-  if (value === undefined) {
-    return false;
-  }
-  const asNumber = Number(value);
-  return Number.isNaN(asNumber)
-    ? String(value).toLowerCase() === "false"
-      ? false
-      : Boolean(String(value))
-    : Boolean(asNumber);
-}
+const root = dirname(fileURLToPath(import.meta.url));
+const nodeDistPath = join(root, "dist/node");
 
-const buildTypesOnly = getBoolean(process.env["BUILD_TYPES_ONLY"]);
+const pkg = p as typeof p & {
+  dependencies?: Record<string, string>;
+  peerDependencies?: Record<string, string>;
+};
 
-const common = defineConfig({
+const treeshake = {
+  annotations: true,
+  moduleSideEffects: [],
+  propertyReadSideEffects: false,
+  unknownGlobalSideEffects: false,
+} satisfies RollupOptions["treeshake"];
+
+const library = {
   input: "src/index.ts",
 
-  output: {
-    sourcemap: false,
-  },
-
-  external: [],
-
-  treeshake: {
-    annotations: true,
-    moduleSideEffects: [],
-    propertyReadSideEffects: false,
-    unknownGlobalSideEffects: false,
-  },
-});
-
-const runtimes = defineConfig({
-  ...common,
-
   output: [
     {
-      ...common.output,
       file: pkg.exports.import,
       format: "esm",
+      sourcemap: false,
     },
     {
-      ...common.output,
       file: pkg.exports.require,
       format: "cjs",
+      sourcemap: false,
     },
+  ],
+
+  external: [
+    ...Object.keys(pkg.dependencies ?? {}),
+    ...Object.keys(pkg.peerDependencies ?? {}),
   ],
 
   plugins: [
-    rollupPluginAutoExternal(),
-    rollupPluginNodeResolve(),
-    rollupPluginTypescript({
+    rollupPluginTs({
+      transpileOnly: true,
       tsconfig: "tsconfig.build.json",
+      hook: {
+        outputPath: (path, kind) => {
+          if (kind === "declaration") {
+            const relativePathToNodeDist = relative(nodeDistPath, path);
+            return join(nodeDistPath, "types/current", relativePathToNodeDist);
+          }
+          return path;
+        },
+      },
     }),
-    rollupPluginJSON({
-      preferConst: true,
+    rollupPluginReplace({
+      values: {
+        "import.meta.vitest": "undefined",
+      },
+      preventAssignment: true,
     }),
-  ],
-});
-
-const types = defineConfig({
-  ...common,
-
-  output: [
-    {
-      file: pkg.exports.types.import,
-      format: "esm",
-    },
-    {
-      file: pkg.exports.types.require,
-      format: "cjs",
-    },
-  ],
-
-  plugins: [
-    rollupPluginTypescript({
-      tsconfig: "tsconfig.build.json",
+    rollupPluginDeassert({
+      include: ["**/*.{js,ts}"],
     }),
-    rollupPluginDts(),
     rollupPluginCopy({
       targets: [
         { src: "types-legacy", dest: "dist/node/types", rename: "legacy" },
       ],
     }),
-  ] as Plugin[],
-});
+  ],
 
-export default buildTypesOnly ? types : [runtimes, types];
+  treeshake,
+} satisfies RollupOptions;
+
+export default [library];
