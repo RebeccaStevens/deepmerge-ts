@@ -10,20 +10,26 @@
     "importHelpers": false,
     "lib": ["ESNext"],
     "module": "ESNext",
-    "moduleResolution": "bundler",
+    "moduleResolution": "Bundler",
     "newLine": "LF",
     "noEmitOnError": true,
+    "noErrorTruncation": true,
     "noImplicitReturns": true,
     "noPropertyAccessFromIndexSignature": true,
     "noUncheckedIndexedAccess": true,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
+    "preserveConstEnums": true,
     "pretty": true,
     "resolveJsonModule": true,
+    "skipLibCheck": true,
     "sourceMap": false,
     "strict": true,
     "target": "ES2022",
-    "useUnknownInCatchVariables": true
+    "useUnknownInCatchVariables": true,
+    "types": ["vitest/importMeta"],
+    "baseUrl": ".",
+    "paths": {}
   },
   "exclude": ["benchmark/", "dist/", "types-legacy/"]
 }
