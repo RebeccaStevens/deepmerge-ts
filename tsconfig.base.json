@@ -31,5 +31,5 @@
     "baseUrl": ".",
     "paths": {}
   },
-  "exclude": ["benchmark/", "dist/", "types-legacy/"]
+  "exclude": ["benchmark/", "dist/"]
 }
