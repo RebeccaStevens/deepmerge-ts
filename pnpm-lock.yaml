@@ -80,8 +80,8 @@ devDependencies:
     specifier: 3.5.5
     version: 3.5.5(@typescript-eslint/parser@6.13.0)(eslint-plugin-import@2.27.5)(eslint@8.38.0)
   eslint-plugin-ava:
-    specifier: 14.0.0
-    version: 14.0.0(eslint@8.38.0)
+    specifier: 15.0.1
+    version: 15.0.1(eslint@8.38.0)
   eslint-plugin-eslint-comments:
     specifier: 3.2.0
     version: 3.2.0(eslint@8.38.0)
@@ -3149,11 +3149,11 @@ packages:
       - supports-color
     dev: true
 
-  /eslint-plugin-ava@14.0.0(eslint@8.38.0):
-    resolution: {integrity: sha512-XmKT6hppaipwwnLVwwvQliSU6AF1QMHiNoLD5JQfzhUhf0jY7CO0O624fQrE+Y/fTb9vbW8r77nKf7M/oHulxw==}
-    engines: {node: '>=14.17 <15 || >=16.4'}
+  /eslint-plugin-ava@15.0.1(eslint@8.38.0):
+    resolution: {integrity: sha512-eRX7mLFPvalGDWztJ4zm+anez2X6J/88r9CqLFfPAIMvFlGyJ+dUoFppoohgUQZLV09mIBNz5guP07zFJOLF8g==}
+    engines: {node: ^18.18 || >=20}
     peerDependencies:
-      eslint: '>=8.26.0'
+      eslint: '>=9'
     dependencies:
       enhance-visitors: 1.0.0
       eslint: 8.38.0
