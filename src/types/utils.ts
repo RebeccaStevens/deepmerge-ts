@@ -2,19 +2,29 @@
  * Flatten a complex type such as a union or intersection of objects into a
  * single object.
  */
-export type FlatternAlias<T> = T extends {} ? FlatternRecord<T> : T;
+export type FlatternAlias<T> = T extends {} ? FlattenRecord<T> : T;
 
-type FlatternRecord<T extends {}> = {
+type FlattenRecord<T extends {}> = {
   [K in keyof T]: T[K];
 } & {};
 
 /**
- * Get the value of the given key in the given object.
+ * Flatten a collection of tuples of tuples into a collection of tuples.
  */
-export type ValueOfKey<
-  T extends Record<PropertyKey, unknown>,
-  K extends PropertyKey,
-> = K extends keyof T ? T[K] : never;
+export type FlattenTuples<T> = {
+  [I in keyof T]: FlattenTuple<T[I]>;
+};
+
+/**
+ * Flatten a tuple of tuples into a single tuple.
+ */
+export type FlattenTuple<T> = T extends readonly []
+  ? []
+  : T extends readonly [infer T0]
+    ? [...FlattenTuple<T0>]
+    : T extends readonly [infer T0, ...infer Ts]
+      ? [...FlattenTuple<T0>, ...FlattenTuple<Ts>]
+      : [T];
 
 /**
  * Safely test whether or not the first given types extends the second.
@@ -27,6 +37,25 @@ export type Is<T1, T2> = [T1] extends [T2] ? true : false;
  * Safely test whether or not the given type is "never".
  */
 export type IsNever<T> = Is<T, never>;
+
+/**
+ * And operator for types.
+ */
+export type And<T1 extends boolean, T2 extends boolean> = T1 extends false
+  ? false
+  : T2;
+
+/**
+ * Or operator for types.
+ */
+export type Or<T1 extends boolean, T2 extends boolean> = T1 extends true
+  ? true
+  : T2;
+
+/**
+ * Not operator for types.
+ */
+export type Not<T extends boolean> = T extends true ? false : true;
 
 /**
  * Returns whether or not all the given types are never.
@@ -131,25 +160,6 @@ export type EveryIsMap<Ts extends ReadonlyArray<unknown>> =
       : false;
 
 /**
- * And operator for types.
- */
-export type And<T1 extends boolean, T2 extends boolean> = T1 extends false
-  ? false
-  : T2;
-
-/**
- * Or operator for types.
- */
-export type Or<T1 extends boolean, T2 extends boolean> = T1 extends true
-  ? true
-  : T2;
-
-/**
- * Not operator for types.
- */
-export type Not<T extends boolean> = T extends true ? false : true;
-
-/**
  * Union of the sets' values' types
  */
 export type UnionSetValues<Ts extends ReadonlyArray<unknown>> =
@@ -210,91 +220,10 @@ type UnionMapValuesHelper<
   : Acc;
 
 /**
- * Get all the keys of the given records.
- */
-export type KeysOf<Ts extends ReadonlyArray<unknown>> = KeysOfHelper<Ts, never>;
-
-/**
- * Tail-recursive helper type for KeysOf.
- */
-type KeysOfHelper<
-  Ts extends ReadonlyArray<unknown>,
-  Acc,
-> = Ts extends readonly [infer Head, ...infer Rest]
-  ? Head extends Record<PropertyKey, unknown>
-    ? Rest extends ReadonlyArray<unknown>
-      ? KeysOfHelper<Rest, Acc | keyof Head>
-      : Acc | keyof Head
-    : never
-  : Acc;
-
-/**
- * Get the keys of the type what match a certain criteria.
- */
-type KeysOfType<T, U> = {
-  [K in keyof T]: T[K] extends U ? K : never;
-}[keyof T];
-
-/**
- * Get the required keys of the type.
- */
-type RequiredKeys<T> = Exclude<
-  KeysOfType<T, Exclude<T[keyof T], undefined>>,
-  undefined
->;
-
-/**
- * Get all the required keys on the types in the tuple.
- */
-export type RequiredKeysOf<
-  Ts extends readonly [unknown, ...ReadonlyArray<unknown>],
-> = RequiredKeysOfHelper<Ts, never>;
-
-/**
- * Tail-recursive helper type for RequiredKeysOf.
- */
-type RequiredKeysOfHelper<
-  Ts extends readonly [unknown, ...ReadonlyArray<unknown>],
-  Acc,
-> = Ts extends readonly [infer Head, ...infer Rest]
-  ? Head extends Record<PropertyKey, unknown>
-    ? Rest extends readonly [unknown, ...ReadonlyArray<unknown>]
-      ? RequiredKeysOfHelper<Rest, Acc | RequiredKeys<Head>>
-      : Acc | RequiredKeys<Head>
-    : never
-  : Acc;
-
-/**
- * Get the optional keys of the type.
- */
-type OptionalKeys<T> = Exclude<keyof T, RequiredKeys<T>>;
-
-/**
- * Get all the optional keys on the types in the tuple.
- */
-export type OptionalKeysOf<
-  Ts extends readonly [unknown, ...ReadonlyArray<unknown>],
-> = OptionalKeysOfHelper<Ts, never>;
-
-/**
- * Tail-recursive helper type for OptionalKeysOf.
- */
-type OptionalKeysOfHelper<
-  Ts extends readonly [unknown, ...ReadonlyArray<unknown>],
-  Acc,
-> = Ts extends readonly [infer Head, ...infer Rest]
-  ? Head extends Record<PropertyKey, unknown>
-    ? Rest extends readonly [unknown, ...ReadonlyArray<unknown>]
-      ? OptionalKeysOfHelper<Rest, Acc | OptionalKeys<Head>>
-      : Acc | OptionalKeys<Head>
-    : never
-  : Acc;
-
-/**
  * Filter out nevers from a tuple.
  */
-export type FilterOutNever<T extends ReadonlyArray<unknown>> =
-  FilterOutNeverHelper<T, []>;
+export type FilterOutNever<T> =
+  T extends ReadonlyArray<unknown> ? FilterOutNeverHelper<T, []> : never;
 
 /**
  * Tail-recursive helper type for FilterOutNever.
@@ -318,3 +247,75 @@ export type IsTuple<T extends ReadonlyArray<unknown>> = T extends readonly []
   : T extends readonly [unknown, ...ReadonlyArray<unknown>]
     ? true
     : false;
+
+/**
+ * Perfrom a transpose operation on a 2D tuple.
+ */
+export type TransposeTuple<T> = T extends readonly [
+  ...(readonly [...unknown[]]),
+]
+  ? T extends readonly []
+    ? []
+    : T extends readonly [infer X extends ReadonlyArray<unknown>]
+      ? TransposeTupleSimpleCase<X>
+      : T extends readonly [
+            infer X extends ReadonlyArray<unknown>,
+            ...infer XS extends ReadonlyArray<ReadonlyArray<unknown>>,
+          ]
+        ? PrependCol<X, TransposeTuple<XS>>
+        : T
+  : never;
+
+type PrependCol<
+  T extends ReadonlyArray<unknown>,
+  S extends ReadonlyArray<ReadonlyArray<unknown>>,
+> = T extends readonly []
+  ? S extends readonly []
+    ? []
+    : never
+  : T extends readonly [infer X, ...infer XS]
+    ? S extends readonly [
+        readonly [...infer Y],
+        ...infer YS extends ReadonlyArray<ReadonlyArray<unknown>>,
+      ]
+      ? [[X, ...Y], ...PrependCol<XS, YS>]
+      : never
+    : never;
+
+type TransposeTupleSimpleCase<T extends readonly [...unknown[]]> =
+  T extends readonly []
+    ? []
+    : T extends readonly [infer X, ...infer XS]
+      ? [[X], ...TransposeTupleSimpleCase<XS>]
+      : never;
+
+/**
+ * Convert a tuple to an intersection of each of its types.
+ */
+export type TupleToIntersection<T extends ReadonlyArray<unknown>> =
+  {
+    [K in keyof T]: (x: T[K]) => void;
+  } extends Record<number, (x: infer I) => void>
+    ? I
+    : never;
+
+/**
+ * Convert a union to a tuple.
+ *
+ * Warning: The order of the elements is non-deterministic.
+ * Warning 2: The union maybe me modified by the TypeScript engine before convertion.
+ * Warning 3: This implementation relies on a hack/limitation in TypeScript.
+ */
+export type TuplifyUnion<T, L = LastOf<T>> =
+  IsNever<T> extends true ? [] : [...TuplifyUnion<Exclude<T, L>>, L];
+
+type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (
+  k: infer I,
+) => void
+  ? I
+  : never;
+
+type LastOf<T> =
+  UnionToIntersection<T extends any ? () => T : never> extends () => infer R
+    ? R
+    : never;

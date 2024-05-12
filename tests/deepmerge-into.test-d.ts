@@ -81,3 +81,17 @@ expectAssignable<{
   bar: "123";
   quux: "456";
 }>(test6);
+
+const d: { waldo: boolean; fred?: number } = { waldo: false };
+
+const test7 = { ...a };
+deepmergeInto(test7, d);
+expectAssignable<{
+  foo: string;
+  baz: {
+    quux: string[];
+  };
+  garply: number;
+  waldo: boolean;
+  fred?: number;
+}>(test7);
