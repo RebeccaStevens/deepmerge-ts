@@ -228,3 +228,14 @@ const test16 = deepmerge(first, second, third, fourth);
 expectType<{ first: boolean; second: boolean; third: number; fourth: string }>(
   test16,
 );
+
+const n: { a: true; b: string } = { a: true, b: "n" };
+const o: { a: false; b?: number } = { a: false };
+
+const test17 = deepmerge(n, o);
+expectType<{ a: false; b: string | number }>(test17);
+
+const p: { a: true; b?: string } = { a: true, b: "n" };
+
+const test18 = deepmerge(o, p);
+expectType<{ a: true; b?: string | number }>(test18);

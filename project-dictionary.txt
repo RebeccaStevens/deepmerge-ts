@@ -19,6 +19,7 @@ kinded
 klass
 knip
 litecoin
+metas
 monero
 noreply
 octocat
@@ -29,5 +30,6 @@ Rebecca
 sonarjs
 Stevens
 thud
+tuplify
 waldo
 xyzzy
