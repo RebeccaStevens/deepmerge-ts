@@ -2,8 +2,11 @@
  * Flatten a complex type such as a union or intersection of objects into a
  * single object.
  */
-export type FlatternAlias<T> =
-  Is<T, unknown> extends true ? T : { [P in keyof T]: T[P] } & {};
+export type FlatternAlias<T> = T extends {} ? FlatternRecord<T> : T;
+
+type FlatternRecord<T extends {}> = {
+  [K in keyof T]: T[K];
+} & {};
 
 /**
  * Get the value of the given key in the given object.
