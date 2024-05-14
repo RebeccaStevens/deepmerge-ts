@@ -47,12 +47,6 @@ export type DeepMergeMergeFunctionsDefaultURIs = Readonly<{
 }>;
 
 /**
- * A union of all the props that should not be included in type information for
- * merged records.
- */
-type BlacklistedRecordProps = "__proto__";
-
-/**
  * Deep merge records.
  */
 export type DeepMergeRecordsDefaultHKT<
@@ -61,12 +55,7 @@ export type DeepMergeRecordsDefaultHKT<
   M,
 > =
   Ts extends Readonly<readonly [unknown, ...Readonly<ReadonlyArray<unknown>>]>
-    ? FlatternAlias<
-        Omit<
-          DeepMergeRecordsDefaultHKTInternalProps<Ts, MF, M>,
-          BlacklistedRecordProps
-        >
-      >
+    ? FlatternAlias<DeepMergeRecordsDefaultHKTInternalProps<Ts, MF, M>>
     : {};
 
 /**
