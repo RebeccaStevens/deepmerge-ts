@@ -4,13 +4,13 @@ import * as defaultMergeFunctions from "./defaults/vanilla.ts";
 import {
   type DeepMergeBuiltInMetaData,
   type DeepMergeHKT,
+  type DeepMergeMergeFunctionUtils,
   type DeepMergeMergeFunctionsDefaultURIs,
   type DeepMergeMergeFunctionsURIs,
   type DeepMergeOptions,
-  type DeepMergeMergeFunctionUtils,
   type GetDeepMergeMergeFunctionsURIs,
 } from "./types/index.ts";
-import { getObjectType, ObjectType } from "./utils.ts";
+import { ObjectType, getObjectType } from "./utils.ts";
 
 /**
  * Deeply merge objects.
@@ -18,7 +18,6 @@ import { getObjectType, ObjectType } from "./utils.ts";
  * @param objects - The objects to merge.
  */
 export function deepmerge<Ts extends Readonly<ReadonlyArray<unknown>>>(
-  // eslint-disable-next-line functional/functional-parameters
   ...objects: readonly [...Ts]
 ): DeepMergeHKT<
   Ts,
@@ -38,10 +37,11 @@ export function deepmerge<Ts extends Readonly<ReadonlyArray<unknown>>>(
  * @param options - The options on how to customize the merge function.
  */
 export function deepmergeCustom<
-  PMF extends Partial<DeepMergeMergeFunctionsURIs>
+  BaseTs = unknown,
+  PMF extends Partial<DeepMergeMergeFunctionsURIs> = {},
 >(
-  options: DeepMergeOptions<DeepMergeBuiltInMetaData, DeepMergeBuiltInMetaData>
-): <Ts extends ReadonlyArray<unknown>>(
+  options: DeepMergeOptions<DeepMergeBuiltInMetaData, DeepMergeBuiltInMetaData>,
+): <Ts extends ReadonlyArray<BaseTs>>(
   ...objects: Ts
 ) => DeepMergeHKT<
   Ts,
@@ -56,24 +56,26 @@ export function deepmergeCustom<
  * @param rootMetaData - The meta data passed to the root items' being merged.
  */
 export function deepmergeCustom<
-  PMF extends Partial<DeepMergeMergeFunctionsURIs>,
-  MetaData,
-  MetaMetaData extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData
+  BaseTs = unknown,
+  PMF extends Partial<DeepMergeMergeFunctionsURIs> = {},
+  MetaData = DeepMergeBuiltInMetaData,
+  MetaMetaData extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData,
 >(
   options: DeepMergeOptions<MetaData, MetaMetaData>,
-  rootMetaData?: MetaData
-): <Ts extends ReadonlyArray<unknown>>(
+  rootMetaData?: MetaData,
+): <Ts extends ReadonlyArray<BaseTs>>(
   ...objects: Ts
 ) => DeepMergeHKT<Ts, GetDeepMergeMergeFunctionsURIs<PMF>, MetaData>;
 
 export function deepmergeCustom<
+  BaseTs,
   PMF extends Partial<DeepMergeMergeFunctionsURIs>,
   MetaData,
-  MetaMetaData extends DeepMergeBuiltInMetaData
+  MetaMetaData extends DeepMergeBuiltInMetaData,
 >(
   options: DeepMergeOptions<MetaData, MetaMetaData>,
-  rootMetaData?: MetaData
-): <Ts extends ReadonlyArray<unknown>>(
+  rootMetaData?: MetaData,
+): <Ts extends ReadonlyArray<BaseTs>>(
   ...objects: Ts
 ) => DeepMergeHKT<Ts, GetDeepMergeMergeFunctionsURIs<PMF>, MetaData> {
   /**
@@ -85,16 +87,13 @@ export function deepmergeCustom<
 
   const utils: DeepMergeMergeFunctionUtils<MetaData, MetaMetaData> = getUtils(
     options,
-    customizedDeepmerge as CustomizedDeepmerge
+    customizedDeepmerge as CustomizedDeepmerge,
   );
 
   /**
    * The customized deepmerge function.
    */
-  function customizedDeepmerge(
-    // eslint-disable-next-line functional/functional-parameters
-    ...objects: ReadonlyArray<unknown>
-  ) {
+  function customizedDeepmerge(...objects: ReadonlyArray<unknown>) {
     return mergeUnknowns<
       ReadonlyArray<unknown>,
       typeof utils,
@@ -114,10 +113,10 @@ export function deepmergeCustom<
  */
 function getUtils<
   M,
-  MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData
+  MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData,
 >(
   options: DeepMergeOptions<M, MM>,
-  customizedDeepmerge: DeepMergeMergeFunctionUtils<M, MM>["deepmerge"]
+  customizedDeepmerge: DeepMergeMergeFunctionUtils<M, MM>["deepmerge"],
 ): DeepMergeMergeFunctionUtils<M, MM> {
   return {
     defaultMergeFunctions,
@@ -129,8 +128,8 @@ function getUtils<
           .map(([key, option]) =>
             option === false
               ? [key, defaultMergeFunctions.mergeOthers]
-              : [key, option]
-          )
+              : [key, option],
+          ),
       ),
     } as DeepMergeMergeFunctionUtils<M, MM>["mergeFunctions"],
     metaDataUpdater: (options.metaDataUpdater ??
@@ -154,7 +153,7 @@ export function mergeUnknowns<
   U extends DeepMergeMergeFunctionUtils<M, MM>,
   MF extends DeepMergeMergeFunctionsURIs,
   M,
-  MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData
+  MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData,
 >(values: Ts, utils: U, meta: M | undefined): DeepMergeHKT<Ts, MF, M> {
   if (values.length === 0) {
     return undefined as DeepMergeHKT<Ts, MF, M>;
@@ -169,7 +168,6 @@ export function mergeUnknowns<
 
   const type = getObjectType(values[0]);
 
-  /* eslint-disable functional/no-loop-statements, functional/no-conditional-statements -- using imperative code here is more performant. */
   if (type !== ObjectType.NOT && type !== ObjectType.OTHER) {
     for (let m_index = 1; m_index < values.length; m_index++) {
       if (getObjectType(values[m_index]) === type) {
@@ -183,14 +181,13 @@ export function mergeUnknowns<
       >;
     }
   }
-  /* eslint-enable functional/no-loop-statements, functional/no-conditional-statements */
 
   switch (type) {
     case ObjectType.RECORD: {
       return mergeRecords<U, MF, M, MM>(
         values as ReadonlyArray<Readonly<Record<PropertyKey, unknown>>>,
         utils,
-        meta
+        meta,
       ) as DeepMergeHKT<Ts, MF, M>;
     }
 
@@ -198,7 +195,7 @@ export function mergeUnknowns<
       return mergeArrays<U, M, MM>(
         values as ReadonlyArray<Readonly<ReadonlyArray<unknown>>>,
         utils,
-        meta
+        meta,
       ) as DeepMergeHKT<Ts, MF, M>;
     }
 
@@ -206,7 +203,7 @@ export function mergeUnknowns<
       return mergeSets<U, M, MM>(
         values as ReadonlyArray<Readonly<ReadonlySet<unknown>>>,
         utils,
-        meta
+        meta,
       ) as DeepMergeHKT<Ts, MF, M>;
     }
 
@@ -214,7 +211,7 @@ export function mergeUnknowns<
       return mergeMaps<U, M, MM>(
         values as ReadonlyArray<Readonly<ReadonlyMap<unknown, unknown>>>,
         utils,
-        meta
+        meta,
       ) as DeepMergeHKT<Ts, MF, M>;
     }
 
@@ -237,11 +234,11 @@ function mergeRecords<
   U extends DeepMergeMergeFunctionUtils<M, MM>,
   MF extends DeepMergeMergeFunctionsURIs,
   M,
-  MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData
+  MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData,
 >(
   values: ReadonlyArray<Readonly<Record<PropertyKey, unknown>>>,
   utils: U,
-  meta: M | undefined
+  meta: M | undefined,
 ) {
   const result = utils.mergeFunctions.mergeRecords(values, utils, meta);
 
@@ -272,11 +269,11 @@ function mergeRecords<
 function mergeArrays<
   U extends DeepMergeMergeFunctionUtils<M, MM>,
   M,
-  MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData
+  MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData,
 >(
   values: ReadonlyArray<Readonly<ReadonlyArray<unknown>>>,
   utils: U,
-  meta: M | undefined
+  meta: M | undefined,
 ) {
   const result = utils.mergeFunctions.mergeArrays(values, utils, meta);
 
@@ -300,11 +297,11 @@ function mergeArrays<
 function mergeSets<
   U extends DeepMergeMergeFunctionUtils<M, MM>,
   M,
-  MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData
+  MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData,
 >(
   values: ReadonlyArray<Readonly<ReadonlySet<unknown>>>,
   utils: U,
-  meta: M | undefined
+  meta: M | undefined,
 ) {
   const result = utils.mergeFunctions.mergeSets(values, utils, meta);
 
@@ -327,11 +324,11 @@ function mergeSets<
 function mergeMaps<
   U extends DeepMergeMergeFunctionUtils<M, MM>,
   M,
-  MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData
+  MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData,
 >(
   values: ReadonlyArray<Readonly<ReadonlyMap<unknown, unknown>>>,
   utils: U,
-  meta: M | undefined
+  meta: M | undefined,
 ) {
   const result = utils.mergeFunctions.mergeMaps(values, utils, meta);
 
@@ -354,7 +351,7 @@ function mergeMaps<
 function mergeOthers<
   U extends DeepMergeMergeFunctionUtils<M, MM>,
   M,
-  MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData
+  MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData,
 >(values: ReadonlyArray<unknown>, utils: U, meta: M | undefined) {
   const result = utils.mergeFunctions.mergeOthers(values, utils, meta);
 

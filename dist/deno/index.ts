@@ -14,7 +14,6 @@ export type {
   DeepMergeBuiltInMetaData,
   DeepMergeHKT,
   DeepMergeLeaf,
-  DeepMergeLeafHKT,
   DeepMergeLeafURI,
   DeepMergeMapsDefaultHKT,
   DeepMergeMergeFunctionsDefaultURIs,

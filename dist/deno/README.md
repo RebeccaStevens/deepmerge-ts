@@ -22,6 +22,14 @@ Deeply merge 2 or more objects respecting type information.
 
 [Any donations would be much appreciated](./DONATIONS.md). 😄
 
+### Enterprise Users
+
+`deepmerge-ts` is available as part of the Tidelift Subscription.
+
+Tidelift is working with the maintainers of `deepmerge-ts` and a growing network of open source maintainers to ensure
+your open source software supply chain meets enterprise standards now and into the future.
+[Learn more.](https://tidelift.com/subscription/pkg/npm-deepmerge-ts?utm_source=npm-deepmerge-ts&utm_medium=referral&utm_campaign=enterprise&utm_term=repo)
+
 ## Installation
 
 ### Node
@@ -43,8 +51,8 @@ yarn add deepmerge-ts
 // import_map.json
 {
   "imports": {
-    "deepmerge-ts": "https://deno.land/x/deepmergets@__version__/dist/deno/index.ts"
-  }
+    "deepmerge-ts": "https://deno.land/x/deepmergets@__version__/dist/deno/index.ts",
+  },
 }
 ```
 
@@ -112,15 +120,18 @@ console.log(merged);
 // }
 ```
 
-You can try out this example at [codesandbox.io](https://codesandbox.io/s/deepmerge-ts-example-iltxby?file=/src/example.ts).
+You can try out this example at
+[codesandbox.io](https://codesandbox.io/s/deepmerge-ts-example-iltxby?file=/src/example.ts).
 
 ### Merging into a Target
 
-You can use `deepmergeInto` if you want to update a target object with the merge result instead of creating a new object.
+You can use `deepmergeInto` if you want to update a target object with the merge result instead of creating a new
+object.
 
 This function is best used with objects that are all of the same type.
 
-Note: If the target object's type is different to the input objects, we'll assert that the target's type has changed (this is not done automatically with `deepmergeIntoCustom`).
+Note: If the target object's type differs from the input objects, we'll assert that the target's type has changed
+(this is not done automatically with `deepmergeIntoCustom`).
 
 ### Customized the Merging Process
 
@@ -131,7 +142,8 @@ See [deepmerge custom docs](./docs/deepmergeCustom.md) for more details.
 
 ## Performance
 
-We use smart merging instead of the classic merging strategy which some alternative libraries use. This vastly improves performance, both in execution time and memory usage.
+We use smart merging instead of the classic merging strategy which some alternative libraries use. This vastly improves
+performance, both in execution time and memory usage.
 
 ### Classic Merge (not what we do)
 
@@ -145,7 +157,8 @@ This strategy has large performance issues when lots of items need to be merged.
 
 With our smart merging, we look ahead to see what can be merged and only merge those things.
 
-In addition to performance improvements, this strategy merges multiple inputs at once; allowing for benefits such as taking averages of the inputs.
+In addition to performance improvements, this strategy merges multiple inputs at once; allowing for benefits such as
+taking averages of the inputs.
 
 ![smart merge animation](./assets/smart-merge.gif)
 

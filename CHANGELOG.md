@@ -1,6 +1,40 @@
 # Changelog
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
+# [6.0.0](https://github.com/RebeccaStevens/deepmerge-ts/compare/v5.1.0...v6.0.0) (2024-05-19)
+
+
+### Bug Fixes
+
+* type when merging optional properties of a record ([fa9ace2](https://github.com/RebeccaStevens/deepmerge-ts/commit/fa9ace2a2b38030d12fa85634966d409b8bb123f))
+
+
+### Build System
+
+* remove typing support for typescript<4.7 ([f2f5956](https://github.com/RebeccaStevens/deepmerge-ts/commit/f2f5956d653a672073fc3c0174f9d8d6ca9d4371))
+
+
+### Features
+
+* allow restricting what types can be passed in as parameters ([69e9ba3](https://github.com/RebeccaStevens/deepmerge-ts/commit/69e9ba3519319eb02763887f457549340e9a9c76)), closes [#305](https://github.com/RebeccaStevens/deepmerge-ts/issues/305)
+* remove deprecated type DeepMergeLeafHKT ([1982e56](https://github.com/RebeccaStevens/deepmerge-ts/commit/1982e56016cbbbfd07f78e8512b56e8294ff83c0))
+* undefined will no longer replace defined values by default ([9c86605](https://github.com/RebeccaStevens/deepmerge-ts/commit/9c866054cbade77118b5cd62b1e8e68033fe2879))
+
+
+### Performance Improvements
+
+* remove BlacklistedRecordProps ([19d4944](https://github.com/RebeccaStevens/deepmerge-ts/commit/19d4944fa228d66d5af93f419526ffaf8b5a376b))
+
+
+### BREAKING CHANGES
+
+* remove deprecated type DeepMergeLeafHKT
+* undefined will no longer replace defined values by default
+* The order of the generics of `deepmergeCustom`
+and `deepmergeIntoCustom` have changed. If you are passing generics
+to these functions you need to update them.
+* remove typing support for typescript<4.7
+
 # [5.1.0](https://github.com/RebeccaStevens/deepmerge-ts/compare/v5.0.0...v5.1.0) (2023-04-04)
 
 

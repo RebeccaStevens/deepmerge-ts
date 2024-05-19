@@ -5,7 +5,7 @@ import { type DeepMergeBuiltInMetaData } from "../types/index.ts";
  */
 export function defaultMetaDataUpdater<M>(
   previousMeta: M,
-  metaMeta: DeepMergeBuiltInMetaData
+  metaMeta: DeepMergeBuiltInMetaData,
 ): DeepMergeBuiltInMetaData {
   return metaMeta;
 }

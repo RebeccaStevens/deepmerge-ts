@@ -51,7 +51,6 @@ export function getObjectType(object: unknown): ObjectType {
 export function getKeys(objects: ReadonlyArray<object>): Set<PropertyKey> {
   const keys = new Set<PropertyKey>();
 
-  /* eslint-disable functional/no-loop-statements, functional/no-expression-statements -- using a loop here is more efficient. */
   for (const object of objects) {
     for (const key of [
       ...Object.keys(object),
@@ -60,7 +59,6 @@ export function getKeys(objects: ReadonlyArray<object>): Set<PropertyKey> {
       keys.add(key);
     }
   }
-  /* eslint-enable functional/no-loop-statements, functional/no-expression-statements */
 
   return keys;
 }
@@ -74,7 +72,7 @@ export function getKeys(objects: ReadonlyArray<object>): Set<PropertyKey> {
  */
 export function objectHasProperty(
   object: object,
-  property: PropertyKey
+  property: PropertyKey,
 ): boolean {
   return (
     typeof object === "object" &&
@@ -86,14 +84,11 @@ export function objectHasProperty(
  * Get an iterable object that iterates over the given iterables.
  */
 export function getIterableOfIterables<T>(
-  iterables: ReadonlyArray<Readonly<Iterable<T>>>
+  iterables: ReadonlyArray<Readonly<Iterable<T>>>,
 ): Iterable<T> {
   return {
-    // eslint-disable-next-line functional/functional-parameters
     *[Symbol.iterator]() {
-      // eslint-disable-next-line functional/no-loop-statements
       for (const iterable of iterables) {
-        // eslint-disable-next-line functional/no-loop-statements
         for (const value of iterable) {
           yield value;
         }
@@ -119,12 +114,11 @@ function isRecord(value: object): value is Record<PropertyKey, unknown> {
   const { constructor } = value;
 
   // If has modified constructor.
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  // eslint-disable-next-line ts/no-unnecessary-condition
   if (constructor === undefined) {
     return true;
   }
 
-  // eslint-disable-next-line prefer-destructuring
   const prototype: unknown = constructor.prototype;
 
   // If has modified prototype.
@@ -137,7 +131,7 @@ function isRecord(value: object): value is Record<PropertyKey, unknown> {
   }
 
   // If constructor does not have an Object-specific method.
-  // eslint-disable-next-line sonarjs/prefer-single-boolean-return, no-prototype-builtins
+  // eslint-disable-next-line sonar/prefer-single-boolean-return, no-prototype-builtins
   if (!prototype.hasOwnProperty("isPrototypeOf")) {
     return false;
   }
