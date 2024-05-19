@@ -9,7 +9,7 @@ import {
   type DeepMergeMergeIntoFunctionUtils,
   type Reference,
 } from "./types";
-import { type FlatternAlias } from "./types/utils";
+import { type SimplifyObject } from "./types/utils";
 import { ObjectType, getObjectType } from "./utils";
 
 /**
@@ -35,7 +35,7 @@ export function deepmergeInto<
 >(
   target: Target,
   ...objects: Ts
-): asserts target is FlatternAlias<
+): asserts target is SimplifyObject<
   Target &
     DeepMergeHKT<
       [Target, ...Ts],
@@ -50,7 +50,7 @@ export function deepmergeInto<
 >(
   target: Target,
   ...objects: Ts
-): asserts target is FlatternAlias<
+): asserts target is SimplifyObject<
   Target &
     DeepMergeHKT<
       [Target, ...Ts],
