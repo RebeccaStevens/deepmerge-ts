@@ -1,10 +1,8 @@
 /**
- * Flatten a complex type such as a union or intersection of objects into a
+ * Simplify a complex type such as a union or intersection of objects into a
  * single object.
  */
-export type FlatternAlias<T> = T extends {} ? FlattenRecord<T> : T;
-
-type FlattenRecord<T extends {}> = {
+export type SimplifyObject<T extends {}> = {
   [K in keyof T]: T[K];
 } & {};
 

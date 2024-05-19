@@ -7,7 +7,7 @@ import {
 import {
   type FilterOutNever,
   type FlattenTuples,
-  type FlatternAlias,
+  type SimplifyObject,
   type TransposeTuple,
   type TupleToIntersection,
   type TuplifyUnion,
@@ -88,7 +88,7 @@ export type DeepMergeRecordsDefaultHKT<
   M,
 > =
   Ts extends ReadonlyArray<Record<PropertyKey, unknown>>
-    ? FlatternAlias<
+    ? SimplifyObject<
         DeepMergeRecordMetaDefaultHKTProps<RecordsToRecordMeta<Ts>, MF, M>
       >
     : never;
