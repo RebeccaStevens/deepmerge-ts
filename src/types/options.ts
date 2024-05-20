@@ -83,7 +83,7 @@ type DeepMergeFunctions<
 > = Readonly<{
   mergeRecords: <
     Ts extends ReadonlyArray<Readonly<Record<PropertyKey, unknown>>>,
-    U extends DeepMergeFunctionUtils<M, MM>,
+    U extends DeepMergeUtils<M, MM>,
   >(
     values: Ts,
     utils: U,
@@ -92,7 +92,7 @@ type DeepMergeFunctions<
 
   mergeArrays: <
     Ts extends ReadonlyArray<ReadonlyArray<unknown>>,
-    U extends DeepMergeFunctionUtils<M, MM>,
+    U extends DeepMergeUtils<M, MM>,
   >(
     values: Ts,
     utils: U,
@@ -101,7 +101,7 @@ type DeepMergeFunctions<
 
   mergeMaps: <
     Ts extends ReadonlyArray<Readonly<ReadonlyMap<unknown, unknown>>>,
-    U extends DeepMergeFunctionUtils<M, MM>,
+    U extends DeepMergeUtils<M, MM>,
   >(
     values: Ts,
     utils: U,
@@ -110,7 +110,7 @@ type DeepMergeFunctions<
 
   mergeSets: <
     Ts extends ReadonlyArray<Readonly<ReadonlySet<unknown>>>,
-    U extends DeepMergeFunctionUtils<M, MM>,
+    U extends DeepMergeUtils<M, MM>,
   >(
     values: Ts,
     utils: U,
@@ -119,7 +119,7 @@ type DeepMergeFunctions<
 
   mergeOthers: <
     Ts extends ReadonlyArray<unknown>,
-    U extends DeepMergeFunctionUtils<M, MM>,
+    U extends DeepMergeUtils<M, MM>,
   >(
     values: Ts,
     utils: U,
@@ -191,7 +191,7 @@ type DeepMergeIntoFunctions<
 /**
  * The utils provided to the merge functions.
  */
-export type DeepMergeFunctionUtils<
+export type DeepMergeUtils<
   in out M,
   MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData,
 > = Readonly<{
