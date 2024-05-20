@@ -30,14 +30,14 @@ export type MergeFunctions = {
 export function mergeRecords<
   Ts extends ReadonlyArray<Record<PropertyKey, unknown>>,
   U extends DeepMergeFunctionUtils<M, MM>,
-  MF extends DeepMergeFunctionsURIs,
+  Fs extends DeepMergeFunctionsURIs,
   M,
   MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData,
 >(
   values: Ts,
   utils: U,
   meta: M | undefined,
-): DeepMergeRecordsDefaultHKT<Ts, MF, M> {
+): DeepMergeRecordsDefaultHKT<Ts, Fs, M> {
   const result: Record<PropertyKey, unknown> = {};
 
   for (const key of getKeys(values)) {
@@ -58,7 +58,7 @@ export function mergeRecords<
       parents: values,
     } as unknown as MM);
 
-    const propertyResult = mergeUnknowns<ReadonlyArray<unknown>, U, MF, M, MM>(
+    const propertyResult = mergeUnknowns<ReadonlyArray<unknown>, U, Fs, M, MM>(
       propValues,
       utils,
       updatedMeta,
@@ -80,7 +80,7 @@ export function mergeRecords<
     }
   }
 
-  return result as DeepMergeRecordsDefaultHKT<Ts, MF, M>;
+  return result as DeepMergeRecordsDefaultHKT<Ts, Fs, M>;
 }
 
 /**
@@ -90,10 +90,10 @@ export function mergeRecords<
  */
 export function mergeArrays<
   Ts extends ReadonlyArray<ReadonlyArray<unknown>>,
-  MF extends DeepMergeFunctionsURIs,
+  Fs extends DeepMergeFunctionsURIs,
   M,
->(values: Ts): DeepMergeArraysDefaultHKT<Ts, MF, M> {
-  return values.flat() as DeepMergeArraysDefaultHKT<Ts, MF, M>;
+>(values: Ts): DeepMergeArraysDefaultHKT<Ts, Fs, M> {
+  return values.flat() as DeepMergeArraysDefaultHKT<Ts, Fs, M>;
 }
 
 /**

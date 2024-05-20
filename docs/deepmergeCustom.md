@@ -170,7 +170,7 @@ declaring a module block for this library and defining the same interface.
 declare module "deepmerge-ts" {
   interface DeepMergeFunctionURItoKind<
     Ts extends ReadonlyArray<unknown>,
-    MF extends DeepMergeFunctionsURIs,
+    Fs extends DeepMergeFunctionsURIs,
     M,
   > {
     readonly MyCustomMergeURI: MyValue;
@@ -215,7 +215,7 @@ customDeepmerge(x, y, z); // => { foo: [Date, Date, Date] }
 declare module "deepmerge-ts" {
   interface DeepMergeFunctionURItoKind<
     Ts extends ReadonlyArray<unknown>,
-    MF extends DeepMergeFunctionsURIs,
+    Fs extends DeepMergeFunctionsURIs,
     M,
   > {
     readonly MyDeepMergeDatesURI: EveryIsDate<Ts> extends true
@@ -301,7 +301,7 @@ customizedDeepmerge(x, y, z); // => { key1: { subkey1: `one`, subkey2: `two` } }
 declare module "deepmerge-ts" {
   interface DeepMergeFunctionURItoKind<
     Ts extends Readonly<ReadonlyArray<unknown>>,
-    MF extends DeepMergeFunctionsURIs,
+    Fs extends DeepMergeFunctionsURIs,
     M,
   > {
     readonly FilterNullValues: FilterOut<Ts, null>;
@@ -433,7 +433,7 @@ customizedDeepmerge(x, y); // => { foo: { bar: { baz: "special merge", bar: { ba
 declare module "deepmerge-ts" {
   interface DeepMergeFunctionURItoKind<
     Ts extends Readonly<ReadonlyArray<unknown>>,
-    MF extends DeepMergeFunctionsURIs,
+    Fs extends DeepMergeFunctionsURIs,
     M, // This is the meta data type
   > {
     readonly KeyPathBasedMerge: Ts[number] extends number
