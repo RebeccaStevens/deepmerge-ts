@@ -27,7 +27,7 @@ All these options are optional.
 
 #### `mergeRecords`
 
-Type: `false | (values: Record<any, unknown>[], utils: DeepMergeMergeFunctionUtils, meta: MetaData) => unknown`
+Type: `false | (values: Record<any, unknown>[], utils: DeepMergeFunctionUtils, meta: MetaData) => unknown`
 
 If `false`, records won't be merged. If set to a function, that function will be used to merge records.
 
@@ -35,25 +35,25 @@ Note: Records are "vanilla" objects (e.g. `{ foo: "hello", bar: "world" }`).
 
 #### `mergeArrays`
 
-Type: `false | (values: unknown[][], utils: DeepMergeMergeFunctionUtils, meta: MetaData) => unknown`
+Type: `false | (values: unknown[][], utils: DeepMergeFunctionUtils, meta: MetaData) => unknown`
 
 If `false`, arrays won't be merged. If set to a function, that function will be used to merge arrays.
 
 #### `mergeMaps`
 
-Type: `false | (values: Map<unknown, unknown>[], utils: DeepMergeMergeFunctionUtils, meta: MetaData) => unknown`
+Type: `false | (values: Map<unknown, unknown>[], utils: DeepMergeFunctionUtils, meta: MetaData) => unknown`
 
 If `false`, maps won't be merged. If set to a function, that function will be used to merge maps.
 
 #### `mergeSets`
 
-Type: `false | (values: Set<unknown>[], utils: DeepMergeMergeFunctionUtils, meta: MetaData) => unknown`
+Type: `false | (values: Set<unknown>[], utils: DeepMergeFunctionUtils, meta: MetaData) => unknown`
 
 If `false`, sets won't be merged. If set to a function, that function will be used to merge sets.
 
 #### `mergeOthers`
 
-Type: `(values: unknown[], utils: DeepMergeMergeFunctionUtils, meta: MetaData) => unknown`
+Type: `(values: unknown[], utils: DeepMergeFunctionUtils, meta: MetaData) => unknown`
 
 If set to a function, that function will be used to merge everything else.
 
@@ -72,7 +72,7 @@ Type: `MetaData`
 
 The given meta data value will be passed to root level merges.
 
-### DeepMergeMergeFunctionUtils
+### DeepMergeFunctionUtils
 
 This is a set of utility functions that are made available to your custom merge functions.
 
@@ -115,7 +115,7 @@ All these options are optional.
 
 #### `mergeRecords`
 
-Type: `false | (target: DeepMergeValueReference<Record<PropertyKey, unknown>>, values: Record<any, unknown>[], utils: DeepMergeMergeFunctionUtils, meta: MetaData) => void | symbol` <!-- markdownlint-disable-line MD013 -->
+Type: `false | (target: DeepMergeValueReference<Record<PropertyKey, unknown>>, values: Record<any, unknown>[], utils: DeepMergeFunctionUtils, meta: MetaData) => void | symbol` <!-- markdownlint-disable-line MD013 -->
 
 If `false`, records won't be merged. If set to a function, that function will be used to merge records by mutating
 `target.value`.
@@ -124,28 +124,28 @@ Note: Records are "vanilla" objects (e.g. `{ foo: "hello", bar: "world" }`).
 
 #### `mergeArrays`
 
-Type: `false | (target: DeepMergeValueReference<unknown[]>, values: unknown[][], utils: DeepMergeMergeIntoFunctionUtils, meta: MetaData) => void | symbol` <!-- markdownlint-disable-line MD013 -->
+Type: `false | (target: DeepMergeValueReference<unknown[]>, values: unknown[][], utils: DeepMergeIntoFunctionUtils, meta: MetaData) => void | symbol` <!-- markdownlint-disable-line MD013 -->
 
 If `false`, arrays won't be merged. If set to a function, that function will be used to merge arrays by mutating
 `target.value`.
 
 #### `mergeMaps`
 
-Type: `false | (target: DeepMergeValueReference<Map<unknown, unknown>>, values: Map<unknown, unknown>[], utils: DeepMergeMergeIntoFunctionUtils, meta: MetaData) => void | symbol` <!-- markdownlint-disable-line MD013 -->
+Type: `false | (target: DeepMergeValueReference<Map<unknown, unknown>>, values: Map<unknown, unknown>[], utils: DeepMergeIntoFunctionUtils, meta: MetaData) => void | symbol` <!-- markdownlint-disable-line MD013 -->
 
 If `false`, maps won't be merged. If set to a function, that function will be used to merge maps by mutating
 `target.value`.
 
 #### `mergeSets`
 
-Type: `false | (target: DeepMergeValueReference<Set<unknown>>, values: Set<unknown>[], utils: DeepMergeMergeIntoFunctionUtils, meta: MetaData) => void | symbol` <!-- markdownlint-disable-line MD013 -->
+Type: `false | (target: DeepMergeValueReference<Set<unknown>>, values: Set<unknown>[], utils: DeepMergeIntoFunctionUtils, meta: MetaData) => void | symbol` <!-- markdownlint-disable-line MD013 -->
 
 If `false`, sets won't be merged. If set to a function, that function will be used to merge sets by mutating
 `target.value`.
 
 #### `mergeOthers`
 
-Type: `(target: DeepMergeValueReference<unknown>, values: unknown[], utils: DeepMergeMergeIntoFunctionUtils, meta: MetaData) => void | symbol` <!-- markdownlint-disable-line MD013 -->
+Type: `(target: DeepMergeValueReference<unknown>, values: unknown[], utils: DeepMergeIntoFunctionUtils, meta: MetaData) => void | symbol` <!-- markdownlint-disable-line MD013 -->
 
 If set to a function, that function will be used to merge everything else by mutating `target.value`.
 
@@ -164,7 +164,7 @@ Type: `MetaData`
 
 The given meta data value will be passed to root level merges.
 
-### DeepMergeMergeIntoFunctionUtils
+### DeepMergeIntoFunctionUtils
 
 This is a set of utility functions that are made available to your custom merge functions.
 

@@ -7,8 +7,8 @@ export {
   objectHasProperty,
 } from "./utils";
 
-export type { MergeFunctions as DeepMergeMergeIntoFunctionsDefaults } from "./defaults/into";
-export type { MergeFunctions as DeepMergeMergeFunctionsDefaults } from "./defaults/vanilla";
+export type { MergeFunctions as DeepMergeIntoFunctionsDefaults } from "./defaults/into";
+export type { MergeFunctions as DeepMergeFunctionsDefaults } from "./defaults/vanilla";
 export type {
   DeepMergeArraysDefaultHKT,
   DeepMergeBuiltInMetaData,
@@ -17,16 +17,16 @@ export type {
   DeepMergeLeafURI,
   DeepMergeNoFilteringURI,
   DeepMergeMapsDefaultHKT,
-  DeepMergeMergeFunctionsDefaultURIs,
-  DeepMergeMergeFunctionsURIs,
-  DeepMergeMergeFunctionURItoKind,
-  DeepMergeMergeFunctionUtils,
-  DeepMergeMergeIntoFunctionUtils,
+  DeepMergeFunctionsDefaultURIs,
+  DeepMergeFunctionsURIs,
+  DeepMergeFunctionURItoKind,
+  DeepMergeFunctionUtils,
+  DeepMergeIntoFunctionUtils,
   DeepMergeOptions,
   DeepMergeIntoOptions,
   DeepMergeRecordsDefaultHKT,
   DeepMergeSetsDefaultHKT,
   Reference as DeepMergeValueReference,
-  GetDeepMergeMergeFunctionsURIs,
+  GetDeepMergeFunctionsURIs,
 } from "./types";
 export type { FilterOut } from "./types/utils";

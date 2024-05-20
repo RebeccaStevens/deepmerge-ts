@@ -6,10 +6,10 @@ import {
 import * as defaultMergeIntoFunctions from "./defaults/into";
 import {
   type DeepMergeBuiltInMetaData,
+  type DeepMergeFunctionsDefaultURIs,
   type DeepMergeHKT,
+  type DeepMergeIntoFunctionUtils,
   type DeepMergeIntoOptions,
-  type DeepMergeMergeFunctionsDefaultURIs,
-  type DeepMergeMergeIntoFunctionUtils,
   type Reference,
 } from "./types";
 import { type SimplifyObject } from "./types/utils";
@@ -42,7 +42,7 @@ export function deepmergeInto<
   Target &
     DeepMergeHKT<
       [Target, ...Ts],
-      DeepMergeMergeFunctionsDefaultURIs,
+      DeepMergeFunctionsDefaultURIs,
       DeepMergeBuiltInMetaData
     >
 >;
@@ -57,7 +57,7 @@ export function deepmergeInto<
   Target &
     DeepMergeHKT<
       [Target, ...Ts],
-      DeepMergeMergeFunctionsDefaultURIs,
+      DeepMergeFunctionsDefaultURIs,
       DeepMergeBuiltInMetaData
     >
 > {
@@ -119,7 +119,7 @@ export function deepmergeIntoCustom<
     ...objects: Ts
   ) => void;
 
-  const utils: DeepMergeMergeIntoFunctionUtils<MetaData, MetaMetaData> =
+  const utils: DeepMergeIntoFunctionUtils<MetaData, MetaMetaData> =
     getIntoUtils(options, customizedDeepmergeInto as CustomizedDeepmergeInto);
 
   /**
@@ -150,11 +150,8 @@ function getIntoUtils<
   MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData,
 >(
   options: DeepMergeIntoOptions<M, MM>,
-  customizedDeepmergeInto: DeepMergeMergeIntoFunctionUtils<
-    M,
-    MM
-  >["deepmergeInto"],
-): DeepMergeMergeIntoFunctionUtils<M, MM> {
+  customizedDeepmergeInto: DeepMergeIntoFunctionUtils<M, MM>["deepmergeInto"],
+): DeepMergeIntoFunctionUtils<M, MM> {
   return {
     defaultMergeFunctions: defaultMergeIntoFunctions,
     mergeFunctions: {
@@ -170,9 +167,9 @@ function getIntoUtils<
               : [key, option],
           ),
       ),
-    } as DeepMergeMergeIntoFunctionUtils<M, MM>["mergeFunctions"],
+    } as DeepMergeIntoFunctionUtils<M, MM>["mergeFunctions"],
     metaDataUpdater: (options.metaDataUpdater ??
-      defaultMetaDataUpdater) as unknown as DeepMergeMergeIntoFunctionUtils<
+      defaultMetaDataUpdater) as unknown as DeepMergeIntoFunctionUtils<
       M,
       MM
     >["metaDataUpdater"],
@@ -193,7 +190,7 @@ function getIntoUtils<
  */
 export function mergeUnknownsInto<
   Ts extends ReadonlyArray<unknown>,
-  U extends DeepMergeMergeIntoFunctionUtils<M, MM>,
+  U extends DeepMergeIntoFunctionUtils<M, MM>,
   M,
   MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData,
 >(
@@ -291,7 +288,7 @@ export function mergeUnknownsInto<
  * @param values - The records.
  */
 function mergeRecordsInto<
-  U extends DeepMergeMergeIntoFunctionUtils<M, MM>,
+  U extends DeepMergeIntoFunctionUtils<M, MM>,
   M,
   MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData,
 >(
@@ -324,7 +321,7 @@ function mergeRecordsInto<
  * @param values - The arrays.
  */
 function mergeArraysInto<
-  U extends DeepMergeMergeIntoFunctionUtils<M, MM>,
+  U extends DeepMergeIntoFunctionUtils<M, MM>,
   M,
   MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData,
 >(
@@ -352,7 +349,7 @@ function mergeArraysInto<
  * @param values - The sets.
  */
 function mergeSetsInto<
-  U extends DeepMergeMergeIntoFunctionUtils<M, MM>,
+  U extends DeepMergeIntoFunctionUtils<M, MM>,
   M,
   MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData,
 >(
@@ -375,7 +372,7 @@ function mergeSetsInto<
  * @param values - The maps.
  */
 function mergeMapsInto<
-  U extends DeepMergeMergeIntoFunctionUtils<M, MM>,
+  U extends DeepMergeIntoFunctionUtils<M, MM>,
   M,
   MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData,
 >(
@@ -398,7 +395,7 @@ function mergeMapsInto<
  * @param values - The other things.
  */
 function mergeOthersInto<
-  U extends DeepMergeMergeIntoFunctionUtils<M, MM>,
+  U extends DeepMergeIntoFunctionUtils<M, MM>,
   M,
   MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData,
 >(
