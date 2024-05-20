@@ -72,8 +72,8 @@ importers:
         specifier: 1.0.2
         version: 1.0.2(rollup@4.17.2)
       denoify:
-        specifier: 1.6.9
-        version: 1.6.9
+        specifier: 1.6.12
+        version: 1.6.12
       eslint:
         specifier: 9.3.0
         version: 9.3.0
@@ -1861,8 +1861,8 @@ packages:
     resolution: {integrity: sha512-uckOqKcfaVvtBdsVkdPv3XjveQJsNQqmhXgRi8uhvWWuPYZCNlzT8qAyblUgNoXdHdjMTzAqeGjAoli8f+bzPA==}
     engines: {node: '>= 0.4'}
 
-  denoify@1.6.9:
-    resolution: {integrity: sha512-/X5rewN7sCNRNx46b8JDnbohTPT+KK2TBQBlnsOktPyny5Zy70iwLvFNToPJ183vVFNBe91NeF9aCRTLZDiqsQ==}
+  denoify@1.6.12:
+    resolution: {integrity: sha512-ejXYFOstNiT3OnY+Tmw7m1NvsdsPsaNJ2Bz5zw8qiGJ6fhM+vh7O3EZ67VCf42s+QiiOcWaYbu8z248WlMwyKw==}
     hasBin: true
 
   deprecation@2.3.1:
@@ -6360,7 +6360,7 @@ snapshots:
       has-property-descriptors: 1.0.0
       object-keys: 1.1.1
 
-  denoify@1.6.9:
+  denoify@1.6.12:
     dependencies:
       '@octokit/rest': 18.12.0
       '@types/comment-json': 1.1.1

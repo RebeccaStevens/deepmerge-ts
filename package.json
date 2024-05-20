@@ -100,7 +100,7 @@
     "cspell": "8.8.1",
     "cz-conventional-changelog": "3.3.0",
     "deassert": "1.0.2",
-    "denoify": "1.6.9",
+    "denoify": "1.6.12",
     "eslint": "9.3.0",
     "eslint-config-prettier": "9.1.0",
     "eslint-flat-config-utils": "0.2.5",
