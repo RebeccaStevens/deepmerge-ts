@@ -61,7 +61,7 @@ export function mergeRecords<
     );
 
     if (key === "__proto__") {
-      Object.defineProperty(m_target, key, {
+      Object.defineProperty(m_target.value, key, {
         value: propertyTarget.value,
         configurable: true,
         enumerable: true,

@@ -401,7 +401,7 @@ function mergeRecords(m_target, values, utils, meta) {
         const propertyTarget = { value: propValues[0] };
         mergeUnknownsInto(propertyTarget, propValues, utils, updatedMeta);
         if (key === "__proto__") {
-            Object.defineProperty(m_target, key, {
+            Object.defineProperty(m_target.value, key, {
                 value: propertyTarget.value,
                 configurable: true,
                 enumerable: true,

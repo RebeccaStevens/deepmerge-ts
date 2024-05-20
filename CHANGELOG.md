@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
+## [6.0.3](https://github.com/RebeccaStevens/deepmerge-ts/compare/v6.0.2...v6.0.3) (2024-05-20)
+
+
+### Bug Fixes
+
+* deepmergeInto unsafe key value assignment ([6b04863](https://github.com/RebeccaStevens/deepmerge-ts/commit/6b048630ca13052927a85a802a9fe9977519db4c))
+
 ## [6.0.2](https://github.com/RebeccaStevens/deepmerge-ts/compare/v6.0.1...v6.0.2) (2024-05-20)
 
 
