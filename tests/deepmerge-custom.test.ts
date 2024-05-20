@@ -2,9 +2,9 @@ import _ from "lodash";
 import { describe, expect, it } from "vitest";
 
 import {
+  type DeepMergeFunctionsURIs,
   type DeepMergeLeaf,
   type DeepMergeLeafURI,
-  type DeepMergeMergeFunctionsURIs,
   type DeepMergeNoFilteringURI,
   type DeepMergeOptions,
   type DeepMergeRecordsDefaultHKT,
@@ -15,9 +15,9 @@ import { type FilterOut } from "../src/types/utils";
 import { areAllNumbers, hasProp } from "./utils";
 
 declare module "../src/types" {
-  interface DeepMergeMergeFunctionURItoKind<
+  interface DeepMergeFunctionURItoKind<
     Ts extends ReadonlyArray<unknown>,
-    MF extends DeepMergeMergeFunctionsURIs,
+    MF extends DeepMergeFunctionsURIs,
     M,
   > {
     readonly CustomArrays1: string[];
@@ -25,9 +25,9 @@ declare module "../src/types" {
 }
 
 declare module "../src/types" {
-  interface DeepMergeMergeFunctionURItoKind<
+  interface DeepMergeFunctionURItoKind<
     Ts extends ReadonlyArray<unknown>,
-    MF extends DeepMergeMergeFunctionsURIs,
+    MF extends DeepMergeFunctionsURIs,
     M,
   > {
     readonly CustomArrays2: Ts extends Readonly<
@@ -40,9 +40,9 @@ declare module "../src/types" {
 }
 
 declare module "../src/types" {
-  interface DeepMergeMergeFunctionURItoKind<
+  interface DeepMergeFunctionURItoKind<
     Ts extends ReadonlyArray<unknown>,
-    MF extends DeepMergeMergeFunctionsURIs,
+    MF extends DeepMergeFunctionsURIs,
     M,
   > {
     readonly CustomRecords3: Entries<DeepMergeRecordsDefaultHKT<Ts, MF, M>>;
@@ -56,9 +56,9 @@ type Entries<T> = Array<
 >;
 
 declare module "../src/types" {
-  interface DeepMergeMergeFunctionURItoKind<
+  interface DeepMergeFunctionURItoKind<
     Ts extends ReadonlyArray<unknown>,
-    MF extends DeepMergeMergeFunctionsURIs,
+    MF extends DeepMergeFunctionsURIs,
     M,
   > {
     readonly NoArrayMerge1: DeepMergeLeaf<Ts>;
@@ -66,9 +66,9 @@ declare module "../src/types" {
 }
 
 declare module "../src/types" {
-  interface DeepMergeMergeFunctionURItoKind<
+  interface DeepMergeFunctionURItoKind<
     Ts extends ReadonlyArray<unknown>,
-    MF extends DeepMergeMergeFunctionsURIs,
+    MF extends DeepMergeFunctionsURIs,
     M,
   > {
     readonly MergeDates1: EveryIsDate<Ts> extends true ? Ts : DeepMergeLeaf<Ts>;
@@ -83,9 +83,9 @@ type EveryIsDate<Ts extends ReadonlyArray<unknown>> =
     : true;
 
 declare module "../src/types" {
-  interface DeepMergeMergeFunctionURItoKind<
+  interface DeepMergeFunctionURItoKind<
     Ts extends Readonly<ReadonlyArray<unknown>>,
-    MF extends DeepMergeMergeFunctionsURIs,
+    MF extends DeepMergeFunctionsURIs,
     M,
   > {
     readonly KeyPathBasedMerge: Ts[number] extends number
@@ -95,9 +95,9 @@ declare module "../src/types" {
 }
 
 declare module "../src/types" {
-  interface DeepMergeMergeFunctionURItoKind<
+  interface DeepMergeFunctionURItoKind<
     Ts extends ReadonlyArray<unknown>,
-    MF extends DeepMergeMergeFunctionsURIs,
+    MF extends DeepMergeFunctionsURIs,
     M,
   > {
     readonly CustomOthers3: Ts[number] extends object
@@ -115,9 +115,9 @@ declare module "../src/types" {
 }
 
 declare module "../src/types" {
-  interface DeepMergeMergeFunctionURItoKind<
+  interface DeepMergeFunctionURItoKind<
     Ts extends ReadonlyArray<unknown>,
-    MF extends DeepMergeMergeFunctionsURIs,
+    MF extends DeepMergeFunctionsURIs,
     M,
   > {
     readonly CustomFilterValues1: FilterOut<Ts, null>;

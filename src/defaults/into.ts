@@ -1,7 +1,7 @@
 import { mergeUnknownsInto } from "../deepmerge-into";
 import {
   type DeepMergeBuiltInMetaData,
-  type DeepMergeMergeIntoFunctionUtils,
+  type DeepMergeIntoFunctionUtils,
   type Reference,
 } from "../types";
 import { getIterableOfIterables, getKeys, objectHasProperty } from "../utils";
@@ -25,7 +25,7 @@ export type MergeFunctions = {
  */
 export function mergeRecords<
   Ts extends ReadonlyArray<Record<PropertyKey, unknown>>,
-  U extends DeepMergeMergeIntoFunctionUtils<M, MM>,
+  U extends DeepMergeIntoFunctionUtils<M, MM>,
   M,
   MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData,
 >(

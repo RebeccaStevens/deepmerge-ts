@@ -159,7 +159,7 @@ const y = { foo: [5, 6] };
 customDeepmerge(x, y); // => { foo: [5, 6], bar: [3, 4] }
 ```
 
-When resolving a HKT, we use a lookup inside an interface called `DeepMergeMergeFunctionURItoKind`.
+When resolving a HKT, we use a lookup inside an interface called `DeepMergeFunctionURItoKind`.
 This interface needs to contain all the mappings of the URIs to their actual type.
 
 When defining your own HKT for use with deepmerge, you need to extend this interface with your mapping.
@@ -168,9 +168,9 @@ declaring a module block for this library and defining the same interface.
 
 ```ts
 declare module "deepmerge-ts" {
-  interface DeepMergeMergeFunctionURItoKind<
+  interface DeepMergeFunctionURItoKind<
     Ts extends ReadonlyArray<unknown>,
-    MF extends DeepMergeMergeFunctionsURIs,
+    MF extends DeepMergeFunctionsURIs,
     M,
   > {
     readonly MyCustomMergeURI: MyValue;
@@ -184,9 +184,9 @@ Here's an example of creating a custom deepmerge function that amalgamates dates
 
 ```ts
 import {
+  type DeepMergeFunctionURItoKind,
+  type DeepMergeFunctionsURIs,
   type DeepMergeLeaf,
-  type DeepMergeMergeFunctionURItoKind,
-  type DeepMergeMergeFunctionsURIs,
   deepmergeCustom,
 } from "deepmerge-ts";
 
@@ -213,9 +213,9 @@ const z = { foo: new Date("2022-03-03") };
 customDeepmerge(x, y, z); // => { foo: [Date, Date, Date] }
 
 declare module "deepmerge-ts" {
-  interface DeepMergeMergeFunctionURItoKind<
+  interface DeepMergeFunctionURItoKind<
     Ts extends ReadonlyArray<unknown>,
-    MF extends DeepMergeMergeFunctionsURIs,
+    MF extends DeepMergeFunctionsURIs,
     M,
   > {
     readonly MyDeepMergeDatesURI: EveryIsDate<Ts> extends true
@@ -247,8 +247,8 @@ Be sure to also set the `DeepMergeFilterValuesURI` to `DeepMergeNoFilteringURI` 
 
 ```ts
 import {
-  type DeepMergeMergeFunctionURItoKind,
-  type DeepMergeMergeFunctionsURIs,
+  type DeepMergeFunctionURItoKind,
+  type DeepMergeFunctionsURIs,
   type DeepMergeNoFilteringURI,
   deepmergeCustom,
 } from "deepmerge-ts";
@@ -275,8 +275,8 @@ Here's an example that creates a custom deepmerge function that filters out all 
 
 ```ts
 import {
-  type DeepMergeMergeFunctionURItoKind,
-  type DeepMergeMergeFunctionsURIs,
+  type DeepMergeFunctionURItoKind,
+  type DeepMergeFunctionsURIs,
   type FilterOut,
   deepmergeCustom,
 } from "deepmerge-ts";
@@ -299,9 +299,9 @@ const z = { key1: { subkey2: `two` } };
 customizedDeepmerge(x, y, z); // => { key1: { subkey1: `one`, subkey2: `two` } }
 
 declare module "deepmerge-ts" {
-  interface DeepMergeMergeFunctionURItoKind<
+  interface DeepMergeFunctionURItoKind<
     Ts extends Readonly<ReadonlyArray<unknown>>,
-    MF extends DeepMergeMergeFunctionsURIs,
+    MF extends DeepMergeFunctionsURIs,
     M,
   > {
     readonly FilterNullValues: FilterOut<Ts, null>;
@@ -318,9 +318,9 @@ under.
 
 ```ts
 import {
+  type DeepMergeFunctionURItoKind,
+  type DeepMergeFunctionsURIs,
   type DeepMergeLeaf,
-  type DeepMergeMergeFunctionURItoKind,
-  type DeepMergeMergeFunctionsURIs,
   deepmergeCustom,
 } from "deepmerge-ts";
 
@@ -370,9 +370,9 @@ Here's an example that uses custom metadata that accumulates the full key path.
 
 ```ts
 import {
+  type DeepMergeFunctionURItoKind,
+  type DeepMergeFunctionsURIs,
   type DeepMergeLeaf,
-  type DeepMergeMergeFunctionURItoKind,
-  type DeepMergeMergeFunctionsURIs,
   deepmergeCustom,
 } from "deepmerge-ts";
 
@@ -431,9 +431,9 @@ const y = {
 customizedDeepmerge(x, y); // => { foo: { bar: { baz: "special merge", bar: { baz: 6, qux: 7 }, qux: 2 } }, bar: { baz: "special merge", qux: 9 }, }
 
 declare module "deepmerge-ts" {
-  interface DeepMergeMergeFunctionURItoKind<
+  interface DeepMergeFunctionURItoKind<
     Ts extends Readonly<ReadonlyArray<unknown>>,
-    MF extends DeepMergeMergeFunctionsURIs,
+    MF extends DeepMergeFunctionsURIs,
     M, // This is the meta data type
   > {
     readonly KeyPathBasedMerge: Ts[number] extends number
@@ -507,10 +507,10 @@ type CustomizedDeepmergeInto = <
   DeepMergeHKT<
     [Target, ...Ts], // Don't forget to pass the `Target` type here too.
     {
-      DeepMergeRecordsURI: DeepMergeMergeFunctionsDefaultURIs["DeepMergeRecordsURI"]; // Use default behavior.
-      DeepMergeArraysURI: DeepMergeMergeFunctionsDefaultURIs["DeepMergeArraysURI"]; // Use default behavior.
-      DeepMergeSetsURI: DeepMergeMergeFunctionsDefaultURIs["DeepMergeSetsURI"]; // Use default behavior.
-      DeepMergeMapsURI: DeepMergeMergeFunctionsDefaultURIs["DeepMergeMapsURI"]; // Use default behavior.
+      DeepMergeRecordsURI: DeepMergeFunctionsDefaultURIs["DeepMergeRecordsURI"]; // Use default behavior.
+      DeepMergeArraysURI: DeepMergeFunctionsDefaultURIs["DeepMergeArraysURI"]; // Use default behavior.
+      DeepMergeSetsURI: DeepMergeFunctionsDefaultURIs["DeepMergeSetsURI"]; // Use default behavior.
+      DeepMergeMapsURI: DeepMergeFunctionsDefaultURIs["DeepMergeMapsURI"]; // Use default behavior.
       DeepMergeOthersURI: "CustomDeepMergeOthersURI"; // Use custom behavior (see deepmergeCustom's docs above for details).
     },
     DeepMergeBuiltInMetaData // Use default meta data.

@@ -18,9 +18,9 @@ import {
  * Mapping of merge function URIs to the merge function type.
  */
 // eslint-disable-next-line ts/consistent-type-definitions
-export interface DeepMergeMergeFunctionURItoKind<
+export interface DeepMergeFunctionURItoKind<
   Ts extends ReadonlyArray<unknown>,
-  MF extends DeepMergeMergeFunctionsURIs,
+  MF extends DeepMergeFunctionsURIs,
   in out M,
 > {
   readonly DeepMergeLeafURI: DeepMergeLeaf<Ts>;
@@ -35,55 +35,55 @@ export interface DeepMergeMergeFunctionURItoKind<
 /**
  * Get the type of the given merge function via its URI.
  */
-type DeepMergeMergeFunctionKind<
-  URI extends DeepMergeMergeFunctionURIs,
+type DeepMergeFunctionKind<
+  URI extends DeepMergeFunctionURIs,
   Ts extends ReadonlyArray<unknown>,
-  MF extends DeepMergeMergeFunctionsURIs,
+  MF extends DeepMergeFunctionsURIs,
   M,
-> = DeepMergeMergeFunctionURItoKind<Ts, MF, M>[URI];
+> = DeepMergeFunctionURItoKind<Ts, MF, M>[URI];
 
 /**
  * A union of all valid merge function URIs.
  */
-type DeepMergeMergeFunctionURIs = keyof DeepMergeMergeFunctionURItoKind<
+type DeepMergeFunctionURIs = keyof DeepMergeFunctionURItoKind<
   ReadonlyArray<unknown>,
-  DeepMergeMergeFunctionsURIs,
+  DeepMergeFunctionsURIs,
   unknown
 >;
 
 /**
  * The merge functions to use when deep merging.
  */
-export type DeepMergeMergeFunctionsURIs = Readonly<{
+export type DeepMergeFunctionsURIs = Readonly<{
   /**
    * The merge function to merge records with.
    */
-  DeepMergeRecordsURI: DeepMergeMergeFunctionURIs;
+  DeepMergeRecordsURI: DeepMergeFunctionURIs;
 
   /**
    * The merge function to merge arrays with.
    */
-  DeepMergeArraysURI: DeepMergeMergeFunctionURIs;
+  DeepMergeArraysURI: DeepMergeFunctionURIs;
 
   /**
    * The merge function to merge sets with.
    */
-  DeepMergeSetsURI: DeepMergeMergeFunctionURIs;
+  DeepMergeSetsURI: DeepMergeFunctionURIs;
 
   /**
    * The merge function to merge maps with.
    */
-  DeepMergeMapsURI: DeepMergeMergeFunctionURIs;
+  DeepMergeMapsURI: DeepMergeFunctionURIs;
 
   /**
    * The merge function to merge other things with.
    */
-  DeepMergeOthersURI: DeepMergeMergeFunctionURIs;
+  DeepMergeOthersURI: DeepMergeFunctionURIs;
 
   /**
    * The function to filter values.
    */
-  DeepMergeFilterValuesURI: DeepMergeMergeFunctionURIs;
+  DeepMergeFilterValuesURI: DeepMergeFunctionURIs;
 }>;
 
 /**
@@ -91,7 +91,7 @@ export type DeepMergeMergeFunctionsURIs = Readonly<{
  */
 export type DeepMergeHKT<
   Ts extends ReadonlyArray<unknown>,
-  MF extends DeepMergeMergeFunctionsURIs,
+  MF extends DeepMergeFunctionsURIs,
   M,
 > =
   IsTuple<Ts> extends true
@@ -100,7 +100,7 @@ export type DeepMergeHKT<
       : DeepMergeHKTHelper<FilterValuesHKT<Ts, MF, M>, MF, M>
     : unknown;
 
-type DeepMergeHKTHelper<Ts, MF extends DeepMergeMergeFunctionsURIs, M> =
+type DeepMergeHKTHelper<Ts, MF extends DeepMergeFunctionsURIs, M> =
   Ts extends ReadonlyArray<unknown>
     ? IsTuple<Ts> extends true
       ? Ts extends readonly []
@@ -124,54 +124,54 @@ type DeepMergeHKTHelper<Ts, MF extends DeepMergeMergeFunctionsURIs, M> =
  */
 type DeepMergeRecordsHKT<
   Ts extends ReadonlyArray<unknown>,
-  MF extends DeepMergeMergeFunctionsURIs,
+  MF extends DeepMergeFunctionsURIs,
   M,
-> = DeepMergeMergeFunctionKind<MF["DeepMergeRecordsURI"], Ts, MF, M>;
+> = DeepMergeFunctionKind<MF["DeepMergeRecordsURI"], Ts, MF, M>;
 
 /**
  * Deep merge arrays.
  */
 type DeepMergeArraysHKT<
   Ts extends ReadonlyArray<unknown>,
-  MF extends DeepMergeMergeFunctionsURIs,
+  MF extends DeepMergeFunctionsURIs,
   M,
-> = DeepMergeMergeFunctionKind<MF["DeepMergeArraysURI"], Ts, MF, M>;
+> = DeepMergeFunctionKind<MF["DeepMergeArraysURI"], Ts, MF, M>;
 
 /**
  * Deep merge sets.
  */
 type DeepMergeSetsHKT<
   Ts extends ReadonlyArray<unknown>,
-  MF extends DeepMergeMergeFunctionsURIs,
+  MF extends DeepMergeFunctionsURIs,
   M,
-> = DeepMergeMergeFunctionKind<MF["DeepMergeSetsURI"], Ts, MF, M>;
+> = DeepMergeFunctionKind<MF["DeepMergeSetsURI"], Ts, MF, M>;
 
 /**
  * Deep merge maps.
  */
 type DeepMergeMapsHKT<
   Ts extends ReadonlyArray<unknown>,
-  MF extends DeepMergeMergeFunctionsURIs,
+  MF extends DeepMergeFunctionsURIs,
   M,
-> = DeepMergeMergeFunctionKind<MF["DeepMergeMapsURI"], Ts, MF, M>;
+> = DeepMergeFunctionKind<MF["DeepMergeMapsURI"], Ts, MF, M>;
 
 /**
  * Deep merge other things.
  */
 type DeepMergeOthersHKT<
   Ts extends ReadonlyArray<unknown>,
-  MF extends DeepMergeMergeFunctionsURIs,
+  MF extends DeepMergeFunctionsURIs,
   M,
-> = DeepMergeMergeFunctionKind<MF["DeepMergeOthersURI"], Ts, MF, M>;
+> = DeepMergeFunctionKind<MF["DeepMergeOthersURI"], Ts, MF, M>;
 
 /**
  * Filter values.
  */
 type FilterValuesHKT<
   Ts extends ReadonlyArray<unknown>,
-  MF extends DeepMergeMergeFunctionsURIs,
+  MF extends DeepMergeFunctionsURIs,
   M,
-> = DeepMergeMergeFunctionKind<MF["DeepMergeFilterValuesURI"], Ts, MF, M>;
+> = DeepMergeFunctionKind<MF["DeepMergeFilterValuesURI"], Ts, MF, M>;
 
 /**
  * The merge function that returns a leaf.

@@ -3,9 +3,9 @@ import { mergeUnknowns } from "../deepmerge";
 import {
   type DeepMergeArraysDefaultHKT,
   type DeepMergeBuiltInMetaData,
+  type DeepMergeFunctionUtils,
+  type DeepMergeFunctionsURIs,
   type DeepMergeMapsDefaultHKT,
-  type DeepMergeMergeFunctionUtils,
-  type DeepMergeMergeFunctionsURIs,
   type DeepMergeRecordsDefaultHKT,
   type DeepMergeSetsDefaultHKT,
 } from "../types";
@@ -29,8 +29,8 @@ export type MergeFunctions = {
  */
 export function mergeRecords<
   Ts extends ReadonlyArray<Record<PropertyKey, unknown>>,
-  U extends DeepMergeMergeFunctionUtils<M, MM>,
-  MF extends DeepMergeMergeFunctionsURIs,
+  U extends DeepMergeFunctionUtils<M, MM>,
+  MF extends DeepMergeFunctionsURIs,
   M,
   MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData,
 >(
@@ -90,7 +90,7 @@ export function mergeRecords<
  */
 export function mergeArrays<
   Ts extends ReadonlyArray<ReadonlyArray<unknown>>,
-  MF extends DeepMergeMergeFunctionsURIs,
+  MF extends DeepMergeFunctionsURIs,
   M,
 >(values: Ts): DeepMergeArraysDefaultHKT<Ts, MF, M> {
   return values.flat() as DeepMergeArraysDefaultHKT<Ts, MF, M>;
