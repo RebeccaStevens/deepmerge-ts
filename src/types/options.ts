@@ -38,6 +38,7 @@ type DeepMergeOptionsFull<
   mergeOthers: DeepMergeMergeFunctions<M, MM>["mergeOthers"];
   metaDataUpdater: MetaDataUpdater<M, MM>;
   enableImplicitDefaultMerging: boolean;
+  filterValues: DeepMergeUtilityFunctions<M>["filterValues"] | false;
 }>;
 
 /**
@@ -53,6 +54,7 @@ type DeepMergeIntoOptionsFull<
   mergeSets: DeepMergeMergeIntoFunctions<M, MM>["mergeSets"] | false;
   mergeOthers: DeepMergeMergeIntoFunctions<M, MM>["mergeOthers"];
   metaDataUpdater: MetaDataUpdater<M, MM>;
+  filterValues: DeepMergeUtilityFunctions<M>["filterValues"] | false;
 }>;
 
 /**
@@ -61,6 +63,16 @@ type DeepMergeIntoOptionsFull<
 export type Reference<T> = {
   value: T;
 };
+
+/**
+ * All the utility functions that can be overridden.
+ */
+type DeepMergeUtilityFunctions<in M> = Readonly<{
+  filterValues: <Ts extends ReadonlyArray<unknown>>(
+    values: Ts,
+    meta: M | undefined,
+  ) => unknown[];
+}>;
 
 /**
  * All the merge functions that deepmerge uses.
@@ -188,6 +200,7 @@ export type DeepMergeMergeFunctionUtils<
   metaDataUpdater: MetaDataUpdater<M, MM>;
   deepmerge: <Ts extends ReadonlyArray<unknown>>(...values: Ts) => unknown;
   useImplicitDefaultMerging: boolean;
+  filterValues: DeepMergeUtilityFunctions<M>["filterValues"] | undefined;
   actions: Readonly<{
     defaultMerge: symbol;
     skip: symbol;
@@ -208,6 +221,7 @@ export type DeepMergeMergeIntoFunctionUtils<
     target: Target,
     ...values: Ts
   ) => void;
+  filterValues: DeepMergeUtilityFunctions<M>["filterValues"] | undefined;
   actions: Readonly<{
     defaultMerge: symbol;
   }>;

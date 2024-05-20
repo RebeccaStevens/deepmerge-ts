@@ -318,6 +318,18 @@ describe("deepmerge", () => {
     expect(merged).toStrictEqual(expected);
   });
 
+  it(`undefined doesn't intefer with merging`, () => {
+    const x = { key1: { subkey1: `one` } };
+    const y = { key1: undefined };
+    const z = { key1: { subkey2: `two` } };
+
+    const expected = { key1: { subkey1: `one`, subkey2: `two` } };
+
+    const merged = deepmerge(x, y, z);
+
+    expect(merged).toStrictEqual(expected);
+  });
+
   it(`can merge arrays`, () => {
     const x = [`one`, `two`];
     const y = [`one`, `three`];

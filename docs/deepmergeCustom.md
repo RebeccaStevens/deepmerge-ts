@@ -237,6 +237,78 @@ type EveryIsDate<Ts extends ReadonlyArray<unknown>> = Ts extends readonly [
 Note: If you want to use HKTs in your own project, not related to deepmerge-ts, we recommend checking out
 [fp-ts](https://gcanti.github.io/fp-ts/modules/HKT.ts.html).
 
+## Filtering Values
+
+You can filter the values before they are merged by using the `filterValues` option.
+By default, we filter out all `undefined` values.
+
+If you don't want to filter out any values, you can set the `filterValues` option to `false`.
+Be sure to also set the `DeepMergeFilterValuesURI` to `DeepMergeNoFilteringURI` to ensure correct return types.
+
+```ts
+import {
+  type DeepMergeMergeFunctionURItoKind,
+  type DeepMergeMergeFunctionsURIs,
+  type DeepMergeNoFilteringURI,
+  deepmergeCustom,
+} from "deepmerge-ts";
+
+const customizedDeepmerge = deepmergeCustom<
+  unknown,
+  {
+    DeepMergeFilterValuesURI: DeepMergeNoFilteringURI;
+  }
+>({
+  filterValues: false,
+});
+
+const x = { key1: { subkey1: `one` } };
+const y = { key1: undefined };
+const z = { key1: { subkey2: `two` } };
+
+customizedDeepmerge(x, y, z); // => { key1: { subkey2: `two` } }
+```
+
+Here's an example that creates a custom deepmerge function that filters out all `null` values instead of `undefined`.
+
+<!-- eslint-disable ts/no-shadow -->
+
+```ts
+import {
+  type DeepMergeMergeFunctionURItoKind,
+  type DeepMergeMergeFunctionsURIs,
+  type FilterOut,
+  deepmergeCustom,
+} from "deepmerge-ts";
+
+const customizedDeepmerge = deepmergeCustom<
+  unknown,
+  {
+    DeepMergeFilterValuesURI: "FilterNullValues";
+  }
+>({
+  filterValues(values, meta) {
+    return values.filter((value) => value !== null);
+  },
+});
+
+const x = { key1: { subkey1: `one` } };
+const y = { key1: null };
+const z = { key1: { subkey2: `two` } };
+
+customizedDeepmerge(x, y, z); // => { key1: { subkey1: `one`, subkey2: `two` } }
+
+declare module "deepmerge-ts" {
+  interface DeepMergeMergeFunctionURItoKind<
+    Ts extends Readonly<ReadonlyArray<unknown>>,
+    MF extends DeepMergeMergeFunctionsURIs,
+    M,
+  > {
+    readonly FilterNullValues: FilterOut<Ts, null>;
+  }
+}
+```
+
 ## Meta Data
 
 We provide a simple object of meta data that states the key that the values being merged were under.

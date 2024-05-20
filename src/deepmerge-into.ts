@@ -1,6 +1,9 @@
 import { actionsInto as actions } from "./actions";
+import {
+  defaultFilterValues,
+  defaultMetaDataUpdater,
+} from "./defaults/general";
 import * as defaultMergeIntoFunctions from "./defaults/into";
-import { defaultMetaDataUpdater } from "./defaults/meta-data-updater";
 import {
   type DeepMergeBuiltInMetaData,
   type DeepMergeHKT,
@@ -174,6 +177,10 @@ function getIntoUtils<
       MM
     >["metaDataUpdater"],
     deepmergeInto: customizedDeepmergeInto,
+    filterValues:
+      options.filterValues === false
+        ? undefined
+        : options.filterValues ?? defaultFilterValues,
     actions,
   };
 }
@@ -196,22 +203,34 @@ export function mergeUnknownsInto<
   meta: M | undefined,
   // eslint-disable-next-line ts/no-invalid-void-type
 ): void | symbol {
-  if (values.length === 0) {
+  const filteredValues = utils.filterValues?.(values, meta) ?? values;
+
+  if (filteredValues.length === 0) {
     return;
   }
-  if (values.length === 1) {
-    return void mergeOthersInto<U, M, MM>(m_target, values, utils, meta);
+  if (filteredValues.length === 1) {
+    return void mergeOthersInto<U, M, MM>(
+      m_target,
+      filteredValues,
+      utils,
+      meta,
+    );
   }
 
   const type = getObjectType(m_target.value);
 
   if (type !== ObjectType.NOT && type !== ObjectType.OTHER) {
-    for (let m_index = 1; m_index < values.length; m_index++) {
-      if (getObjectType(values[m_index]) === type) {
+    for (let m_index = 1; m_index < filteredValues.length; m_index++) {
+      if (getObjectType(filteredValues[m_index]) === type) {
         continue;
       }
 
-      return void mergeOthersInto<U, M, MM>(m_target, values, utils, meta);
+      return void mergeOthersInto<U, M, MM>(
+        m_target,
+        filteredValues,
+        utils,
+        meta,
+      );
     }
   }
 
@@ -219,7 +238,7 @@ export function mergeUnknownsInto<
     case ObjectType.RECORD: {
       return void mergeRecordsInto<U, M, MM>(
         m_target as Reference<Record<PropertyKey, unknown>>,
-        values as ReadonlyArray<Readonly<Record<PropertyKey, unknown>>>,
+        filteredValues as ReadonlyArray<Readonly<Record<PropertyKey, unknown>>>,
         utils,
         meta,
       );
@@ -228,7 +247,7 @@ export function mergeUnknownsInto<
     case ObjectType.ARRAY: {
       return void mergeArraysInto<U, M, MM>(
         m_target as Reference<unknown[]>,
-        values as ReadonlyArray<ReadonlyArray<unknown>>,
+        filteredValues as ReadonlyArray<ReadonlyArray<unknown>>,
         utils,
         meta,
       );
@@ -237,7 +256,7 @@ export function mergeUnknownsInto<
     case ObjectType.SET: {
       return void mergeSetsInto<U, M, MM>(
         m_target as Reference<Set<unknown>>,
-        values as ReadonlyArray<Readonly<ReadonlySet<unknown>>>,
+        filteredValues as ReadonlyArray<Readonly<ReadonlySet<unknown>>>,
         utils,
         meta,
       );
@@ -246,14 +265,21 @@ export function mergeUnknownsInto<
     case ObjectType.MAP: {
       return void mergeMapsInto<U, M, MM>(
         m_target as Reference<Map<unknown, unknown>>,
-        values as ReadonlyArray<Readonly<ReadonlyMap<unknown, unknown>>>,
+        filteredValues as ReadonlyArray<
+          Readonly<ReadonlyMap<unknown, unknown>>
+        >,
         utils,
         meta,
       );
     }
 
     default: {
-      return void mergeOthersInto<U, M, MM>(m_target, values, utils, meta);
+      return void mergeOthersInto<U, M, MM>(
+        m_target,
+        filteredValues,
+        utils,
+        meta,
+      );
     }
   }
 }

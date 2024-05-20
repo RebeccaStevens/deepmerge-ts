@@ -253,3 +253,10 @@ expectType<{
   };
   garply: number;
 }>(test20);
+
+// eslint-disable-next-line ts/no-confusing-void-expression
+const test21 = deepmerge();
+expectType<undefined>(test21);
+
+const test22 = deepmerge({} as any, {} as any);
+expectType<unknown>(test22);
