@@ -98,7 +98,19 @@ const y = {
   ]),
 };
 
-const merged = deepmerge(x, y);
+const z = {
+  record: {
+    prop1: undefined,
+    prop3: undefined,
+    prop2: undefined,
+    prop4: undefined,
+  },
+  array: undefined,
+  set: undefined,
+  map: undefined,
+};
+
+const merged = deepmerge(x, y, z);
 
 console.log(merged);
 
@@ -109,6 +121,7 @@ console.log(merged);
 //     "prop1": "changed",
 //     "prop2": "value2",
 //     "prop3": "value3",
+//     "prop4": undefined,
 //   },
 //   "array": Array [1, 2, 3, 2, 3, 4],
 //   "set": Set { 1, 2, 3, 4 },
