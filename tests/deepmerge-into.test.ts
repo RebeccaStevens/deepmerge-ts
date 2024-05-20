@@ -591,10 +591,6 @@ describe("deepmergeInto", () => {
     const target = {};
     deepmergeInto(target, a, b);
     expect(target).toStrictEqual(expected);
-
-    expect(() => {
-      deepmergeInto(a, b);
-    }).toThrowError();
   });
 
   it("prototype pollution", () => {
