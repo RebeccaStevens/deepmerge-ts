@@ -38,7 +38,7 @@ jobs:
       # explaining this to the PR author
       - name: "Comment about changes we can't accept"
         if: ${{ steps.filter.outputs.notAllowed }}
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         with:
           script: |
             let reviewMessage = `👋 Hey there. It looks like you've modified some of the `dist` files.\nYou'll need to revert all of the changes that you've made to these files. Once you get those files reverted, we can continue with the review process. :octocat:`
