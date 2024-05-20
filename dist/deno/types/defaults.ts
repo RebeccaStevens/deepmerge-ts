@@ -7,6 +7,7 @@ import {
 import {
   type FilterOutNever,
   type FlattenTuples,
+  type KeyIsOptional,
   type SimplifyObject,
   type TransposeTuple,
   type TupleToIntersection,
@@ -75,7 +76,7 @@ type RecordToRecordMeta<T extends Record<PropertyKey, unknown>> = {
   [K in keyof T]-?: {
     key: K;
     value: Required<T>[K];
-    optional: {} extends Pick<T, K> ? true : false;
+    optional: KeyIsOptional<K, T>;
   };
 };
 

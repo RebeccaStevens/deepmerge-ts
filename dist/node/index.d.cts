@@ -56,6 +56,14 @@ type Or<T1 extends boolean, T2 extends boolean> = T1 extends true ? true : T2;
  */
 type Not<T extends boolean> = T extends true ? false : true;
 /**
+ * Check if a key is optional in the given object.
+ */
+type KeyIsOptional<K extends PropertyKey, O extends {
+    [Key in K]?: unknown;
+}> = O extends {
+    [Key in K]: unknown;
+} ? false : true;
+/**
  * Returns whether or not the given type a record.
  */
 type IsRecord<T> = And<Not<IsNever<T>>, T extends Readonly<Record<PropertyKey, unknown>> ? true : false>;
@@ -380,7 +388,7 @@ type RecordToRecordMeta<T extends Record<PropertyKey, unknown>> = {
     [K in keyof T]-?: {
         key: K;
         value: Required<T>[K];
-        optional: {} extends Pick<T, K> ? true : false;
+        optional: KeyIsOptional<K, T>;
     };
 };
 /**
