@@ -381,10 +381,10 @@ type RecordPropertyMeta<Key extends PropertyKey = PropertyKey, Value = unknown, 
     value: Value;
     optional: Optional;
 };
-type RecordsToRecordMeta<Ts extends ReadonlyArray<Record<PropertyKey, unknown>>> = {
+type RecordsToRecordMeta<Ts extends ReadonlyArray<Record<PropertyKey, unknown>>> = FilterOutNever<{
     [I in keyof Ts]: RecordToRecordMeta<Ts[I]>;
-};
-type RecordToRecordMeta<T extends Record<PropertyKey, unknown>> = {
+}>;
+type RecordToRecordMeta<T extends Record<PropertyKey, unknown>> = object extends T ? never : {
     [K in keyof T]-?: {
         key: K;
         value: Required<T>[K];
@@ -398,7 +398,7 @@ type DeepMergeRecordsDefaultHKT<Ts extends ReadonlyArray<unknown>, MF extends De
 /**
  * Deep merge record props.
  */
-type DeepMergeRecordMetaDefaultHKTProps<RecordMetas extends ReadonlyArray<RecordMeta>, MF extends DeepMergeMergeFunctionsURIs, M> = CreateRecordFromMeta<MergeRecordMeta<RecordMetas>, MF, M>;
+type DeepMergeRecordMetaDefaultHKTProps<RecordMetas, MF extends DeepMergeMergeFunctionsURIs, M> = RecordMetas extends ReadonlyArray<RecordMeta> ? CreateRecordFromMeta<MergeRecordMeta<RecordMetas>, MF, M> : never;
 type MergeRecordMeta<RecordMetas extends ReadonlyArray<RecordMeta>> = GroupValuesByKey<FlattenTuples<TransposeTuple<{
     [I in keyof RecordMetas]: TransposeTuple<RecordEntries<RecordMetas[I]>>;
 }>>>;

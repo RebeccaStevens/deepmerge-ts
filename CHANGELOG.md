@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
+## [6.0.2](https://github.com/RebeccaStevens/deepmerge-ts/compare/v6.0.1...v6.0.2) (2024-05-20)
+
+
+### Bug Fixes
+
+* return type when using empty records ([6b4ff3f](https://github.com/RebeccaStevens/deepmerge-ts/commit/6b4ff3f42951cd9b548d2b4adb184fed4e35be2d)), closes [#465](https://github.com/RebeccaStevens/deepmerge-ts/issues/465)
+
 ## [6.0.1](https://github.com/RebeccaStevens/deepmerge-ts/compare/v6.0.0...v6.0.1) (2024-05-20)
 
 
