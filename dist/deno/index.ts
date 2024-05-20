@@ -7,24 +7,26 @@ export {
   objectHasProperty,
 } from "./utils.ts";
 
-export type { MergeFunctions as DeepMergeMergeIntoFunctionsDefaults } from "./defaults/into.ts";
-export type { MergeFunctions as DeepMergeMergeFunctionsDefaults } from "./defaults/vanilla.ts";
+export type { MergeFunctions as DeepMergeIntoFunctionsDefaults } from "./defaults/into.ts";
+export type { MergeFunctions as DeepMergeFunctionsDefaults } from "./defaults/vanilla.ts";
 export type {
   DeepMergeArraysDefaultHKT,
   DeepMergeBuiltInMetaData,
   DeepMergeHKT,
   DeepMergeLeaf,
   DeepMergeLeafURI,
+  DeepMergeNoFilteringURI,
   DeepMergeMapsDefaultHKT,
-  DeepMergeMergeFunctionsDefaultURIs,
-  DeepMergeMergeFunctionsURIs,
-  DeepMergeMergeFunctionURItoKind,
-  DeepMergeMergeFunctionUtils,
-  DeepMergeMergeIntoFunctionUtils,
+  DeepMergeFunctionsDefaultURIs,
+  DeepMergeFunctionsURIs,
+  DeepMergeFunctionURItoKind,
+  DeepMergeUtils,
+  DeepMergeIntoFunctionUtils,
   DeepMergeOptions,
   DeepMergeIntoOptions,
   DeepMergeRecordsDefaultHKT,
   DeepMergeSetsDefaultHKT,
   Reference as DeepMergeValueReference,
-  GetDeepMergeMergeFunctionsURIs,
+  GetDeepMergeFunctionsURIs,
 } from "./types/index.ts";
+export type { FilterOut } from "./types/utils.ts";

@@ -226,24 +226,34 @@ type UnionMapValuesHelper<
   : Acc;
 
 /**
- * Filter out nevers from a tuple.
+ * Filter out U from a tuple.
  */
-export type FilterOutNever<T> =
-  T extends ReadonlyArray<unknown> ? FilterOutNeverHelper<T, []> : never;
+export type FilterOut<T extends ReadonlyArray<unknown>, U> = FilterOutHelper<
+  T,
+  U,
+  []
+>;
 
 /**
- * Tail-recursive helper type for FilterOutNever.
+ * Tail-recursive helper type for FilterOut.
  */
-type FilterOutNeverHelper<
+type FilterOutHelper<
   T extends ReadonlyArray<unknown>,
+  U,
   Acc extends ReadonlyArray<unknown>,
 > = T extends readonly []
   ? Acc
   : T extends readonly [infer Head, ...infer Rest]
-    ? IsNever<Head> extends true
-      ? FilterOutNeverHelper<Rest, Acc>
-      : FilterOutNeverHelper<Rest, [...Acc, Head]>
+    ? Is<Head, U> extends true
+      ? FilterOutHelper<Rest, U, Acc>
+      : FilterOutHelper<Rest, U, [...Acc, Head]>
     : T;
+
+/**
+ * Filter out nevers from a tuple.
+ */
+export type FilterOutNever<T> =
+  T extends ReadonlyArray<unknown> ? FilterOut<T, never> : never;
 
 /**
  * Is the type a tuple?

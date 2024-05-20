@@ -1,6 +1,26 @@
 # Changelog
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
+# [7.0.0](https://github.com/RebeccaStevens/deepmerge-ts/compare/v6.0.3...v7.0.0) (2024-05-20)
+
+
+### Code Refactoring
+
+* rename DeepMergeFunctionUtils to DeepMergeUtils ([e821255](https://github.com/RebeccaStevens/deepmerge-ts/commit/e821255380dd9307041e6749c43d363e4e2ae633))
+* rename DeepMergeMerge* to DeepMerge* ([fd4d2d4](https://github.com/RebeccaStevens/deepmerge-ts/commit/fd4d2d462eec14841adc45d741148cc7a9449a1f))
+
+
+### Features
+
+* allow filtering out values before merging them ([0784f63](https://github.com/RebeccaStevens/deepmerge-ts/commit/0784f63befc4ab4d66b6f3ae4b2076fba203fb48)), closes [#460](https://github.com/RebeccaStevens/deepmerge-ts/issues/460)
+
+
+### BREAKING CHANGES
+
+* rename DeepMergeFunctionUtils to DeepMergeUtils
+* rename DeepMergeMerge* to DeepMerge*
+* allow filtering out values before merging them
+
 ## [6.0.3](https://github.com/RebeccaStevens/deepmerge-ts/compare/v6.0.2...v6.0.3) (2024-05-20)
 
 

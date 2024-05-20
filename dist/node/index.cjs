@@ -16,9 +16,19 @@ const actionsInto = {
 
 /**
  * The default function to update meta data.
+ *
+ * It doesn't update the meta data.
  */
 function defaultMetaDataUpdater(previousMeta, metaMeta) {
     return metaMeta;
+}
+/**
+ * The default function to filter values.
+ *
+ * It filters out undefined values.
+ */
+function defaultFilterValues(values, meta) {
+    return values.filter((value) => value !== undefined);
 }
 
 /**
@@ -203,12 +213,7 @@ function mergeMaps$2(values) {
  * Get the last non-undefined value in the given array.
  */
 function mergeOthers$2(values) {
-    for (let i = values.length - 1; i >= 0; i--) {
-        if (values[i] !== undefined) {
-            return values[i];
-        }
-    }
-    return undefined;
+    return values.at(-1);
 }
 
 var defaultMergeFunctions = /*#__PURE__*/Object.freeze({
@@ -258,6 +263,9 @@ function getUtils(options, customizedDeepmerge) {
             defaultMetaDataUpdater),
         deepmerge: customizedDeepmerge,
         useImplicitDefaultMerging: options.enableImplicitDefaultMerging ?? false,
+        filterValues: options.filterValues === false
+            ? undefined
+            : options.filterValues ?? defaultFilterValues,
         actions,
     };
 }
@@ -267,36 +275,37 @@ function getUtils(options, customizedDeepmerge) {
  * @param values - The values.
  */
 function mergeUnknowns(values, utils, meta) {
-    if (values.length === 0) {
+    const filteredValues = utils.filterValues?.(values, meta) ?? values;
+    if (filteredValues.length === 0) {
         return undefined;
     }
-    if (values.length === 1) {
-        return mergeOthers$1(values, utils, meta);
+    if (filteredValues.length === 1) {
+        return mergeOthers$1(filteredValues, utils, meta);
     }
-    const type = getObjectType(values[0]);
+    const type = getObjectType(filteredValues[0]);
     if (type !== 0 /* ObjectType.NOT */ && type !== 5 /* ObjectType.OTHER */) {
-        for (let m_index = 1; m_index < values.length; m_index++) {
-            if (getObjectType(values[m_index]) === type) {
+        for (let m_index = 1; m_index < filteredValues.length; m_index++) {
+            if (getObjectType(filteredValues[m_index]) === type) {
                 continue;
             }
-            return mergeOthers$1(values, utils, meta);
+            return mergeOthers$1(filteredValues, utils, meta);
         }
     }
     switch (type) {
         case 1 /* ObjectType.RECORD */: {
-            return mergeRecords$1(values, utils, meta);
+            return mergeRecords$1(filteredValues, utils, meta);
         }
         case 2 /* ObjectType.ARRAY */: {
-            return mergeArrays$1(values, utils, meta);
+            return mergeArrays$1(filteredValues, utils, meta);
         }
         case 3 /* ObjectType.SET */: {
-            return mergeSets$1(values, utils, meta);
+            return mergeSets$1(filteredValues, utils, meta);
         }
         case 4 /* ObjectType.MAP */: {
-            return mergeMaps$1(values, utils, meta);
+            return mergeMaps$1(filteredValues, utils, meta);
         }
         default: {
-            return mergeOthers$1(values, utils, meta);
+            return mergeOthers$1(filteredValues, utils, meta);
         }
     }
 }
@@ -450,13 +459,7 @@ function mergeMaps(m_target, values) {
  * Set the target to the last non-undefined value.
  */
 function mergeOthers(m_target, values) {
-    for (let i = values.length - 1; i >= 0; i--) {
-        if (values[i] !== undefined) {
-            m_target.value = values[i];
-            return;
-        }
-    }
-    m_target.value = undefined;
+    m_target.value = values.at(-1);
 }
 
 var defaultMergeIntoFunctions = /*#__PURE__*/Object.freeze({
@@ -500,6 +503,9 @@ function getIntoUtils(options, customizedDeepmergeInto) {
         metaDataUpdater: (options.metaDataUpdater ??
             defaultMetaDataUpdater),
         deepmergeInto: customizedDeepmergeInto,
+        filterValues: options.filterValues === false
+            ? undefined
+            : options.filterValues ?? defaultFilterValues,
         actions: actionsInto,
     };
 }
@@ -510,36 +516,37 @@ function getIntoUtils(options, customizedDeepmergeInto) {
  * @param values - The values.
  */
 function mergeUnknownsInto(m_target, values, utils, meta) {
-    if (values.length === 0) {
+    const filteredValues = utils.filterValues?.(values, meta) ?? values;
+    if (filteredValues.length === 0) {
         return;
     }
-    if (values.length === 1) {
-        return void mergeOthersInto(m_target, values, utils, meta);
+    if (filteredValues.length === 1) {
+        return void mergeOthersInto(m_target, filteredValues, utils, meta);
     }
     const type = getObjectType(m_target.value);
     if (type !== 0 /* ObjectType.NOT */ && type !== 5 /* ObjectType.OTHER */) {
-        for (let m_index = 1; m_index < values.length; m_index++) {
-            if (getObjectType(values[m_index]) === type) {
+        for (let m_index = 1; m_index < filteredValues.length; m_index++) {
+            if (getObjectType(filteredValues[m_index]) === type) {
                 continue;
             }
-            return void mergeOthersInto(m_target, values, utils, meta);
+            return void mergeOthersInto(m_target, filteredValues, utils, meta);
         }
     }
     switch (type) {
         case 1 /* ObjectType.RECORD */: {
-            return void mergeRecordsInto(m_target, values, utils, meta);
+            return void mergeRecordsInto(m_target, filteredValues, utils, meta);
         }
         case 2 /* ObjectType.ARRAY */: {
-            return void mergeArraysInto(m_target, values, utils, meta);
+            return void mergeArraysInto(m_target, filteredValues, utils, meta);
         }
         case 3 /* ObjectType.SET */: {
-            return void mergeSetsInto(m_target, values, utils, meta);
+            return void mergeSetsInto(m_target, filteredValues, utils, meta);
         }
         case 4 /* ObjectType.MAP */: {
-            return void mergeMapsInto(m_target, values, utils, meta);
+            return void mergeMapsInto(m_target, filteredValues, utils, meta);
         }
         default: {
-            return void mergeOthersInto(m_target, values, utils, meta);
+            return void mergeOthersInto(m_target, filteredValues, utils, meta);
         }
     }
 }

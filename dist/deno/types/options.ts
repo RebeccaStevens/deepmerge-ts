@@ -31,13 +31,14 @@ type DeepMergeOptionsFull<
   in out M,
   MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData,
 > = Readonly<{
-  mergeRecords: DeepMergeMergeFunctions<M, MM>["mergeRecords"] | false;
-  mergeArrays: DeepMergeMergeFunctions<M, MM>["mergeArrays"] | false;
-  mergeMaps: DeepMergeMergeFunctions<M, MM>["mergeMaps"] | false;
-  mergeSets: DeepMergeMergeFunctions<M, MM>["mergeSets"] | false;
-  mergeOthers: DeepMergeMergeFunctions<M, MM>["mergeOthers"];
+  mergeRecords: DeepMergeFunctions<M, MM>["mergeRecords"] | false;
+  mergeArrays: DeepMergeFunctions<M, MM>["mergeArrays"] | false;
+  mergeMaps: DeepMergeFunctions<M, MM>["mergeMaps"] | false;
+  mergeSets: DeepMergeFunctions<M, MM>["mergeSets"] | false;
+  mergeOthers: DeepMergeFunctions<M, MM>["mergeOthers"];
   metaDataUpdater: MetaDataUpdater<M, MM>;
   enableImplicitDefaultMerging: boolean;
+  filterValues: DeepMergeUtilityFunctions<M>["filterValues"] | false;
 }>;
 
 /**
@@ -47,12 +48,13 @@ type DeepMergeIntoOptionsFull<
   in out M,
   MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData,
 > = Readonly<{
-  mergeRecords: DeepMergeMergeIntoFunctions<M, MM>["mergeRecords"] | false;
-  mergeArrays: DeepMergeMergeIntoFunctions<M, MM>["mergeArrays"] | false;
-  mergeMaps: DeepMergeMergeIntoFunctions<M, MM>["mergeMaps"] | false;
-  mergeSets: DeepMergeMergeIntoFunctions<M, MM>["mergeSets"] | false;
-  mergeOthers: DeepMergeMergeIntoFunctions<M, MM>["mergeOthers"];
+  mergeRecords: DeepMergeIntoFunctions<M, MM>["mergeRecords"] | false;
+  mergeArrays: DeepMergeIntoFunctions<M, MM>["mergeArrays"] | false;
+  mergeMaps: DeepMergeIntoFunctions<M, MM>["mergeMaps"] | false;
+  mergeSets: DeepMergeIntoFunctions<M, MM>["mergeSets"] | false;
+  mergeOthers: DeepMergeIntoFunctions<M, MM>["mergeOthers"];
   metaDataUpdater: MetaDataUpdater<M, MM>;
+  filterValues: DeepMergeUtilityFunctions<M>["filterValues"] | false;
 }>;
 
 /**
@@ -63,15 +65,25 @@ export type Reference<T> = {
 };
 
 /**
+ * All the utility functions that can be overridden.
+ */
+type DeepMergeUtilityFunctions<in M> = Readonly<{
+  filterValues: <Ts extends ReadonlyArray<unknown>>(
+    values: Ts,
+    meta: M | undefined,
+  ) => unknown[];
+}>;
+
+/**
  * All the merge functions that deepmerge uses.
  */
-type DeepMergeMergeFunctions<
+type DeepMergeFunctions<
   in M,
   MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData,
 > = Readonly<{
   mergeRecords: <
     Ts extends ReadonlyArray<Readonly<Record<PropertyKey, unknown>>>,
-    U extends DeepMergeMergeFunctionUtils<M, MM>,
+    U extends DeepMergeUtils<M, MM>,
   >(
     values: Ts,
     utils: U,
@@ -80,7 +92,7 @@ type DeepMergeMergeFunctions<
 
   mergeArrays: <
     Ts extends ReadonlyArray<ReadonlyArray<unknown>>,
-    U extends DeepMergeMergeFunctionUtils<M, MM>,
+    U extends DeepMergeUtils<M, MM>,
   >(
     values: Ts,
     utils: U,
@@ -89,7 +101,7 @@ type DeepMergeMergeFunctions<
 
   mergeMaps: <
     Ts extends ReadonlyArray<Readonly<ReadonlyMap<unknown, unknown>>>,
-    U extends DeepMergeMergeFunctionUtils<M, MM>,
+    U extends DeepMergeUtils<M, MM>,
   >(
     values: Ts,
     utils: U,
@@ -98,7 +110,7 @@ type DeepMergeMergeFunctions<
 
   mergeSets: <
     Ts extends ReadonlyArray<Readonly<ReadonlySet<unknown>>>,
-    U extends DeepMergeMergeFunctionUtils<M, MM>,
+    U extends DeepMergeUtils<M, MM>,
   >(
     values: Ts,
     utils: U,
@@ -107,7 +119,7 @@ type DeepMergeMergeFunctions<
 
   mergeOthers: <
     Ts extends ReadonlyArray<unknown>,
-    U extends DeepMergeMergeFunctionUtils<M, MM>,
+    U extends DeepMergeUtils<M, MM>,
   >(
     values: Ts,
     utils: U,
@@ -116,78 +128,79 @@ type DeepMergeMergeFunctions<
 }>;
 
 // eslint-disable-next-line ts/no-invalid-void-type
-type DeepMergeMergeIntoFunctionsReturnType = void | symbol;
+type DeepMergeIntoFunctionsReturnType = void | symbol;
 
 /**
  * All the merge functions that deepmerge uses.
  */
-type DeepMergeMergeIntoFunctions<
+type DeepMergeIntoFunctions<
   in M,
   MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData,
 > = Readonly<{
   mergeRecords: <
     Ts extends ReadonlyArray<Readonly<Record<PropertyKey, unknown>>>,
-    U extends DeepMergeMergeIntoFunctionUtils<M, MM>,
+    U extends DeepMergeIntoFunctionUtils<M, MM>,
   >(
     m_target: Reference<Record<PropertyKey, unknown>>,
     values: Ts,
     utils: U,
     meta: M | undefined,
-  ) => DeepMergeMergeIntoFunctionsReturnType;
+  ) => DeepMergeIntoFunctionsReturnType;
 
   mergeArrays: <
     Ts extends ReadonlyArray<ReadonlyArray<unknown>>,
-    U extends DeepMergeMergeIntoFunctionUtils<M, MM>,
+    U extends DeepMergeIntoFunctionUtils<M, MM>,
   >(
     m_target: Reference<unknown[]>,
     values: Ts,
     utils: U,
     meta: M | undefined,
-  ) => DeepMergeMergeIntoFunctionsReturnType;
+  ) => DeepMergeIntoFunctionsReturnType;
 
   mergeMaps: <
     Ts extends ReadonlyArray<Readonly<ReadonlyMap<unknown, unknown>>>,
-    U extends DeepMergeMergeIntoFunctionUtils<M, MM>,
+    U extends DeepMergeIntoFunctionUtils<M, MM>,
   >(
     m_target: Reference<Map<unknown, unknown>>,
     values: Ts,
     utils: U,
     meta: M | undefined,
-  ) => DeepMergeMergeIntoFunctionsReturnType;
+  ) => DeepMergeIntoFunctionsReturnType;
 
   mergeSets: <
     Ts extends ReadonlyArray<Readonly<ReadonlySet<unknown>>>,
-    U extends DeepMergeMergeIntoFunctionUtils<M, MM>,
+    U extends DeepMergeIntoFunctionUtils<M, MM>,
   >(
     m_target: Reference<Set<unknown>>,
     values: Ts,
     utils: U,
     meta: M | undefined,
-  ) => DeepMergeMergeIntoFunctionsReturnType;
+  ) => DeepMergeIntoFunctionsReturnType;
 
   mergeOthers: <
     Ts extends ReadonlyArray<unknown>,
-    U extends DeepMergeMergeIntoFunctionUtils<M, MM>,
+    U extends DeepMergeIntoFunctionUtils<M, MM>,
   >(
     m_target: Reference<unknown>,
     values: Ts,
     utils: U,
     meta: M | undefined,
-  ) => DeepMergeMergeIntoFunctionsReturnType;
+  ) => DeepMergeIntoFunctionsReturnType;
 }>;
 
 /**
  * The utils provided to the merge functions.
  */
-export type DeepMergeMergeFunctionUtils<
+export type DeepMergeUtils<
   in out M,
   MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData,
 > = Readonly<{
-  mergeFunctions: DeepMergeMergeFunctions<M, MM>;
+  mergeFunctions: DeepMergeFunctions<M, MM>;
   defaultMergeFunctions: MergeFunctions;
   metaDataUpdater: MetaDataUpdater<M, MM>;
   deepmerge: <Ts extends ReadonlyArray<unknown>>(...values: Ts) => unknown;
   useImplicitDefaultMerging: boolean;
+  filterValues: DeepMergeUtilityFunctions<M>["filterValues"] | undefined;
   actions: Readonly<{
     defaultMerge: symbol;
     skip: symbol;
@@ -197,17 +210,18 @@ export type DeepMergeMergeFunctionUtils<
 /**
  * The utils provided to the merge functions.
  */
-export type DeepMergeMergeIntoFunctionUtils<
+export type DeepMergeIntoFunctionUtils<
   in out M,
   MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData,
 > = Readonly<{
-  mergeFunctions: DeepMergeMergeIntoFunctions<M, MM>;
+  mergeFunctions: DeepMergeIntoFunctions<M, MM>;
   defaultMergeFunctions: MergeIntoFunctions;
   metaDataUpdater: MetaDataUpdater<M, MM>;
   deepmergeInto: <Target extends object, Ts extends ReadonlyArray<unknown>>(
     target: Target,
     ...values: Ts
   ) => void;
+  filterValues: DeepMergeUtilityFunctions<M>["filterValues"] | undefined;
   actions: Readonly<{
     defaultMerge: symbol;
   }>;
