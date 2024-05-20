@@ -20,7 +20,7 @@ export type {
   DeepMergeFunctionsDefaultURIs,
   DeepMergeFunctionsURIs,
   DeepMergeFunctionURItoKind,
-  DeepMergeFunctionUtils,
+  DeepMergeUtils,
   DeepMergeIntoFunctionUtils,
   DeepMergeOptions,
   DeepMergeIntoOptions,
