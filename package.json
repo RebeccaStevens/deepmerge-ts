@@ -49,7 +49,7 @@
     "README.md"
   ],
   "scripts": {
-    "benchmark": "pnpm run build && pnpm run link & cd benchmark && pnpm run benchmark; cd ..",
+    "benchmark": "pnpm run build && cd benchmark && pnpm run benchmark; cd ..",
     "build": "rimraf build && pnpm run build:node && pnpm run build:deno && rimraf build && if-env-defined CI || pnpm run build:assume-unchanged",
     "build:assume-unchanged": "cd dist; git update-index --assume-unchanged $(git ls-files | tr '\n' ' '); cd ..",
     "build:deno": "rimraf dist/deno && tsc -p tsconfig.build.deno.json && denoify",
