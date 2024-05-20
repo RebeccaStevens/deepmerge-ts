@@ -283,29 +283,30 @@ describe("deepmergeIntoCustom", () => {
       bar: { baz: "special merge", qux: 9 },
     };
 
-    const customizedDeepmerge = deepmergeIntoCustom<ReadonlyArray<PropertyKey>>(
-      {
-        metaDataUpdater: (previousMeta, metaMeta) => {
-          if (metaMeta.key === undefined) {
-            return previousMeta ?? [];
-          }
-          return [...(previousMeta ?? []), metaMeta.key];
-        },
-        mergeOthers: (m_target, values, utils, meta): void => {
-          if (
-            meta !== undefined &&
-            meta.length >= 2 &&
-            meta.at(-2) === "bar" &&
-            meta.at(-1) === "baz"
-          ) {
-            m_target.value = "special merge";
-            return;
-          }
-
-          utils.defaultMergeFunctions.mergeOthers(m_target, values);
-        },
+    const customizedDeepmerge = deepmergeIntoCustom<
+      unknown,
+      ReadonlyArray<PropertyKey>
+    >({
+      metaDataUpdater: (previousMeta, metaMeta) => {
+        if (metaMeta.key === undefined) {
+          return previousMeta ?? [];
+        }
+        return [...(previousMeta ?? []), metaMeta.key];
       },
-    );
+      mergeOthers: (m_target, values, utils, meta): void => {
+        if (
+          meta !== undefined &&
+          meta.length >= 2 &&
+          meta.at(-2) === "bar" &&
+          meta.at(-1) === "baz"
+        ) {
+          m_target.value = "special merge";
+          return;
+        }
+
+        utils.defaultMergeFunctions.mergeOthers(m_target, values);
+      },
+    });
 
     customizedDeepmerge(x, y);
 
