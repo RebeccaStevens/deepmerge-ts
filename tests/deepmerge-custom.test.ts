@@ -5,10 +5,12 @@ import {
   type DeepMergeLeaf,
   type DeepMergeLeafURI,
   type DeepMergeMergeFunctionsURIs,
+  type DeepMergeNoFilteringURI,
   type DeepMergeOptions,
   type DeepMergeRecordsDefaultHKT,
   deepmergeCustom,
 } from "../src";
+import { type FilterOut } from "../src/types/utils";
 
 import { areAllNumbers, hasProp } from "./utils";
 
@@ -109,6 +111,16 @@ declare module "../src/types" {
           M
         >
       : DeepMergeLeaf<Ts>;
+  }
+}
+
+declare module "../src/types" {
+  interface DeepMergeMergeFunctionURItoKind<
+    Ts extends ReadonlyArray<unknown>,
+    MF extends DeepMergeMergeFunctionsURIs,
+    M,
+  > {
+    readonly CustomFilterValues1: FilterOut<Ts, null>;
   }
 }
 
@@ -757,6 +769,50 @@ describe("deepmergeCustom", () => {
     });
 
     const merged = customizedDeepmerge(x, y);
+
+    expect(merged).toStrictEqual(expected);
+  });
+
+  it(`null can be filtered out`, () => {
+    const x = { key1: { subkey1: `one` } };
+    const y = { key1: null };
+    const z = { key1: { subkey2: `two` } };
+
+    const expected = { key1: { subkey1: `one`, subkey2: `two` } };
+
+    const customizedDeepmerge = deepmergeCustom<
+      unknown,
+      {
+        DeepMergeFilterValuesURI: "CustomFilterValues1";
+      }
+    >({
+      filterValues(values) {
+        return values.filter((value) => value !== null);
+      },
+    });
+
+    const merged = customizedDeepmerge(x, y, z);
+
+    expect(merged).toStrictEqual(expected);
+  });
+
+  it(`filtered out nothing`, () => {
+    const x = { key1: { subkey1: `one` } };
+    const y = { key1: undefined };
+    const z = { key1: { subkey2: `two` } };
+
+    const expected = { key1: { subkey2: `two` } };
+
+    const customizedDeepmerge = deepmergeCustom<
+      unknown,
+      {
+        DeepMergeFilterValuesURI: DeepMergeNoFilteringURI;
+      }
+    >({
+      filterValues: false,
+    });
+
+    const merged = customizedDeepmerge(x, y, z);
 
     expect(merged).toStrictEqual(expected);
   });

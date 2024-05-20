@@ -15,6 +15,7 @@ export type {
   DeepMergeHKT,
   DeepMergeLeaf,
   DeepMergeLeafURI,
+  DeepMergeNoFilteringURI,
   DeepMergeMapsDefaultHKT,
   DeepMergeMergeFunctionsDefaultURIs,
   DeepMergeMergeFunctionsURIs,
@@ -28,3 +29,4 @@ export type {
   Reference as DeepMergeValueReference,
   GetDeepMergeMergeFunctionsURIs,
 } from "./types";
+export type { FilterOut } from "./types/utils";

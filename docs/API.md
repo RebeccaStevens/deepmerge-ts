@@ -59,6 +59,13 @@ If set to a function, that function will be used to merge everything else.
 
 Note: This includes merging mixed types, such as merging a map with an array.
 
+#### `filterValues`
+
+Type: `false | (values: unknown[], meta: MetaData) => unknown[]`
+
+If `false`, no values will be filter out. If set to a function, that function will be used to filter values.
+By default, `undefined` values will be filtered out (`null` values will be kept).
+
 ### `rootMetaData`
 
 Type: `MetaData`
@@ -143,6 +150,13 @@ Type: `(target: DeepMergeValueReference<unknown>, values: unknown[], utils: Deep
 If set to a function, that function will be used to merge everything else by mutating `target.value`.
 
 Note: This includes merging mixed types, such as merging a map with an array.
+
+#### `filterValues`
+
+Type: `false | (values: unknown[], meta: MetaData) => unknown[]`
+
+If `false`, no values will be filter out. If set to a function, that function will be used to filter values.
+By default, `undefined` values will be filtered out (`null` values will be kept).
 
 ### `rootMetaData`
 

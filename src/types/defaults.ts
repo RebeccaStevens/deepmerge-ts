@@ -5,6 +5,7 @@ import {
   type DeepMergeMergeFunctionsURIs,
 } from "./merging";
 import {
+  type FilterOut,
   type FilterOutNever,
   type FlattenTuples,
   type KeyIsOptional,
@@ -38,6 +39,11 @@ type DeepMergeSetsDefaultURI = "DeepMergeSetsDefaultURI";
 type DeepMergeMapsDefaultURI = "DeepMergeMapsDefaultURI";
 
 /**
+ * The default filter values function.
+ */
+type DeepMergeFilterValuesDefaultURI = "DeepMergeFilterValuesDefaultURI";
+
+/**
  * The default merge functions to use when deep merging.
  */
 export type DeepMergeMergeFunctionsDefaultURIs = Readonly<{
@@ -46,6 +52,7 @@ export type DeepMergeMergeFunctionsDefaultURIs = Readonly<{
   DeepMergeSetsURI: DeepMergeSetsDefaultURI;
   DeepMergeMapsURI: DeepMergeMapsDefaultURI;
   DeepMergeOthersURI: DeepMergeLeafURI;
+  DeepMergeFilterValuesURI: DeepMergeFilterValuesDefaultURI;
 }>;
 
 type RecordEntries<T extends Record<PropertyKey, unknown>> = TuplifyUnion<
@@ -300,6 +307,12 @@ export type DeepMergeMapsDefaultHKT<Ts extends ReadonlyArray<unknown>> = Map<
 >;
 
 /**
+ * Filter out undefined values.
+ */
+export type DeepMergeFilterValuesDefaultHKT<Ts extends ReadonlyArray<unknown>> =
+  FilterOut<Ts, undefined>;
+
+/**
  * Get the merge functions with defaults apply from the given subset.
  */
 export type GetDeepMergeMergeFunctionsURIs<
@@ -334,4 +347,10 @@ export type GetDeepMergeMergeFunctionsURIs<
     PMF["DeepMergeOthersURI"] extends keyof DeepMergeMergeFunctionURItoKind<any, any, any>
       ? PMF["DeepMergeOthersURI"]
       : DeepMergeLeafURI;
+
+  // prettier-ignore
+  DeepMergeFilterValuesURI:
+    PMF["DeepMergeFilterValuesURI"] extends keyof DeepMergeMergeFunctionURItoKind<any, any, any>
+      ? PMF["DeepMergeFilterValuesURI"]
+      : DeepMergeFilterValuesDefaultURI;
 }>;
