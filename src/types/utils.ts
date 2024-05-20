@@ -56,6 +56,14 @@ export type Or<T1 extends boolean, T2 extends boolean> = T1 extends true
 export type Not<T extends boolean> = T extends true ? false : true;
 
 /**
+ * Check if a key is optional in the given object.
+ */
+export type KeyIsOptional<
+  K extends PropertyKey,
+  O extends { [Key in K]?: unknown },
+> = O extends { [Key in K]: unknown } ? false : true;
+
+/**
  * Returns whether or not all the given types are never.
  */
 export type EveryIsNever<Ts extends ReadonlyArray<unknown>> =
