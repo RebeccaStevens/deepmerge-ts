@@ -8,20 +8,20 @@
     "email": "rebecca.stevens@outlook.co.nz"
   },
   "scripts": {
-    "prebenchmark": "pnpm install; pnpm link deepmerge-ts",
-    "benchmark": "ts-node run.ts"
+    "benchmark": "tsx run.ts"
   },
+  "type": "module",
   "dependencies": {
-    "@types/benchmark": "^2.1.1",
-    "benchmark": "^2.1.4",
-    "deepmerge": "^4.2.2",
+    "deepmerge": "^4.3.1",
+    "deepmerge-ts": "link:..",
     "lodash": "^4.17.21",
-    "merge-anything": "^5.0.0",
+    "merge-anything": "^5.1.7",
     "object-accumulator": "^0.0.5"
   },
   "devDependencies": {
-    "@types/node": "18.15.11",
-    "ts-node": "10.9.1",
-    "typescript": "5.0.4"
+    "@types/node": "20.12.12",
+    "tinybench": "2.8.0",
+    "tsx": "4.10.5",
+    "typescript": "5.4.5"
   }
 }
