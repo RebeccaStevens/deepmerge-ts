@@ -239,3 +239,8 @@ const p: { a: true; b?: string } = { a: true, b: "n" };
 
 const test18 = deepmerge(o, p);
 expectType<{ a: true; b?: string | number }>(test18);
+
+const q: Record<string, string> = { a: "a" };
+
+const test19 = deepmerge(q, q);
+expectType<Record<string, string>>(test19);
