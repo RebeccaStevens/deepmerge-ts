@@ -244,3 +244,12 @@ const q: Record<string, string> = { a: "a" };
 
 const test19 = deepmerge(q, q);
 expectType<Record<string, string>>(test19);
+
+const test20 = deepmerge({}, a);
+expectType<{
+  foo: string;
+  baz: {
+    quux: string[];
+  };
+  garply: number;
+}>(test20);
