@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
+## [7.0.1](https://github.com/RebeccaStevens/deepmerge-ts/compare/v7.0.0...v7.0.1) (2024-05-21)
+
+
+### Bug Fixes
+
+* handling of partial types ([1832bd0](https://github.com/RebeccaStevens/deepmerge-ts/commit/1832bd071b925c49a2d5d1c944703916ee4348d4)), closes [#476](https://github.com/RebeccaStevens/deepmerge-ts/issues/476)
+
 # [7.0.0](https://github.com/RebeccaStevens/deepmerge-ts/compare/v6.0.3...v7.0.0) (2024-05-20)
 
 
