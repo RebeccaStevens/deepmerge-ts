@@ -260,3 +260,7 @@ expectType<undefined>(test21);
 
 const test22 = deepmerge({} as any, {} as any);
 expectType<unknown>(test22);
+
+const r: { a?: string; b?: number; c?: boolean } = { a: "a", b: 1 };
+const test23 = deepmerge(r, r);
+expectType<{ a?: string; b?: number; c?: boolean }>(test23);
