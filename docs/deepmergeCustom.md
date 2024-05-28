@@ -246,12 +246,7 @@ If you don't want to filter out any values, you can set the `filterValues` optio
 Be sure to also set the `DeepMergeFilterValuesURI` to `DeepMergeNoFilteringURI` to ensure correct return types.
 
 ```ts
-import {
-  type DeepMergeFunctionURItoKind,
-  type DeepMergeFunctionsURIs,
-  type DeepMergeNoFilteringURI,
-  deepmergeCustom,
-} from "deepmerge-ts";
+import { type DeepMergeNoFilteringURI, deepmergeCustom } from "deepmerge-ts";
 
 const customizedDeepmerge = deepmergeCustom<
   unknown,
@@ -262,11 +257,10 @@ const customizedDeepmerge = deepmergeCustom<
   filterValues: false,
 });
 
-const x = { key1: { subkey1: `one` } };
+const x = { key1: { subkey1: "one" } };
 const y = { key1: undefined };
-const z = { key1: { subkey2: `two` } };
 
-customizedDeepmerge(x, y, z); // => { key1: { subkey2: `two` } }
+customizedDeepmerge(x, y); // => { key1: undefined }
 ```
 
 Here's an example that creates a custom deepmerge function that filters out all `null` values instead of `undefined`.
