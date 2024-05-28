@@ -2,5 +2,5 @@
   "$schema": "node_modules/markdownlint-cli2/schema/markdownlint-cli2-config-schema.json",
   "gitignore": true,
   "globs": ["**/*.md"],
-  "ignores": ["dist/", "CHANGELOG.md"],
+  "ignores": ["node_modules", "build", "coverage", "dist", "CHANGELOG.md"],
 }
