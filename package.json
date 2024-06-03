@@ -41,6 +41,8 @@
     "import": "./dist/node/index.mjs",
     "require": "./dist/node/index.cjs"
   },
+  "main": "./dist/node/index.cjs",
+  "types": "./dist/node/index.d.cts",
   "files": [
     "dist/node/",
     "package.json",
