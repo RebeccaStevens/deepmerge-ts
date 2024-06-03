@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
+## [7.0.2](https://github.com/RebeccaStevens/deepmerge-ts/compare/v7.0.1...v7.0.2) (2024-06-03)
+
+
+### Bug Fixes
+
+* support older module resolutions ([063675e](https://github.com/RebeccaStevens/deepmerge-ts/commit/063675eccc19f0565527a2ec584d76801ccfe249)), closes [#480](https://github.com/RebeccaStevens/deepmerge-ts/issues/480)
+
 ## [7.0.1](https://github.com/RebeccaStevens/deepmerge-ts/compare/v7.0.0...v7.0.1) (2024-05-21)
 
 
