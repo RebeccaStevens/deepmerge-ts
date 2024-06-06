@@ -27,7 +27,7 @@ export type MergeFunctions = {
  *
  * @param values - The records.
  */
-export function mergeRecords<
+function mergeRecords<
   Ts extends ReadonlyArray<Record<PropertyKey, unknown>>,
   U extends DeepMergeUtils<M, MM>,
   Fs extends DeepMergeFunctionsURIs,
@@ -88,7 +88,7 @@ export function mergeRecords<
  *
  * @param values - The arrays.
  */
-export function mergeArrays<
+function mergeArrays<
   Ts extends ReadonlyArray<ReadonlyArray<unknown>>,
   Fs extends DeepMergeFunctionsURIs,
   M,
@@ -101,9 +101,9 @@ export function mergeArrays<
  *
  * @param values - The sets.
  */
-export function mergeSets<
-  Ts extends ReadonlyArray<Readonly<ReadonlySet<unknown>>>,
->(values: Ts): DeepMergeSetsDefaultHKT<Ts> {
+function mergeSets<Ts extends ReadonlyArray<Readonly<ReadonlySet<unknown>>>>(
+  values: Ts,
+): DeepMergeSetsDefaultHKT<Ts> {
   return new Set(getIterableOfIterables(values)) as DeepMergeSetsDefaultHKT<Ts>;
 }
 
@@ -112,7 +112,7 @@ export function mergeSets<
  *
  * @param values - The maps.
  */
-export function mergeMaps<
+function mergeMaps<
   Ts extends ReadonlyArray<Readonly<ReadonlyMap<unknown, unknown>>>,
 >(values: Ts): DeepMergeMapsDefaultHKT<Ts> {
   return new Map(getIterableOfIterables(values)) as DeepMergeMapsDefaultHKT<Ts>;
@@ -121,6 +121,17 @@ export function mergeMaps<
 /**
  * Get the last non-undefined value in the given array.
  */
-export function mergeOthers<Ts extends ReadonlyArray<unknown>>(values: Ts) {
+function mergeOthers<Ts extends ReadonlyArray<unknown>>(values: Ts) {
   return values.at(-1);
 }
+
+/**
+ * The merge functions.
+ */
+export const mergeFunctions = {
+  mergeRecords,
+  mergeArrays,
+  mergeSets,
+  mergeMaps,
+  mergeOthers,
+};

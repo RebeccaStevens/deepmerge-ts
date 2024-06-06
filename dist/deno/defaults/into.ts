@@ -10,11 +10,11 @@ import { getIterableOfIterables, getKeys, objectHasProperty } from "../utils.ts"
  * The default merge functions.
  */
 export type MergeFunctions = {
-  mergeRecords: typeof mergeRecords;
-  mergeArrays: typeof mergeArrays;
-  mergeSets: typeof mergeSets;
-  mergeMaps: typeof mergeMaps;
-  mergeOthers: typeof mergeOthers;
+  mergeRecords: typeof mergeRecordsInto;
+  mergeArrays: typeof mergeArraysInto;
+  mergeSets: typeof mergeSetsInto;
+  mergeMaps: typeof mergeMapsInto;
+  mergeOthers: typeof mergeOthersInto;
 };
 
 /**
@@ -23,7 +23,7 @@ export type MergeFunctions = {
  * @param m_target - The result will be mutated into this record
  * @param values - The records (including the target's value if there is one).
  */
-export function mergeRecords<
+function mergeRecordsInto<
   Ts extends ReadonlyArray<Record<PropertyKey, unknown>>,
   U extends DeepMergeIntoFunctionUtils<M, MM>,
   M,
@@ -79,7 +79,7 @@ export function mergeRecords<
  * @param m_target - The result will be mutated into this array
  * @param values - The arrays (including the target's value if there is one).
  */
-export function mergeArrays<Ts extends ReadonlyArray<ReadonlyArray<unknown>>>(
+function mergeArraysInto<Ts extends ReadonlyArray<ReadonlyArray<unknown>>>(
   m_target: Reference<unknown[]>,
   values: Ts,
 ): void {
@@ -92,7 +92,7 @@ export function mergeArrays<Ts extends ReadonlyArray<ReadonlyArray<unknown>>>(
  * @param m_target - The result will be mutated into this set
  * @param values - The sets (including the target's value if there is one).
  */
-export function mergeSets<
+function mergeSetsInto<
   Ts extends ReadonlyArray<Readonly<ReadonlySet<unknown>>>,
 >(m_target: Reference<Set<unknown>>, values: Ts): void {
   for (const value of getIterableOfIterables(values.slice(1))) {
@@ -106,7 +106,7 @@ export function mergeSets<
  * @param m_target - The result will be mutated into this map
  * @param values - The maps (including the target's value if there is one).
  */
-export function mergeMaps<
+function mergeMapsInto<
   Ts extends ReadonlyArray<Readonly<ReadonlyMap<unknown, unknown>>>,
 >(m_target: Reference<Map<unknown, unknown>>, values: Ts): void {
   for (const [key, value] of getIterableOfIterables(values.slice(1))) {
@@ -117,9 +117,20 @@ export function mergeMaps<
 /**
  * Set the target to the last non-undefined value.
  */
-export function mergeOthers<Ts extends ReadonlyArray<unknown>>(
+function mergeOthersInto<Ts extends ReadonlyArray<unknown>>(
   m_target: Reference<unknown>,
   values: Ts,
 ) {
   m_target.value = values.at(-1);
 }
+
+/**
+ * The merge functions.
+ */
+export const mergeIntoFunctions = {
+  mergeRecords: mergeRecordsInto,
+  mergeArrays: mergeArraysInto,
+  mergeSets: mergeSetsInto,
+  mergeMaps: mergeMapsInto,
+  mergeOthers: mergeOthersInto,
+};

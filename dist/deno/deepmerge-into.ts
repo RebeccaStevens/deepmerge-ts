@@ -3,7 +3,7 @@ import {
   defaultFilterValues,
   defaultMetaDataUpdater,
 } from "./defaults/general.ts";
-import * as defaultMergeIntoFunctions from "./defaults/into.ts";
+import { mergeIntoFunctions as defaultMergeIntoFunctions } from "./defaults/into.ts";
 import {
   type DeepMergeBuiltInMetaData,
   type DeepMergeFunctionsDefaultURIs,

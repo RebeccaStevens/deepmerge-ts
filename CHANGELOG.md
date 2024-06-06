@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
+## [7.0.3](https://github.com/RebeccaStevens/deepmerge-ts/compare/v7.0.2...v7.0.3) (2024-06-06)
+
+
+### Bug Fixes
+
+* merge functions' types ([ca94270](https://github.com/RebeccaStevens/deepmerge-ts/commit/ca94270da73d0a071043ef0e8936b17c444e40ab))
+
 ## [7.0.2](https://github.com/RebeccaStevens/deepmerge-ts/compare/v7.0.1...v7.0.2) (2024-06-03)
 
 

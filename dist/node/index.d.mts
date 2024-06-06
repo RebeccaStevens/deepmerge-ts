@@ -586,11 +586,11 @@ type GetDeepMergeFunctionsURIs<PMF extends Partial<DeepMergeFunctionsURIs>> = Re
  * The default merge functions.
  */
 type MergeFunctions = {
-    mergeRecords: typeof mergeRecords;
-    mergeArrays: typeof mergeArrays;
-    mergeSets: typeof mergeSets;
-    mergeMaps: typeof mergeMaps;
-    mergeOthers: typeof mergeOthers;
+    mergeRecords: typeof mergeRecordsInto;
+    mergeArrays: typeof mergeArraysInto;
+    mergeSets: typeof mergeSetsInto;
+    mergeMaps: typeof mergeMapsInto;
+    mergeOthers: typeof mergeOthersInto;
 };
 /**
  * The default strategy to merge records into a target record.
@@ -598,32 +598,32 @@ type MergeFunctions = {
  * @param m_target - The result will be mutated into this record
  * @param values - The records (including the target's value if there is one).
  */
-declare function mergeRecords<Ts extends ReadonlyArray<Record<PropertyKey, unknown>>, U extends DeepMergeIntoFunctionUtils<M, MM>, M, MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData>(m_target: Reference<Record<PropertyKey, unknown>>, values: Ts, utils: U, meta: M | undefined): void;
+declare function mergeRecordsInto<Ts extends ReadonlyArray<Record<PropertyKey, unknown>>, U extends DeepMergeIntoFunctionUtils<M, MM>, M, MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData>(m_target: Reference<Record<PropertyKey, unknown>>, values: Ts, utils: U, meta: M | undefined): void;
 /**
  * The default strategy to merge arrays into a target array.
  *
  * @param m_target - The result will be mutated into this array
  * @param values - The arrays (including the target's value if there is one).
  */
-declare function mergeArrays<Ts extends ReadonlyArray<ReadonlyArray<unknown>>>(m_target: Reference<unknown[]>, values: Ts): void;
+declare function mergeArraysInto<Ts extends ReadonlyArray<ReadonlyArray<unknown>>>(m_target: Reference<unknown[]>, values: Ts): void;
 /**
  * The default strategy to merge sets into a target set.
  *
  * @param m_target - The result will be mutated into this set
  * @param values - The sets (including the target's value if there is one).
  */
-declare function mergeSets<Ts extends ReadonlyArray<Readonly<ReadonlySet<unknown>>>>(m_target: Reference<Set<unknown>>, values: Ts): void;
+declare function mergeSetsInto<Ts extends ReadonlyArray<Readonly<ReadonlySet<unknown>>>>(m_target: Reference<Set<unknown>>, values: Ts): void;
 /**
  * The default strategy to merge maps into a target map.
  *
  * @param m_target - The result will be mutated into this map
  * @param values - The maps (including the target's value if there is one).
  */
-declare function mergeMaps<Ts extends ReadonlyArray<Readonly<ReadonlyMap<unknown, unknown>>>>(m_target: Reference<Map<unknown, unknown>>, values: Ts): void;
+declare function mergeMapsInto<Ts extends ReadonlyArray<Readonly<ReadonlyMap<unknown, unknown>>>>(m_target: Reference<Map<unknown, unknown>>, values: Ts): void;
 /**
  * Set the target to the last non-undefined value.
  */
-declare function mergeOthers<Ts extends ReadonlyArray<unknown>>(m_target: Reference<unknown>, values: Ts): void;
+declare function mergeOthersInto<Ts extends ReadonlyArray<unknown>>(m_target: Reference<unknown>, values: Ts): void;
 type MergeIntoFunctions = MergeFunctions;
 /**
  * The default merge functions.
@@ -635,6 +635,34 @@ type MergeFunctions$0 = {
     mergeMaps: typeof mergeMaps;
     mergeOthers: typeof mergeOthers;
 };
+/**
+ * The default strategy to merge records.
+ *
+ * @param values - The records.
+ */
+declare function mergeRecords<Ts extends ReadonlyArray<Record<PropertyKey, unknown>>, U extends DeepMergeUtils<M, MM>, Fs extends DeepMergeFunctionsURIs, M, MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData>(values: Ts, utils: U, meta: M | undefined): DeepMergeRecordsDefaultHKT<Ts, Fs, M>;
+/**
+ * The default strategy to merge arrays.
+ *
+ * @param values - The arrays.
+ */
+declare function mergeArrays<Ts extends ReadonlyArray<ReadonlyArray<unknown>>, Fs extends DeepMergeFunctionsURIs, M>(values: Ts): DeepMergeArraysDefaultHKT<Ts, Fs, M>;
+/**
+ * The default strategy to merge sets.
+ *
+ * @param values - The sets.
+ */
+declare function mergeSets<Ts extends ReadonlyArray<Readonly<ReadonlySet<unknown>>>>(values: Ts): DeepMergeSetsDefaultHKT<Ts>;
+/**
+ * The default strategy to merge maps.
+ *
+ * @param values - The maps.
+ */
+declare function mergeMaps<Ts extends ReadonlyArray<Readonly<ReadonlyMap<unknown, unknown>>>>(values: Ts): DeepMergeMapsDefaultHKT<Ts>;
+/**
+ * Get the last non-undefined value in the given array.
+ */
+declare function mergeOthers<Ts extends ReadonlyArray<unknown>>(values: Ts): unknown;
 /**
  * The options the user can pass to customize deepmerge.
  */

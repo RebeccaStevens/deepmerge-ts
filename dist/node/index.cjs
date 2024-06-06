@@ -151,7 +151,7 @@ function isRecord(value) {
  *
  * @param values - The records.
  */
-function mergeRecords$2(values, utils, meta) {
+function mergeRecords$1(values, utils, meta) {
     const result = {};
     for (const key of getKeys(values)) {
         const propValues = [];
@@ -190,7 +190,7 @@ function mergeRecords$2(values, utils, meta) {
  *
  * @param values - The arrays.
  */
-function mergeArrays$2(values) {
+function mergeArrays$1(values) {
     return values.flat();
 }
 /**
@@ -198,7 +198,7 @@ function mergeArrays$2(values) {
  *
  * @param values - The sets.
  */
-function mergeSets$2(values) {
+function mergeSets$1(values) {
     return new Set(getIterableOfIterables(values));
 }
 /**
@@ -206,24 +206,25 @@ function mergeSets$2(values) {
  *
  * @param values - The maps.
  */
-function mergeMaps$2(values) {
+function mergeMaps$1(values) {
     return new Map(getIterableOfIterables(values));
 }
 /**
  * Get the last non-undefined value in the given array.
  */
-function mergeOthers$2(values) {
+function mergeOthers$1(values) {
     return values.at(-1);
 }
-
-var defaultMergeFunctions = /*#__PURE__*/Object.freeze({
-  __proto__: null,
-  mergeArrays: mergeArrays$2,
-  mergeMaps: mergeMaps$2,
-  mergeOthers: mergeOthers$2,
-  mergeRecords: mergeRecords$2,
-  mergeSets: mergeSets$2
-});
+/**
+ * The merge functions.
+ */
+const mergeFunctions = {
+    mergeRecords: mergeRecords$1,
+    mergeArrays: mergeArrays$1,
+    mergeSets: mergeSets$1,
+    mergeMaps: mergeMaps$1,
+    mergeOthers: mergeOthers$1,
+};
 
 /**
  * Deeply merge objects.
@@ -250,13 +251,13 @@ function deepmergeCustom(options, rootMetaData) {
  */
 function getUtils(options, customizedDeepmerge) {
     return {
-        defaultMergeFunctions,
+        defaultMergeFunctions: mergeFunctions,
         mergeFunctions: {
-            ...defaultMergeFunctions,
+            ...mergeFunctions,
             ...Object.fromEntries(Object.entries(options)
-                .filter(([key, option]) => Object.hasOwn(defaultMergeFunctions, key))
+                .filter(([key, option]) => Object.hasOwn(mergeFunctions, key))
                 .map(([key, option]) => option === false
-                ? [key, mergeOthers$2]
+                ? [key, mergeFunctions.mergeOthers]
                 : [key, option])),
         },
         metaDataUpdater: (options.metaDataUpdater ??
@@ -280,7 +281,7 @@ function mergeUnknowns(values, utils, meta) {
         return undefined;
     }
     if (filteredValues.length === 1) {
-        return mergeOthers$1(filteredValues, utils, meta);
+        return mergeOthers(filteredValues, utils, meta);
     }
     const type = getObjectType(filteredValues[0]);
     if (type !== 0 /* ObjectType.NOT */ && type !== 5 /* ObjectType.OTHER */) {
@@ -288,24 +289,24 @@ function mergeUnknowns(values, utils, meta) {
             if (getObjectType(filteredValues[m_index]) === type) {
                 continue;
             }
-            return mergeOthers$1(filteredValues, utils, meta);
+            return mergeOthers(filteredValues, utils, meta);
         }
     }
     switch (type) {
         case 1 /* ObjectType.RECORD */: {
-            return mergeRecords$1(filteredValues, utils, meta);
+            return mergeRecords(filteredValues, utils, meta);
         }
         case 2 /* ObjectType.ARRAY */: {
-            return mergeArrays$1(filteredValues, utils, meta);
+            return mergeArrays(filteredValues, utils, meta);
         }
         case 3 /* ObjectType.SET */: {
-            return mergeSets$1(filteredValues, utils, meta);
+            return mergeSets(filteredValues, utils, meta);
         }
         case 4 /* ObjectType.MAP */: {
-            return mergeMaps$1(filteredValues, utils, meta);
+            return mergeMaps(filteredValues, utils, meta);
         }
         default: {
-            return mergeOthers$1(filteredValues, utils, meta);
+            return mergeOthers(filteredValues, utils, meta);
         }
     }
 }
@@ -314,7 +315,7 @@ function mergeUnknowns(values, utils, meta) {
  *
  * @param values - The records.
  */
-function mergeRecords$1(values, utils, meta) {
+function mergeRecords(values, utils, meta) {
     const result = utils.mergeFunctions.mergeRecords(values, utils, meta);
     if (result === actions.defaultMerge ||
         (utils.useImplicitDefaultMerging &&
@@ -330,7 +331,7 @@ function mergeRecords$1(values, utils, meta) {
  *
  * @param values - The arrays.
  */
-function mergeArrays$1(values, utils, meta) {
+function mergeArrays(values, utils, meta) {
     const result = utils.mergeFunctions.mergeArrays(values, utils, meta);
     if (result === actions.defaultMerge ||
         (utils.useImplicitDefaultMerging &&
@@ -346,7 +347,7 @@ function mergeArrays$1(values, utils, meta) {
  *
  * @param values - The sets.
  */
-function mergeSets$1(values, utils, meta) {
+function mergeSets(values, utils, meta) {
     const result = utils.mergeFunctions.mergeSets(values, utils, meta);
     if (result === actions.defaultMerge ||
         (utils.useImplicitDefaultMerging &&
@@ -361,7 +362,7 @@ function mergeSets$1(values, utils, meta) {
  *
  * @param values - The maps.
  */
-function mergeMaps$1(values, utils, meta) {
+function mergeMaps(values, utils, meta) {
     const result = utils.mergeFunctions.mergeMaps(values, utils, meta);
     if (result === actions.defaultMerge ||
         (utils.useImplicitDefaultMerging &&
@@ -376,7 +377,7 @@ function mergeMaps$1(values, utils, meta) {
  *
  * @param values - The other things.
  */
-function mergeOthers$1(values, utils, meta) {
+function mergeOthers(values, utils, meta) {
     const result = utils.mergeFunctions.mergeOthers(values, utils, meta);
     if (result === actions.defaultMerge ||
         (utils.useImplicitDefaultMerging &&
@@ -394,7 +395,7 @@ function mergeOthers$1(values, utils, meta) {
  * @param m_target - The result will be mutated into this record
  * @param values - The records (including the target's value if there is one).
  */
-function mergeRecords(m_target, values, utils, meta) {
+function mergeRecordsInto$1(m_target, values, utils, meta) {
     for (const key of getKeys(values)) {
         const propValues = [];
         for (const value of values) {
@@ -430,7 +431,7 @@ function mergeRecords(m_target, values, utils, meta) {
  * @param m_target - The result will be mutated into this array
  * @param values - The arrays (including the target's value if there is one).
  */
-function mergeArrays(m_target, values) {
+function mergeArraysInto$1(m_target, values) {
     m_target.value.push(...values.slice(1).flat());
 }
 /**
@@ -439,7 +440,7 @@ function mergeArrays(m_target, values) {
  * @param m_target - The result will be mutated into this set
  * @param values - The sets (including the target's value if there is one).
  */
-function mergeSets(m_target, values) {
+function mergeSetsInto$1(m_target, values) {
     for (const value of getIterableOfIterables(values.slice(1))) {
         m_target.value.add(value);
     }
@@ -450,7 +451,7 @@ function mergeSets(m_target, values) {
  * @param m_target - The result will be mutated into this map
  * @param values - The maps (including the target's value if there is one).
  */
-function mergeMaps(m_target, values) {
+function mergeMapsInto$1(m_target, values) {
     for (const [key, value] of getIterableOfIterables(values.slice(1))) {
         m_target.value.set(key, value);
     }
@@ -458,18 +459,19 @@ function mergeMaps(m_target, values) {
 /**
  * Set the target to the last non-undefined value.
  */
-function mergeOthers(m_target, values) {
+function mergeOthersInto$1(m_target, values) {
     m_target.value = values.at(-1);
 }
-
-var defaultMergeIntoFunctions = /*#__PURE__*/Object.freeze({
-  __proto__: null,
-  mergeArrays: mergeArrays,
-  mergeMaps: mergeMaps,
-  mergeOthers: mergeOthers,
-  mergeRecords: mergeRecords,
-  mergeSets: mergeSets
-});
+/**
+ * The merge functions.
+ */
+const mergeIntoFunctions = {
+    mergeRecords: mergeRecordsInto$1,
+    mergeArrays: mergeArraysInto$1,
+    mergeSets: mergeSetsInto$1,
+    mergeMaps: mergeMapsInto$1,
+    mergeOthers: mergeOthersInto$1,
+};
 
 function deepmergeInto(target, ...objects) {
     return void deepmergeIntoCustom({})(target, ...objects);
@@ -491,13 +493,13 @@ function deepmergeIntoCustom(options, rootMetaData) {
  */
 function getIntoUtils(options, customizedDeepmergeInto) {
     return {
-        defaultMergeFunctions: defaultMergeIntoFunctions,
+        defaultMergeFunctions: mergeIntoFunctions,
         mergeFunctions: {
-            ...defaultMergeIntoFunctions,
+            ...mergeIntoFunctions,
             ...Object.fromEntries(Object.entries(options)
-                .filter(([key, option]) => Object.hasOwn(defaultMergeIntoFunctions, key))
+                .filter(([key, option]) => Object.hasOwn(mergeIntoFunctions, key))
                 .map(([key, option]) => option === false
-                ? [key, mergeOthers]
+                ? [key, mergeIntoFunctions.mergeOthers]
                 : [key, option])),
         },
         metaDataUpdater: (options.metaDataUpdater ??
