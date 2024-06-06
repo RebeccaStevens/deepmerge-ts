@@ -114,16 +114,16 @@ type Foo = {
   };
 };
 
-const customDeepmerge = deepmergeCustom<Foo>({}); // <-- Only parameters of type Foo to be passed into the function.
+const customizedDeepmerge = deepmergeCustom<Foo>({}); // <-- Only parameters of type Foo to be passed into the function.
 
 const x = { foo: { bar: "bar-1", baz: 3 } };
 const y = { foo: { bar: "bar-2" } };
 
-customDeepmerge(x, y); // => { foo: { bar: "bar-2", baz: 3 } }
+customizedDeepmerge(x, y); // => { foo: { bar: "bar-2", baz: 3 } }
 
 const z = { bar: "bar" };
 
-customDeepmerge(x, z); // Argument of type '{ bar: string; }' is not assignable to parameter of type 'Foo'.
+customizedDeepmerge(x, z); // Argument of type '{ bar: string; }' is not assignable to parameter of type 'Foo'.
 ```
 
 ## Customizing the Return Type
@@ -144,7 +144,7 @@ Here's a simple example that creates a custom deepmerge function that does not m
 ```ts
 import { type DeepMergeLeafURI, deepmergeCustom } from "deepmerge-ts";
 
-const customDeepmerge = deepmergeCustom<
+const customizedDeepmerge = deepmergeCustom<
   unknown, // <-- Types that can be passed into the function.
   {
     DeepMergeArraysURI: DeepMergeLeafURI; // <-- Needed for correct output type.
@@ -156,7 +156,7 @@ const customDeepmerge = deepmergeCustom<
 const x = { foo: [1, 2], bar: [3, 4] };
 const y = { foo: [5, 6] };
 
-customDeepmerge(x, y); // => { foo: [5, 6], bar: [3, 4] }
+customizedDeepmerge(x, y); // => { foo: [5, 6], bar: [3, 4] }
 ```
 
 When resolving a HKT, we use a lookup inside an interface called `DeepMergeFunctionURItoKind`.
@@ -184,7 +184,6 @@ Here's an example of creating a custom deepmerge function that amalgamates dates
 
 ```ts
 import {
-  type DeepMergeFunctionURItoKind,
   type DeepMergeFunctionsURIs,
   type DeepMergeLeaf,
   deepmergeCustom,
@@ -210,7 +209,7 @@ const x = { foo: new Date("2020-01-01") };
 const y = { foo: new Date("2021-02-02") };
 const z = { foo: new Date("2022-03-03") };
 
-customDeepmerge(x, y, z); // => { foo: [Date, Date, Date] }
+customizedDeepmerge(x, y, z); // => { foo: [Date, Date, Date] }
 
 declare module "deepmerge-ts" {
   interface DeepMergeFunctionURItoKind<
@@ -269,7 +268,6 @@ Here's an example that creates a custom deepmerge function that filters out all 
 
 ```ts
 import {
-  type DeepMergeFunctionURItoKind,
   type DeepMergeFunctionsURIs,
   type FilterOut,
   deepmergeCustom,
@@ -311,12 +309,7 @@ Here's an example that creates a custom deepmerge function that merges numbers d
 under.
 
 ```ts
-import {
-  type DeepMergeFunctionURItoKind,
-  type DeepMergeFunctionsURIs,
-  type DeepMergeLeaf,
-  deepmergeCustom,
-} from "deepmerge-ts";
+import { deepmergeCustom } from "deepmerge-ts";
 
 const customizedDeepmerge = deepmergeCustom({
   mergeOthers: (values, utils, meta) => {
@@ -364,7 +357,6 @@ Here's an example that uses custom metadata that accumulates the full key path.
 
 ```ts
 import {
-  type DeepMergeFunctionURItoKind,
   type DeepMergeFunctionsURIs,
   type DeepMergeLeaf,
   deepmergeCustom,
