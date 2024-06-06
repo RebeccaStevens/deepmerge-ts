@@ -3,7 +3,7 @@ import {
   defaultFilterValues,
   defaultMetaDataUpdater,
 } from "./defaults/general";
-import * as defaultMergeIntoFunctions from "./defaults/into";
+import { mergeIntoFunctions as defaultMergeIntoFunctions } from "./defaults/into";
 import {
   type DeepMergeBuiltInMetaData,
   type DeepMergeFunctionsDefaultURIs,
