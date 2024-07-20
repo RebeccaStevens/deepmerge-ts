@@ -76,7 +76,7 @@ for (let m_i = 0; m_i < benchmarkDataSets.length; m_i++) {
       deepmerge.all(benchmarkData);
     })
     .add("defu", () => {
-      defu(benchmarkData);
+      defu({}, ...benchmarkData);
     })
     .add("merge-anything", () => {
       (mergeAnything as any)(...benchmarkData);
