@@ -7,6 +7,7 @@ import { fileURLToPath } from "node:url";
 
 import deepmerge from "deepmerge";
 import { deepmerge as deepmergeTs } from "deepmerge-ts";
+import { defu } from "defu";
 import lodash from "lodash";
 import { merge as mergeAnything } from "merge-anything";
 import { Accumulator as ObjectAccumulator } from "object-accumulator";
@@ -73,6 +74,9 @@ for (let m_i = 0; m_i < benchmarkDataSets.length; m_i++) {
     })
     .add("deepmerge", () => {
       deepmerge.all(benchmarkData);
+    })
+    .add("defu", () => {
+      defu({}, ...benchmarkData);
     })
     .add("merge-anything", () => {
       (mergeAnything as any)(...benchmarkData);

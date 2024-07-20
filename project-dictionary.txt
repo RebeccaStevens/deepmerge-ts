@@ -8,6 +8,7 @@ deassert
 deepmerge
 deepmergecustomoptions
 deepmergets
+defu
 denoify
 foo
 fred
