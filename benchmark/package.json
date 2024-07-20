@@ -14,6 +14,7 @@
   "dependencies": {
     "deepmerge": "^4.3.1",
     "deepmerge-ts": "link:..",
+    "defu": "^6.1.4",
     "lodash": "^4.17.21",
     "merge-anything": "^5.1.7",
     "object-accumulator": "^0.0.5"
