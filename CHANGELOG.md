@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
+# [7.1.0](https://github.com/RebeccaStevens/deepmerge-ts/compare/v7.0.3...v7.1.0) (2024-07-20)
+
+
+### Features
+
+* **benchmark:** add `defu` to compare with ([#486](https://github.com/RebeccaStevens/deepmerge-ts/issues/486)) ([93599b4](https://github.com/RebeccaStevens/deepmerge-ts/commit/93599b4bb6cd341cbaef156d619530a16e34550f))
+
 ## [7.0.3](https://github.com/RebeccaStevens/deepmerge-ts/compare/v7.0.2...v7.0.3) (2024-06-06)
 
 
