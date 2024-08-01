@@ -21,8 +21,8 @@ importers:
         specifier: ^4.17.21
         version: 4.17.21
       merge-anything:
-        specifier: ^5.1.7
-        version: 5.1.7
+        specifier: ^6.0.0
+        version: 6.0.2
       object-accumulator:
         specifier: ^0.0.5
         version: 0.0.5
@@ -203,16 +203,16 @@ packages:
   get-tsconfig@4.7.5:
     resolution: {integrity: sha512-ZCuZCnlqNzjb4QprAzXKdpp/gh6KTxSJuw3IBsPnV/7fV4NxC9ckB+vPTt8w7fJA0TaSD7c55BR47JD6MEDyDw==}
 
-  is-what@4.1.8:
-    resolution: {integrity: sha512-yq8gMao5upkPoGEU9LsB2P+K3Kt8Q3fQFCGyNCWOAnJAMzEXVV9drYb0TXr42TTliLLhKIBvulgAXgtLLnwzGA==}
-    engines: {node: '>=12.13'}
+  is-what@5.0.2:
+    resolution: {integrity: sha512-vI7Ui0qzNQ2ClDZd0bC7uqRk3T1imbX5cZODmVlqqdqiwmSIUX3CNSiRgFjFMJ987sVCMSa7xZeEDtpJduPg4A==}
+    engines: {node: '>=18'}
 
   lodash@4.17.21:
     resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
 
-  merge-anything@5.1.7:
-    resolution: {integrity: sha512-eRtbOb1N5iyH0tkQDAoQ4Ipsp/5qSR79Dzrz8hEPxRX10RWWR/iQXdoKmBSRCThY1Fh5EhISDtpSc93fpxUniQ==}
-    engines: {node: '>=12.13'}
+  merge-anything@6.0.2:
+    resolution: {integrity: sha512-U8x6DL/YVudOcf82B6hd8GFg+6gF6hEHYwzqdo67GrH6vnDZ5YBq6BYX3hHWyCnG3CcqJDB1a9tj9fzMI3RL9Q==}
+    engines: {node: '>=18'}
 
   object-accumulator@0.0.5:
     resolution: {integrity: sha512-UKkFOfHwuL+nHRSVRjTHv99h8gjeW/zHfgtfaaRM4WLbGvJbutlujegjN7YsL1EsJlB7Q1kGI12P93+yiY4snA==}
@@ -348,13 +348,13 @@ snapshots:
     dependencies:
       resolve-pkg-maps: 1.0.0
 
-  is-what@4.1.8: {}
+  is-what@5.0.2: {}
 
   lodash@4.17.21: {}
 
-  merge-anything@5.1.7:
+  merge-anything@6.0.2:
     dependencies:
-      is-what: 4.1.8
+      is-what: 5.0.2
 
   object-accumulator@0.0.5: {}
 
