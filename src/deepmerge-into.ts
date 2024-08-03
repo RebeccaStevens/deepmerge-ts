@@ -177,7 +177,7 @@ function getIntoUtils<
     filterValues:
       options.filterValues === false
         ? undefined
-        : options.filterValues ?? defaultFilterValues,
+        : (options.filterValues ?? defaultFilterValues),
     actions,
   };
 }
