@@ -2,5 +2,11 @@
   "$schema": "node_modules/knip/schema-jsonc.json",
   "entry": ["src/index.ts!"],
   "project": ["src/**/*.ts!"],
-  "ignoreDependencies": ["tslib"],
+  "ignoreDependencies": [
+    // Unknown reason for issue.
+    "@vitest/coverage-v8",
+
+    // Lint staged
+    "tsc-files",
+  ],
 }

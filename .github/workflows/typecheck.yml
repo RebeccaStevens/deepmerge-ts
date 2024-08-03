@@ -6,9 +6,9 @@ on:
   workflow_call:
 
 jobs:
-  type-check:
+  typecheck:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/prepare
-      - run: pnpm run type-check
+      - run: pnpm run typecheck

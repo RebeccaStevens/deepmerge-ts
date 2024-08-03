@@ -16,13 +16,13 @@
     "deepmerge-ts": "link:..",
     "defu": "^6.1.4",
     "lodash": "^4.17.21",
-    "merge-anything": "^5.1.7",
+    "merge-anything": "^6.0.2",
     "object-accumulator": "^0.0.5"
   },
   "devDependencies": {
-    "@types/node": "20.14.2",
-    "tinybench": "2.8.0",
-    "tsx": "4.11.2",
-    "typescript": "5.4.5"
+    "@types/node": "22.1.0",
+    "tinybench": "2.9.0",
+    "tsx": "4.16.5",
+    "typescript": "5.5.4"
   }
 }
