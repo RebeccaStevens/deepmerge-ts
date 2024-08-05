@@ -10,7 +10,7 @@ import {
   type DeepMergeRecordsDefaultHKT,
   deepmergeCustom,
 } from "../src";
-import { type FilterOut } from "../src/types/utils";
+import type { FilterOut } from "../src/types/utils";
 
 import { areAllNumbers, hasProp } from "./utils";
 

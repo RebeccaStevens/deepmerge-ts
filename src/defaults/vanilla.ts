@@ -1,13 +1,13 @@
 import { actions } from "../actions";
 import { mergeUnknowns } from "../deepmerge";
-import {
-  type DeepMergeArraysDefaultHKT,
-  type DeepMergeBuiltInMetaData,
-  type DeepMergeFunctionsURIs,
-  type DeepMergeMapsDefaultHKT,
-  type DeepMergeRecordsDefaultHKT,
-  type DeepMergeSetsDefaultHKT,
-  type DeepMergeUtils,
+import type {
+  DeepMergeArraysDefaultHKT,
+  DeepMergeBuiltInMetaData,
+  DeepMergeFunctionsURIs,
+  DeepMergeMapsDefaultHKT,
+  DeepMergeRecordsDefaultHKT,
+  DeepMergeSetsDefaultHKT,
+  DeepMergeUtils,
 } from "../types";
 import { getIterableOfIterables, getKeys, objectHasProperty } from "../utils";
 

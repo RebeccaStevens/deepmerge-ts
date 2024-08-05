@@ -4,14 +4,14 @@ import {
   defaultMetaDataUpdater,
 } from "./defaults/general";
 import { mergeFunctions as defaultMergeFunctions } from "./defaults/vanilla";
-import {
-  type DeepMergeBuiltInMetaData,
-  type DeepMergeFunctionsDefaultURIs,
-  type DeepMergeFunctionsURIs,
-  type DeepMergeHKT,
-  type DeepMergeOptions,
-  type DeepMergeUtils,
-  type GetDeepMergeFunctionsURIs,
+import type {
+  DeepMergeBuiltInMetaData,
+  DeepMergeFunctionsDefaultURIs,
+  DeepMergeFunctionsURIs,
+  DeepMergeHKT,
+  DeepMergeOptions,
+  DeepMergeUtils,
+  GetDeepMergeFunctionsURIs,
 } from "./types";
 import { ObjectType, getObjectType } from "./utils";
 

@@ -4,15 +4,15 @@ import {
   defaultMetaDataUpdater,
 } from "./defaults/general";
 import { mergeIntoFunctions as defaultMergeIntoFunctions } from "./defaults/into";
-import {
-  type DeepMergeBuiltInMetaData,
-  type DeepMergeFunctionsDefaultURIs,
-  type DeepMergeHKT,
-  type DeepMergeIntoFunctionUtils,
-  type DeepMergeIntoOptions,
-  type Reference,
+import type {
+  DeepMergeBuiltInMetaData,
+  DeepMergeFunctionsDefaultURIs,
+  DeepMergeHKT,
+  DeepMergeIntoFunctionUtils,
+  DeepMergeIntoOptions,
+  Reference,
 } from "./types";
-import { type SimplifyObject } from "./types/utils";
+import type { SimplifyObject } from "./types/utils";
 import { ObjectType, getObjectType } from "./utils";
 
 /**

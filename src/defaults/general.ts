@@ -1,4 +1,4 @@
-import { type DeepMergeBuiltInMetaData } from "../types";
+import type { DeepMergeBuiltInMetaData } from "../types";
 
 /**
  * The default function to update meta data.

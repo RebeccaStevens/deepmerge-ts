@@ -1,21 +1,21 @@
-import {
-  type DeepMergeFunctionURItoKind,
-  type DeepMergeFunctionsURIs,
-  type DeepMergeHKT,
-  type DeepMergeLeafURI,
+import type {
+  DeepMergeFunctionURItoKind,
+  DeepMergeFunctionsURIs,
+  DeepMergeHKT,
+  DeepMergeLeafURI,
 } from "./merging";
-import {
-  type FilterOut,
-  type FilterOutNever,
-  type FlattenTuples,
-  type KeyIsOptional,
-  type SimplifyObject,
-  type TransposeTuple,
-  type TupleToIntersection,
-  type TuplifyUnion,
-  type UnionMapKeys,
-  type UnionMapValues,
-  type UnionSetValues,
+import type {
+  FilterOut,
+  FilterOutNever,
+  FlattenTuples,
+  KeyIsOptional,
+  SimplifyObject,
+  TransposeTuple,
+  TupleToIntersection,
+  TuplifyUnion,
+  UnionMapKeys,
+  UnionMapValues,
+  UnionSetValues,
 } from "./utils";
 
 /**

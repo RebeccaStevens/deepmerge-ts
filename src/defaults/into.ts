@@ -1,8 +1,8 @@
 import { mergeUnknownsInto } from "../deepmerge-into";
-import {
-  type DeepMergeBuiltInMetaData,
-  type DeepMergeIntoFunctionUtils,
-  type Reference,
+import type {
+  DeepMergeBuiltInMetaData,
+  DeepMergeIntoFunctionUtils,
+  Reference,
 } from "../types";
 import { getIterableOfIterables, getKeys, objectHasProperty } from "../utils";
 

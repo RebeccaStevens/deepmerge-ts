@@ -1,17 +1,17 @@
-import {
-  type DeepMergeArraysDefaultHKT,
-  type DeepMergeFilterValuesDefaultHKT,
-  type DeepMergeMapsDefaultHKT,
-  type DeepMergeRecordsDefaultHKT,
-  type DeepMergeSetsDefaultHKT,
+import type {
+  DeepMergeArraysDefaultHKT,
+  DeepMergeFilterValuesDefaultHKT,
+  DeepMergeMapsDefaultHKT,
+  DeepMergeRecordsDefaultHKT,
+  DeepMergeSetsDefaultHKT,
 } from "./defaults";
-import {
-  type EveryIsArray,
-  type EveryIsMap,
-  type EveryIsRecord,
-  type EveryIsSet,
-  type IsNever,
-  type IsTuple,
+import type {
+  EveryIsArray,
+  EveryIsMap,
+  EveryIsRecord,
+  EveryIsSet,
+  IsNever,
+  IsTuple,
 } from "./utils";
 
 /**
