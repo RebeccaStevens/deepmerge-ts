@@ -105,7 +105,7 @@
     "cz-conventional-changelog": "3.3.0",
     "deassert": "1.0.2",
     "denoify": "1.6.13",
-    "eslint": "9.8.0",
+    "eslint": "9.9.0",
     "eslint-config-prettier": "9.1.0",
     "eslint-flat-config-utils": "0.3.0",
     "eslint-import-resolver-typescript": "3.6.1",
