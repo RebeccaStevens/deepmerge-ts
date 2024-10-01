@@ -99,7 +99,7 @@
     "@types/node": "20.14.14",
     "@typescript-eslint/eslint-plugin": "8.0.1",
     "@typescript-eslint/parser": "8.0.1",
-    "@vitest/coverage-v8": "2.0.5",
+    "@vitest/coverage-v8": "2.1.1",
     "commitizen": "4.3.0",
     "cspell": "8.13.2",
     "cz-conventional-changelog": "3.3.0",
@@ -144,7 +144,7 @@
     "tsd": "0.31.1",
     "typescript": "5.5.4",
     "vite-tsconfig-paths": "4.3.2",
-    "vitest": "2.0.5",
+    "vitest": "2.1.1",
     "yaml-eslint-parser": "1.2.3"
   },
   "packageManager": "pnpm@9.6.0",
