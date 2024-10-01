@@ -87,7 +87,7 @@
     "@cspell/dict-cryptocurrencies": "5.0.0",
     "@eslint/compat": "1.1.1",
     "@rebeccastevens/eslint-config": "3.0.0",
-    "@rollup/plugin-replace": "5.0.7",
+    "@rollup/plugin-replace": "6.0.1",
     "@semantic-release/changelog": "6.0.3",
     "@semantic-release/commit-analyzer": "13.0.0",
     "@semantic-release/git": "10.0.1",
