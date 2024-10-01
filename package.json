@@ -137,7 +137,7 @@
     "prettier": "3.3.3",
     "prettier-plugin-packagejson": "2.5.1",
     "rimraf": "6.0.1",
-    "rollup": "4.20.0",
+    "rollup": "4.22.4",
     "rollup-plugin-ts": "3.4.5",
     "semantic-release": "24.1.0",
     "tsc-files": "1.1.4",
