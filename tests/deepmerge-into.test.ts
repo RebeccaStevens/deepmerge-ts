@@ -431,9 +431,7 @@ describe("deepmergeInto", () => {
 
     deepmergeInto(x, y);
 
-    expect(Object.getOwnPropertySymbols(x)).toStrictEqual(
-      Object.getOwnPropertySymbols(expected),
-    );
+    expect(Object.getOwnPropertySymbols(x)).toStrictEqual(Object.getOwnPropertySymbols(expected));
 
     expect(x[testSymbol1]).toStrictEqual(expected[testSymbol1]);
     expect(x[testSymbol2]).toStrictEqual(expected[testSymbol2]);
@@ -499,15 +497,9 @@ describe("deepmergeInto", () => {
       Object.hasOwn(m_x, "parentKey"),
       "inherited properties of target should be removed, not target or ignored",
     ).toBe(false);
-    expect(
-      m_x.plainKey,
-      "enumerable own properties of target should be target",
-    ).toBe("bar");
+    expect(m_x.plainKey, "enumerable own properties of target should be target").toBe("bar");
     expect(m_x.newKey, "property should be target").toBe("baz");
-    expect(
-      m_x[plainSymbolKey],
-      "enumerable own symbol properties should be target",
-    ).toBe("qux");
+    expect(m_x[plainSymbolKey], "enumerable own symbol properties should be target").toBe("qux");
   });
 
   it(`merging objects with null prototype`, () => {

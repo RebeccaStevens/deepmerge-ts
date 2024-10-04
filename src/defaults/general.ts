@@ -17,9 +17,6 @@ export function defaultMetaDataUpdater<M>(
  *
  * It filters out undefined values.
  */
-export function defaultFilterValues<Ts extends ReadonlyArray<unknown>, M>(
-  values: Ts,
-  meta: M | undefined,
-): unknown[] {
+export function defaultFilterValues<Ts extends ReadonlyArray<unknown>, M>(values: Ts, meta: M | undefined): unknown[] {
   return values.filter((value) => value !== undefined);
 }

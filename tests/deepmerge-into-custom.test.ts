@@ -1,11 +1,7 @@
 import _ from "lodash";
 import { describe, expect, it } from "vitest";
 
-import {
-  type DeepMergeIntoOptions,
-  type DeepMergeValueReference,
-  deepmergeIntoCustom,
-} from "../src";
+import { type DeepMergeIntoOptions, type DeepMergeValueReference, deepmergeIntoCustom } from "../src";
 import { getKeys } from "../src/utils";
 
 import { areAllNumbers, hasProp } from "./utils";
@@ -91,26 +87,14 @@ describe("deepmergeIntoCustom", () => {
 
   it("custom merge arrays of records", () => {
     const x = {
-      foo: [
-        { bar: { baz: [{ qux: 35 }] } },
-        { bar: { baz: [{ qux: 36 }] } },
-        { bar: { baz: [{ qux: 37 }] } },
-      ],
+      foo: [{ bar: { baz: [{ qux: 35 }] } }, { bar: { baz: [{ qux: 36 }] } }, { bar: { baz: [{ qux: 37 }] } }],
     };
     const y = {
-      foo: [
-        { bar: { baz: [{ qux: 38 }] } },
-        { bar: { baz: [{ qux: 39 }] } },
-        { bar: { baz: [{ qux: 40 }] } },
-      ],
+      foo: [{ bar: { baz: [{ qux: 38 }] } }, { bar: { baz: [{ qux: 39 }] } }, { bar: { baz: [{ qux: 40 }] } }],
     };
 
     const expected = {
-      foo: [
-        { bar: { baz: [{ qux: "I" }] } },
-        { bar: { baz: [{ qux: "K" }] } },
-        { bar: { baz: [{ qux: "M" }] } },
-      ],
+      foo: [{ bar: { baz: [{ qux: "I" }] } }, { bar: { baz: [{ qux: "K" }] } }, { bar: { baz: [{ qux: "M" }] } }],
     };
 
     const customizedDeepmerge = deepmergeIntoCustom({
@@ -123,9 +107,7 @@ describe("deepmergeIntoCustom", () => {
           const s = {};
           utils.deepmergeInto(
             s,
-            ...arrays
-              .map((array) => (m_i < array.length ? array[m_i] : never))
-              .filter((value) => value !== never),
+            ...arrays.map((array) => (m_i < array.length ? array[m_i] : never)).filter((value) => value !== never),
           );
           m_result.push(s);
         }
@@ -134,12 +116,7 @@ describe("deepmergeIntoCustom", () => {
       },
       mergeOthers: (m_target, values) => {
         if (values.every((value) => typeof value === "number")) {
-          m_target.value = String.fromCodePoint(
-            values.reduce<number>(
-              (carry, value) => carry + (value as number),
-              0,
-            ),
-          );
+          m_target.value = String.fromCodePoint(values.reduce<number>((carry, value) => carry + (value as number), 0));
           return;
         }
         m_target.value = "";
@@ -198,11 +175,7 @@ describe("deepmergeIntoCustom", () => {
   });
 
   type EveryIsDate<Ts extends ReadonlyArray<unknown>> =
-    Ts extends Readonly<readonly [infer Head, ...infer Rest]>
-      ? Head extends Date
-        ? EveryIsDate<Rest>
-        : false
-      : true;
+    Ts extends Readonly<readonly [infer Head, ...infer Rest]> ? (Head extends Date ? EveryIsDate<Rest> : false) : true;
 
   it("custom merge dates", () => {
     const x = { foo: new Date("2020-01-01") };
@@ -253,8 +226,7 @@ describe("deepmergeIntoCustom", () => {
             return;
           }
           if (key === "mean") {
-            m_target.value =
-              numbers.reduce((sum, value) => sum + value) / numbers.length;
+            m_target.value = numbers.reduce((sum, value) => sum + value) / numbers.length;
             return;
           }
         }
@@ -283,10 +255,7 @@ describe("deepmergeIntoCustom", () => {
       bar: { baz: "special merge", qux: 9 },
     };
 
-    const customizedDeepmerge = deepmergeIntoCustom<
-      unknown,
-      ReadonlyArray<PropertyKey>
-    >({
+    const customizedDeepmerge = deepmergeIntoCustom<unknown, ReadonlyArray<PropertyKey>>({
       metaDataUpdater: (previousMeta, metaMeta) => {
         if (metaMeta.key === undefined) {
           return previousMeta ?? [];
@@ -294,12 +263,7 @@ describe("deepmergeIntoCustom", () => {
         return [...(previousMeta ?? []), metaMeta.key];
       },
       mergeOthers: (m_target, values, utils, meta): void => {
-        if (
-          meta !== undefined &&
-          meta.length >= 2 &&
-          meta.at(-2) === "bar" &&
-          meta.at(-1) === "baz"
-        ) {
+        if (meta !== undefined && meta.length >= 2 && meta.at(-2) === "bar" && meta.at(-1) === "baz") {
           m_target.value = "special merge";
           return;
         }
@@ -369,24 +333,13 @@ describe("deepmergeIntoCustom", () => {
       ],
     };
 
-    const customizedDeepmergeEntry = <K extends PropertyKey>(
-      ...idsPaths: ReadonlyArray<ReadonlyArray<K>>
-    ) => {
-      const mergeSettings: DeepMergeIntoOptions<
-        ReadonlyArray<unknown>,
-        Readonly<{ id: unknown }>
-      > = {
-        metaDataUpdater: (previousMeta, metaMeta) => [
-          ...(previousMeta ?? []),
-          metaMeta.key ?? metaMeta.id,
-        ],
+    const customizedDeepmergeEntry = <K extends PropertyKey>(...idsPaths: ReadonlyArray<ReadonlyArray<K>>) => {
+      const mergeSettings: DeepMergeIntoOptions<ReadonlyArray<unknown>, Readonly<{ id: unknown }>> = {
+        metaDataUpdater: (previousMeta, metaMeta) => [...(previousMeta ?? []), metaMeta.key ?? metaMeta.id],
         mergeArrays: (m_target, values, utils, meta = []) => {
           const idPath = idsPaths.find((idPath) => {
             const parentPath = idPath.slice(0, -1);
-            return (
-              parentPath.length === meta.length &&
-              parentPath.every((part, i) => part === meta[i])
-            );
+            return parentPath.length === meta.length && parentPath.every((part, i) => part === meta[i]);
           });
           if (idPath === undefined) {
             utils.defaultMergeFunctions.mergeArrays(m_target, values);
@@ -394,9 +347,7 @@ describe("deepmergeIntoCustom", () => {
           }
 
           const id = idPath.at(-1)!;
-          const valuesById = values.reduce<
-            Map<unknown, Array<Record<PropertyKey, unknown>>>
-          >((carry, current) => {
+          const valuesById = values.reduce<Map<unknown, Array<Record<PropertyKey, unknown>>>>((carry, current) => {
             const currentElementsById = new Map<unknown, unknown>();
 
             for (const element of current) {
@@ -414,15 +365,12 @@ describe("deepmergeIntoCustom", () => {
             return carry;
           }, new Map<unknown, Array<Record<PropertyKey, unknown>>>());
 
-          m_target.value = [...valuesById.entries()].reduce<unknown[]>(
-            (carry, [id, values]) => {
-              const childMeta = utils.metaDataUpdater(meta, { id });
-              const s = {};
-              deepmergeIntoCustom(mergeSettings, childMeta)(s, ...values);
-              return [...carry, s];
-            },
-            [],
-          );
+          m_target.value = [...valuesById.entries()].reduce<unknown[]>((carry, [id, values]) => {
+            const childMeta = utils.metaDataUpdater(meta, { id });
+            const s = {};
+            deepmergeIntoCustom(mergeSettings, childMeta)(s, ...values);
+            return [...carry, s];
+          }, []);
         },
       };
 
@@ -455,9 +403,7 @@ describe("deepmergeIntoCustom", () => {
           }
 
           const goodValues = values.filter(
-            (value, index): value is number =>
-              parents[index]!["isBadObject"] !== true &&
-              typeof value === "number",
+            (value, index): value is number => parents[index]!["isBadObject"] !== true && typeof value === "number",
           );
 
           if (key === "sum") {

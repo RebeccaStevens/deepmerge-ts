@@ -1,6 +1,6 @@
 import rollupPluginReplace from "@rollup/plugin-replace";
-import { rollupPlugin as rollupPluginDeassert } from "deassert";
 import type { RollupOptions } from "rollup";
+import rollupPluginDeassert from "rollup-plugin-deassert";
 import rollupPluginTs from "rollup-plugin-ts";
 
 import pkg from "./package.json" with { type: "json" };

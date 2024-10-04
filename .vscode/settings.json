@@ -38,12 +38,7 @@
   "typescript.tsdk": "node_modules/typescript/lib",
   "json.schemas": [
     {
-      "fileMatch": [
-        "**/*.jsonc",
-        "**/tsconfig.json",
-        "**/tsconfig.*.json",
-        ".vscode/*.json"
-      ],
+      "fileMatch": ["**/*.jsonc", "**/tsconfig.json", "**/tsconfig.*.json", ".vscode/*.json"],
       "schema": {
         "allowTrailingCommas": true
       }

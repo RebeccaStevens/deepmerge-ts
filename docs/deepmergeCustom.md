@@ -168,11 +168,7 @@ declaring a module block for this library and defining the same interface.
 
 ```ts
 declare module "deepmerge-ts" {
-  interface DeepMergeFunctionURItoKind<
-    Ts extends ReadonlyArray<unknown>,
-    Fs extends DeepMergeFunctionsURIs,
-    M,
-  > {
+  interface DeepMergeFunctionURItoKind<Ts extends ReadonlyArray<unknown>, Fs extends DeepMergeFunctionsURIs, M> {
     readonly MyCustomMergeURI: MyValue;
   }
 }
@@ -183,11 +179,7 @@ Here's an example of creating a custom deepmerge function that amalgamates dates
 <!-- eslint-disable ts/no-shadow -->
 
 ```ts
-import {
-  type DeepMergeFunctionsURIs,
-  type DeepMergeLeaf,
-  deepmergeCustom,
-} from "deepmerge-ts";
+import { type DeepMergeFunctionsURIs, type DeepMergeLeaf, deepmergeCustom } from "deepmerge-ts";
 
 const customizedDeepmerge = deepmergeCustom<
   unknown, // <-- Types that can be passed into the function.
@@ -212,21 +204,12 @@ const z = { foo: new Date("2022-03-03") };
 customizedDeepmerge(x, y, z); // => { foo: [Date, Date, Date] }
 
 declare module "deepmerge-ts" {
-  interface DeepMergeFunctionURItoKind<
-    Ts extends ReadonlyArray<unknown>,
-    Fs extends DeepMergeFunctionsURIs,
-    M,
-  > {
-    readonly MyDeepMergeDatesURI: EveryIsDate<Ts> extends true
-      ? Ts
-      : DeepMergeLeaf<Ts>;
+  interface DeepMergeFunctionURItoKind<Ts extends ReadonlyArray<unknown>, Fs extends DeepMergeFunctionsURIs, M> {
+    readonly MyDeepMergeDatesURI: EveryIsDate<Ts> extends true ? Ts : DeepMergeLeaf<Ts>;
   }
 }
 
-type EveryIsDate<Ts extends ReadonlyArray<unknown>> = Ts extends readonly [
-  infer Head,
-  ...infer Rest,
-]
+type EveryIsDate<Ts extends ReadonlyArray<unknown>> = Ts extends readonly [infer Head, ...infer Rest]
   ? Head extends Date
     ? EveryIsDate<Rest>
     : false
@@ -267,11 +250,7 @@ Here's an example that creates a custom deepmerge function that filters out all 
 <!-- eslint-disable ts/no-shadow -->
 
 ```ts
-import {
-  type DeepMergeFunctionsURIs,
-  type FilterOut,
-  deepmergeCustom,
-} from "deepmerge-ts";
+import { type DeepMergeFunctionsURIs, type FilterOut, deepmergeCustom } from "deepmerge-ts";
 
 const customizedDeepmerge = deepmergeCustom<
   unknown,
@@ -332,9 +311,7 @@ const customizedDeepmerge = deepmergeCustom({
   },
 });
 
-function areAllNumbers(
-  values: ReadonlyArray<unknown>,
-): values is ReadonlyArray<number> {
+function areAllNumbers(values: ReadonlyArray<unknown>): values is ReadonlyArray<number> {
   return values.every((value) => typeof value === "number");
 }
 
@@ -356,11 +333,7 @@ Here's an example that uses custom metadata that accumulates the full key path.
 <!-- eslint-disable ts/no-shadow -->
 
 ```ts
-import {
-  type DeepMergeFunctionsURIs,
-  type DeepMergeLeaf,
-  deepmergeCustom,
-} from "deepmerge-ts";
+import { type DeepMergeFunctionsURIs, type DeepMergeLeaf, deepmergeCustom } from "deepmerge-ts";
 
 const customizedDeepmerge = deepmergeCustom<
   // Allow any value to be passed into the function.
@@ -422,9 +395,7 @@ declare module "deepmerge-ts" {
     Fs extends DeepMergeFunctionsURIs,
     M, // This is the meta data type
   > {
-    readonly KeyPathBasedMerge: Ts[number] extends number
-      ? Ts[number] | string
-      : DeepMergeLeaf<Ts>;
+    readonly KeyPathBasedMerge: Ts[number] extends number ? Ts[number] | string : DeepMergeLeaf<Ts>;
   }
 }
 ```
@@ -445,12 +416,7 @@ See [deepmerge custom API](./API.md#deepmergecustomoptions-rootmetadata).
 The signature of merging functions for `deepmergeIntoCustom` looks like this:
 
 ```ts
-(
-  target: DeepMergeValueReference<T>,
-  values: Ts,
-  utils: U,
-  meta: M | undefined,
-) => symbol | undefined;
+(target: DeepMergeValueReference<T>, values: Ts, utils: U, meta: M | undefined) => symbol | undefined;
 ```
 
 Instead of returning a value like with `deepmergeCustom`'s merge functions, mutations should be made to `target.value`.\
@@ -483,10 +449,7 @@ But if you want to do this then you'll simply need to explicity declare a type a
 Here's an example:
 
 ```ts
-type CustomizedDeepmergeInto = <
-  Target extends object,
-  Ts extends ReadonlyArray<object>,
->(
+type CustomizedDeepmergeInto = <Target extends object, Ts extends ReadonlyArray<object>>(
   target: Target,
   ...objects: Ts
 ) => asserts target is Target & // Intercepting with `Target` is essentially required to make TypeScript happy.
@@ -502,12 +465,11 @@ type CustomizedDeepmergeInto = <
     DeepMergeBuiltInMetaData // Use default meta data.
   >;
 
-export const customizedDeepmergeInto: CustomizedDeepmergeInto =
-  deepmergeIntoCustom({
-    mergeOthers: (source, values, utils, meta) => {
-      /* ... */
-    },
-  });
+export const customizedDeepmergeInto: CustomizedDeepmergeInto = deepmergeIntoCustom({
+  mergeOthers: (source, values, utils, meta) => {
+    /* ... */
+  },
+});
 ```
 
 ## API

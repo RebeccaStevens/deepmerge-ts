@@ -1,9 +1,4 @@
-import type {
-  DeepMergeFunctionURItoKind,
-  DeepMergeFunctionsURIs,
-  DeepMergeHKT,
-  DeepMergeLeafURI,
-} from "./merging";
+import type { DeepMergeFunctionURItoKind, DeepMergeFunctionsURIs, DeepMergeHKT, DeepMergeLeafURI } from "./merging";
 import type {
   FilterOut,
   FilterOutNever,
@@ -66,19 +61,13 @@ type RecordEntries<T extends Record<PropertyKey, unknown>> = FilterOut<
 
 type RecordMeta = Record<PropertyKey, RecordPropertyMeta>;
 
-type RecordPropertyMeta<
-  Key extends PropertyKey = PropertyKey,
-  Value = unknown,
-  Optional extends boolean = boolean,
-> = {
+type RecordPropertyMeta<Key extends PropertyKey = PropertyKey, Value = unknown, Optional extends boolean = boolean> = {
   key: Key;
   value: Value;
   optional: Optional;
 };
 
-type RecordsToRecordMeta<
-  Ts extends ReadonlyArray<Record<PropertyKey, unknown>>,
-> = FilterOutNever<{
+type RecordsToRecordMeta<Ts extends ReadonlyArray<Record<PropertyKey, unknown>>> = FilterOutNever<{
   [I in keyof Ts]: RecordToRecordMeta<Ts[I]>;
 }>;
 
@@ -93,49 +82,31 @@ type RecordToRecordMeta<T extends Record<PropertyKey, unknown>> = {
 /**
  * Deep merge records.
  */
-export type DeepMergeRecordsDefaultHKT<
-  Ts extends ReadonlyArray<unknown>,
-  Fs extends DeepMergeFunctionsURIs,
-  M,
-> =
+export type DeepMergeRecordsDefaultHKT<Ts extends ReadonlyArray<unknown>, Fs extends DeepMergeFunctionsURIs, M> =
   Ts extends ReadonlyArray<Record<PropertyKey, unknown>>
-    ? SimplifyObject<
-        DeepMergeRecordMetaDefaultHKTProps<RecordsToRecordMeta<Ts>, Fs, M>
-      >
+    ? SimplifyObject<DeepMergeRecordMetaDefaultHKTProps<RecordsToRecordMeta<Ts>, Fs, M>>
     : never;
 
 /**
  * Deep merge record props.
  */
-type DeepMergeRecordMetaDefaultHKTProps<
-  RecordMetas,
-  Fs extends DeepMergeFunctionsURIs,
-  M,
-> =
-  RecordMetas extends ReadonlyArray<RecordMeta>
-    ? CreateRecordFromMeta<MergeRecordMeta<RecordMetas>, Fs, M>
-    : never;
+type DeepMergeRecordMetaDefaultHKTProps<RecordMetas, Fs extends DeepMergeFunctionsURIs, M> =
+  RecordMetas extends ReadonlyArray<RecordMeta> ? CreateRecordFromMeta<MergeRecordMeta<RecordMetas>, Fs, M> : never;
 
-type MergeRecordMeta<RecordMetas extends ReadonlyArray<RecordMeta>> =
-  GroupValuesByKey<
-    FlattenTuples<
-      TransposeTuple<
-        FilterOut<
-          {
-            [I in keyof RecordMetas]: TransposeTuple<
-              RecordEntries<RecordMetas[I]>
-            >;
-          },
-          readonly []
-        >
+type MergeRecordMeta<RecordMetas extends ReadonlyArray<RecordMeta>> = GroupValuesByKey<
+  FlattenTuples<
+    TransposeTuple<
+      FilterOut<
+        {
+          [I in keyof RecordMetas]: TransposeTuple<RecordEntries<RecordMetas[I]>>;
+        },
+        readonly []
       >
     >
-  >;
+  >
+>;
 
-type GroupValuesByKey<Ts> = Ts extends readonly [
-  infer Keys extends ReadonlyArray<PropertyKey>,
-  infer Values,
-]
+type GroupValuesByKey<Ts> = Ts extends readonly [infer Keys extends ReadonlyArray<PropertyKey>, infer Values]
   ? {
       [I in keyof Keys]: DeepMergeRecordPropertyMetaDefaultHKTGetPossible<
         Keys[I],
@@ -180,27 +151,18 @@ type CreateRecordForKeyFromMeta<
 /**
  * Get the possible types of a property.
  */
-type DeepMergeRecordPropertyMetaDefaultHKTGetPossible<
-  Key extends PropertyKey,
-  Ts,
-> = Ts extends readonly [
+type DeepMergeRecordPropertyMetaDefaultHKTGetPossible<Key extends PropertyKey, Ts> = Ts extends readonly [
   RecordPropertyMeta,
   ...ReadonlyArray<RecordPropertyMeta>,
 ]
-  ? DeepMergeRecordPropertyMetaDefaultHKTGetPossibleHelper<
-      Ts,
-      { key: Key; values: []; optional: never }
-    >
+  ? DeepMergeRecordPropertyMetaDefaultHKTGetPossibleHelper<Ts, { key: Key; values: []; optional: never }>
   : never;
 
 /**
  * Tail-recursive helper type for DeepMergeRecordPropertyMetaDefaultHKTGetPossible.
  */
 type DeepMergeRecordPropertyMetaDefaultHKTGetPossibleHelper<
-  Ts extends readonly [
-    RecordPropertyMeta,
-    ...ReadonlyArray<RecordPropertyMeta>,
-  ],
+  Ts extends readonly [RecordPropertyMeta, ...ReadonlyArray<RecordPropertyMeta>],
   Acc extends {
     key: PropertyKey;
     values: ReadonlyArray<unknown>;
@@ -216,10 +178,7 @@ type DeepMergeRecordPropertyMetaDefaultHKTGetPossibleHelper<
 ]
   ? Acc["optional"] extends true
     ? Acc extends { values: [infer Head, ...infer AccRest] }
-      ? Rest extends readonly [
-          RecordPropertyMeta,
-          ...ReadonlyArray<RecordPropertyMeta>,
-        ]
+      ? Rest extends readonly [RecordPropertyMeta, ...ReadonlyArray<RecordPropertyMeta>]
         ? DeepMergeRecordPropertyMetaDefaultHKTGetPossibleHelper<
             Rest,
             {
@@ -233,10 +192,7 @@ type DeepMergeRecordPropertyMetaDefaultHKTGetPossibleHelper<
             values: [V | Head, ...AccRest];
             optional: O;
           }
-      : Rest extends readonly [
-            RecordPropertyMeta,
-            ...ReadonlyArray<RecordPropertyMeta>,
-          ]
+      : Rest extends readonly [RecordPropertyMeta, ...ReadonlyArray<RecordPropertyMeta>]
         ? DeepMergeRecordPropertyMetaDefaultHKTGetPossibleHelper<
             Rest,
             {
@@ -250,10 +206,7 @@ type DeepMergeRecordPropertyMetaDefaultHKTGetPossibleHelper<
             values: [V, ...Acc["values"]];
             optional: O;
           }
-    : Rest extends readonly [
-          RecordPropertyMeta,
-          ...ReadonlyArray<RecordPropertyMeta>,
-        ]
+    : Rest extends readonly [RecordPropertyMeta, ...ReadonlyArray<RecordPropertyMeta>]
       ? DeepMergeRecordPropertyMetaDefaultHKTGetPossibleHelper<
           Rest,
           {
@@ -286,14 +239,8 @@ type DeepMergeArraysDefaultHKTHelper<
   Fs extends DeepMergeFunctionsURIs,
   M,
   Acc extends ReadonlyArray<unknown>,
-> = Ts extends readonly [
-  infer Head extends ReadonlyArray<unknown>,
-  ...infer Rest,
-]
-  ? Rest extends readonly [
-      ReadonlyArray<unknown>,
-      ...ReadonlyArray<ReadonlyArray<unknown>>,
-    ]
+> = Ts extends readonly [infer Head extends ReadonlyArray<unknown>, ...infer Rest]
+  ? Rest extends readonly [ReadonlyArray<unknown>, ...ReadonlyArray<ReadonlyArray<unknown>>]
     ? DeepMergeArraysDefaultHKTHelper<Rest, Fs, M, [...Acc, ...Head]>
     : [...Acc, ...Head]
   : never;
@@ -301,30 +248,22 @@ type DeepMergeArraysDefaultHKTHelper<
 /**
  * Deep merge sets.
  */
-export type DeepMergeSetsDefaultHKT<Ts extends ReadonlyArray<unknown>> = Set<
-  UnionSetValues<Ts>
->;
+export type DeepMergeSetsDefaultHKT<Ts extends ReadonlyArray<unknown>> = Set<UnionSetValues<Ts>>;
 
 /**
  * Deep merge maps.
  */
-export type DeepMergeMapsDefaultHKT<Ts extends ReadonlyArray<unknown>> = Map<
-  UnionMapKeys<Ts>,
-  UnionMapValues<Ts>
->;
+export type DeepMergeMapsDefaultHKT<Ts extends ReadonlyArray<unknown>> = Map<UnionMapKeys<Ts>, UnionMapValues<Ts>>;
 
 /**
  * Filter out undefined values.
  */
-export type DeepMergeFilterValuesDefaultHKT<Ts extends ReadonlyArray<unknown>> =
-  FilterOut<Ts, undefined>;
+export type DeepMergeFilterValuesDefaultHKT<Ts extends ReadonlyArray<unknown>> = FilterOut<Ts, undefined>;
 
 /**
  * Get the merge functions with defaults apply from the given subset.
  */
-export type GetDeepMergeFunctionsURIs<
-  PMF extends Partial<DeepMergeFunctionsURIs>,
-> = Readonly<{
+export type GetDeepMergeFunctionsURIs<PMF extends Partial<DeepMergeFunctionsURIs>> = Readonly<{
   // prettier-ignore
   DeepMergeRecordsURI:
     PMF["DeepMergeRecordsURI"] extends keyof DeepMergeFunctionURItoKind<any, any, any>
