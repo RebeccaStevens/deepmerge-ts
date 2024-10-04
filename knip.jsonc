@@ -12,5 +12,9 @@
     // Eslint
     "@eslint/compat",
     "@vitest/eslint-plugin",
+
+    // Temp
+    // cspell:disable-next-line
+    "@sebbo2002/semantic-release-jsr",
   ],
 }
