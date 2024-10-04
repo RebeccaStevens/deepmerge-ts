@@ -11,5 +11,6 @@
 
     // Eslint
     "@eslint/compat",
+    "@vitest/eslint-plugin",
   ],
 }
