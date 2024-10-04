@@ -1,7 +1,8 @@
 import rollupPluginReplace from "@rollup/plugin-replace";
+import rollupPluginTypescript from "@rollup/plugin-typescript";
 import type { RollupOptions } from "rollup";
 import rollupPluginDeassert from "rollup-plugin-deassert";
-import rollupPluginTs from "rollup-plugin-ts";
+import { generateDtsBundle } from "rollup-plugin-dts-bundle-generator";
 
 import pkg from "./package.json" with { type: "json" };
 
@@ -18,11 +19,27 @@ const library = {
       file: pkg.exports.import,
       format: "esm",
       sourcemap: false,
+      plugins: [
+        generateDtsBundle({
+          compilation: {
+            preferredConfigPath: "tsconfig.build.json",
+          },
+          outFile: pkg.exports.types.import,
+        }) as any,
+      ],
     },
     {
       file: pkg.exports.require,
       format: "cjs",
       sourcemap: false,
+      plugins: [
+        generateDtsBundle({
+          compilation: {
+            preferredConfigPath: "tsconfig.build.json",
+          },
+          outFile: pkg.exports.types.require,
+        }) as any,
+      ],
     },
   ],
 
@@ -34,8 +51,11 @@ const library = {
   },
 
   plugins: [
-    rollupPluginTs({
-      transpileOnly: true,
+    rollupPluginTypescript({
+      compilerOptions: {
+        noCheck: true,
+        declaration: false,
+      },
       tsconfig: "tsconfig.build.json",
     }),
     rollupPluginReplace({
