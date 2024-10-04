@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
+## [7.1.1](https://github.com/RebeccaStevens/deepmerge-ts/compare/v7.1.0...v7.1.1) (2024-10-04)
+
+
+### Performance Improvements
+
+* add explicit return type to speed up types ([8e1ff6d](https://github.com/RebeccaStevens/deepmerge-ts/commit/8e1ff6d04abe4ae0d541bba817054578924ca3db))
+
 # [7.1.0](https://github.com/RebeccaStevens/deepmerge-ts/compare/v7.0.3...v7.1.0) (2024-07-20)
 
 
