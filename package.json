@@ -96,7 +96,7 @@
     "@semantic-release/release-notes-generator": "14.0.1",
     "@stylistic/eslint-plugin": "2.8.0",
     "@types/lodash": "4.17.10",
-    "@types/node": "20.14.14",
+    "@types/node": "20.16.10",
     "@typescript-eslint/eslint-plugin": "8.8.0",
     "@typescript-eslint/parser": "8.8.0",
     "@vitest/coverage-v8": "2.1.2",
