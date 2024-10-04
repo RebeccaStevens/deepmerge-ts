@@ -3,7 +3,7 @@
 # DeepmergeTS
 
 [![npm version](https://img.shields.io/npm/v/deepmerge-ts.svg)](https://www.npmjs.com/package/deepmerge-ts)
-[![deno version](https://img.shields.io/github/v/tag/RebeccaStevens/deepmerge-ts?label=deno&sort=semver)](https://deno.land/x/deepmergets)
+[![jsr Version](https://img.shields.io/jsr/v/@rebeccastevens/deepmerge)](https://jsr.io/@rebeccastevens/deepmerge)
 [![CI](https://github.com/RebeccaStevens/deepmerge-ts/actions/workflows/release.yml/badge.svg)](https://github.com/RebeccaStevens/deepmerge-ts/actions/workflows/release.yml)
 [![Coverage Status](https://codecov.io/gh/RebeccaStevens/deepmerge-ts/branch/main/graph/badge.svg?token=MVpR1oAbIT)](https://codecov.io/gh/RebeccaStevens/deepmerge-ts)\
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
@@ -32,7 +32,7 @@ your open source software supply chain meets enterprise standards now and into t
 
 ## Installation
 
-### Node
+### npm
 
 ```sh
 # Install with npm
@@ -43,17 +43,22 @@ pnpm add deepmerge-ts
 
 # Install with yarn
 yarn add deepmerge-ts
+
+# Install with bun
+bun add deepmerge-ts
 ```
 
-### Deno
+### jsr
 
-```jsonc
-// import_map.json
-{
-  "imports": {
-    "deepmerge-ts": "https://deno.land/x/deepmergets@__version__/dist/deno/index.ts",
-  },
-}
+```sh
+# Install in a node project
+npx jsr add @rebeccastevens/deepmerge
+
+# Install in a deno project
+deno add jsr:@rebeccastevens/deepmerge
+
+# Install in a bun project
+bunx jsr add @rebeccastevens/deepmerge
 ```
 
 ## Features

@@ -35,16 +35,16 @@
   "type": "module",
   "exports": {
     "types": {
-      "import": "./dist/node/index.d.mts",
-      "require": "./dist/node/index.d.cts"
+      "import": "./dist/index.d.mts",
+      "require": "./dist/index.d.cts"
     },
-    "import": "./dist/node/index.mjs",
-    "require": "./dist/node/index.cjs"
+    "import": "./dist/index.mjs",
+    "require": "./dist/index.cjs"
   },
-  "main": "./dist/node/index.cjs",
-  "types": "./dist/node/index.d.cts",
+  "main": "./dist/index.cjs",
+  "types": "./dist/index.d.cts",
   "files": [
-    "dist/node/",
+    "dist/",
     "package.json",
     "CHANGELOG.md",
     "LICENSE",
@@ -52,10 +52,7 @@
   ],
   "scripts": {
     "benchmark": "pnpm run build && cd benchmark && pnpm run benchmark; cd ..",
-    "build": "pnpm run build:node && pnpm run build:deno && rimraf build && if-env-defined CI || pnpm run build:assume-unchanged",
-    "build:assume-unchanged": "cd dist; git update-index --assume-unchanged $(git ls-files | tr '\n' ' '); cd ..",
-    "build:deno": "rimraf dist/deno && tsc -p tsconfig.build.deno.json && denoify",
-    "build:node": "rimraf dist/node types/current && rollup -c rollup.config.ts --configPlugin rollup-plugin-ts",
+    "build": "rimraf dist && rollup -c rollup.config.ts --configPlugin rollup-plugin-ts",
     "cz": "git-cz",
     "lint": "eslint && pnpm run lint:md && pnpm run lint:spelling && pnpm run lint:knip && pnpm run lint:packages",
     "lint-fix": "eslint --fix && pnpm run lint:md-fix && pnpm run lint:packages-fix",
@@ -78,7 +75,7 @@
     "test": "pnpm run test:js-run && pnpm run test:types",
     "test:js": "vitest --coverage",
     "test:js-run": "vitest run --coverage",
-    "test:types": "pnpm run build:node && tsd -f 'tests/**/*.test-d.ts' -t 'dist/node/index.d.mts'",
+    "test:types": "pnpm run build && tsd -f 'tests/**/*.test-d.ts' -t 'dist/index.d.mts'",
     "typecheck": "tsc -p tsconfig.build.json --noEmit"
   },
   "devDependencies": {
@@ -88,6 +85,7 @@
     "@eslint/compat": "1.1.1",
     "@rebeccastevens/eslint-config": "3.2.2",
     "@rollup/plugin-replace": "6.0.1",
+    "@sebbo2002/semantic-release-jsr": "2.0.0",
     "@semantic-release/changelog": "6.0.3",
     "@semantic-release/commit-analyzer": "13.0.0",
     "@semantic-release/git": "10.0.1",
@@ -104,7 +102,6 @@
     "commitizen": "4.3.1",
     "cspell": "8.14.4",
     "cz-conventional-changelog": "3.3.0",
-    "denoify": "1.6.16",
     "eslint": "9.11.1",
     "eslint-config-prettier": "9.1.0",
     "eslint-flat-config-utils": "0.4.0",
@@ -127,7 +124,6 @@
     "eslint-plugin-unicorn": "56.0.0",
     "eslint-plugin-yml": "1.14.0",
     "husky": "9.1.6",
-    "if-env-defined": "1.0.0",
     "jsonc-eslint-parser": "2.4.0",
     "knip": "5.31.0",
     "lint-staged": "15.2.10",
@@ -150,9 +146,5 @@
   "packageManager": "pnpm@9.12.0",
   "engines": {
     "node": ">=16.0.0"
-  },
-  "denoify": {
-    "out": "dist/deno",
-    "index": "src/index.ts"
   }
 }
