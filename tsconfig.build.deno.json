@@ -3,11 +3,5 @@
   "compilerOptions": {
     "outDir": "build/deno/"
   },
-  "exclude": [
-    "node_modules",
-    "build/deno/",
-    "dist/",
-    "src/**/*.deno.ts",
-    "src/**/*.deno.tsx"
-  ]
+  "exclude": ["node_modules", "build/deno/", "dist/", "src/**/*.deno.ts", "src/**/*.deno.tsx"]
 }

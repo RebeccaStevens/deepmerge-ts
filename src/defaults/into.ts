@@ -1,9 +1,5 @@
 import { mergeUnknownsInto } from "../deepmerge-into";
-import type {
-  DeepMergeBuiltInMetaData,
-  DeepMergeIntoFunctionUtils,
-  Reference,
-} from "../types";
+import type { DeepMergeBuiltInMetaData, DeepMergeIntoFunctionUtils, Reference } from "../types";
 import { getIterableOfIterables, getKeys, objectHasProperty } from "../utils";
 
 /**
@@ -28,12 +24,7 @@ function mergeRecordsInto<
   U extends DeepMergeIntoFunctionUtils<M, MM>,
   M,
   MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData,
->(
-  m_target: Reference<Record<PropertyKey, unknown>>,
-  values: Ts,
-  utils: U,
-  meta: M | undefined,
-): void {
+>(m_target: Reference<Record<PropertyKey, unknown>>, values: Ts, utils: U, meta: M | undefined): void {
   for (const key of getKeys(values)) {
     const propValues = [];
 
@@ -53,12 +44,7 @@ function mergeRecordsInto<
     } as unknown as MM);
 
     const propertyTarget: Reference<unknown> = { value: propValues[0] };
-    mergeUnknownsInto<ReadonlyArray<unknown>, U, M, MM>(
-      propertyTarget,
-      propValues,
-      utils,
-      updatedMeta,
-    );
+    mergeUnknownsInto<ReadonlyArray<unknown>, U, M, MM>(propertyTarget, propValues, utils, updatedMeta);
 
     if (key === "__proto__") {
       Object.defineProperty(m_target.value, key, {
@@ -92,9 +78,10 @@ function mergeArraysInto<Ts extends ReadonlyArray<ReadonlyArray<unknown>>>(
  * @param m_target - The result will be mutated into this set
  * @param values - The sets (including the target's value if there is one).
  */
-function mergeSetsInto<
-  Ts extends ReadonlyArray<Readonly<ReadonlySet<unknown>>>,
->(m_target: Reference<Set<unknown>>, values: Ts): void {
+function mergeSetsInto<Ts extends ReadonlyArray<Readonly<ReadonlySet<unknown>>>>(
+  m_target: Reference<Set<unknown>>,
+  values: Ts,
+): void {
   for (const value of getIterableOfIterables(values.slice(1))) {
     m_target.value.add(value);
   }
@@ -106,9 +93,10 @@ function mergeSetsInto<
  * @param m_target - The result will be mutated into this map
  * @param values - The maps (including the target's value if there is one).
  */
-function mergeMapsInto<
-  Ts extends ReadonlyArray<Readonly<ReadonlyMap<unknown, unknown>>>,
->(m_target: Reference<Map<unknown, unknown>>, values: Ts): void {
+function mergeMapsInto<Ts extends ReadonlyArray<Readonly<ReadonlyMap<unknown, unknown>>>>(
+  m_target: Reference<Map<unknown, unknown>>,
+  values: Ts,
+): void {
   for (const [key, value] of getIterableOfIterables(values.slice(1))) {
     m_target.value.set(key, value);
   }
@@ -117,10 +105,7 @@ function mergeMapsInto<
 /**
  * Set the target to the last non-undefined value.
  */
-function mergeOthersInto<Ts extends ReadonlyArray<unknown>>(
-  m_target: Reference<unknown>,
-  values: Ts,
-) {
+function mergeOthersInto<Ts extends ReadonlyArray<unknown>>(m_target: Reference<unknown>, values: Ts) {
   m_target.value = values.at(-1);
 }
 

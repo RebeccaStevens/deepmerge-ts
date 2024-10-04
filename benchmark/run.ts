@@ -13,10 +13,7 @@ import { merge as mergeAnything } from "merge-anything";
 import { Accumulator as ObjectAccumulator } from "object-accumulator";
 import { Bench } from "tinybench";
 
-const benchmarkDataFile = path.join(
-  dirname(fileURLToPath(import.meta.url)),
-  "data.json",
-);
+const benchmarkDataFile = path.join(dirname(fileURLToPath(import.meta.url)), "data.json");
 
 const benchmarkDataSets: Array<{
   name: string;
@@ -29,16 +26,10 @@ const benchmarkDataSets: Array<{
     return JSON.parse(data);
   })
   .catch(async (error: unknown) => {
-    if (
-      !(error instanceof Error) ||
-      !("code" in error) ||
-      error.code !== "ENOENT"
-    ) {
+    if (!(error instanceof Error) || !("code" in error) || error.code !== "ENOENT") {
       throw error;
     }
-    console.log(
-      "No benchmark data file found. Generating random data for benchmarking against.",
-    );
+    console.log("No benchmark data file found. Generating random data for benchmarking against.");
 
     const data = [
       generateBenchmarkDataSet("tall", 2, 3, 16),
@@ -62,11 +53,7 @@ for (let m_i = 0; m_i < benchmarkDataSets.length; m_i++) {
     warmupIterations: 1,
   });
 
-  console.log(
-    `\nRunning benchmarks for data set "${benchmarkName}" (${m_i + 1} of ${
-      benchmarkDataSets.length
-    }):\n`,
-  );
+  console.log(`\nRunning benchmarks for data set "${benchmarkName}" (${m_i + 1} of ${benchmarkDataSets.length}):\n`);
 
   bench
     .add("deepmerge-ts", () => {
@@ -94,12 +81,7 @@ for (let m_i = 0; m_i < benchmarkDataSets.length; m_i++) {
   console.table(bench.table());
 }
 
-function generateBenchmarkDataSet(
-  name: string,
-  items: number,
-  maxProperties: number,
-  maxDepth: number,
-) {
+function generateBenchmarkDataSet(name: string, items: number, maxProperties: number, maxDepth: number) {
   const data: object[] = [];
 
   for (let m_i = 0; m_i < items; m_i++) {
@@ -112,28 +94,17 @@ function generateBenchmarkDataSet(
   };
 }
 
-function generateBenchmarkDataItem(
-  maxProperties: number,
-  depth: number,
-  currentDepth = 0,
-) {
+function generateBenchmarkDataItem(maxProperties: number, depth: number, currentDepth = 0) {
   const obj: object = {};
 
   const properties = Math.floor(maxProperties * Math.random()) + 1;
 
-  const propertiesOptions = shuffle(
-    Array.from({ length: maxProperties }, (_, i) =>
-      String.fromCodePoint(i + 65),
-    ),
-  );
+  const propertiesOptions = shuffle(Array.from({ length: maxProperties }, (_, i) => String.fromCodePoint(i + 65)));
 
   for (let m_i = 0; m_i < properties; m_i++) {
     const prop = propertiesOptions[m_i];
 
-    obj[prop] =
-      currentDepth < depth
-        ? generateBenchmarkDataItem(maxProperties, depth, currentDepth + 1)
-        : "value";
+    obj[prop] = currentDepth < depth ? generateBenchmarkDataItem(maxProperties, depth, currentDepth + 1) : "value";
   }
 
   return obj;
@@ -147,10 +118,7 @@ function shuffle<T>(array: T[]) {
     m_randomIndex = Math.floor(Math.random() * m_currentIndex);
     m_currentIndex--;
 
-    [array[m_currentIndex], array[m_randomIndex]] = [
-      array[m_randomIndex],
-      array[m_currentIndex],
-    ];
+    [array[m_currentIndex], array[m_randomIndex]] = [array[m_randomIndex], array[m_currentIndex]];
   }
 
   return array;

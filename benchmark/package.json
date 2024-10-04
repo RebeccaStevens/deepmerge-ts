@@ -7,10 +7,10 @@
     "name": "Rebecca Stevens",
     "email": "rebecca.stevens@outlook.co.nz"
   },
+  "type": "module",
   "scripts": {
     "benchmark": "tsx run.ts"
   },
-  "type": "module",
   "dependencies": {
     "deepmerge": "^4.3.1",
     "deepmerge-ts": "link:..",

@@ -1,10 +1,6 @@
 import { expectAssignable, expectType } from "tsd";
 
-import {
-  type DeepMergeMapsDefaultHKT,
-  type DeepMergeSetsDefaultHKT,
-  deepmerge,
-} from "../src";
+import { type DeepMergeMapsDefaultHKT, type DeepMergeSetsDefaultHKT, deepmerge } from "../src";
 
 const a = {
   foo: "abc",
@@ -200,14 +196,8 @@ const test15 = deepmerge(l, m);
 expectType<
   DeepMergeMapsDefaultHKT<
     [
-      Map<
-        number,
-        Map<number, { foo: string; baz: { quux: string[] }; garply: number }>
-      >,
-      Map<
-        number,
-        Map<number, { foo: string; baz: { corge: number }; grault: number }>
-      >,
+      Map<number, Map<number, { foo: string; baz: { quux: string[] }; garply: number }>>,
+      Map<number, Map<number, { foo: string; baz: { corge: number }; grault: number }>>,
     ]
   >
 >(test15);
@@ -225,9 +215,7 @@ const third = { third: 123 };
 const fourth = { fourth: "abc" };
 
 const test16 = deepmerge(first, second, third, fourth);
-expectType<{ first: boolean; second: boolean; third: number; fourth: string }>(
-  test16,
-);
+expectType<{ first: boolean; second: boolean; third: number; fourth: string }>(test16);
 
 const n: { a: true; b: string } = { a: true, b: "n" };
 const o: { a: false; b?: number } = { a: false };

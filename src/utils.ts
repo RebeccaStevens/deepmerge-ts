@@ -52,10 +52,7 @@ export function getKeys(objects: ReadonlyArray<object>): Set<PropertyKey> {
   const keys = new Set<PropertyKey>();
 
   for (const object of objects) {
-    for (const key of [
-      ...Object.keys(object),
-      ...Object.getOwnPropertySymbols(object),
-    ]) {
+    for (const key of [...Object.keys(object), ...Object.getOwnPropertySymbols(object)]) {
       keys.add(key);
     }
   }
@@ -70,22 +67,14 @@ export function getKeys(objects: ReadonlyArray<object>): Set<PropertyKey> {
  * @param property - The property to test.
  * @returns Whether the object has the property.
  */
-export function objectHasProperty(
-  object: object,
-  property: PropertyKey,
-): boolean {
-  return (
-    typeof object === "object" &&
-    Object.prototype.propertyIsEnumerable.call(object, property)
-  );
+export function objectHasProperty(object: object, property: PropertyKey): boolean {
+  return typeof object === "object" && Object.prototype.propertyIsEnumerable.call(object, property);
 }
 
 /**
  * Get an iterable object that iterates over the given iterables.
  */
-export function getIterableOfIterables<T>(
-  iterables: ReadonlyArray<Readonly<Iterable<T>>>,
-): Iterable<T> {
+export function getIterableOfIterables<T>(iterables: ReadonlyArray<Readonly<Iterable<T>>>): Iterable<T> {
   return {
     *[Symbol.iterator]() {
       for (const iterable of iterables) {
@@ -97,10 +86,7 @@ export function getIterableOfIterables<T>(
   };
 }
 
-const validRecordToStringValues = new Set([
-  "[object Object]",
-  "[object Module]",
-]);
+const validRecordToStringValues = new Set(["[object Object]", "[object Module]"]);
 
 /**
  * Does the given object appear to be a record.
