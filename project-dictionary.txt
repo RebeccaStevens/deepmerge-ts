@@ -9,7 +9,6 @@ deepmerge
 deepmergecustomoptions
 deepmergets
 defu
-denoify
 foo
 fred
 garply
