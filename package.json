@@ -124,7 +124,7 @@
     "eslint-plugin-regexp": "2.6.0",
     "eslint-plugin-sonarjs": "2.0.3",
     "eslint-plugin-unicorn": "56.0.0",
-    "eslint-plugin-vitest": "0.5.4",
+    "@vitest/eslint-plugin": "1.0.1",
     "eslint-plugin-yml": "1.14.0",
     "husky": "9.1.6",
     "if-env-defined": "1.0.0",
