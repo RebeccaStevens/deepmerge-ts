@@ -48,7 +48,7 @@ plugins:
     - assets:
         - CHANGELOG.md
   - "@semantic-release/npm"
-  # - "@sebbo2002/semantic-release-jsr"
+  - "@sebbo2002/semantic-release-jsr"
   - - "@semantic-release/github"
     - releasedLabels:
         - "<%= nextRelease.channel === 'next' ? 'Status: Released on Next' : 'Status: Released' %>"
