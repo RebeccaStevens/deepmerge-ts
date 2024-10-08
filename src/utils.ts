@@ -75,25 +75,45 @@ export function objectHasProperty(object: object, property: PropertyKey): boolea
  * Get an iterable object that iterates over the given iterables.
  */
 export function getIterableOfIterables<T>(iterables: ReadonlyArray<Readonly<Iterable<T>>>): Iterable<T> {
+  let m_iterablesIndex = 0;
+  let m_iterator = iterables[0]?.[Symbol.iterator]();
+
   return {
-    *[Symbol.iterator]() {
-      for (const iterable of iterables) {
-        for (const value of iterable) {
-          yield value;
-        }
-      }
+    [Symbol.iterator](): Iterator<T, void> {
+      return {
+        next(): IteratorResult<T, void> {
+          do {
+            if (m_iterator === undefined) {
+              return { done: true, value: undefined };
+            }
+
+            const result = m_iterator.next();
+            if (result.done === true) {
+              m_iterablesIndex += 1;
+              m_iterator = iterables[m_iterablesIndex]?.[Symbol.iterator]();
+              continue;
+            }
+
+            return {
+              done: false,
+              value: result.value,
+            };
+          } while (true);
+        },
+      };
     },
   };
 }
 
-const validRecordToStringValues = new Set(["[object Object]", "[object Module]"]);
+// eslint-disable-next-line unicorn/prefer-set-has -- Array is more performant for a low number of elements.
+const validRecordToStringValues = ["[object Object]", "[object Module]"];
 
 /**
  * Does the given object appear to be a record.
  */
 function isRecord(value: object): value is Record<PropertyKey, unknown> {
   // All records are objects.
-  if (!validRecordToStringValues.has(Object.prototype.toString.call(value))) {
+  if (!validRecordToStringValues.includes(Object.prototype.toString.call(value))) {
     return false;
   }
 
@@ -111,7 +131,7 @@ function isRecord(value: object): value is Record<PropertyKey, unknown> {
   if (
     prototype === null ||
     typeof prototype !== "object" ||
-    !validRecordToStringValues.has(Object.prototype.toString.call(prototype))
+    !validRecordToStringValues.includes(Object.prototype.toString.call(prototype))
   ) {
     return false;
   }
