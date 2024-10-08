@@ -33,8 +33,8 @@ importers:
         specifier: 12.1.0
         version: 12.1.0(rollup@4.24.0)(tslib@2.6.3)(typescript@5.6.2)
       '@sebbo2002/semantic-release-jsr':
-        specifier: 2.0.0
-        version: 2.0.0
+        specifier: 2.0.1-develop.2
+        version: 2.0.1-develop.2
       '@semantic-release/changelog':
         specifier: 6.0.3
         version: 6.0.3(semantic-release@24.1.2(typescript@5.6.2))
@@ -1710,8 +1710,8 @@ packages:
   '@rtsao/scc@1.1.0':
     resolution: {integrity: sha512-zt6OdqaDoOnJ1ZYsCYGt9YmWzDXl4vQdKTyJev62gFhRGKdx7mcT54V9KIjg+d2wi9EXsPvAPKe7i7WjfVWB8g==}
 
-  '@sebbo2002/semantic-release-jsr@2.0.0':
-    resolution: {integrity: sha512-v8hvjvYKgiMx6DY3cVc+BhpFzTmqDok5y81u0YfwbqMP7wP+zsqQJZDYau5QjFFpt7byyXorR2kv+L3TmpH6Sg==}
+  '@sebbo2002/semantic-release-jsr@2.0.1-develop.2':
+    resolution: {integrity: sha512-rKX/BHL5F9sdXSp/1fwYJQOCrU9DGme+qMBxZIxtyd5075Ux8qx5WRKdzjZc+jq/QTK/f/2P+9dnn3f/cdPetQ==}
     engines: {node: 18 || 20 || >=22.0.0}
 
   '@sec-ant/readable-stream@0.4.1':
@@ -7037,7 +7037,7 @@ snapshots:
 
   '@rtsao/scc@1.1.0': {}
 
-  '@sebbo2002/semantic-release-jsr@2.0.0':
+  '@sebbo2002/semantic-release-jsr@2.0.1-develop.2':
     dependencies:
       jsr: 0.13.2
 
