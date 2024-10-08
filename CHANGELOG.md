@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
+## [7.1.2](https://github.com/RebeccaStevens/deepmerge-ts/compare/v7.1.1...v7.1.2) (2024-10-08)
+
+
+### Performance Improvements
+
+* use more performant data structures ([#519](https://github.com/RebeccaStevens/deepmerge-ts/issues/519)) ([a48f8c4](https://github.com/RebeccaStevens/deepmerge-ts/commit/a48f8c4ccc32ec8937cc7177991a072a93e329b2))
+
 ## [7.1.1](https://github.com/RebeccaStevens/deepmerge-ts/compare/v7.1.0...v7.1.1) (2024-10-04)
 
 
