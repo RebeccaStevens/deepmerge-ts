@@ -41,13 +41,13 @@ type Entries<T> = Array<
 
 declare module "../src/types" {
   interface DeepMergeFunctionURItoKind<Ts extends ReadonlyArray<unknown>, Fs extends DeepMergeFunctionsURIs, M> {
-    readonly NoArrayMerge1: DeepMergeLeaf<Ts>;
+    readonly NoArrayMerge1: DeepMergeLeaf<Ts, Fs, M>;
   }
 }
 
 declare module "../src/types" {
   interface DeepMergeFunctionURItoKind<Ts extends ReadonlyArray<unknown>, Fs extends DeepMergeFunctionsURIs, M> {
-    readonly MergeDates1: EveryIsDate<Ts> extends true ? Ts : DeepMergeLeaf<Ts>;
+    readonly MergeDates1: EveryIsDate<Ts> extends true ? Ts : DeepMergeLeaf<Ts, Fs, M>;
   }
 }
 
@@ -60,7 +60,7 @@ declare module "../src/types" {
     Fs extends DeepMergeFunctionsURIs,
     M,
   > {
-    readonly KeyPathBasedMerge: Ts[number] extends number ? Ts[number] | string : DeepMergeLeaf<Ts>;
+    readonly KeyPathBasedMerge: Ts[number] extends number ? Ts[number] | string : DeepMergeLeaf<Ts, Fs, M>;
   }
 }
 
@@ -76,7 +76,7 @@ declare module "../src/types" {
           Fs,
           M
         >
-      : DeepMergeLeaf<Ts>;
+      : DeepMergeLeaf<Ts, Fs, M>;
   }
 }
 

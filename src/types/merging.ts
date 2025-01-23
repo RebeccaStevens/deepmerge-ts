@@ -5,7 +5,17 @@ import type {
   DeepMergeRecordsDefaultHKT,
   DeepMergeSetsDefaultHKT,
 } from "./defaults";
-import type { EveryIsArray, EveryIsMap, EveryIsRecord, EveryIsSet, IsNever, IsTuple } from "./utils";
+import type {
+  AssertType,
+  EveryIsArray,
+  EveryIsMap,
+  EveryIsRecord,
+  EveryIsSet,
+  IsNever,
+  IsTuple,
+  TupleTupleToTupleUnion,
+  UnionToTuple,
+} from "./utils";
 
 /**
  * Mapping of merge function URIs to the merge function type.
@@ -16,7 +26,7 @@ export interface DeepMergeFunctionURItoKind<
   Fs extends DeepMergeFunctionsURIs,
   in out M,
 > {
-  readonly DeepMergeLeafURI: DeepMergeLeaf<Ts>;
+  readonly DeepMergeLeafURI: DeepMergeLeaf<Ts, Fs, M>;
   readonly DeepMergeRecordsDefaultURI: DeepMergeRecordsDefaultHKT<Ts, Fs, M>;
   readonly DeepMergeArraysDefaultURI: DeepMergeArraysDefaultHKT<Ts, Fs, M>;
   readonly DeepMergeSetsDefaultURI: DeepMergeSetsDefaultHKT<Ts>;
@@ -174,17 +184,45 @@ export type DeepMergeNoFilteringURI = "DeepMergeNoFilteringURI";
 /**
  * Get the leaf type from many types that can't be merged.
  */
-export type DeepMergeLeaf<Ts extends ReadonlyArray<unknown>> = Ts extends readonly []
+export type DeepMergeLeaf<
+  Ts extends ReadonlyArray<unknown>,
+  Fs extends DeepMergeFunctionsURIs,
+  M,
+> = Ts extends readonly []
   ? never
   : Ts extends readonly [infer T]
     ? T
     : Ts extends readonly [...infer Rest, infer Tail]
       ? IsNever<Tail> extends true
         ? Rest extends ReadonlyArray<unknown>
-          ? DeepMergeLeaf<Rest>
+          ? DeepMergeLeaf<Rest, Fs, M>
           : never
-        : Tail
+        : DeepMergeLeafApplyFilter<
+            Ts,
+            AssertType<
+              ReadonlyArray<unknown>,
+              TupleTupleToTupleUnion<
+                AssertType<
+                  ReadonlyArray<ReadonlyArray<unknown>>,
+                  {
+                    [I in keyof Ts]: FilterValuesHKT<UnionToTuple<Ts[I]>, Fs, M>;
+                  }
+                >
+              >
+            >
+          >
       : never;
+
+type DeepMergeLeafApplyFilter<
+  Original extends ReadonlyArray<unknown>,
+  Filtered extends ReadonlyArray<unknown>,
+> = Original extends readonly [...infer OriginalRest, infer OriginalTail]
+  ? Filtered extends readonly [...infer FilteredRest, infer FilteredTail]
+    ? OriginalTail extends FilteredTail
+      ? FilteredTail
+      : FilteredTail | DeepMergeLeafApplyFilter<OriginalRest, FilteredRest>
+    : never
+  : never;
 
 /**
  * The meta data deepmerge is able to provide.
