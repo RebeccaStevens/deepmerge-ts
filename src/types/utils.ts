@@ -275,7 +275,7 @@ export type TupleToIntersection<T extends ReadonlyArray<unknown>> =
  * Warning 2: The union maybe me modified by the TypeScript engine before convertion.
  * Warning 3: This implementation relies on a hack/limitation in TypeScript.
  */
-export type TuplifyUnion<T, L = LastOf<T>> = IsNever<T> extends true ? [] : [...TuplifyUnion<Exclude<T, L>>, L];
+export type UnionToTuple<T, L = LastOf<T>> = IsNever<T> extends true ? [] : [...UnionToTuple<Exclude<T, L>>, L];
 
 type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (k: infer I) => void ? I : never;
 
