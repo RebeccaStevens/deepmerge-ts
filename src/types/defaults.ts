@@ -7,10 +7,10 @@ import type {
   SimplifyObject,
   TransposeTuple,
   TupleToIntersection,
-  TuplifyUnion,
   UnionMapKeys,
   UnionMapValues,
   UnionSetValues,
+  UnionToTuple,
 } from "./utils";
 
 /**
@@ -51,7 +51,7 @@ export type DeepMergeFunctionsDefaultURIs = Readonly<{
 }>;
 
 type RecordEntries<T extends Record<PropertyKey, unknown>> = FilterOut<
-  TuplifyUnion<
+  UnionToTuple<
     {
       [K in keyof T]: [K, T[K]];
     }[keyof T]
