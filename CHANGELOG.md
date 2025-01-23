@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
+## [7.1.4](https://github.com/RebeccaStevens/deepmerge-ts/compare/v7.1.3...v7.1.4) (2025-01-23)
+
+
+### Bug Fixes
+
+* apply filtering to types when selecting a leaf node ([#526](https://github.com/RebeccaStevens/deepmerge-ts/issues/526)) ([6d85163](https://github.com/RebeccaStevens/deepmerge-ts/commit/6d85163aecce3981b3a2f5378cb17f471fa7566b)), closes [#524](https://github.com/RebeccaStevens/deepmerge-ts/issues/524)
+
 ## [7.1.3](https://github.com/RebeccaStevens/deepmerge-ts/compare/v7.1.2...v7.1.3) (2024-10-08)
 
 ## [7.1.2](https://github.com/RebeccaStevens/deepmerge-ts/compare/v7.1.1...v7.1.2) (2024-10-08)
