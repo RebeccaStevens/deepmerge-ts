@@ -280,3 +280,24 @@ export type UnionToTuple<T, L = LastOf<T>> = IsNever<T> extends true ? [] : [...
 type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (k: infer I) => void ? I : never;
 
 type LastOf<T> = UnionToIntersection<T extends any ? () => T : never> extends () => infer R ? R : never;
+
+/**
+ * Convert a tuple of tuples to a tuple of unions.
+ */
+export type TupleTupleToTupleUnion<T extends ReadonlyArray<ReadonlyArray<unknown>>> = {
+  [I in keyof T]: TupleToUnion<T[I]>;
+};
+
+/**
+ * Convert a tuple to a union.
+ */
+export type TupleToUnion<T extends ReadonlyArray<unknown>> = T extends readonly []
+  ? never
+  : T extends readonly [infer Head, ...infer Rest]
+    ? Head | TupleToUnion<Rest>
+    : never;
+
+/**
+ * Assert that a type is of a given type.
+ */
+export type AssertType<Expected, T> = T extends Expected ? T : never;
