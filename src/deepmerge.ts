@@ -136,8 +136,8 @@ export function mergeUnknowns<
   const type = getObjectType(filteredValues[0]);
 
   if (type !== ObjectType.NOT && type !== ObjectType.OTHER) {
-    for (let m_index = 1; m_index < filteredValues.length; m_index++) {
-      if (getObjectType(filteredValues[m_index]) === type) {
+    for (let mut_index = 1; mut_index < filteredValues.length; mut_index++) {
+      if (getObjectType(filteredValues[mut_index]) === type) {
         continue;
       }
 

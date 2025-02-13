@@ -44,8 +44,8 @@ const benchmarkDataSets: Array<{
     return data;
   });
 
-for (let m_i = 0; m_i < benchmarkDataSets.length; m_i++) {
-  const { name: benchmarkName, data: benchmarkData } = benchmarkDataSets[m_i];
+for (let mut_i = 0; mut_i < benchmarkDataSets.length; mut_i++) {
+  const { name: benchmarkName, data: benchmarkData } = benchmarkDataSets[mut_i];
   const bench = new Bench({
     time: 10_000,
     iterations: 1,
@@ -53,7 +53,7 @@ for (let m_i = 0; m_i < benchmarkDataSets.length; m_i++) {
     warmupIterations: 1,
   });
 
-  console.log(`\nRunning benchmarks for data set "${benchmarkName}" (${m_i + 1} of ${benchmarkDataSets.length}):\n`);
+  console.log(`\nRunning benchmarks for data set "${benchmarkName}" (${mut_i + 1} of ${benchmarkDataSets.length}):\n`);
 
   bench
     .add("deepmerge-ts", () => {
@@ -84,7 +84,7 @@ for (let m_i = 0; m_i < benchmarkDataSets.length; m_i++) {
 function generateBenchmarkDataSet(name: string, items: number, maxProperties: number, maxDepth: number) {
   const data: object[] = [];
 
-  for (let m_i = 0; m_i < items; m_i++) {
+  for (let mut_i = 0; mut_i < items; mut_i++) {
     data.push(generateBenchmarkDataItem(maxProperties, maxDepth));
   }
 
@@ -101,8 +101,8 @@ function generateBenchmarkDataItem(maxProperties: number, depth: number, current
 
   const propertiesOptions = shuffle(Array.from({ length: maxProperties }, (_, i) => String.fromCodePoint(i + 65)));
 
-  for (let m_i = 0; m_i < properties; m_i++) {
-    const prop = propertiesOptions[m_i];
+  for (let mut_i = 0; mut_i < properties; mut_i++) {
+    const prop = propertiesOptions[mut_i];
 
     obj[prop] = currentDepth < depth ? generateBenchmarkDataItem(maxProperties, depth, currentDepth + 1) : "value";
   }
@@ -111,14 +111,14 @@ function generateBenchmarkDataItem(maxProperties: number, depth: number, current
 }
 
 function shuffle<T>(array: T[]) {
-  let m_currentIndex = array.length;
-  let m_randomIndex;
+  let mut_currentIndex = array.length;
+  let mut_randomIndex;
 
-  while (m_currentIndex !== 0) {
-    m_randomIndex = Math.floor(Math.random() * m_currentIndex);
-    m_currentIndex--;
+  while (mut_currentIndex !== 0) {
+    mut_randomIndex = Math.floor(Math.random() * mut_currentIndex);
+    mut_currentIndex--;
 
-    [array[m_currentIndex], array[m_randomIndex]] = [array[m_randomIndex], array[m_currentIndex]];
+    [array[mut_currentIndex], array[mut_randomIndex]] = [array[mut_randomIndex], array[mut_currentIndex]];
   }
 
   return array;

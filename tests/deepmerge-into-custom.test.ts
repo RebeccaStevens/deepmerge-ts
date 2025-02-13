@@ -36,12 +36,12 @@ describe("deepmergeIntoCustom", () => {
     };
 
     const customizedDeepmerge = deepmergeIntoCustom({
-      mergeOthers: (m_target, values, utils) => {
+      mergeOthers: (mut_target, values, utils) => {
         if (values.every((value) => typeof value === "string")) {
-          m_target.value = values.join(" ");
+          mut_target.value = values.join(" ");
           return;
         }
-        utils.defaultMergeFunctions.mergeOthers(m_target, values);
+        utils.defaultMergeFunctions.mergeOthers(mut_target, values);
       },
     });
 
@@ -59,24 +59,24 @@ describe("deepmergeIntoCustom", () => {
     };
 
     const customizedDeepmerge = deepmergeIntoCustom({
-      mergeArrays: (m_target, arrays) => {
+      mergeArrays: (mut_target, arrays) => {
         const maxLength = Math.max(...arrays.map((array) => array.length));
 
         const result = [];
 
-        for (let m_i = 0; m_i < maxLength; m_i++) {
-          result[m_i] = "";
+        for (let mut_i = 0; mut_i < maxLength; mut_i++) {
+          result[mut_i] = "";
 
           for (const array of arrays) {
-            if (m_i >= array.length) {
+            if (mut_i >= array.length) {
               break;
             }
             // eslint-disable-next-line ts/restrict-template-expressions
-            result[m_i] += `${array[m_i]}`;
+            result[mut_i] += `${array[mut_i]}`;
           }
         }
 
-        m_target.value = result;
+        mut_target.value = result;
       },
     });
 
@@ -98,28 +98,30 @@ describe("deepmergeIntoCustom", () => {
     };
 
     const customizedDeepmerge = deepmergeIntoCustom({
-      mergeArrays: (m_target, arrays, utils) => {
+      mergeArrays: (mut_target, arrays, utils) => {
         const maxLength = Math.max(...arrays.map((array) => array.length));
-        const m_result: unknown[] = [];
+        const mut_result: unknown[] = [];
 
-        for (let m_i = 0; m_i < maxLength; m_i++) {
+        for (let mut_i = 0; mut_i < maxLength; mut_i++) {
           const never = {};
           const s = {};
           utils.deepmergeInto(
             s,
-            ...arrays.map((array) => (m_i < array.length ? array[m_i] : never)).filter((value) => value !== never),
+            ...arrays.map((array) => (mut_i < array.length ? array[mut_i] : never)).filter((value) => value !== never),
           );
-          m_result.push(s);
+          mut_result.push(s);
         }
 
-        m_target.value = m_result;
+        mut_target.value = mut_result;
       },
-      mergeOthers: (m_target, values) => {
+      mergeOthers: (mut_target, values) => {
         if (values.every((value) => typeof value === "number")) {
-          m_target.value = String.fromCodePoint(values.reduce<number>((carry, value) => carry + (value as number), 0));
+          mut_target.value = String.fromCodePoint(
+            values.reduce<number>((carry, value) => carry + (value as number), 0),
+          );
           return;
         }
-        m_target.value = "";
+        mut_target.value = "";
       },
     });
 
@@ -145,9 +147,9 @@ describe("deepmergeIntoCustom", () => {
     };
 
     const customizedDeepmerge = deepmergeIntoCustom({
-      mergeRecords: (m_target, records, utils, meta) => {
+      mergeRecords: (mut_target, records, utils, meta) => {
         for (const key of getKeys(records)) {
-          m_target.value[key] = key;
+          mut_target.value[key] = key;
         }
       },
     });
@@ -185,12 +187,12 @@ describe("deepmergeIntoCustom", () => {
     const expected = { foo: [x.foo, y.foo, z.foo] } as const;
 
     const customizedDeepmerge = deepmergeIntoCustom({
-      mergeOthers: (m_target, values, utils) => {
+      mergeOthers: (mut_target, values, utils) => {
         if (values.every((value) => value instanceof Date)) {
-          m_target.value = values;
+          mut_target.value = values;
           return;
         }
-        utils.defaultMergeFunctions.mergeOthers(m_target, values);
+        utils.defaultMergeFunctions.mergeOthers(mut_target, values);
       },
     });
 
@@ -212,26 +214,26 @@ describe("deepmergeIntoCustom", () => {
     };
 
     const customizedDeepmerge = deepmergeIntoCustom({
-      mergeOthers: (m_target, values, utils, meta) => {
+      mergeOthers: (mut_target, values, utils, meta) => {
         if (meta !== undefined && areAllNumbers(values)) {
           const { key } = meta;
           const numbers: ReadonlyArray<number> = values;
 
           if (key === "sum") {
-            m_target.value = numbers.reduce((sum, value) => sum + value);
+            mut_target.value = numbers.reduce((sum, value) => sum + value);
             return;
           }
           if (key === "product") {
-            m_target.value = numbers.reduce((prod, value) => prod * value);
+            mut_target.value = numbers.reduce((prod, value) => prod * value);
             return;
           }
           if (key === "mean") {
-            m_target.value = numbers.reduce((sum, value) => sum + value) / numbers.length;
+            mut_target.value = numbers.reduce((sum, value) => sum + value) / numbers.length;
             return;
           }
         }
 
-        utils.defaultMergeFunctions.mergeOthers(m_target, values);
+        utils.defaultMergeFunctions.mergeOthers(mut_target, values);
       },
     });
 
@@ -262,13 +264,13 @@ describe("deepmergeIntoCustom", () => {
         }
         return [...(previousMeta ?? []), metaMeta.key];
       },
-      mergeOthers: (m_target, values, utils, meta): void => {
+      mergeOthers: (mut_target, values, utils, meta): void => {
         if (meta !== undefined && meta.length >= 2 && meta.at(-2) === "bar" && meta.at(-1) === "baz") {
-          m_target.value = "special merge";
+          mut_target.value = "special merge";
           return;
         }
 
-        utils.defaultMergeFunctions.mergeOthers(m_target, values);
+        utils.defaultMergeFunctions.mergeOthers(mut_target, values);
       },
     });
 
@@ -336,13 +338,13 @@ describe("deepmergeIntoCustom", () => {
     const customizedDeepmergeEntry = <K extends PropertyKey>(...idsPaths: ReadonlyArray<ReadonlyArray<K>>) => {
       const mergeSettings: DeepMergeIntoOptions<ReadonlyArray<unknown>, Readonly<{ id: unknown }>> = {
         metaDataUpdater: (previousMeta, metaMeta) => [...(previousMeta ?? []), metaMeta.key ?? metaMeta.id],
-        mergeArrays: (m_target, values, utils, meta = []) => {
+        mergeArrays: (mut_target, values, utils, meta = []) => {
           const idPath = idsPaths.find((idPath) => {
             const parentPath = idPath.slice(0, -1);
             return parentPath.length === meta.length && parentPath.every((part, i) => part === meta[i]);
           });
           if (idPath === undefined) {
-            utils.defaultMergeFunctions.mergeArrays(m_target, values);
+            utils.defaultMergeFunctions.mergeArrays(mut_target, values);
             return;
           }
 
@@ -365,7 +367,7 @@ describe("deepmergeIntoCustom", () => {
             return carry;
           }, new Map<unknown, Array<Record<PropertyKey, unknown>>>());
 
-          m_target.value = [...valuesById.entries()].reduce<unknown[]>((carry, [id, values]) => {
+          mut_target.value = [...valuesById.entries()].reduce<unknown[]>((carry, [id, values]) => {
             const childMeta = utils.metaDataUpdater(meta, { id });
             const s = {};
             deepmergeIntoCustom(mergeSettings, childMeta)(s, ...values);
@@ -394,11 +396,11 @@ describe("deepmergeIntoCustom", () => {
     };
 
     const customizedDeepmerge = deepmergeIntoCustom({
-      mergeOthers: (m_target, values, utils, meta): void => {
+      mergeOthers: (mut_target, values, utils, meta): void => {
         if (meta !== undefined) {
           const { key, parents } = meta;
           if (key === "isBadObject") {
-            m_target.value = false;
+            mut_target.value = false;
             return;
           }
 
@@ -407,11 +409,11 @@ describe("deepmergeIntoCustom", () => {
           );
 
           if (key === "sum") {
-            m_target.value = goodValues.reduce((sum, value) => sum + value, 0);
+            mut_target.value = goodValues.reduce((sum, value) => sum + value, 0);
             return;
           }
         }
-        utils.defaultMergeFunctions.mergeOthers(m_target, values);
+        utils.defaultMergeFunctions.mergeOthers(mut_target, values);
       },
     });
 
@@ -472,26 +474,26 @@ describe("deepmergeIntoCustom", () => {
     };
 
     const customizedDeepmerge = deepmergeIntoCustom({
-      mergeOthers: (m_target, values, utils, meta) => {
-        let m_allRecords = true;
+      mergeOthers: (mut_target, values, utils, meta) => {
+        let mut_allRecords = true;
         const records = values.map((v) => {
           if (typeof v === "object" && v !== null) {
             return { ...v };
           }
-          m_allRecords = false;
+          mut_allRecords = false;
           return false;
         });
         // eslint-disable-next-line ts/no-unnecessary-condition
-        if (m_allRecords) {
+        if (mut_allRecords) {
           utils.mergeFunctions.mergeRecords(
-            m_target as DeepMergeValueReference<Record<PropertyKey, unknown>>,
+            mut_target as DeepMergeValueReference<Record<PropertyKey, unknown>>,
             records,
             utils,
             meta,
           );
           return;
         }
-        m_target.value = utils.actions.defaultMerge;
+        mut_target.value = utils.actions.defaultMerge;
       },
     });
 

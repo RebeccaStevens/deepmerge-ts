@@ -439,10 +439,10 @@ describe("deepmergeInto", () => {
   });
 
   it("enumerable keys", () => {
-    const m_x = {};
-    const m_y = {};
+    const mut_x = {};
+    const mut_y = {};
 
-    Object.defineProperties(m_x, {
+    Object.defineProperties(mut_x, {
       a: {
         value: 1,
         enumerable: false,
@@ -453,7 +453,7 @@ describe("deepmergeInto", () => {
       },
     });
 
-    Object.defineProperties(m_y, {
+    Object.defineProperties(mut_y, {
       a: {
         value: 3,
         enumerable: false,
@@ -467,11 +467,11 @@ describe("deepmergeInto", () => {
     const expected = { b: 2 };
 
     const target = {};
-    deepmergeInto(target, m_x, m_y);
-    expect(m_x).toStrictEqual(expected);
+    deepmergeInto(target, mut_x, mut_y);
+    expect(mut_x).toStrictEqual(expected);
 
     expect(() => {
-      deepmergeInto(m_x, m_y);
+      deepmergeInto(mut_x, mut_y);
     }).toThrowError();
   });
 
@@ -481,9 +481,9 @@ describe("deepmergeInto", () => {
       parentKey: `should be undefined`,
     };
 
-    const m_x = Object.create(parent);
-    m_x.plainKey = `should be replaced`;
-    m_x[plainSymbolKey] = `should also be replaced`;
+    const mut_x = Object.create(parent);
+    mut_x.plainKey = `should be replaced`;
+    mut_x[plainSymbolKey] = `should also be replaced`;
 
     const y = {
       plainKey: `bar`,
@@ -491,25 +491,25 @@ describe("deepmergeInto", () => {
       [plainSymbolKey]: `qux`,
     };
 
-    deepmergeInto(m_x, y);
+    deepmergeInto(mut_x, y);
 
     expect(
-      Object.hasOwn(m_x, "parentKey"),
+      Object.hasOwn(mut_x, "parentKey"),
       "inherited properties of target should be removed, not target or ignored",
     ).toBe(false);
-    expect(m_x.plainKey, "enumerable own properties of target should be target").toBe("bar");
-    expect(m_x.newKey, "property should be target").toBe("baz");
-    expect(m_x[plainSymbolKey], "enumerable own symbol properties should be target").toBe("qux");
+    expect(mut_x.plainKey, "enumerable own properties of target should be target").toBe("bar");
+    expect(mut_x.newKey, "property should be target").toBe("baz");
+    expect(mut_x[plainSymbolKey], "enumerable own symbol properties should be target").toBe("qux");
   });
 
   it(`merging objects with null prototype`, () => {
-    const m_x = Object.create(null);
-    m_x.a = 1;
-    m_x.b = { c: [2] };
+    const mut_x = Object.create(null);
+    mut_x.a = 1;
+    mut_x.b = { c: [2] };
 
-    const m_y = Object.create(null);
-    m_y.b = { c: [3] };
-    m_y.d = 4;
+    const mut_y = Object.create(null);
+    mut_y.b = { c: [3] };
+    mut_y.d = 4;
 
     const expected = Object.assign(Object.create(null), {
       a: 1,
@@ -519,24 +519,24 @@ describe("deepmergeInto", () => {
       d: 4,
     });
 
-    deepmergeInto(m_x, m_y);
+    deepmergeInto(mut_x, mut_y);
 
-    expect(m_x).toStrictEqual(expected);
+    expect(mut_x).toStrictEqual(expected);
   });
 
   it("detecting valid records", () => {
-    const m_a = { a: 1 };
+    const mut_a = { a: 1 };
     // eslint-disable-next-line no-proto, no-restricted-properties
-    (m_a as any).__proto__.aProto = 1;
+    (mut_a as any).__proto__.aProto = 1;
 
-    const m_b = Object.create({ bProto: 2 });
-    m_b.b = 2;
+    const mut_b = Object.create({ bProto: 2 });
+    mut_b.b = 2;
 
-    const m_c = Object.create(Object.prototype);
-    m_c.c = 3;
+    const mut_c = Object.create(Object.prototype);
+    mut_c.c = 3;
 
-    const m_d = Object.create(null);
-    m_d.d = 4;
+    const mut_d = Object.create(null);
+    mut_d.d = 4;
 
     const expected = {
       a: 1,
@@ -545,9 +545,9 @@ describe("deepmergeInto", () => {
       d: 4,
     };
 
-    deepmergeInto(m_a, m_b, m_c, m_d);
+    deepmergeInto(mut_a, mut_b, mut_c, mut_d);
 
-    expect(m_a).toStrictEqual(expected);
+    expect(mut_a).toStrictEqual(expected);
   });
 
   it("detecting invalid records", () => {
@@ -555,15 +555,15 @@ describe("deepmergeInto", () => {
 
     // eslint-disable-next-line ts/no-extraneous-class
     class AClass {}
-    const m_b = new AClass();
+    const mut_b = new AClass();
 
-    (m_b as any).a = 1;
+    (mut_b as any).a = 1;
 
     const c = {};
 
     const expected = {};
 
-    deepmergeInto(a, m_b, c);
+    deepmergeInto(a, mut_b, c);
     expect(a).toStrictEqual(expected);
   });
 

@@ -148,15 +148,15 @@ describe("deepmergeCustom", () => {
 
         const result = [];
 
-        for (let m_i = 0; m_i < maxLength; m_i++) {
-          result[m_i] = "";
+        for (let mut_i = 0; mut_i < maxLength; mut_i++) {
+          result[mut_i] = "";
 
           for (const array of arrays) {
-            if (m_i >= array.length) {
+            if (mut_i >= array.length) {
               break;
             }
             // eslint-disable-next-line ts/restrict-template-expressions
-            result[m_i] += `${array[m_i]}`;
+            result[mut_i] += `${array[mut_i]}`;
           }
         }
 
@@ -190,18 +190,20 @@ describe("deepmergeCustom", () => {
     >({
       mergeArrays: (arrays, utils) => {
         const maxLength = Math.max(...arrays.map((array) => array.length));
-        const m_result: unknown[] = [];
+        const mut_result: unknown[] = [];
 
-        for (let m_i = 0; m_i < maxLength; m_i++) {
+        for (let mut_i = 0; mut_i < maxLength; mut_i++) {
           const never = {};
-          m_result.push(
+          mut_result.push(
             utils.deepmerge(
-              ...arrays.map((array) => (m_i < array.length ? array[m_i] : never)).filter((value) => value !== never),
+              ...arrays
+                .map((array) => (mut_i < array.length ? array[mut_i] : never))
+                .filter((value) => value !== never),
             ),
           );
         }
 
-        return m_result;
+        return mut_result;
       },
       mergeOthers: (values) => {
         if (values.every((value) => typeof value === "number")) {
@@ -661,16 +663,16 @@ describe("deepmergeCustom", () => {
       }
     >({
       mergeOthers: (values, utils, meta) => {
-        let m_allRecords = true;
+        let mut_allRecords = true;
         const records = values.map((v) => {
           if (typeof v === "object" && v !== null) {
             return { ...v };
           }
-          m_allRecords = false;
+          mut_allRecords = false;
           return false;
         });
         // eslint-disable-next-line ts/no-unnecessary-condition
-        if (m_allRecords) {
+        if (mut_allRecords) {
           return utils.mergeFunctions.mergeRecords(records, utils, meta);
         }
         return utils.actions.defaultMerge;

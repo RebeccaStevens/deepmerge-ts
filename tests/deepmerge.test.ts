@@ -478,10 +478,10 @@ describe("deepmerge", () => {
   });
 
   it("enumerable keys", () => {
-    const m_x = {};
-    const m_y = {};
+    const mut_x = {};
+    const mut_y = {};
 
-    Object.defineProperties(m_x, {
+    Object.defineProperties(mut_x, {
       a: {
         value: 1,
         enumerable: false,
@@ -492,7 +492,7 @@ describe("deepmerge", () => {
       },
     });
 
-    Object.defineProperties(m_y, {
+    Object.defineProperties(mut_y, {
       a: {
         value: 3,
         enumerable: false,
@@ -505,7 +505,7 @@ describe("deepmerge", () => {
 
     const expected = { b: 2 };
 
-    const merged = deepmerge(m_x, m_y);
+    const merged = deepmerge(mut_x, mut_y);
 
     expect(merged).toStrictEqual(expected);
   });
@@ -516,9 +516,9 @@ describe("deepmerge", () => {
       parentKey: `should be undefined`,
     };
 
-    const m_x = Object.create(parent);
-    m_x.plainKey = `should be replaced`;
-    m_x[plainSymbolKey] = `should also be replaced`;
+    const mut_x = Object.create(parent);
+    mut_x.plainKey = `should be replaced`;
+    mut_x[plainSymbolKey] = `should also be replaced`;
 
     const y = {
       plainKey: `bar`,
@@ -526,7 +526,7 @@ describe("deepmerge", () => {
       [plainSymbolKey]: `qux`,
     };
 
-    const merged = deepmerge(m_x, y);
+    const merged = deepmerge(mut_x, y);
 
     expect(
       Object.hasOwn(merged, "parentKey"),
@@ -538,13 +538,13 @@ describe("deepmerge", () => {
   });
 
   it(`merging objects with null prototype`, () => {
-    const m_x = Object.create(null);
-    m_x.a = 1;
-    m_x.b = { c: [2] };
+    const mut_x = Object.create(null);
+    mut_x.a = 1;
+    mut_x.b = { c: [2] };
 
-    const m_y = Object.create(null);
-    m_y.b = { c: [3] };
-    m_y.d = 4;
+    const mut_y = Object.create(null);
+    mut_y.b = { c: [3] };
+    mut_y.d = 4;
 
     const expected = {
       a: 1,
@@ -554,24 +554,24 @@ describe("deepmerge", () => {
       d: 4,
     };
 
-    const merged = deepmerge(m_x, m_y);
+    const merged = deepmerge(mut_x, mut_y);
 
     expect(merged).toStrictEqual(expected);
   });
 
   it("detecting valid records", () => {
-    const m_a = { a: 1 };
+    const mut_a = { a: 1 };
     // eslint-disable-next-line no-proto, no-restricted-properties
-    (m_a as any).__proto__.aProto = 1;
+    (mut_a as any).__proto__.aProto = 1;
 
-    const m_b = Object.create({ bProto: 2 });
-    m_b.b = 2;
+    const mut_b = Object.create({ bProto: 2 });
+    mut_b.b = 2;
 
-    const m_c = Object.create(Object.prototype);
-    m_c.c = 3;
+    const mut_c = Object.create(Object.prototype);
+    mut_c.c = 3;
 
-    const m_d = Object.create(null);
-    m_d.d = 4;
+    const mut_d = Object.create(null);
+    mut_d.d = 4;
 
     const expected = {
       a: 1,
@@ -580,7 +580,7 @@ describe("deepmerge", () => {
       d: 4,
     };
 
-    const merged = deepmerge(m_a, m_b, m_c, m_d);
+    const merged = deepmerge(mut_a, mut_b, mut_c, mut_d);
 
     expect(merged).toStrictEqual(expected);
   });
@@ -590,11 +590,11 @@ describe("deepmerge", () => {
 
     // eslint-disable-next-line ts/no-extraneous-class
     class AClass {}
-    const m_a = new AClass();
+    const mut_a = new AClass();
 
-    (m_a as any).a = 1;
+    (mut_a as any).a = 1;
 
-    expect(deepmerge(m_a, expected)).toStrictEqual(expected);
+    expect(deepmerge(mut_a, expected)).toStrictEqual(expected);
   });
 
   it("merging cjs modules", () => {

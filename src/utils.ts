@@ -75,22 +75,22 @@ export function objectHasProperty(object: object, property: PropertyKey): boolea
  * Get an iterable object that iterates over the given iterables.
  */
 export function getIterableOfIterables<T>(iterables: ReadonlyArray<Readonly<Iterable<T>>>): Iterable<T> {
-  let m_iterablesIndex = 0;
-  let m_iterator = iterables[0]?.[Symbol.iterator]();
+  let mut_iterablesIndex = 0;
+  let mut_iterator = iterables[0]?.[Symbol.iterator]();
 
   return {
     [Symbol.iterator](): Iterator<T, void> {
       return {
         next(): IteratorResult<T, void> {
           do {
-            if (m_iterator === undefined) {
+            if (mut_iterator === undefined) {
               return { done: true, value: undefined };
             }
 
-            const result = m_iterator.next();
+            const result = mut_iterator.next();
             if (result.done === true) {
-              m_iterablesIndex += 1;
-              m_iterator = iterables[m_iterablesIndex]?.[Symbol.iterator]();
+              mut_iterablesIndex += 1;
+              mut_iterator = iterables[mut_iterablesIndex]?.[Symbol.iterator]();
               continue;
             }
 

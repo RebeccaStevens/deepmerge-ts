@@ -130,7 +130,7 @@ function getIntoUtils<M, MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInM
 /**
  * Merge unknown things into a target.
  *
- * @param m_target - The target to merge into.
+ * @param mut_target - The target to merge into.
  * @param values - The values.
  */
 export function mergeUnknownsInto<
@@ -139,7 +139,7 @@ export function mergeUnknownsInto<
   M,
   MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData,
 >(
-  m_target: Reference<unknown>,
+  mut_target: Reference<unknown>,
   values: Ts,
   utils: U,
   meta: M | undefined,
@@ -151,25 +151,25 @@ export function mergeUnknownsInto<
     return;
   }
   if (filteredValues.length === 1) {
-    return void mergeOthersInto<U, M, MM>(m_target, filteredValues, utils, meta);
+    return void mergeOthersInto<U, M, MM>(mut_target, filteredValues, utils, meta);
   }
 
-  const type = getObjectType(m_target.value);
+  const type = getObjectType(mut_target.value);
 
   if (type !== ObjectType.NOT && type !== ObjectType.OTHER) {
-    for (let m_index = 1; m_index < filteredValues.length; m_index++) {
-      if (getObjectType(filteredValues[m_index]) === type) {
+    for (let mut_index = 1; mut_index < filteredValues.length; mut_index++) {
+      if (getObjectType(filteredValues[mut_index]) === type) {
         continue;
       }
 
-      return void mergeOthersInto<U, M, MM>(m_target, filteredValues, utils, meta);
+      return void mergeOthersInto<U, M, MM>(mut_target, filteredValues, utils, meta);
     }
   }
 
   switch (type) {
     case ObjectType.RECORD: {
       return void mergeRecordsInto<U, M, MM>(
-        m_target as Reference<Record<PropertyKey, unknown>>,
+        mut_target as Reference<Record<PropertyKey, unknown>>,
         filteredValues as ReadonlyArray<Readonly<Record<PropertyKey, unknown>>>,
         utils,
         meta,
@@ -178,7 +178,7 @@ export function mergeUnknownsInto<
 
     case ObjectType.ARRAY: {
       return void mergeArraysInto<U, M, MM>(
-        m_target as Reference<unknown[]>,
+        mut_target as Reference<unknown[]>,
         filteredValues as ReadonlyArray<ReadonlyArray<unknown>>,
         utils,
         meta,
@@ -187,7 +187,7 @@ export function mergeUnknownsInto<
 
     case ObjectType.SET: {
       return void mergeSetsInto<U, M, MM>(
-        m_target as Reference<Set<unknown>>,
+        mut_target as Reference<Set<unknown>>,
         filteredValues as ReadonlyArray<Readonly<ReadonlySet<unknown>>>,
         utils,
         meta,
@@ -196,7 +196,7 @@ export function mergeUnknownsInto<
 
     case ObjectType.MAP: {
       return void mergeMapsInto<U, M, MM>(
-        m_target as Reference<Map<unknown, unknown>>,
+        mut_target as Reference<Map<unknown, unknown>>,
         filteredValues as ReadonlyArray<Readonly<ReadonlyMap<unknown, unknown>>>,
         utils,
         meta,
@@ -204,7 +204,7 @@ export function mergeUnknownsInto<
     }
 
     default: {
-      return void mergeOthersInto<U, M, MM>(m_target, filteredValues, utils, meta);
+      return void mergeOthersInto<U, M, MM>(mut_target, filteredValues, utils, meta);
     }
   }
 }
@@ -212,7 +212,7 @@ export function mergeUnknownsInto<
 /**
  * Merge records into a target record.
  *
- * @param m_target - The target to merge into.
+ * @param mut_target - The target to merge into.
  * @param values - The records.
  */
 function mergeRecordsInto<
@@ -220,16 +220,16 @@ function mergeRecordsInto<
   M,
   MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData,
 >(
-  m_target: Reference<Record<PropertyKey, unknown>>,
+  mut_target: Reference<Record<PropertyKey, unknown>>,
   values: ReadonlyArray<Readonly<Record<PropertyKey, unknown>>>,
   utils: U,
   meta: M | undefined,
 ) {
-  const action = utils.mergeFunctions.mergeRecords(m_target, values, utils, meta);
+  const action = utils.mergeFunctions.mergeRecords(mut_target, values, utils, meta);
 
   if (action === actions.defaultMerge) {
     utils.defaultMergeFunctions.mergeRecords<ReadonlyArray<Readonly<Record<PropertyKey, unknown>>>, U, M, MM>(
-      m_target,
+      mut_target,
       values,
       utils,
       meta,
@@ -240,25 +240,25 @@ function mergeRecordsInto<
 /**
  * Merge arrays into a target array.
  *
- * @param m_target - The target to merge into.
+ * @param mut_target - The target to merge into.
  * @param values - The arrays.
  */
 function mergeArraysInto<
   U extends DeepMergeIntoFunctionUtils<M, MM>,
   M,
   MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData,
->(m_target: Reference<unknown[]>, values: ReadonlyArray<ReadonlyArray<unknown>>, utils: U, meta: M | undefined) {
-  const action = utils.mergeFunctions.mergeArrays(m_target, values, utils, meta);
+>(mut_target: Reference<unknown[]>, values: ReadonlyArray<ReadonlyArray<unknown>>, utils: U, meta: M | undefined) {
+  const action = utils.mergeFunctions.mergeArrays(mut_target, values, utils, meta);
 
   if (action === actions.defaultMerge) {
-    utils.defaultMergeFunctions.mergeArrays(m_target, values);
+    utils.defaultMergeFunctions.mergeArrays(mut_target, values);
   }
 }
 
 /**
  * Merge sets into a target set.
  *
- * @param m_target - The target to merge into.
+ * @param mut_target - The target to merge into.
  * @param values - The sets.
  */
 function mergeSetsInto<
@@ -266,22 +266,22 @@ function mergeSetsInto<
   M,
   MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData,
 >(
-  m_target: Reference<Set<unknown>>,
+  mut_target: Reference<Set<unknown>>,
   values: ReadonlyArray<Readonly<ReadonlySet<unknown>>>,
   utils: U,
   meta: M | undefined,
 ) {
-  const action = utils.mergeFunctions.mergeSets(m_target, values, utils, meta);
+  const action = utils.mergeFunctions.mergeSets(mut_target, values, utils, meta);
 
   if (action === actions.defaultMerge) {
-    utils.defaultMergeFunctions.mergeSets(m_target, values);
+    utils.defaultMergeFunctions.mergeSets(mut_target, values);
   }
 }
 
 /**
  * Merge maps into a target map.
  *
- * @param m_target - The target to merge into.
+ * @param mut_target - The target to merge into.
  * @param values - The maps.
  */
 function mergeMapsInto<
@@ -289,32 +289,32 @@ function mergeMapsInto<
   M,
   MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData,
 >(
-  m_target: Reference<Map<unknown, unknown>>,
+  mut_target: Reference<Map<unknown, unknown>>,
   values: ReadonlyArray<Readonly<ReadonlyMap<unknown, unknown>>>,
   utils: U,
   meta: M | undefined,
 ) {
-  const action = utils.mergeFunctions.mergeMaps(m_target, values, utils, meta);
+  const action = utils.mergeFunctions.mergeMaps(mut_target, values, utils, meta);
 
   if (action === actions.defaultMerge) {
-    utils.defaultMergeFunctions.mergeMaps(m_target, values);
+    utils.defaultMergeFunctions.mergeMaps(mut_target, values);
   }
 }
 
 /**
  * Merge other things into a target.
  *
- * @param m_target - The target to merge into.
+ * @param mut_target - The target to merge into.
  * @param values - The other things.
  */
 function mergeOthersInto<
   U extends DeepMergeIntoFunctionUtils<M, MM>,
   M,
   MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData,
->(m_target: Reference<unknown>, values: ReadonlyArray<unknown>, utils: U, meta: M | undefined) {
-  const action = utils.mergeFunctions.mergeOthers(m_target, values, utils, meta);
+>(mut_target: Reference<unknown>, values: ReadonlyArray<unknown>, utils: U, meta: M | undefined) {
+  const action = utils.mergeFunctions.mergeOthers(mut_target, values, utils, meta);
 
-  if (action === actions.defaultMerge || m_target.value === actions.defaultMerge) {
-    utils.defaultMergeFunctions.mergeOthers(m_target, values);
+  if (action === actions.defaultMerge || mut_target.value === actions.defaultMerge) {
+    utils.defaultMergeFunctions.mergeOthers(mut_target, values);
   }
 }

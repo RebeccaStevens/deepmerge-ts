@@ -109,14 +109,14 @@ type DeepMergeIntoFunctions<in M, MM extends DeepMergeBuiltInMetaData = DeepMerg
     Ts extends ReadonlyArray<Readonly<Record<PropertyKey, unknown>>>,
     U extends DeepMergeIntoFunctionUtils<M, MM>,
   >(
-    m_target: Reference<Record<PropertyKey, unknown>>,
+    mut_target: Reference<Record<PropertyKey, unknown>>,
     values: Ts,
     utils: U,
     meta: M | undefined,
   ) => DeepMergeIntoFunctionsReturnType;
 
   mergeArrays: <Ts extends ReadonlyArray<ReadonlyArray<unknown>>, U extends DeepMergeIntoFunctionUtils<M, MM>>(
-    m_target: Reference<unknown[]>,
+    mut_target: Reference<unknown[]>,
     values: Ts,
     utils: U,
     meta: M | undefined,
@@ -126,21 +126,21 @@ type DeepMergeIntoFunctions<in M, MM extends DeepMergeBuiltInMetaData = DeepMerg
     Ts extends ReadonlyArray<Readonly<ReadonlyMap<unknown, unknown>>>,
     U extends DeepMergeIntoFunctionUtils<M, MM>,
   >(
-    m_target: Reference<Map<unknown, unknown>>,
+    mut_target: Reference<Map<unknown, unknown>>,
     values: Ts,
     utils: U,
     meta: M | undefined,
   ) => DeepMergeIntoFunctionsReturnType;
 
   mergeSets: <Ts extends ReadonlyArray<Readonly<ReadonlySet<unknown>>>, U extends DeepMergeIntoFunctionUtils<M, MM>>(
-    m_target: Reference<Set<unknown>>,
+    mut_target: Reference<Set<unknown>>,
     values: Ts,
     utils: U,
     meta: M | undefined,
   ) => DeepMergeIntoFunctionsReturnType;
 
   mergeOthers: <Ts extends ReadonlyArray<unknown>, U extends DeepMergeIntoFunctionUtils<M, MM>>(
-    m_target: Reference<unknown>,
+    mut_target: Reference<unknown>,
     values: Ts,
     utils: U,
     meta: M | undefined,
