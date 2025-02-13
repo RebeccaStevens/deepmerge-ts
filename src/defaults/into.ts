@@ -103,7 +103,7 @@ function mergeMapsInto<Ts extends ReadonlyArray<Readonly<ReadonlyMap<unknown, un
 }
 
 /**
- * Set the target to the last non-undefined value.
+ * Set the target to the last value.
  */
 function mergeOthersInto<Ts extends ReadonlyArray<unknown>>(m_target: Reference<unknown>, values: Ts) {
   m_target.value = values.at(-1);

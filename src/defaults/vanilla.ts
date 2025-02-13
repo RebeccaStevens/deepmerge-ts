@@ -107,7 +107,7 @@ function mergeMaps<Ts extends ReadonlyArray<Readonly<ReadonlyMap<unknown, unknow
 }
 
 /**
- * Get the last non-undefined value in the given array.
+ * Get the last value in the given array.
  */
 function mergeOthers<Ts extends ReadonlyArray<unknown>>(values: Ts): unknown {
   return values.at(-1);
