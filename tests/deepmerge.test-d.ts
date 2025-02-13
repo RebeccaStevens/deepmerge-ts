@@ -281,8 +281,8 @@ const tt: T = { foo: "abc" };
 const ti: I = { foo: "abc" };
 
 const test26 = deepmerge(tt, tt as Partial<typeof tt>);
-expectType<typeof tt>(test26);
+expectType<{ foo: string; bar?: string }>(test26);
 
 const test27 = deepmerge(ti, ti as Partial<typeof ti>);
 // Interfaces are not merged like type aliases.
-expectType<Partial<typeof ti>>(test27);
+expectType<Partial<I>>(test27);
