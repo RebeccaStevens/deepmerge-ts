@@ -71,6 +71,8 @@ export type EveryIsNever<Ts extends ReadonlyArray<unknown>> = Ts extends readonl
 
 /**
  * Returns whether or not the given type a record.
+ *
+ * Note: Does not pass for interfaces.
  */
 export type IsRecord<T> = And<Not<IsNever<T>>, T extends Readonly<Record<PropertyKey, unknown>> ? true : false>;
 
