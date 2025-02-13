@@ -37,6 +37,12 @@ type T = {
   bar?: string;
 };
 
+// eslint-disable-next-line ts/consistent-type-definitions
+interface I {
+  readonly foo: string;
+  bar?: string;
+}
+
 const test2 = deepmerge(a as T, b as T);
 expectType<{ foo: string; bar?: string }>(test2);
 
@@ -270,3 +276,13 @@ const test25 = deepmergeCustom<
   }
 >({ filterValues: false })(a, s);
 expectType<{ foo: number | undefined; baz: { quux: string[] }; garply: number }>(test25);
+
+const tt: T = { foo: "abc" };
+const ti: I = { foo: "abc" };
+
+const test26 = deepmerge(tt, tt as Partial<typeof tt>);
+expectType<typeof tt>(test26);
+
+const test27 = deepmerge(ti, ti as Partial<typeof ti>);
+// Interfaces are not merged like type aliases.
+expectType<Partial<typeof ti>>(test27);
