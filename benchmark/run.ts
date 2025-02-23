@@ -75,7 +75,6 @@ for (let mut_i = 0; mut_i < benchmarkDataSets.length; mut_i++) {
       lodash.merge({}, benchmarkData);
     });
 
-  await bench.warmup();
   await bench.run();
 
   console.table(bench.table());

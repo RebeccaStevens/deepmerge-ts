@@ -1,26 +1,28 @@
 {
   "compilerOptions": {
+    "allowImportingTsExtensions": true,
     "allowSyntheticDefaultImports": true,
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
+    "alwaysStrict": true,
     "esModuleInterop": true,
     "exactOptionalPropertyTypes": true,
     "forceConsistentCasingInFileNames": true,
     "importHelpers": false,
     "lib": ["ESNext"],
-    "module": "ES2022",
-    "moduleResolution": "node",
+    "module": "NodeNext",
     "newLine": "LF",
     "noEmitOnError": true,
-    "noImplicitReturns": true,
     "noImplicitAny": false,
+    "noImplicitReturns": true,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "pretty": true,
     "resolveJsonModule": true,
+    "rewriteRelativeImportExtensions": true,
     "sourceMap": false,
     "strict": true,
-    "alwaysStrict": true,
-    "target": "ES2022"
+    "target": "ESNext",
+    "verbatimModuleSyntax": true
   }
 }

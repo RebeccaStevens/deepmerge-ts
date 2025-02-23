@@ -9,10 +9,10 @@ import {
   type DeepMergeOptions,
   type DeepMergeRecordsDefaultHKT,
   deepmergeCustom,
-} from "../src";
-import type { FilterOut } from "../src/types/utils";
+} from "../src/index.ts";
+import type { FilterOut } from "../src/types/utils.ts";
 
-import { areAllNumbers, hasProp } from "./utils";
+import { areAllNumbers, hasProp } from "./utils.ts";
 
 declare module "../src/types" {
   interface DeepMergeFunctionURItoKind<Ts extends ReadonlyArray<unknown>, Fs extends DeepMergeFunctionsURIs, M> {
@@ -643,8 +643,8 @@ describe("deepmergeCustom", () => {
 
   it("merging class object as record", () => {
     class Klass {
-      public readonly prop1 = 1 as const;
-      public readonly prop2 = 2 as const;
+      public readonly prop1 = 1;
+      public readonly prop2 = 2;
     }
 
     const x = new Klass();

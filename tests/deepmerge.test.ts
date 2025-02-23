@@ -2,7 +2,7 @@ import { createRequire } from "node:module";
 
 import { describe, expect, it } from "vitest";
 
-import { deepmerge } from "../src";
+import { deepmerge } from "../src/index.ts";
 
 describe("deepmerge", () => {
   it("return undefined when nothing to merge", () => {

@@ -1,9 +1,9 @@
-export { deepmerge, deepmergeCustom } from "./deepmerge";
-export { deepmergeInto, deepmergeIntoCustom } from "./deepmerge-into";
-export { type ObjectType, getKeys, getObjectType, objectHasProperty } from "./utils";
+export { deepmerge, deepmergeCustom } from "./deepmerge.ts";
+export { deepmergeInto, deepmergeIntoCustom } from "./deepmerge-into.ts";
+export { type ObjectType, getKeys, getObjectType, objectHasProperty } from "./utils.ts";
 
-export type { MergeFunctions as DeepMergeIntoFunctionsDefaults } from "./defaults/into";
-export type { MergeFunctions as DeepMergeFunctionsDefaults } from "./defaults/vanilla";
+export type { MergeFunctions as DeepMergeIntoFunctionsDefaults } from "./defaults/into.ts";
+export type { MergeFunctions as DeepMergeFunctionsDefaults } from "./defaults/vanilla.ts";
 export type {
   DeepMergeArraysDefaultHKT,
   DeepMergeBuiltInMetaData,
@@ -23,5 +23,5 @@ export type {
   DeepMergeSetsDefaultHKT,
   Reference as DeepMergeValueReference,
   GetDeepMergeFunctionsURIs,
-} from "./types";
-export type { FilterOut } from "./types/utils";
+} from "./types/index.ts";
+export type { FilterOut } from "./types/utils.ts";

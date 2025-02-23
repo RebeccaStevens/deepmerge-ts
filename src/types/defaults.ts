@@ -1,4 +1,4 @@
-import type { DeepMergeFunctionURItoKind, DeepMergeFunctionsURIs, DeepMergeHKT, DeepMergeLeafURI } from "./merging";
+import type { DeepMergeFunctionURItoKind, DeepMergeFunctionsURIs, DeepMergeHKT, DeepMergeLeafURI } from "./merging.ts";
 import type {
   FilterOut,
   FilterOutNever,
@@ -12,7 +12,7 @@ import type {
   UnionMapValues,
   UnionSetValues,
   UnionToTuple,
-} from "./utils";
+} from "./utils.ts";
 
 /**
  * The default merge function to merge records with.
@@ -142,12 +142,8 @@ type CreateRecordForKeyFromMeta<
   Fs extends DeepMergeFunctionsURIs,
   M,
 > = Optional extends true
-  ? {
-      [k in Key]+?: DeepMergeHKT<Values, Fs, M>;
-    }
-  : {
-      [k in Key]-?: DeepMergeHKT<Values, Fs, M>;
-    };
+  ? Partial<Record<Key, DeepMergeHKT<Values, Fs, M>>>
+  : Required<Record<Key, DeepMergeHKT<Values, Fs, M>>>;
 
 /**
  * Get the possible types of a property.

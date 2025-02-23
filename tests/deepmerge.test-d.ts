@@ -6,7 +6,7 @@ import {
   type DeepMergeSetsDefaultHKT,
   deepmerge,
   deepmergeCustom,
-} from "../src";
+} from "../src/index.ts";
 
 const a = {
   foo: "abc",

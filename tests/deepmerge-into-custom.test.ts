@@ -1,10 +1,10 @@
 import _ from "lodash";
 import { describe, expect, it } from "vitest";
 
-import { type DeepMergeIntoOptions, type DeepMergeValueReference, deepmergeIntoCustom } from "../src";
-import { getKeys } from "../src/utils";
+import { type DeepMergeIntoOptions, type DeepMergeValueReference, deepmergeIntoCustom } from "../src/index.ts";
+import { getKeys } from "../src/utils.ts";
 
-import { areAllNumbers, hasProp } from "./utils";
+import { areAllNumbers, hasProp } from "./utils.ts";
 
 describe("deepmergeIntoCustom", () => {
   it("works just like non-customized version when no options passed", () => {
@@ -460,8 +460,8 @@ describe("deepmergeIntoCustom", () => {
 
   it("merging class object as record", () => {
     class Klass {
-      public readonly prop1 = 1 as const;
-      public readonly prop2 = 2 as const;
+      public readonly prop1 = 1;
+      public readonly prop2 = 2;
     }
 
     const x = new Klass();

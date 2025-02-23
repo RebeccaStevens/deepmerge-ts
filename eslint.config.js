@@ -17,6 +17,12 @@ export default rsEslint(
     ignores: ["tests/modules", "tests/types", "benchmark/data.json"],
   },
   {
+    rules: {
+      // waiting for ts type support.
+      "unicorn/no-instanceof-builtins": "off",
+    },
+  },
+  {
     files: ["tests/utils.ts"],
     rules: {
       "jsdoc/require-jsdoc": "off",
