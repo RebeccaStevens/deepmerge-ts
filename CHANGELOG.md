@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
+## [7.1.5](https://github.com/RebeccaStevens/deepmerge-ts/compare/v7.1.4...v7.1.5) (2025-02-23)
+
+
+### Bug Fixes
+
+* improve type merging of nested optional properties ([#530](https://github.com/RebeccaStevens/deepmerge-ts/issues/530)) ([349fd14](https://github.com/RebeccaStevens/deepmerge-ts/commit/349fd14d20405f2a56ff9ce788959db38fc970f4))
+
 ## [7.1.4](https://github.com/RebeccaStevens/deepmerge-ts/compare/v7.1.3...v7.1.4) (2025-01-23)
 
 
