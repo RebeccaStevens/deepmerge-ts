@@ -4,7 +4,7 @@ import type {
   DeepMergeMapsDefaultHKT,
   DeepMergeRecordsDefaultHKT,
   DeepMergeSetsDefaultHKT,
-} from "./defaults";
+} from "./defaults.ts";
 import type {
   AssertType,
   EveryIsArray,
@@ -15,7 +15,7 @@ import type {
   IsTuple,
   TupleTupleToTupleUnion,
   UnionToTuple,
-} from "./utils";
+} from "./utils.ts";
 
 /**
  * Mapping of merge function URIs to the merge function type.

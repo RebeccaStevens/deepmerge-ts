@@ -1,6 +1,6 @@
-import { actions } from "./actions";
-import { defaultFilterValues, defaultMetaDataUpdater } from "./defaults/general";
-import { mergeFunctions as defaultMergeFunctions } from "./defaults/vanilla";
+import { actions } from "./actions.ts";
+import { defaultFilterValues, defaultMetaDataUpdater } from "./defaults/general.ts";
+import { mergeFunctions as defaultMergeFunctions } from "./defaults/vanilla.ts";
 import type {
   DeepMergeBuiltInMetaData,
   DeepMergeFunctionsDefaultURIs,
@@ -9,8 +9,8 @@ import type {
   DeepMergeOptions,
   DeepMergeUtils,
   GetDeepMergeFunctionsURIs,
-} from "./types";
-import { ObjectType, getObjectType } from "./utils";
+} from "./types/index.ts";
+import { ObjectType, getObjectType } from "./utils.ts";
 
 /**
  * Deeply merge objects.

@@ -9,20 +9,19 @@
   },
   "type": "module",
   "scripts": {
-    "benchmark": "tsx run.ts"
+    "benchmark": "node run.ts"
   },
   "dependencies": {
     "deepmerge": "^4.3.1",
     "deepmerge-ts": "link:..",
     "defu": "^6.1.4",
     "lodash": "^4.17.21",
-    "merge-anything": "^6.0.2",
+    "merge-anything": "^6.0.4",
     "object-accumulator": "^0.0.5"
   },
   "devDependencies": {
-    "@types/node": "22.8.6",
-    "tinybench": "2.9.0",
-    "tsx": "4.19.2",
-    "typescript": "5.6.3"
+    "@types/node": "22.13.5",
+    "tinybench": "3.1.1",
+    "typescript": "5.7.3"
   }
 }

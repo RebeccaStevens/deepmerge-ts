@@ -1,5 +1,5 @@
-import { actions } from "../actions";
-import { mergeUnknowns } from "../deepmerge";
+import { actions } from "../actions.ts";
+import { mergeUnknowns } from "../deepmerge.ts";
 import type {
   DeepMergeArraysDefaultHKT,
   DeepMergeBuiltInMetaData,
@@ -8,8 +8,8 @@ import type {
   DeepMergeRecordsDefaultHKT,
   DeepMergeSetsDefaultHKT,
   DeepMergeUtils,
-} from "../types";
-import { getIterableOfIterables, getKeys, objectHasProperty } from "../utils";
+} from "../types/index.ts";
+import { getIterableOfIterables, getKeys, objectHasProperty } from "../utils.ts";
 
 /**
  * The default merge functions.

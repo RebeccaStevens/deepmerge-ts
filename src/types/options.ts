@@ -1,7 +1,7 @@
-import type { MergeFunctions as MergeIntoFunctions } from "../defaults/into";
-import type { MergeFunctions } from "../defaults/vanilla";
+import type { MergeFunctions as MergeIntoFunctions } from "../defaults/into.ts";
+import type { MergeFunctions } from "../defaults/vanilla.ts";
 
-import type { DeepMergeBuiltInMetaData } from "./merging";
+import type { DeepMergeBuiltInMetaData } from "./merging.ts";
 
 /**
  * The options the user can pass to customize deepmerge.

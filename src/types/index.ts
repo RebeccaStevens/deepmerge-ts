@@ -1,3 +1,3 @@
-export * from "./defaults";
-export * from "./merging";
-export * from "./options";
+export * from "./defaults.ts";
+export * from "./merging.ts";
+export * from "./options.ts";

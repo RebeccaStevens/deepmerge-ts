@@ -1,6 +1,6 @@
-import { mergeUnknownsInto } from "../deepmerge-into";
-import type { DeepMergeBuiltInMetaData, DeepMergeIntoFunctionUtils, Reference } from "../types";
-import { getIterableOfIterables, getKeys, objectHasProperty } from "../utils";
+import { mergeUnknownsInto } from "../deepmerge-into.ts";
+import type { DeepMergeBuiltInMetaData, DeepMergeIntoFunctionUtils, Reference } from "../types/index.ts";
+import { getIterableOfIterables, getKeys, objectHasProperty } from "../utils.ts";
 
 /**
  * The default merge functions.

@@ -1,9 +1,8 @@
-import exp from "node:constants";
 import { createRequire } from "node:module";
 
 import { describe, expect, it } from "vitest";
 
-import { deepmergeInto } from "../src";
+import { deepmergeInto } from "../src/index.ts";
 
 describe("deepmergeInto", () => {
   it("does not modify the target when nothing to merge", () => {

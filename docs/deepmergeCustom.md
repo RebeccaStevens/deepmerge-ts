@@ -406,7 +406,11 @@ declare module "deepmerge-ts" {
 
 See [deepmerge custom API](./API.md#deepmergecustomoptions-rootmetadata).
 
+<!-- markdownlint-disable MD025 -->
+
 # Deepmerge Into Custom
+
+<!-- markdownlint-restore -->
 
 `deepmergeIntoCustom` as the name suggests, works just like `deepmergeCustom`, only for `deepmergeInto` instead of
 `deepmerge`. But there are some differences to be aware of.

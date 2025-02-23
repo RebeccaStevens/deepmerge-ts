@@ -3,14 +3,12 @@
   "entry": ["src/index.ts!"],
   "project": ["src/**/*.ts!"],
   "ignoreDependencies": [
-    // Unknown reason for issue.
-    "@vitest/coverage-v8",
-
-    // Lint staged
-    "tsc-files",
-
-    // Eslint
     "@eslint/compat",
-    "@vitest/eslint-plugin",
+    "tsc-files",
+    "@semantic-release/commit-analyzer",
+    "@semantic-release/github",
+    "@semantic-release/npm",
+    "@semantic-release/release-notes-generator",
   ],
+  "exclude": ["exports", "nsExports", "types", "nsTypes"],
 }

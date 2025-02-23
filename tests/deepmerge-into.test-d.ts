@@ -1,6 +1,6 @@
 import { expectAssignable, expectType } from "tsd";
 
-import { deepmergeInto } from "../src";
+import { deepmergeInto } from "../src/index.ts";
 
 const a = {
   foo: "abc",
