@@ -196,6 +196,12 @@ type UnionMapValuesHelper<Ts extends ReadonlyArray<unknown>, Acc> = Ts extends r
   : Acc;
 
 /**
+ * Use the more precise type if the types are compatible.
+ * Otherwise, union them.
+ */
+export type PreciseOrUnion<A, B> = A extends B ? A : B extends A ? B : A | B;
+
+/**
  * Filter out U from a tuple.
  */
 export type FilterOut<T extends ReadonlyArray<unknown>, U> = FilterOutHelper<T, U, []>;
