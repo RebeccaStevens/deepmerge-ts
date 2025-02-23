@@ -4,6 +4,7 @@ import type {
   FilterOutNever,
   FlattenTuples,
   KeyIsOptional,
+  PreciseOrUnion,
   SimplifyObject,
   TransposeTuple,
   TupleToIntersection,
@@ -183,13 +184,13 @@ type DeepMergeRecordPropertyMetaDefaultHKTGetPossibleHelper<
             Rest,
             {
               key: K;
-              values: [V | Head, ...AccRest];
+              values: [PreciseOrUnion<V, Head>, ...AccRest];
               optional: O;
             }
           >
         : {
             key: K;
-            values: [V | Head, ...AccRest];
+            values: [PreciseOrUnion<V, Head>, ...AccRest];
             optional: O;
           }
       : Rest extends readonly [RecordPropertyMeta, ...ReadonlyArray<RecordPropertyMeta>]
