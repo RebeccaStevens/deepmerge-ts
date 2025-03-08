@@ -117,3 +117,11 @@
 - name: "Status: Released on Next"
   color: fef2c0
   description: "It's now live on the next branch."
+
+# Graphite
+- name: "Status: Merge Queue"
+  color: 0052cc
+  description: "Merge the stack with the merge queue"
+- name: "Status: Hotfix"
+  color: ee0701
+  description: "Merge as a hotfix"
