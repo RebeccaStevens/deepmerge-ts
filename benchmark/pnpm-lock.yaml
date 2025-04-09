@@ -22,25 +22,25 @@ importers:
         version: 4.17.21
       merge-anything:
         specifier: ^6.0.4
-        version: 6.0.4
+        version: 6.0.6
       object-accumulator:
         specifier: ^0.0.5
         version: 0.0.5
     devDependencies:
       '@types/node':
-        specifier: 22.13.8
-        version: 22.13.8
+        specifier: 22.14.0
+        version: 22.14.0
       tinybench:
         specifier: 4.0.1
         version: 4.0.1
       typescript:
-        specifier: 5.8.2
-        version: 5.8.2
+        specifier: 5.8.3
+        version: 5.8.3
 
 packages:
 
-  '@types/node@22.13.8':
-    resolution: {integrity: sha512-G3EfaZS+iOGYWLLRCEAXdWK9my08oHNZ+FHluRiggIYJPOXzhOiDgpVCUHaUvyIC5/fj7C/p637jdzC666AOKQ==}
+  '@types/node@22.14.0':
+    resolution: {integrity: sha512-Kmpl+z84ILoG+3T/zQFyAJsU6EPTmOCj8/2+83fSN6djd6I4o7uOuGIH6vq3PrjY5BGitSbFuMN18j3iknubbA==}
 
   deepmerge@4.3.1:
     resolution: {integrity: sha512-3sUqbMEc77XqpdNO7FRyRog+eW3ph+GYCbj+rK+uYyRMuwsVy0rMiVtPn+QJlKFvWP/1PYpapqYn0Me2knFn+A==}
@@ -49,15 +49,15 @@ packages:
   defu@6.1.4:
     resolution: {integrity: sha512-mEQCMmwJu317oSz8CwdIOdwf3xMif1ttiM8LTufzc3g6kR+9Pe236twL8j3IYT1F7GfRgGcW6MWxzZjLIkuHIg==}
 
-  is-what@5.2.0:
-    resolution: {integrity: sha512-IPOooAvDsC9AaL36TR6/pWlCTgQcCgZZR2IY6p8DCjJ84WVdH/f6SCZr8ngAY9wohbF5bvjOoqrVnBQGZiln/A==}
+  is-what@5.2.1:
+    resolution: {integrity: sha512-FLNNgur29o+0/G6RcG3B6KRDCT6SvMfb7MlfjdydTZWPgBLfiemceChDhY0DHu50O35BDNbNp4rJLQXMt4fG0g==}
     engines: {node: '>=18'}
 
   lodash@4.17.21:
     resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
 
-  merge-anything@6.0.4:
-    resolution: {integrity: sha512-5S9GDYUY0gTpTklwyHTR+F3+uGJPmqfCwEtIWHER3PJE+2ltCMbGKQVFdUpKdvSlzV0TTGUGczoA5vMUxPHypA==}
+  merge-anything@6.0.6:
+    resolution: {integrity: sha512-F3K1W45PvTjRZzbcYIhXntNr8cux00gUxR8IzNPPG+80gNlAHZGVBwFyN4x5yjw/7QkLPKDbRQBK4KrJKo69mw==}
     engines: {node: '>=18'}
 
   object-accumulator@0.0.5:
@@ -67,36 +67,36 @@ packages:
     resolution: {integrity: sha512-Nb1srn7dvzkVx0J5h1vq8f48e3TIcbrS7e/UfAI/cDSef/n8yLh4zsAEsFkfpw6auTY+ZaspEvam/xs8nMnotQ==}
     engines: {node: '>=18.0.0'}
 
-  typescript@5.8.2:
-    resolution: {integrity: sha512-aJn6wq13/afZp/jT9QZmwEjDqqvSGp1VT5GVg+f/t6/oVyrgXM6BY1h9BRh/O5p3PlUPAe+WuiEZOmb/49RqoQ==}
+  typescript@5.8.3:
+    resolution: {integrity: sha512-p1diW6TqL9L07nNxvRMM7hMMw4c5XOo/1ibL4aAIGmSAt9slTE1Xgw5KWuof2uTOvCg9BY7ZRi+GaF+7sfgPeQ==}
     engines: {node: '>=14.17'}
     hasBin: true
 
-  undici-types@6.20.0:
-    resolution: {integrity: sha512-Ny6QZ2Nju20vw1SRHe3d9jVu6gJ+4e3+MMpqu7pqE5HT6WsTSlce++GQmK5UXS8mzV8DSYHrQH+Xrf2jVcuKNg==}
+  undici-types@6.21.0:
+    resolution: {integrity: sha512-iwDZqg0QAGrg9Rav5H4n0M64c3mkR59cJ6wQp+7C4nI0gsmExaedaYLNO44eT4AtBBwjbTiGPMlt2Md0T9H9JQ==}
 
 snapshots:
 
-  '@types/node@22.13.8':
+  '@types/node@22.14.0':
     dependencies:
-      undici-types: 6.20.0
+      undici-types: 6.21.0
 
   deepmerge@4.3.1: {}
 
   defu@6.1.4: {}
 
-  is-what@5.2.0: {}
+  is-what@5.2.1: {}
 
   lodash@4.17.21: {}
 
-  merge-anything@6.0.4:
+  merge-anything@6.0.6:
     dependencies:
-      is-what: 5.2.0
+      is-what: 5.2.1
 
   object-accumulator@0.0.5: {}
 
   tinybench@4.0.1: {}
 
-  typescript@5.8.2: {}
+  typescript@5.8.3: {}
 
-  undici-types@6.20.0: {}
+  undici-types@6.21.0: {}
