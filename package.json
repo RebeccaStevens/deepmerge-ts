@@ -100,7 +100,7 @@
     "@vitest/coverage-v8": "3.1.1",
     "@vitest/eslint-plugin": "1.1.40",
     "commitizen": "4.3.1",
-    "cspell": "8.18.1",
+    "cspell": "8.19.3",
     "cz-conventional-changelog": "3.3.0",
     "eslint": "9.23.0",
     "eslint-config-prettier": "10.1.1",
