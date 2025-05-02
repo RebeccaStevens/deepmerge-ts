@@ -121,7 +121,7 @@
     "eslint-plugin-promise": "7.2.1",
     "eslint-plugin-regexp": "2.7.0",
     "eslint-plugin-sonarjs": "3.0.2",
-    "eslint-plugin-unicorn": "58.0.0",
+    "eslint-plugin-unicorn": "59.0.0",
     "eslint-plugin-yml": "1.17.0",
     "husky": "9.1.7",
     "jsonc-eslint-parser": "2.4.0",
