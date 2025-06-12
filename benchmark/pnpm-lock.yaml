@@ -28,8 +28,8 @@ importers:
         version: 0.0.5
     devDependencies:
       '@types/node':
-        specifier: 22.15.17
-        version: 22.15.17
+        specifier: 22.15.31
+        version: 22.15.31
       tinybench:
         specifier: 4.0.1
         version: 4.0.1
@@ -39,8 +39,8 @@ importers:
 
 packages:
 
-  '@types/node@22.15.17':
-    resolution: {integrity: sha512-wIX2aSZL5FE+MR0JlvF87BNVrtFWf6AE6rxSE9X7OwnVvoyCQjpzSRJ+M87se/4QCkCiebQAqrJ0y6fwIyi7nw==}
+  '@types/node@22.15.31':
+    resolution: {integrity: sha512-jnVe5ULKl6tijxUhvQeNbQG/84fHfg+yMak02cT8QVhBx/F05rAVxCGBYYTh2EKz22D6JF5ktXuNwdx7b9iEGw==}
 
   deepmerge@4.3.1:
     resolution: {integrity: sha512-3sUqbMEc77XqpdNO7FRyRog+eW3ph+GYCbj+rK+uYyRMuwsVy0rMiVtPn+QJlKFvWP/1PYpapqYn0Me2knFn+A==}
@@ -77,7 +77,7 @@ packages:
 
 snapshots:
 
-  '@types/node@22.15.17':
+  '@types/node@22.15.31':
     dependencies:
       undici-types: 6.21.0
 
