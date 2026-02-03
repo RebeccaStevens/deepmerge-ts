@@ -119,7 +119,7 @@
     "eslint-plugin-optimize-regex": "1.2.1",
     "eslint-plugin-prettier": "5.5.3",
     "eslint-plugin-promise": "7.2.1",
-    "eslint-plugin-regexp": "2.9.0",
+    "eslint-plugin-regexp": "3.0.0",
     "eslint-plugin-sonarjs": "3.0.4",
     "eslint-plugin-unicorn": "62.0.0",
     "eslint-plugin-yml": "1.18.0",
