@@ -48,6 +48,8 @@ plugins:
     - changelogTitle: "# Changelog
 
         All notable changes to this project will be documented in this file. Dates are displayed in UTC."
+  - - "semantic-release-publint"
+    - strict: true
   - - "@semantic-release/git"
     - assets:
         - CHANGELOG.md

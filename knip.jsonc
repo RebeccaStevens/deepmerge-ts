@@ -2,13 +2,6 @@
   "$schema": "node_modules/knip/schema-jsonc.json",
   "entry": ["src/index.ts!"],
   "project": ["src/**/*.ts!"],
-  "ignoreDependencies": [
-    "@eslint/compat",
-    "tsc-files",
-    "@semantic-release/commit-analyzer",
-    "@semantic-release/github",
-    "@semantic-release/npm",
-    "@semantic-release/release-notes-generator",
-  ],
+  "ignoreDependencies": ["@eslint/compat", "tsc-files"],
   "exclude": ["exports", "nsExports", "types", "nsTypes"],
 }

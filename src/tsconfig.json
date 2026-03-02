@@ -4,7 +4,8 @@
     "allowJs": false,
     "declaration": true,
     // "isolatedDeclarations": true,
-    "rootDir": "."
+    "rootDir": ".",
+    "erasableSyntaxOnly": false
   },
   "include": [".", ".*"]
 }
