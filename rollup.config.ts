@@ -35,6 +35,7 @@ export default {
   plugins: [
     rollupPluginTypescript({
       tsconfig: "src/tsconfig.build.json",
+      outDir: "dist",
     }),
     rollupPluginDeassert({
       include: ["**/*.{js,ts}"],
