@@ -37,6 +37,12 @@
       "matchPackageNames": ["*"]
     },
     {
+      "matchPaths": ["+(benchmark/package.json)"],
+      "rangeStrategy": "replace",
+      "semanticCommitScope": "benchmark",
+      "semanticCommitType": "chore"
+    },
+    {
       "major": {
         "enabled": true,
         "automerge": false,
