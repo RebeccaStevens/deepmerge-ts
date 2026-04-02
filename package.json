@@ -142,7 +142,7 @@
     "sort-package-json": "3.6.1",
     "tsc-files": "1.1.4",
     "tsd": "0.33.0",
-    "typescript": "5.9.3",
+    "typescript": "6.0.2",
     "vite-tsconfig-paths": "6.1.1",
     "vitest": "4.1.2",
     "yaml-eslint-parser": "2.0.0"
