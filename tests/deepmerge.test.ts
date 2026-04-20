@@ -642,4 +642,37 @@ describe("deepmerge", () => {
     expect(y.a0, "Safe y input").not.toBe(true);
     expect(merged.a0, "Safe output").not.toBe(true);
   });
+
+  it("merging circular references", () => {
+    const a = {
+      foo: { value: 1 },
+      bar: { value: 2 },
+    } as any;
+    a.ref = a;
+    a.foo.ref = a;
+    a.foo.ref2 = a;
+    a.bar.ref = a;
+
+    const b = {
+      foo: { value: 3 },
+      bar: { value: 4 },
+    } as any;
+    b.ref = b;
+    b.foo.ref = b;
+    b.foo.ref2 = b;
+    b.bar.ref = b.foo; // Deliberately a different reference to `a.bar.ref`.
+
+    const expected = {
+      foo: { value: 3 },
+      bar: { value: 4 },
+    } as any;
+    expected.ref = expected;
+    expected.foo.ref = expected;
+    expected.foo.ref2 = expected;
+    expected.bar.ref = expected.foo; // FIXME: Currently equal to `b.foo` as this isn't strictly a circular reference.
+
+    const merged = deepmerge(a, b);
+
+    expect(merged).toStrictEqual(expected);
+  });
 });

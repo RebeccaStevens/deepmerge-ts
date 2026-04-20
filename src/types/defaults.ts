@@ -1,4 +1,10 @@
-import type { DeepMergeFunctionURItoKind, DeepMergeFunctionsURIs, DeepMergeHKT, DeepMergeLeafURI } from "./merging.ts";
+import type {
+  DeepMergeFunctionURItoKind,
+  DeepMergeFunctionsURIs,
+  DeepMergeHKT,
+  DeepMergeLeaf,
+  DeepMergeLeafURI,
+} from "./merging.ts";
 import type {
   FilterOut,
   FilterOutNever,
@@ -297,3 +303,12 @@ export type GetDeepMergeFunctionsURIs<PMF extends Partial<DeepMergeFunctionsURIs
       ? PMF["DeepMergeFilterValuesURI"]
       : DeepMergeFilterValuesDefaultURI;
 }>;
+
+/**
+ * Deep merge circular references.
+ */
+export type DeepMergeCircularReferencesDefaultHKT<
+  Ts extends ReadonlyArray<unknown>,
+  Fs extends DeepMergeFunctionsURIs,
+  M,
+> = DeepMergeLeaf<Ts, Fs, M>;

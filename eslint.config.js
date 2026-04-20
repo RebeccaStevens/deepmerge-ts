@@ -18,6 +18,7 @@ export default rsEslint(
   },
   {
     rules: {
+      "ts/no-unused-vars": "off",
       // waiting for ts type support.
       "unicorn/no-instanceof-builtins": "off",
     },

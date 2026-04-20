@@ -1,31 +1,36 @@
 import type { MergeFunctions as MergeIntoFunctions } from "../defaults/into.ts";
 import type { MergeFunctions } from "../defaults/vanilla.ts";
 
-import type { DeepMergeBuiltInMetaData } from "./merging.ts";
+import type { DeepMergeMetaData, DeepMergeMetaMetaData } from "./merging.ts";
 
 /**
  * The options the user can pass to customize deepmerge.
  */
-export type DeepMergeOptions<in out M, MM extends Readonly<Record<PropertyKey, unknown>> = {}> = Partial<
-  DeepMergeOptionsFull<M, MM & DeepMergeBuiltInMetaData>
->;
+export type DeepMergeOptions<
+  in out M extends DeepMergeMetaData,
+  MM extends Readonly<Record<PropertyKey, unknown>> = {},
+> = Partial<DeepMergeOptionsFull<M, MM & DeepMergeMetaMetaData>>;
 
 /**
  * The options the user can pass to customize deepmergeInto.
  */
-export type DeepMergeIntoOptions<in out M, MM extends Readonly<Record<PropertyKey, unknown>> = {}> = Partial<
-  DeepMergeIntoOptionsFull<M, MM & DeepMergeBuiltInMetaData>
->;
+export type DeepMergeIntoOptions<
+  in out M extends DeepMergeMetaData,
+  MM extends Readonly<Record<PropertyKey, unknown>> = {},
+> = Partial<DeepMergeIntoOptionsFull<M, MM & DeepMergeMetaMetaData>>;
 
-type MetaDataUpdater<in out M, MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData> = (
+type MetaDataUpdater<in out M extends DeepMergeMetaData, MM extends DeepMergeMetaMetaData = DeepMergeMetaMetaData> = (
   previousMeta: M | undefined,
-  metaMeta: Readonly<Partial<MM>>,
+  metaMeta: Readonly<MM>,
 ) => M;
 
 /**
  * All the options the user can pass to customize deepmerge.
  */
-type DeepMergeOptionsFull<in out M, MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData> = Readonly<{
+type DeepMergeOptionsFull<
+  in out M extends DeepMergeMetaData,
+  MM extends DeepMergeMetaMetaData = DeepMergeMetaMetaData,
+> = Readonly<{
   mergeRecords: DeepMergeFunctions<M, MM>["mergeRecords"] | false;
   mergeArrays: DeepMergeFunctions<M, MM>["mergeArrays"] | false;
   mergeMaps: DeepMergeFunctions<M, MM>["mergeMaps"] | false;
@@ -39,7 +44,10 @@ type DeepMergeOptionsFull<in out M, MM extends DeepMergeBuiltInMetaData = DeepMe
 /**
  * All the options the user can pass to customize deepmergeInto.
  */
-type DeepMergeIntoOptionsFull<in out M, MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData> = Readonly<{
+type DeepMergeIntoOptionsFull<
+  in out M extends DeepMergeMetaData,
+  MM extends DeepMergeMetaMetaData = DeepMergeMetaMetaData,
+> = Readonly<{
   mergeRecords: DeepMergeIntoFunctions<M, MM>["mergeRecords"] | false;
   mergeArrays: DeepMergeIntoFunctions<M, MM>["mergeArrays"] | false;
   mergeMaps: DeepMergeIntoFunctions<M, MM>["mergeMaps"] | false;
@@ -59,14 +67,17 @@ export type Reference<T> = {
 /**
  * All the utility functions that can be overridden.
  */
-type DeepMergeUtilityFunctions<in M> = Readonly<{
+type DeepMergeUtilityFunctions<in M extends DeepMergeMetaData> = Readonly<{
   filterValues: <Ts extends ReadonlyArray<unknown>>(values: Ts, meta: M | undefined) => unknown[];
 }>;
 
 /**
  * All the merge functions that deepmerge uses.
  */
-type DeepMergeFunctions<in M, MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData> = Readonly<{
+type DeepMergeFunctions<
+  in M extends DeepMergeMetaData,
+  MM extends DeepMergeMetaMetaData = DeepMergeMetaMetaData,
+> = Readonly<{
   mergeRecords: <Ts extends ReadonlyArray<Readonly<Record<PropertyKey, unknown>>>, U extends DeepMergeUtils<M, MM>>(
     values: Ts,
     utils: U,
@@ -91,6 +102,13 @@ type DeepMergeFunctions<in M, MM extends DeepMergeBuiltInMetaData = DeepMergeBui
     meta: M | undefined,
   ) => unknown;
 
+  mergeCircularReferences: <Ts extends ReadonlyArray<unknown>, U extends DeepMergeUtils<M, MM>>(
+    values: Ts,
+    cyclicDepths: ReadonlyArray<number>,
+    utils: U,
+    meta: M | undefined,
+  ) => unknown;
+
   mergeOthers: <Ts extends ReadonlyArray<unknown>, U extends DeepMergeUtils<M, MM>>(
     values: Ts,
     utils: U,
@@ -104,7 +122,10 @@ type DeepMergeIntoFunctionsReturnType = void | symbol;
 /**
  * All the merge functions that deepmerge uses.
  */
-type DeepMergeIntoFunctions<in M, MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData> = Readonly<{
+type DeepMergeIntoFunctions<
+  in M extends DeepMergeMetaData,
+  MM extends DeepMergeMetaMetaData = DeepMergeMetaMetaData,
+> = Readonly<{
   mergeRecords: <
     Ts extends ReadonlyArray<Readonly<Record<PropertyKey, unknown>>>,
     U extends DeepMergeIntoFunctionUtils<M, MM>,
@@ -139,6 +160,13 @@ type DeepMergeIntoFunctions<in M, MM extends DeepMergeBuiltInMetaData = DeepMerg
     meta: M | undefined,
   ) => DeepMergeIntoFunctionsReturnType;
 
+  mergeCircularReferences: <Ts extends ReadonlyArray<object>, U extends DeepMergeIntoFunctionUtils<M, MM>>(
+    mut_target: Reference<unknown>,
+    values: Ts,
+    utils: U,
+    meta: M | undefined,
+  ) => DeepMergeIntoFunctionsReturnType;
+
   mergeOthers: <Ts extends ReadonlyArray<unknown>, U extends DeepMergeIntoFunctionUtils<M, MM>>(
     mut_target: Reference<unknown>,
     values: Ts,
@@ -150,7 +178,10 @@ type DeepMergeIntoFunctions<in M, MM extends DeepMergeBuiltInMetaData = DeepMerg
 /**
  * The utils provided to the merge functions.
  */
-export type DeepMergeUtils<in out M, MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData> = Readonly<{
+export type DeepMergeUtils<
+  in out M extends DeepMergeMetaData,
+  MM extends DeepMergeMetaMetaData = DeepMergeMetaMetaData,
+> = Readonly<{
   mergeFunctions: DeepMergeFunctions<M, MM>;
   defaultMergeFunctions: MergeFunctions;
   metaDataUpdater: MetaDataUpdater<M, MM>;
@@ -167,8 +198,8 @@ export type DeepMergeUtils<in out M, MM extends DeepMergeBuiltInMetaData = DeepM
  * The utils provided to the merge functions.
  */
 export type DeepMergeIntoFunctionUtils<
-  in out M,
-  MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData,
+  in out M extends DeepMergeMetaData,
+  MM extends DeepMergeMetaMetaData = DeepMergeMetaMetaData,
 > = Readonly<{
   mergeFunctions: DeepMergeIntoFunctions<M, MM>;
   defaultMergeFunctions: MergeIntoFunctions;

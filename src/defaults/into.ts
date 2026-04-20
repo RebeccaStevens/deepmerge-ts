@@ -1,5 +1,5 @@
 import { mergeUnknownsInto } from "../deepmerge-into.ts";
-import type { DeepMergeBuiltInMetaData, DeepMergeIntoFunctionUtils, Reference } from "../types/index.ts";
+import type { DeepMergeMetaMetaData, DeepMergeIntoFunctionUtils, Reference } from "../types/index.ts";
 import { getIterableOfIterables, getKeys, objectHasProperty } from "../utils.ts";
 
 /**
@@ -23,7 +23,7 @@ function mergeRecordsInto<
   Ts extends ReadonlyArray<Record<PropertyKey, unknown>>,
   U extends DeepMergeIntoFunctionUtils<M, MM>,
   M,
-  MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData,
+  MM extends DeepMergeMetaMetaData = DeepMergeMetaMetaData,
 >(mut_target: Reference<Record<PropertyKey, unknown>>, values: Ts, utils: U, meta: M | undefined): void {
   for (const key of getKeys(values)) {
     const propValues = [];

@@ -1,3 +1,5 @@
+import type { HierarchyValue } from "./types/merging.ts";
+
 /**
  * The different types of objects deepmerge-ts support.
  */
@@ -41,6 +43,18 @@ export function getObjectType(object: unknown): ObjectType {
 }
 
 /**
+ * Get the keys of the given object(s) including symbol keys.
+ * If an array is given, the keys of all the objects within the array are returned.
+ *
+ * Note: Only keys to enumerable properties are returned.
+ *
+ * @deprecated Use `getKeysOfObjects` instead.
+ * @param objects - An array of objects to get the keys of.
+ * @returns A set containing all the keys of all the given objects.
+ */
+export const getKeys = getKeysOfObjects;
+
+/**
  * Get the keys of the given objects including symbol keys.
  *
  * Note: Only keys to enumerable properties are returned.
@@ -48,16 +62,23 @@ export function getObjectType(object: unknown): ObjectType {
  * @param objects - An array of objects to get the keys of.
  * @returns A set containing all the keys of all the given objects.
  */
-export function getKeys(objects: ReadonlyArray<object>): Set<PropertyKey> {
+export function getKeysOfObjects(objects: ReadonlyArray<object>): Set<PropertyKey> {
   const keys = new Set<PropertyKey>();
 
   for (const object of objects) {
-    for (const key of [...Object.keys(object), ...Object.getOwnPropertySymbols(object)]) {
+    for (const key of getKeysOfObject(object)) {
       keys.add(key);
     }
   }
 
   return keys;
+}
+
+/**
+ * Get the keys of the given object.
+ */
+export function getKeysOfObject(object: object): PropertyKey[] {
+  return [...Object.keys(object), ...Object.getOwnPropertySymbols(object)];
 }
 
 /**
@@ -137,11 +158,43 @@ function isRecord(value: object): value is Record<PropertyKey, unknown> {
   }
 
   // If constructor does not have an Object-specific method.
-  // eslint-disable-next-line sonar/prefer-single-boolean-return, no-prototype-builtins
+  // eslint-disable-next-line no-prototype-builtins
   if (!prototype.hasOwnProperty("isPrototypeOf")) {
     return false;
   }
 
   // Most likely a record.
   return true;
+}
+
+/**
+ * If the given object is a cyclic reference in its ancestor tree, return how far down the ancestor tree the object is from it's first occurrence. Otherwise, return 0.
+ *
+ * @param object - The object to check.
+ * @param hierarchy - The hierarchy of the object.
+ * @param index - The index of the object (or ancestor of) within the original values passed to the merge function.
+ * @returns The cyclic reference depth of the object if it is a cyclic reference, or 0 if it is not.
+ */
+export function getCyclicReferenceDepth(
+  object: unknown,
+  hierarchy: ReadonlyArray<HierarchyValue> | undefined,
+  index: number,
+): number {
+  // If their is no hierarchy, then there can be no cyclic reference.
+  if (hierarchy === undefined || hierarchy.length === 0) {
+    return 0;
+  }
+
+  let mut_depth = 1;
+
+  // Check if the child is an ancestor of itself.
+  for (let mut_index = hierarchy.length - 1; mut_index >= 0; mut_index--) {
+    const parent = hierarchy[mut_index]!.parents[index];
+    if (object === parent) {
+      return mut_depth;
+    }
+    mut_depth += 1;
+  }
+
+  return 0;
 }

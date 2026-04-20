@@ -1,5 +1,6 @@
 import type {
   DeepMergeArraysDefaultHKT,
+  DeepMergeCircularReferencesDefaultHKT,
   DeepMergeFilterValuesDefaultHKT,
   DeepMergeMapsDefaultHKT,
   DeepMergeRecordsDefaultHKT,
@@ -31,6 +32,7 @@ export interface DeepMergeFunctionURItoKind<
   readonly DeepMergeArraysDefaultURI: DeepMergeArraysDefaultHKT<Ts, Fs, M>;
   readonly DeepMergeSetsDefaultURI: DeepMergeSetsDefaultHKT<Ts>;
   readonly DeepMergeMapsDefaultURI: DeepMergeMapsDefaultHKT<Ts>;
+  readonly DeepMergeCircularReferencesURI: DeepMergeCircularReferencesDefaultHKT<Ts, Fs, M>;
   readonly DeepMergeFilterValuesDefaultURI: DeepMergeFilterValuesDefaultHKT<Ts>;
   readonly DeepMergeNoFilteringURI: Ts;
 }
@@ -224,10 +226,28 @@ type DeepMergeLeafApplyFilter<
     : never
   : never;
 
+export type HierarchyValue = Readonly<{
+  key: unknown;
+  parents: ReadonlyArray<unknown>;
+  values: ReadonlyArray<unknown>;
+  result: unknown;
+}>;
+
+export type DeepMergeRootMetaData = undefined;
+
+export type DeepMergeMetaData =
+  | DeepMergeRootMetaData
+  | (Partial<DeepMergeMetaMetaData> &
+      Readonly<{
+        hierarchy?: ReadonlyArray<HierarchyValue>;
+      }>);
+
 /**
  * The meta data deepmerge is able to provide.
  */
-export type DeepMergeBuiltInMetaData = Readonly<{
-  key: PropertyKey;
-  parents: ReadonlyArray<Readonly<Record<PropertyKey, unknown>>>;
+export type DeepMergeMetaMetaData = Readonly<{
+  key: unknown;
+  parents: ReadonlyArray<unknown>;
+  values: ReadonlyArray<unknown>;
+  result: unknown;
 }>;

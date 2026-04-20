@@ -6,7 +6,7 @@ export type { MergeFunctions as DeepMergeIntoFunctionsDefaults } from "./default
 export type { MergeFunctions as DeepMergeFunctionsDefaults } from "./defaults/vanilla.ts";
 export type {
   DeepMergeArraysDefaultHKT,
-  DeepMergeBuiltInMetaData,
+  DeepMergeMetaMetaData as DeepMergeBuiltInMetaData,
   DeepMergeHKT,
   DeepMergeLeaf,
   DeepMergeLeafURI,
