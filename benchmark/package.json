@@ -20,8 +20,8 @@
     "object-accumulator": "^0.0.5"
   },
   "devDependencies": {
-    "@types/node": "22.19.17",
-    "tinybench": "6.0.0",
+    "@types/node": "22.20.0",
+    "tinybench": "6.0.2",
     "typescript": "5.9.3"
   }
 }
