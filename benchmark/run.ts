@@ -15,7 +15,7 @@ import { Bench } from "tinybench";
 import { merge as tsDeepmerge } from "ts-deepmerge";
 
 const benchmarkDataFile = path.join(dirname(fileURLToPath(import.meta.url)), "data.json");
-const SAMPLES_PER_SHAPE = 5;
+const SAMPLES_PER_SHAPE = 20;
 
 type BenchmarkDataSet = { name: string; samples: object[][] };
 
@@ -57,19 +57,23 @@ const benchmarkData: BenchmarkData = await fs
     return data;
   });
 
-let mut_sampleIndex = 0;
-const nextSample = (samples: object[][]) => samples[mut_sampleIndex++ % samples.length];
-
 const fastifyMergeAll = fastify({ all: true });
 const fastifyMerge2 = fastify();
 
 const createBench = () =>
   new Bench({
-    time: 10_000,
+    time: 3000,
     iterations: 1,
-    warmupTime: 1000,
+    warmupTime: 500,
     warmupIterations: 1,
   });
+
+const addBenchTask = (bench: Bench, name: string, samples: object[][], fn: (sample: object[]) => void) => {
+  let mut_sampleIndex = 0;
+  bench.add(name, () => {
+    fn(samples[mut_sampleIndex++ % samples.length]);
+  });
+};
 
 for (let mut_i = 0; mut_i < benchmarkData.all.length; mut_i++) {
   const { name: benchmarkName, samples: samplesAll } = benchmarkData.all[mut_i];
@@ -81,83 +85,70 @@ for (let mut_i = 0; mut_i < benchmarkData.all.length; mut_i++) {
 
   // --- 1. Multi-object (all) benchmark ---
   console.log(`--- Multi-object / Variadic Merging (all) ---`);
-  mut_sampleIndex = 0;
   const benchAll = createBench();
 
-  benchAll
-    .add("deepmerge-ts", () => {
-      deepmergeTs(...nextSample(samplesAll));
-    })
-    .add("deepmerge-ts (into)", () => {
-      deepmergeInto({}, ...nextSample(samplesAll));
-    })
-    .add("lodash.merge", () => {
-      lodash.merge({}, ...nextSample(samplesAll));
-    })
-    .add("deepmerge", () => {
-      deepmerge.all(nextSample(samplesAll));
-    })
-    .add("defu", () => {
-      (defu as any)(...nextSample(samplesAll));
-    })
-    .add("@fastify/deepmerge", () => {
-      fastifyMergeAll(...nextSample(samplesAll));
-    })
-    .add("ts-deepmerge", () => {
-      tsDeepmerge(...nextSample(samplesAll));
-    })
-    .add("merge-anything", () => {
-      (mergeAnything as any)(...nextSample(samplesAll));
-    })
-    .add("mergician", () => {
-      mergician(...nextSample(samplesAll));
-    });
+  addBenchTask(benchAll, "deepmerge-ts", samplesAll, (s) => {
+    deepmergeTs(...s);
+  });
+  addBenchTask(benchAll, "deepmerge-ts (into)", samplesAll, (s) => {
+    deepmergeInto({}, ...s);
+  });
+  addBenchTask(benchAll, "lodash.merge", samplesAll, (s) => {
+    lodash.merge({}, ...s);
+  });
+  addBenchTask(benchAll, "deepmerge", samplesAll, (s) => {
+    deepmerge.all(s);
+  });
+  addBenchTask(benchAll, "defu", samplesAll, (s) => {
+    (defu as any)(...s);
+  });
+  addBenchTask(benchAll, "@fastify/deepmerge", samplesAll, (s) => {
+    fastifyMergeAll(...s);
+  });
+  addBenchTask(benchAll, "ts-deepmerge", samplesAll, (s) => {
+    tsDeepmerge(...s);
+  });
+  addBenchTask(benchAll, "merge-anything", samplesAll, (s) => {
+    (mergeAnything as any)(...s);
+  });
+  addBenchTask(benchAll, "mergician", samplesAll, (s) => {
+    mergician(...s);
+  });
 
   await benchAll.run();
   console.table(benchAll.table());
 
   // --- 2. Pairwise (2-arg) benchmark ---
   console.log(`\n--- Pairwise Merging (2-arg) ---`);
-  mut_sampleIndex = 0;
   const bench2Arg = createBench();
 
-  bench2Arg
-    .add("deepmerge-ts", () => {
-      const s = nextSample(samples2Arg);
-      deepmergeTs(s[0], s[1]);
-    })
-    .add("deepmerge-ts (into)", () => {
-      const s = nextSample(samples2Arg);
-      deepmergeInto(s[0], s[1]);
-    })
-    .add("lodash.merge", () => {
-      const s = nextSample(samples2Arg);
-      lodash.merge({}, s[0], s[1]);
-    })
-    .add("deepmerge", () => {
-      const s = nextSample(samples2Arg);
-      deepmerge(s[0], s[1]);
-    })
-    .add("defu", () => {
-      const s = nextSample(samples2Arg);
-      (defu as any)(s[0], s[1]);
-    })
-    .add("@fastify/deepmerge", () => {
-      const s = nextSample(samples2Arg);
-      fastifyMerge2(s[0], s[1]);
-    })
-    .add("ts-deepmerge", () => {
-      const s = nextSample(samples2Arg);
-      tsDeepmerge(s[0], s[1]);
-    })
-    .add("merge-anything", () => {
-      const s = nextSample(samples2Arg);
-      (mergeAnything as any)(s[0], s[1]);
-    })
-    .add("mergician", () => {
-      const s = nextSample(samples2Arg);
-      mergician(s[0], s[1]);
-    });
+  addBenchTask(bench2Arg, "deepmerge-ts", samples2Arg, (s) => {
+    deepmergeTs(s[0], s[1]);
+  });
+  addBenchTask(bench2Arg, "deepmerge-ts (into)", samples2Arg, (s) => {
+    deepmergeInto({}, s[0], s[1]);
+  });
+  addBenchTask(bench2Arg, "lodash.merge", samples2Arg, (s) => {
+    lodash.merge({}, s[0], s[1]);
+  });
+  addBenchTask(bench2Arg, "deepmerge", samples2Arg, (s) => {
+    deepmerge(s[0], s[1]);
+  });
+  addBenchTask(bench2Arg, "defu", samples2Arg, (s) => {
+    (defu as any)(s[0], s[1]);
+  });
+  addBenchTask(bench2Arg, "@fastify/deepmerge", samples2Arg, (s) => {
+    fastifyMerge2(s[0], s[1]);
+  });
+  addBenchTask(bench2Arg, "ts-deepmerge", samples2Arg, (s) => {
+    tsDeepmerge(s[0], s[1]);
+  });
+  addBenchTask(bench2Arg, "merge-anything", samples2Arg, (s) => {
+    (mergeAnything as any)(s[0], s[1]);
+  });
+  addBenchTask(bench2Arg, "mergician", samples2Arg, (s) => {
+    mergician(s[0], s[1]);
+  });
 
   await bench2Arg.run();
   console.table(bench2Arg.table());
