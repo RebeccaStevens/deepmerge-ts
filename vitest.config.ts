@@ -8,7 +8,7 @@ export default defineConfig({
     include: ["./tests/**/*.test.ts"],
     exclude: ["dist", "node_modules"],
     coverage: {
-      include: ["src"],
+      include: ["src/**/*.ts"],
       exclude: ["src/types", "dist"],
       reporter: ["lcov", "text"],
       watermarks: {
