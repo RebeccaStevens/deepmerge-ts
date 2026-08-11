@@ -287,7 +287,19 @@ const test27 = deepmerge(ti, ti as Partial<typeof ti>);
 // Interfaces are not merged like type aliases.
 expectType<Partial<I>>(test27);
 
+// eslint-disable-next-line ts/consistent-type-definitions
+interface IndexableInterface {
+  [key: PropertyKey]: unknown;
+  readonly foo: string;
+  bar?: string;
+}
+
+const tiIndexable: IndexableInterface = { foo: "abc" };
+
+const test28 = deepmerge(tiIndexable, tiIndexable as Partial<typeof tiIndexable>);
+expectType<{ foo: string; bar?: string }>(test28);
+
 const u: { outer: { inner: number } } = { outer: { inner: 1 } };
 const v: { outer?: { inner?: number } } = {};
-const test28 = deepmerge(u, v);
-expectType<{ outer: { inner: number } }>(test28);
+const test29 = deepmerge(u, v);
+expectType<{ outer: { inner: number } }>(test29);
