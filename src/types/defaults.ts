@@ -3,6 +3,7 @@ import type {
   FilterOut,
   FilterOutNever,
   FlattenTuples,
+  IsNever,
   KeyIsOptional,
   PreciseOrUnion,
   SimplifyObject,
@@ -51,11 +52,19 @@ export type DeepMergeFunctionsDefaultURIs = Readonly<{
   DeepMergeFilterValuesURI: DeepMergeFilterValuesDefaultURI;
 }>;
 
+type KnownKeys<T> = keyof {
+  [K in keyof T as string extends K ? never : number extends K ? never : symbol extends K ? never : K]: any;
+};
+
 type RecordEntries<T extends Record<PropertyKey, unknown>> = FilterOut<
   UnionToTuple<
-    {
-      [K in keyof T]: [K, T[K]];
-    }[keyof T]
+    IsNever<KnownKeys<T>> extends true
+      ? {
+          [K in keyof T]: [K, T[K]];
+        }[keyof T]
+      : {
+          [K in KnownKeys<T>]: [K, T[K]];
+        }[KnownKeys<T>]
   >,
   undefined
 >;
