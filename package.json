@@ -111,6 +111,7 @@
     "eslint": "10.8.0",
     "eslint-config-prettier": "10.1.8",
     "eslint-flat-config-utils": "3.2.0",
+    "eslint-formatting-reporter": "0.0.0",
     "eslint-import-resolver-typescript": "4.4.5",
     "eslint-merge-processors": "2.0.0",
     "eslint-plugin-format": "2.0.1",
@@ -147,7 +148,7 @@
     "vitest": "4.1.10",
     "yaml-eslint-parser": "2.1.0"
   },
-  "packageManager": "pnpm@10.34.5",
+  "packageManager": "pnpm@11.21.0",
   "engines": {
     "node": ">=16.0.0"
   }
