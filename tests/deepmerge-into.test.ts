@@ -471,7 +471,7 @@ describe("deepmergeInto", () => {
 
     expect(() => {
       deepmergeInto(mut_x, mut_y);
-    }).toThrowError();
+    }).toThrow();
   });
 
   it(`merging objects with plain and non-plain properties`, () => {
