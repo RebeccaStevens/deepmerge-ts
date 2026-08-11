@@ -5,13 +5,16 @@ import * as path from "node:path";
 import { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
+import fastify from "@fastify/deepmerge";
 import deepmerge from "deepmerge";
 import { deepmerge as deepmergeTs } from "deepmerge-ts";
-import { defu } from "defu";
+import defu from "defu";
 import lodash from "lodash";
 import { merge as mergeAnything } from "merge-anything";
+import { mergician } from "mergician";
 import { Accumulator as ObjectAccumulator } from "object-accumulator";
 import { Bench } from "tinybench";
+import { merge as tsDeepmerge } from "ts-deepmerge";
 
 const benchmarkDataFile = path.join(dirname(fileURLToPath(import.meta.url)), "data.json");
 
@@ -82,8 +85,17 @@ for (let mut_i = 0; mut_i < benchmarkDataSets.length; mut_i++) {
     .add("object-accumulator", () => {
       ObjectAccumulator.from(nextSample(samples)).merge();
     })
-    .add("lodash merge", () => {
+    .add("lodash.merge", () => {
       lodash.merge({}, nextSample(samples));
+    })
+    .add("@fastify/deepmerge", () => {
+      fastify({ all: true })(...nextSample(samples));
+    })
+    .add("mergician", () => {
+      mergician(...nextSample(samples));
+    })
+    .add("ts-deepmerge", () => {
+      tsDeepmerge(...nextSample(samples));
     });
 
   await bench.run();

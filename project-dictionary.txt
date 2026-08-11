@@ -19,6 +19,7 @@ kinded
 klass
 knip
 litecoin
+mergician
 metas
 monero
 noreply

@@ -12,12 +12,15 @@
     "benchmark": "node run.ts"
   },
   "dependencies": {
+    "@fastify/deepmerge": "^3.2.1",
     "deepmerge": "^4.3.1",
     "deepmerge-ts": "link:..",
     "defu": "^6.1.4",
     "lodash": "^4.17.21",
     "merge-anything": "^6.0.4",
-    "object-accumulator": "^0.0.5"
+    "mergician": "^2.0.2",
+    "object-accumulator": "^0.0.5",
+    "ts-deepmerge": "^8.0.0"
   },
   "devDependencies": {
     "@types/node": "22.20.1",
