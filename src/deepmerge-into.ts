@@ -95,7 +95,7 @@ export function deepmergeIntoCustom<BaseTs, MetaData, MetaMetaData extends DeepM
     );
   }
 
-  return customizedDeepmergeInto as CustomizedDeepmergeInto;
+  return customizedDeepmergeInto;
 }
 
 /**

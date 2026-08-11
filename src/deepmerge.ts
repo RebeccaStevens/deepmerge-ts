@@ -20,7 +20,7 @@ import { ObjectType, getObjectType } from "./utils.ts";
 export function deepmerge<Ts extends Readonly<ReadonlyArray<unknown>>>(
   ...objects: readonly [...Ts]
 ): DeepMergeHKT<Ts, DeepMergeFunctionsDefaultURIs, DeepMergeBuiltInMetaData> {
-  return deepmergeCustom({})(...objects) as DeepMergeHKT<Ts, DeepMergeFunctionsDefaultURIs, DeepMergeBuiltInMetaData>;
+  return deepmergeCustom({})(...objects);
 }
 
 /**
