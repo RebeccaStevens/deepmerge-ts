@@ -467,11 +467,11 @@ describe("deepmergeInto", () => {
 
     const target = {};
     deepmergeInto(target, mut_x, mut_y);
-    expect(mut_x).toStrictEqual(expected);
+    expect(target).toStrictEqual(expected);
 
     expect(() => {
       deepmergeInto(mut_x, mut_y);
-    }).toThrowError();
+    }).toThrow();
   });
 
   it(`merging objects with plain and non-plain properties`, () => {
