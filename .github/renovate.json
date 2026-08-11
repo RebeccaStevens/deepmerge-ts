@@ -22,33 +22,22 @@
   "automergeStrategy": "squash",
   "automergeType": "pr",
   "configMigration": true,
-  "labels": [
-    "Type: Maintenance",
-    ":blue_heart:"
-  ],
+  "labels": ["Type: Maintenance", ":blue_heart:"],
   "rebaseWhen": "conflicted",
-  "postUpdateOptions": [
-    "pnpmDedupe"
-  ],
+  "postUpdateOptions": ["pnpmDedupe"],
   "lockFileMaintenance": {
     "enabled": true,
-    "extends": [
-      "schedule:monthly"
-    ],
+    "extends": ["schedule:monthly"],
     "semanticCommitScope": "deps",
     "semanticCommitType": "chore"
   },
   "packageRules": [
     {
       "abandonmentThreshold": "2 year",
-      "matchPackageNames": [
-        "*"
-      ]
+      "matchPackageNames": ["*"]
     },
     {
-      "matchFileNames": [
-        "+(benchmark/package.json)"
-      ],
+      "matchFileNames": ["+(benchmark/package.json)"],
       "rangeStrategy": "replace",
       "semanticCommitScope": "benchmark",
       "semanticCommitType": "chore"
@@ -62,23 +51,15 @@
         "rebaseWhen": "behind-base-branch"
       },
       "enabled": false,
-      "matchDepTypes": [
-        "dependencies"
-      ],
-      "matchManagers": [
-        "npm"
-      ],
+      "matchDepTypes": ["dependencies"],
+      "matchManagers": ["npm"],
       "rangeStrategy": "update-lockfile",
       "semanticCommitScope": "deps",
       "semanticCommitType": "chore"
     },
     {
-      "matchDepTypes": [
-        "devDependencies"
-      ],
-      "matchManagers": [
-        "npm"
-      ],
+      "matchDepTypes": ["devDependencies"],
+      "matchManagers": ["npm"],
       "rangeStrategy": "pin",
       "semanticCommitScope": "dev-deps",
       "semanticCommitType": "chore"
@@ -87,20 +68,14 @@
       "major": {
         "semanticCommitType": "build"
       },
-      "matchDepTypes": [
-        "peerDependencies"
-      ],
-      "matchManagers": [
-        "npm"
-      ],
+      "matchDepTypes": ["peerDependencies"],
+      "matchManagers": ["npm"],
       "rangeStrategy": "widen",
       "semanticCommitScope": "peer-deps",
       "semanticCommitType": "chore"
     },
     {
-      "matchManagers": [
-        "github-actions"
-      ],
+      "matchManagers": ["github-actions"],
       "rangeStrategy": "replace",
       "semanticCommitScope": "dev-deps",
       "semanticCommitType": "ci"
