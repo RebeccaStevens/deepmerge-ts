@@ -158,6 +158,12 @@ You can use these to customize the details of how values should be merged togeth
 
 See [deepmerge custom docs](./docs/deepmergeCustom.md) for more details.
 
+### TypeScript Interfaces
+
+Due to how TypeScript handles interfaces ([microsoft/TypeScript#15300](https://github.com/microsoft/TypeScript/issues/15300)),
+`interface` types without an explicit index signature may not appear to merge correctly.
+For proper type inference when merging objects, use `type` aliases instead of `interface`s.
+
 ## Performance
 
 We use smart merging instead of the classic merging strategy which some alternative libraries use. This vastly improves
