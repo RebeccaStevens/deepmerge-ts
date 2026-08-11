@@ -21,6 +21,7 @@
     "pretty": true,
     "resolveJsonModule": true,
     "rewriteRelativeImportExtensions": true,
+    "skipLibCheck": true,
     "sourceMap": false,
     "strict": true,
     "target": "ESNext",

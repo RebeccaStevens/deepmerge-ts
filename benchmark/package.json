@@ -19,7 +19,6 @@
     "lodash": "^4.17.21",
     "merge-anything": "^6.0.4",
     "mergician": "^2.0.2",
-    "object-accumulator": "^0.0.5",
     "ts-deepmerge": "^8.0.0"
   },
   "devDependencies": {
