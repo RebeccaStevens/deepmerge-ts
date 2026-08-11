@@ -1,7 +1,7 @@
+/* eslint-disable node/no-unpublished-import */
 /* eslint-disable no-await-in-loop */
-import * as fs from "node:fs/promises";
-import * as path from "node:path";
-import { dirname } from "node:path";
+import fs from "node:fs/promises";
+import path, { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import fastify from "@fastify/deepmerge";
@@ -18,44 +18,9 @@ const benchmarkDataFile = path.join(dirname(fileURLToPath(import.meta.url)), "da
 const SAMPLES_PER_SHAPE = 20;
 
 type BenchmarkDataSet = { name: string; samples: object[][] };
+type BenchmarkData = { all: BenchmarkDataSet[]; twoArg: BenchmarkDataSet[] };
 
-type BenchmarkData = {
-  all: BenchmarkDataSet[];
-  twoArg: BenchmarkDataSet[];
-};
-
-const benchmarkData: BenchmarkData = await fs
-  .readFile(benchmarkDataFile, "utf8")
-  .then((data) => {
-    const parsed = JSON.parse(data) as unknown;
-    if (
-      typeof parsed !== "object" ||
-      parsed === null ||
-      Array.isArray(parsed) ||
-      !("all" in parsed) ||
-      !("twoArg" in parsed)
-    ) {
-      throw new Error("Invalid benchmark data format");
-    }
-    return parsed as BenchmarkData;
-  })
-  .catch(async () => {
-    console.log("Generating fresh benchmark data...");
-    const data: BenchmarkData = {
-      all: [
-        generateBenchmarkDataSet("tall", 3, 3, 16),
-        generateBenchmarkDataSet("wide", 100, 12, 4),
-        generateBenchmarkDataSet("mid", 10, 6, 8),
-      ],
-      twoArg: [
-        generateBenchmarkDataSet("tall", 2, 3, 16),
-        generateBenchmarkDataSet("wide", 2, 12, 4),
-        generateBenchmarkDataSet("mid", 2, 6, 8),
-      ],
-    };
-    await fs.writeFile(benchmarkDataFile, JSON.stringify(data), "utf8");
-    return data;
-  });
+const benchmarkData = await loadOrGenerateData();
 
 const fastifyMergeAll = fastify({ all: true });
 const fastifyMerge2 = fastify();
@@ -90,8 +55,10 @@ for (let mut_i = 0; mut_i < benchmarkData.all.length; mut_i++) {
   addBenchTask(benchAll, "deepmerge-ts", samplesAll, (s) => {
     deepmergeTs(...s);
   });
+  // deepmergeInto is not a pure function (it mutates nested objects in-place).
+  // Use structuredClone to prevent corrupting the shared benchmark dataset across iterations.
   addBenchTask(benchAll, "deepmerge-ts (into)", samplesAll, (s) => {
-    deepmergeInto({}, ...s);
+    deepmergeInto({}, ...structuredClone(s));
   });
   addBenchTask(benchAll, "lodash.merge", samplesAll, (s) => {
     lodash.merge({}, ...s);
@@ -116,7 +83,7 @@ for (let mut_i = 0; mut_i < benchmarkData.all.length; mut_i++) {
   });
 
   await benchAll.run();
-  console.table(benchAll.table());
+  logSortedBenchTable(benchAll);
 
   // --- 2. Pairwise (2-arg) benchmark ---
   console.log(`\n--- Pairwise Merging (2-arg) ---`);
@@ -125,8 +92,11 @@ for (let mut_i = 0; mut_i < benchmarkData.all.length; mut_i++) {
   addBenchTask(bench2Arg, "deepmerge-ts", samples2Arg, (s) => {
     deepmergeTs(s[0], s[1]);
   });
+  // deepmergeInto is not a pure function (it mutates nested objects in-place).
+  // Use structuredClone to prevent corrupting the shared benchmark dataset across iterations.
   addBenchTask(bench2Arg, "deepmerge-ts (into)", samples2Arg, (s) => {
-    deepmergeInto({}, s[0], s[1]);
+    const [a, b] = structuredClone(s);
+    deepmergeInto({}, a, b);
   });
   addBenchTask(bench2Arg, "lodash.merge", samples2Arg, (s) => {
     lodash.merge({}, s[0], s[1]);
@@ -151,7 +121,86 @@ for (let mut_i = 0; mut_i < benchmarkData.all.length; mut_i++) {
   });
 
   await bench2Arg.run();
-  console.table(bench2Arg.table());
+  logSortedBenchTable(bench2Arg);
+}
+
+async function loadOrGenerateData(): Promise<BenchmarkData> {
+  try {
+    const content = await fs.readFile(benchmarkDataFile, "utf8");
+    const parsed = JSON.parse(content) as unknown;
+    if (typeof parsed === "object" && parsed !== null && "all" in parsed && "twoArg" in parsed) {
+      return parsed as BenchmarkData;
+    }
+  } catch {
+    // Generate fresh data if file missing or format invalid
+  }
+
+  console.log("Generating fresh benchmark data...");
+  const data: BenchmarkData = {
+    all: [
+      generateBenchmarkDataSet("tall", 3, 3, 16),
+      generateBenchmarkDataSet("wide", 100, 12, 4),
+      generateBenchmarkDataSet("mid", 10, 6, 8),
+    ],
+    twoArg: [
+      generateBenchmarkDataSet("tall", 2, 3, 16),
+      generateBenchmarkDataSet("wide", 2, 12, 4),
+      generateBenchmarkDataSet("mid", 2, 6, 8),
+    ],
+  };
+  await fs.writeFile(benchmarkDataFile, JSON.stringify(data), "utf8");
+  return data;
+}
+
+function logSortedBenchTable(bench: Bench) {
+  const getOps = (row: Record<string, unknown> | null) => {
+    if (row === null) {
+      return 0;
+    }
+    const name = typeof row["Task name"] === "string" ? row["Task name"] : "";
+    const task = bench.tasks.find((t) => t.name === name);
+    return task?.result.state === "completed" ? task.result.throughput.mean : 0;
+  };
+
+  const sortedTable = [...bench.table()].sort((a, b) => getOps(b) - getOps(a));
+  const firstRowOps = getOps(sortedTable[0] ?? null);
+  const maxOps = firstRowOps > 0 ? firstRowOps : 1;
+
+  // Gather standard column headers from completed rows
+  const headerKeys = new Set<string>();
+  for (const row of sortedTable) {
+    if (row !== null) {
+      for (const key of Object.keys(row)) {
+        if (key !== "Error" && key !== "Stack") {
+          headerKeys.add(key);
+        }
+      }
+    }
+  }
+
+  const formattedTable: Array<Record<string, string>> = [];
+  for (const [index, row] of sortedTable.entries()) {
+    if (row === null) {
+      continue;
+    }
+    const ops = getOps(row);
+    const safeOps = ops === 0 ? 1 : ops;
+    const ratio = maxOps / safeOps;
+    const rank = index + 1;
+    const rankStr = rank === 1 ? "1st (fastest)" : rank === 2 ? "2nd" : rank === 3 ? "3rd" : `${rank}th`;
+
+    const rowObj: Record<string, string> = {
+      Rank: rankStr,
+      "Relative speed": index === 0 ? "1.00x" : ops === 0 ? "N/A" : `${ratio.toFixed(2)}x slower`,
+    };
+
+    for (const key of headerKeys) {
+      rowObj[key] = key in row ? String(row[key] ?? "") : "N/A";
+    }
+    formattedTable.push(rowObj);
+  }
+
+  console.table(formattedTable);
 }
 
 function generateBenchmarkDataSet(name: string, items: number, maxProperties: number, maxDepth: number) {
