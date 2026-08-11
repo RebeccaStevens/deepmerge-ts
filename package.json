@@ -61,8 +61,9 @@
     "README.md"
   ],
   "scripts": {
-    "benchmark": "pnpm run build && cd benchmark && pnpm run benchmark; cd ..",
+    "benchmark": "pnpm run build:check && cd benchmark && pnpm run benchmark; cd ..",
     "build": "rimraf dist && rollup -c rollup.config.ts --configPlugin @rollup/plugin-typescript --configImportAttributesKey with",
+    "build:check": "node --strip-types scripts/check-build.ts",
     "cz": "git-cz",
     "lint": "eslint && pnpm run lint:md && pnpm run lint:spelling && pnpm run lint:knip && pnpm run lint:package && pnpm run lint:packages",
     "lint:js": "eslint \"**/*.?([cm])[jt]s?(x)\"",
@@ -84,7 +85,7 @@
     "test": "pnpm run test:js-run && pnpm run test:types",
     "test:js": "vitest --coverage",
     "test:js-run": "vitest run --coverage",
-    "test:types": "pnpm run build && tsd -f 'tests/**/*.test-d.ts' -t 'dist/index.d.mts'",
+    "test:types": "pnpm run build:check && tsd -f 'tests/**/*.test-d.ts' -t 'dist/index.d.mts'",
     "typecheck": "pnpm run typecheck:root && pnpm run typecheck:src",
     "typecheck:root": "tsc -p ./tsconfig.json --noEmit",
     "typecheck:src": "tsc -p ./src/tsconfig.json --noEmit"
