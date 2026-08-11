@@ -137,7 +137,7 @@ function isRecord(value: object): value is Record<PropertyKey, unknown> {
   }
 
   // If constructor does not have an Object-specific method.
-  // eslint-disable-next-line sonar/prefer-single-boolean-return, no-prototype-builtins
+  // eslint-disable-next-line no-prototype-builtins
   if (!prototype.hasOwnProperty("isPrototypeOf")) {
     return false;
   }
