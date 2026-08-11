@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
+## [7.1.6](https://github.com/RebeccaStevens/deepmerge-ts/compare/v7.1.5...v7.1.6) (2026-08-11)
+
+
+### Bug Fixes
+
+* preserve known keys when merging objects with index signatures ([#692](https://github.com/RebeccaStevens/deepmerge-ts/issues/692)) ([e86cd8c](https://github.com/RebeccaStevens/deepmerge-ts/commit/e86cd8c724aa83ab6fc32e8a5a1d810b5ad5e81b))
+
 ## [7.1.5](https://github.com/RebeccaStevens/deepmerge-ts/compare/v7.1.4...v7.1.5) (2025-02-23)
 
 
