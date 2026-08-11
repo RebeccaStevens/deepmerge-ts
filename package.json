@@ -61,7 +61,7 @@
     "README.md"
   ],
   "scripts": {
-    "benchmark": "pnpm run build:check && cd benchmark && pnpm run benchmark; cd ..",
+    "benchmark": "pnpm run build:check && pnpm --filter deepmerge-ts-benchmark run benchmark",
     "build": "rimraf dist && rollup -c rollup.config.ts --configPlugin @rollup/plugin-typescript --configImportAttributesKey with",
     "build:check": "node --strip-types scripts/check-build.ts",
     "cz": "git-cz",
