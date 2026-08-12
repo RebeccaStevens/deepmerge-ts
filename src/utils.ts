@@ -41,6 +41,18 @@ export function getObjectType(object: unknown): ObjectType {
 }
 
 /**
+ * Get the keys of the given object(s) including symbol keys.
+ * If an array is given, the keys of all the objects within the array are returned.
+ *
+ * Note: Only keys to enumerable properties are returned.
+ *
+ * @deprecated Use `getKeysOfObjects` instead.
+ * @param objects - An array of objects to get the keys of.
+ * @returns A set containing all the keys of all the given objects.
+ */
+export const getKeys = getKeysOfObjects;
+
+/**
  * Get the keys of the given objects including symbol keys.
  *
  * Note: Only keys to enumerable properties are returned.
@@ -48,12 +60,22 @@ export function getObjectType(object: unknown): ObjectType {
  * @param objects - An array of objects to get the keys of.
  * @returns A set containing all the keys of all the given objects.
  */
-export function getKeys(objects: ReadonlyArray<object>): Set<PropertyKey> {
+export function getKeysOfObjects(objects: ReadonlyArray<object>): Set<PropertyKey> {
   const keys = new Set<PropertyKey>();
 
-  for (const object of objects) {
-    for (const key of [...Object.keys(object), ...Object.getOwnPropertySymbols(object)]) {
-      keys.add(key);
+  for (const currentObject of objects) {
+    const stringKeys = Object.keys(currentObject);
+    for (const stringKey of stringKeys) {
+      keys.add(stringKey);
+    }
+    const symbols = Object.getOwnPropertySymbols(currentObject);
+    // Fast path: skip symbol iteration when the object has no own symbols.
+    if (symbols.length > 0) {
+      for (const symbol of symbols) {
+        if (Object.prototype.propertyIsEnumerable.call(currentObject, symbol)) {
+          keys.add(symbol);
+        }
+      }
     }
   }
 
