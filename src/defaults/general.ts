@@ -43,3 +43,30 @@ export function hasFallback<M, MM extends DeepMergeBuiltInMetaData = DeepMergeBu
       utils.mergeFunctions[fallback] !== utils.defaultMergeFunctions[fallback])
   );
 }
+
+/**
+ * Resolve custom merge functions from user options.
+ *
+ * @param options - The options passed by the user.
+ * @param defaultMergeFunctions - The default merge functions.
+ * @returns The resolved merge functions.
+ */
+export function resolveCustomMergeFunctions<Fns extends { mergeOthers: unknown } & Record<PropertyKey, unknown>>(
+  options: Record<PropertyKey, unknown>,
+  defaultMergeFunctions: Fns,
+): Fns {
+  return {
+    ...defaultMergeFunctions,
+    ...Object.fromEntries(
+      Object.entries(options)
+        .filter(([key]) => Object.hasOwn(defaultMergeFunctions, key))
+        .map(([key, option]) =>
+          option === false
+            ? [key, defaultMergeFunctions.mergeOthers]
+            : typeof option === "function"
+              ? [key, option]
+              : [key, defaultMergeFunctions[key]],
+        ),
+    ),
+  };
+}
