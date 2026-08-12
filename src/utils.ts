@@ -93,9 +93,6 @@ export function objectHasProperty(object: object, property: PropertyKey): boolea
   return typeof object === "object" && Object.prototype.propertyIsEnumerable.call(object, property);
 }
 
-// eslint-disable-next-line unicorn/prefer-set-has -- Array is more performant for a low number of elements.
-const validRecordToStringValues = ["[object Object]", "[object Module]"];
-
 /**
  * Does the given object appear to be a record.
  */
@@ -110,7 +107,8 @@ function isRecord(value: object): value is Record<PropertyKey, unknown> {
   }
 
   // All records are objects.
-  if (!validRecordToStringValues.includes(Object.prototype.toString.call(value))) {
+  const objectToString = Object.prototype.toString.call(value);
+  if (objectToString !== "[object Object]" && objectToString !== "[object Module]") {
     return false;
   }
 
@@ -125,11 +123,12 @@ function isRecord(value: object): value is Record<PropertyKey, unknown> {
   const constructorPrototype: unknown = constructor.prototype;
 
   // If has modified prototype.
-  if (
-    constructorPrototype === null ||
-    typeof constructorPrototype !== "object" ||
-    !validRecordToStringValues.includes(Object.prototype.toString.call(constructorPrototype))
-  ) {
+  if (constructorPrototype === null || typeof constructorPrototype !== "object") {
+    return false;
+  }
+
+  const constructorToString = Object.prototype.toString.call(constructorPrototype);
+  if (constructorToString !== "[object Object]" && constructorToString !== "[object Module]") {
     return false;
   }
 
