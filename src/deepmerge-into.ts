@@ -1,5 +1,5 @@
 import { actionsInto as actions } from "./actions.ts";
-import { defaultFilterValues, defaultMetaDataUpdater } from "./defaults/general.ts";
+import { defaultFilterValues, defaultMetaDataUpdater, resolveCustomMergeFunctions } from "./defaults/general.ts";
 import { mergeIntoFunctions as defaultMergeIntoFunctions } from "./defaults/into.ts";
 import type {
   DeepMergeBuiltInMetaData,
@@ -111,14 +111,10 @@ function getIntoUtils<M, MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInM
 ): DeepMergeIntoFunctionUtils<M, MM> {
   return {
     defaultMergeFunctions: defaultMergeIntoFunctions,
-    mergeFunctions: {
-      ...defaultMergeIntoFunctions,
-      ...Object.fromEntries(
-        Object.entries(options)
-          .filter(([key, option]) => Object.hasOwn(defaultMergeIntoFunctions, key))
-          .map(([key, option]) => (option === false ? [key, defaultMergeIntoFunctions.mergeOthers] : [key, option])),
-      ),
-    } as DeepMergeIntoFunctionUtils<M, MM>["mergeFunctions"],
+    mergeFunctions: resolveCustomMergeFunctions(options, defaultMergeIntoFunctions) as DeepMergeIntoFunctionUtils<
+      M,
+      MM
+    >["mergeFunctions"],
     metaDataUpdater: (options.metaDataUpdater ?? defaultMetaDataUpdater) as unknown as DeepMergeIntoFunctionUtils<
       M,
       MM
