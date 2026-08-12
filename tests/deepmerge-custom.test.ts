@@ -8,6 +8,7 @@ import {
   type DeepMergeNoFilteringURI,
   type DeepMergeOptions,
   type DeepMergeRecordsDefaultHKT,
+  deepmerge,
   deepmergeCustom,
 } from "../src/index.ts";
 import type { FilterOut } from "../src/types/utils.ts";
@@ -799,5 +800,16 @@ describe("deepmergeCustom", () => {
 
       expect(customized({ a: 1, b: 2 }, { b: undefined })).toStrictEqual({ a: 1, b: 2 });
     });
+  });
+
+  it("deeply merges map values", () => {
+    const map1 = new Map([["key1", { a: 1 }]]);
+    const map2 = new Map([["key1", { b: 2 }]]);
+
+    const expected = new Map([["key1", { a: 1, b: 2 }]]);
+
+    const merged = deepmerge(map1, map2);
+
+    expect(merged).toStrictEqual(expected);
   });
 });

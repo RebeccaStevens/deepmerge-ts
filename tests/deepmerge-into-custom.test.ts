@@ -1,7 +1,12 @@
 import _ from "lodash";
 import { describe, expect, it } from "vitest";
 
-import { type DeepMergeIntoOptions, type DeepMergeValueReference, deepmergeIntoCustom } from "../src/index.ts";
+import {
+  type DeepMergeIntoOptions,
+  type DeepMergeValueReference,
+  deepmergeInto,
+  deepmergeIntoCustom,
+} from "../src/index.ts";
 import { getKeys } from "../src/utils.ts";
 
 import { areAllNumbers, hasProp } from "./utils.ts";
@@ -565,5 +570,16 @@ describe("deepmergeIntoCustom", () => {
       customized(target, { b: 2 });
       expect(target).toStrictEqual({ a: 1, b: 2 });
     });
+  });
+
+  it("deeply merges map values", () => {
+    const map1 = new Map([["key1", { a: 1 }]]);
+    const map2 = new Map([["key1", { b: 2 }]]);
+
+    const expected = new Map([["key1", { a: 1, b: 2 }]]);
+
+    deepmergeInto(map1, map2);
+
+    expect(map1).toStrictEqual(expected);
   });
 });

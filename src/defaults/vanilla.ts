@@ -127,10 +127,20 @@ function mergeMaps<
   Fs extends DeepMergeFunctionsURIs,
   M extends DeepMergeMetaData,
   MM extends DeepMergeMetaMetaData = DeepMergeMetaMetaData,
->(values: Ts, utils: U, meta: M): DeepMergeMapsDefaultHKT<Ts> {
+>(values: Ts, utils?: U, meta?: M): DeepMergeMapsDefaultHKT<Ts> {
   const result = new Map<unknown, unknown>();
 
+  if (utils === undefined) {
+    for (const map of values) {
+      for (const [key, value] of map) {
+        result.set(key, value);
+      }
+    }
+    return result as DeepMergeMapsDefaultHKT<Ts>;
+  }
+
   const valuesByKey = new Map<unknown, unknown[]>();
+
   for (const map of values) {
     for (const [key, value] of map) {
       const mut_keyValues = valuesByKey.get(key);
