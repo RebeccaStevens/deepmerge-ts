@@ -112,6 +112,15 @@ const validRecordToStringValues = ["[object Object]", "[object Module]"];
  * Does the given object appear to be a record.
  */
 function isRecord(value: object): value is Record<PropertyKey, unknown> {
+  // Fast path: Objects created via `{}` (whose prototype is `Object.prototype`)
+  // or `Object.create(null)` (whose prototype is `null`) are plain records.
+  // Assumes that standard plain objects do not have modified prototypes.
+  const prototype: unknown = Object.getPrototypeOf(value);
+
+  if (prototype === null || prototype === Object.prototype) {
+    return true;
+  }
+
   // All records are objects.
   if (!validRecordToStringValues.includes(Object.prototype.toString.call(value))) {
     return false;
@@ -125,20 +134,19 @@ function isRecord(value: object): value is Record<PropertyKey, unknown> {
     return true;
   }
 
-  const prototype: unknown = constructor.prototype;
+  const constructorPrototype: unknown = constructor.prototype;
 
   // If has modified prototype.
   if (
-    prototype === null ||
-    typeof prototype !== "object" ||
-    !validRecordToStringValues.includes(Object.prototype.toString.call(prototype))
+    constructorPrototype === null ||
+    typeof constructorPrototype !== "object" ||
+    !validRecordToStringValues.includes(Object.prototype.toString.call(constructorPrototype))
   ) {
     return false;
   }
 
   // If constructor does not have an Object-specific method.
-  // eslint-disable-next-line no-prototype-builtins
-  if (!prototype.hasOwnProperty("isPrototypeOf")) {
+  if (!Object.hasOwn(constructorPrototype, "isPrototypeOf")) {
     return false;
   }
 
