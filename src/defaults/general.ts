@@ -18,5 +18,6 @@ export function defaultMetaDataUpdater<M>(
  * It filters out undefined values.
  */
 export function defaultFilterValues<Ts extends ReadonlyArray<unknown>, M>(values: Ts, meta: M | undefined): unknown[] {
-  return values.filter((value) => value !== undefined);
+  // Fast path: avoid allocating a new array when no undefined values exist.
+  return values.includes(undefined) ? values.filter((value) => value !== undefined) : (values as unknown as unknown[]);
 }
