@@ -99,15 +99,48 @@ function mergeSetsInto<Ts extends ReadonlyArray<Readonly<ReadonlySet<unknown>>>>
  *
  * @param mut_target - The result will be mutated into this map
  * @param values - The maps (including the target's value if there is one).
+ * @param utils - The utils.
+ * @param meta - The meta data.
  */
-function mergeMapsInto<Ts extends ReadonlyArray<Readonly<ReadonlyMap<unknown, unknown>>>>(
-  mut_target: Reference<Map<unknown, unknown>>,
-  values: Ts,
-): void {
+function mergeMapsInto<
+  Ts extends ReadonlyArray<Readonly<ReadonlyMap<unknown, unknown>>>,
+  U extends DeepMergeIntoFunctionUtils<M, MM>,
+  M,
+  MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData,
+>(mut_target: Reference<Map<unknown, unknown>>, values: Ts, utils?: U, meta?: M): void {
+  if (utils === undefined) {
+    for (let mut_i = 1; mut_i < values.length; mut_i++) {
+      for (const [key, value] of values[mut_i]!) {
+        mut_target.value.set(key, value);
+      }
+    }
+    return;
+  }
+
+  const valuesByKey = new Map<unknown, unknown[]>();
   for (let mut_i = 1; mut_i < values.length; mut_i++) {
     for (const [key, value] of values[mut_i]!) {
-      mut_target.value.set(key, value);
+      const mut_keyValues = valuesByKey.get(key);
+      if (mut_keyValues === undefined) {
+        valuesByKey.set(key, [value]);
+      } else {
+        mut_keyValues.push(value);
+      }
     }
+  }
+
+  for (const [key, keyValues] of valuesByKey) {
+    const targetValue = mut_target.value.get(key);
+    const allValues = targetValue === undefined ? keyValues : [targetValue, ...keyValues];
+    const updatedMeta = utils.metaDataUpdater(meta, {
+      key,
+      parents: values,
+    } as unknown as MM);
+
+    const propTarget: Reference<unknown> = { value: allValues[0] };
+    mergeUnknownsInto<ReadonlyArray<unknown>, U, M, MM>(propTarget, allValues, utils, updatedMeta);
+
+    mut_target.value.set(key, propTarget.value);
   }
 }
 

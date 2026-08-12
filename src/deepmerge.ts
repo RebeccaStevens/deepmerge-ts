@@ -267,7 +267,7 @@ function mergeMaps<U extends DeepMergeUtils<M, MM>, M, MM extends DeepMergeBuilt
   const result = utils.mergeFunctions.mergeMaps(values, utils, meta);
 
   if (hasFallback(utils, "mergeMaps", result)) {
-    return utils.defaultMergeFunctions.mergeMaps(values);
+    return utils.defaultMergeFunctions.mergeMaps(values, utils as any, meta);
   }
   return result;
 }
