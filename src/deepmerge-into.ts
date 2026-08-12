@@ -1,5 +1,5 @@
 import { actionsInto as actions } from "./actions.ts";
-import { defaultFilterValues, defaultMetaDataUpdater } from "./defaults/general.ts";
+import { defaultFilterValues, defaultMetaDataUpdater, defaultMetaDataUpdaterFast } from "./defaults/general.ts";
 import { mergeIntoFunctions as defaultMergeIntoFunctions } from "./defaults/into.ts";
 import type {
   DeepMergeBuiltInMetaData,
@@ -9,10 +9,15 @@ import type {
   DeepMergeIntoOptions,
   Reference,
 } from "./types/index.ts";
-import type { SimplifyObject } from "./types/utils.ts";
 import { ObjectType, getObjectType } from "./utils.ts";
 
 const defaultDeepmergeInto = /** @__PURE__ */ deepmergeIntoCustom({});
+const defaultDeepmergeIntoFastUnsafe = /** @__PURE__ */ deepmergeIntoCustom(
+  {
+    metaDataUpdater: defaultMetaDataUpdaterFast,
+  },
+  undefined,
+);
 
 /**
  * Deeply merge objects into a target.
@@ -31,17 +36,56 @@ export function deepmergeInto<T extends object>(target: T, ...objects: ReadonlyA
 export function deepmergeInto<Target extends object, Ts extends ReadonlyArray<unknown>>(
   target: Target,
   ...objects: Ts
-): asserts target is SimplifyObject<
-  Target & DeepMergeHKT<[Target, ...Ts], DeepMergeFunctionsDefaultURIs, DeepMergeBuiltInMetaData>
->;
+): asserts target is Target & DeepMergeHKT<[Target, ...Ts], DeepMergeFunctionsDefaultURIs, DeepMergeBuiltInMetaData>;
 
 export function deepmergeInto<Target extends object, Ts extends ReadonlyArray<unknown>>(
   target: Target,
   ...objects: Ts
-): asserts target is SimplifyObject<
-  Target & DeepMergeHKT<[Target, ...Ts], DeepMergeFunctionsDefaultURIs, DeepMergeBuiltInMetaData>
-> {
+): asserts target is Target & DeepMergeHKT<[Target, ...Ts], DeepMergeFunctionsDefaultURIs, DeepMergeBuiltInMetaData> {
   return void defaultDeepmergeInto(target, ...objects);
+}
+
+/**
+ * Deeply merge objects into a target fast without tracking metadata or circular references.
+ *
+ * @param target - This object will be mutated with the merge result.
+ * @param objects - The objects to merge into the target.
+ */
+export function deepmergeIntoFastUnsafe<T extends object>(target: T, ...objects: ReadonlyArray<T>): void;
+
+/**
+ * Deeply merge objects into a target fast without tracking metadata or circular references.
+ *
+ * @param target - This object will be mutated with the merge result.
+ * @param objects - The objects to merge into the target.
+ */
+export function deepmergeIntoFastUnsafe<Target extends object, Ts extends ReadonlyArray<unknown>>(
+  target: Target,
+  ...objects: Ts
+): asserts target is Target & DeepMergeHKT<[Target, ...Ts], DeepMergeFunctionsDefaultURIs, undefined>;
+
+export function deepmergeIntoFastUnsafe<Target extends object, Ts extends ReadonlyArray<unknown>>(
+  target: Target,
+  ...objects: Ts
+): asserts target is Target & DeepMergeHKT<[Target, ...Ts], DeepMergeFunctionsDefaultURIs, undefined> {
+  return void defaultDeepmergeIntoFastUnsafe(target, ...objects);
+}
+
+/**
+ * Deeply merge two or more objects into a target fast using the given options.
+ *
+ * @param options - The options on how to customize the merge function.
+ */
+export function deepmergeIntoFastUnsafeCustom<BaseTs = unknown>(
+  options: DeepMergeIntoOptions<undefined>,
+): <Target extends object, Ts extends ReadonlyArray<BaseTs>>(target: Target, ...objects: Ts) => void {
+  return deepmergeIntoCustom<BaseTs, undefined, any>(
+    {
+      ...options,
+      metaDataUpdater: defaultMetaDataUpdaterFast,
+    },
+    undefined,
+  );
 }
 
 /**

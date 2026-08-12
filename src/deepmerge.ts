@@ -1,5 +1,10 @@
 import { actions } from "./actions.ts";
-import { defaultFilterValues, defaultMetaDataUpdater, hasFallback } from "./defaults/general.ts";
+import {
+  defaultFilterValues,
+  defaultMetaDataUpdater,
+  defaultMetaDataUpdaterFast,
+  hasFallback,
+} from "./defaults/general.ts";
 import { mergeFunctions as defaultMergeFunctions } from "./defaults/vanilla.ts";
 import type {
   DeepMergeBuiltInMetaData,
@@ -13,16 +18,50 @@ import type {
 import { ObjectType, getObjectType } from "./utils.ts";
 
 const defaultDeepmerge = /** @__PURE__ */ deepmergeCustom({});
+const defaultDeepmergeFastUnsafe = /** @__PURE__ */ deepmergeCustom(
+  {
+    metaDataUpdater: defaultMetaDataUpdaterFast,
+  },
+  undefined,
+);
 
 /**
- * Deeply merge objects.
+ * Deeply merge two or more objects.
  *
  * @param objects - The objects to merge.
  */
-export function deepmerge<Ts extends Readonly<ReadonlyArray<unknown>>>(
-  ...objects: readonly [...Ts]
+export function deepmerge<Ts extends ReadonlyArray<unknown>>(
+  ...objects: Ts
 ): DeepMergeHKT<Ts, DeepMergeFunctionsDefaultURIs, DeepMergeBuiltInMetaData> {
   return defaultDeepmerge(...objects);
+}
+
+/**
+ * Deeply merge two or more objects fast without tracking metadata or circular references.
+ *
+ * @param objects - The objects to merge.
+ */
+export function deepmergeFastUnsafe<Ts extends ReadonlyArray<unknown>>(
+  ...objects: Ts
+): DeepMergeHKT<Ts, DeepMergeFunctionsDefaultURIs, undefined> {
+  return defaultDeepmergeFastUnsafe(...objects);
+}
+
+/**
+ * Deeply merge two or more objects fast using the given options.
+ *
+ * @param options - The options on how to customize the merge function.
+ */
+export function deepmergeFastUnsafeCustom<BaseTs = unknown, PMF extends Partial<DeepMergeFunctionsURIs> = {}>(
+  options: DeepMergeOptions<undefined>,
+): <Ts extends ReadonlyArray<BaseTs>>(...objects: Ts) => DeepMergeHKT<Ts, GetDeepMergeFunctionsURIs<PMF>, undefined> {
+  return deepmergeCustom<BaseTs, PMF, undefined, any>(
+    {
+      ...options,
+      metaDataUpdater: defaultMetaDataUpdaterFast,
+    },
+    undefined,
+  );
 }
 
 /**

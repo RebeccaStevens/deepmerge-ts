@@ -1,5 +1,10 @@
-export { deepmerge, deepmergeCustom } from "./deepmerge.ts";
-export { deepmergeInto, deepmergeIntoCustom } from "./deepmerge-into.ts";
+export { deepmerge, deepmergeCustom, deepmergeFastUnsafe, deepmergeFastUnsafeCustom } from "./deepmerge.ts";
+export {
+  deepmergeInto,
+  deepmergeIntoCustom,
+  deepmergeIntoFastUnsafe,
+  deepmergeIntoFastUnsafeCustom,
+} from "./deepmerge-into.ts";
 export { type ObjectType, getKeys, getObjectType, objectHasProperty } from "./utils.ts";
 
 export type { MergeFunctions as DeepMergeIntoFunctionsDefaults } from "./defaults/into.ts";
@@ -17,6 +22,8 @@ export type {
   DeepMergeFunctionURItoKind,
   DeepMergeUtils,
   DeepMergeIntoFunctionUtils,
+  DeepMergeFastUtils,
+  DeepMergeIntoFastUtils,
   DeepMergeOptions,
   DeepMergeIntoOptions,
   DeepMergeRecordsDefaultHKT,

@@ -179,3 +179,13 @@ export type DeepMergeIntoFunctionUtils<
     defaultMerge: symbol;
   }>;
 }>;
+
+/**
+ * The utils provided to the merge functions in fast mode.
+ */
+export type DeepMergeFastUtils = DeepMergeUtils<undefined>;
+
+/**
+ * The utils provided to the into merge functions in fast mode.
+ */
+export type DeepMergeIntoFastUtils = DeepMergeIntoFunctionUtils<undefined>;

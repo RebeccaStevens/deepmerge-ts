@@ -43,3 +43,15 @@ export function hasFallback<M, MM extends DeepMergeBuiltInMetaData = DeepMergeBu
       utils.mergeFunctions[fallback] !== utils.defaultMergeFunctions[fallback])
   );
 }
+
+/**
+ * The default function to update meta data in fast mode.
+ *
+ * It doesn't track any meta data.
+ *
+ * @param previousMeta - The previous meta data.
+ * @param metaMeta - Meta information about the current merge state.
+ */
+export function defaultMetaDataUpdaterFast(previousMeta: undefined, metaMeta: unknown): undefined {
+  return undefined;
+}
