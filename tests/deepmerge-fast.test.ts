@@ -252,10 +252,10 @@ describe("deepmergeFastUnsafeCustom", () => {
       mergeOthers: (values, utils) => {
         utils.metaDataUpdater(undefined, {
           key: "k",
-          parents: values as any,
+          parents: values,
           values,
           result: {},
-        } as any);
+        });
         mut_called = true;
         return values.at(-1);
       },
