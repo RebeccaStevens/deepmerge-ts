@@ -1,6 +1,6 @@
 import { mergeUnknownsInto } from "../deepmerge-into.ts";
 import type { DeepMergeBuiltInMetaData, DeepMergeIntoFunctionUtils, Reference } from "../types/index.ts";
-import { getIterableOfIterables, getKeysOfObjects, objectHasProperty } from "../utils.ts";
+import { getKeysOfObjects, objectHasProperty } from "../utils.ts";
 
 /**
  * The default merge functions.
@@ -104,8 +104,10 @@ function mergeMapsInto<Ts extends ReadonlyArray<Readonly<ReadonlyMap<unknown, un
   mut_target: Reference<Map<unknown, unknown>>,
   values: Ts,
 ): void {
-  for (const [key, value] of getIterableOfIterables(values.slice(1))) {
-    mut_target.value.set(key, value);
+  for (let mut_i = 1; mut_i < values.length; mut_i++) {
+    for (const [key, value] of values[mut_i]!) {
+      mut_target.value.set(key, value);
+    }
   }
 }
 
