@@ -1,24 +1,59 @@
 import { actions } from "../actions.ts";
 import { mergeUnknowns } from "../deepmerge.ts";
 import type {
-  DeepMergeArraysDefaultHKT,
-  DeepMergeBuiltInMetaData,
+  DeepMergeCircularReferencesDefaultHKT,
   DeepMergeFunctionsURIs,
   DeepMergeMapsDefaultHKT,
+  DeepMergeMetaData,
+  DeepMergeMetaMetaData,
   DeepMergeRecordsDefaultHKT,
-  DeepMergeSetsDefaultHKT,
   DeepMergeUtils,
 } from "../types/index.ts";
-import { getKeysOfObjects, objectHasProperty } from "../utils.ts";
+import {
+  ObjectType,
+  getCyclicReferenceDepth,
+  getKeysOfObject,
+  getKeysOfObjects,
+  getMetaDataHierarchy,
+  getObjectType,
+  objectHasProperty,
+} from "../utils.ts";
+
+import { mergeArrays, mergeOthers, mergeSets } from "./general.ts";
 
 /**
  * The default merge functions.
  */
-export type MergeFunctions = {
-  mergeRecords: typeof mergeRecords;
+export type MergeFunctions<
+  M extends DeepMergeMetaData = DeepMergeMetaData,
+  MM extends DeepMergeMetaMetaData = DeepMergeMetaMetaData,
+> = {
+  mergeRecords: <
+    Ts extends ReadonlyArray<Record<PropertyKey, unknown>>,
+    U extends DeepMergeUtils<M, MM>,
+    Fs extends DeepMergeFunctionsURIs,
+  >(
+    values: Ts,
+    utils: U,
+    meta: M,
+  ) => DeepMergeRecordsDefaultHKT<Ts, Fs, M>;
   mergeArrays: typeof mergeArrays;
   mergeSets: typeof mergeSets;
-  mergeMaps: typeof mergeMaps;
+  mergeMaps: <Ts extends ReadonlyArray<ReadonlyMap<unknown, unknown>>, U extends DeepMergeUtils<M, MM>>(
+    values: Ts,
+    utils: U,
+    meta: M,
+  ) => DeepMergeMapsDefaultHKT<Ts>;
+  mergeCircularReferences: <
+    Ts extends ReadonlyArray<unknown>,
+    U extends DeepMergeUtils<M, MM>,
+    Fs extends DeepMergeFunctionsURIs,
+  >(
+    values: Ts,
+    cyclicDepths: ReadonlyArray<number>,
+    utils: U,
+    meta: M,
+  ) => DeepMergeCircularReferencesDefaultHKT<Ts, Fs, M>;
   mergeOthers: typeof mergeOthers;
 };
 
@@ -26,14 +61,16 @@ export type MergeFunctions = {
  * The default strategy to merge records.
  *
  * @param values - The records.
+ * @param utils - The utils.
+ * @param meta - The meta data.
  */
 function mergeRecords<
   Ts extends ReadonlyArray<Record<PropertyKey, unknown>>,
   U extends DeepMergeUtils<M, MM>,
   Fs extends DeepMergeFunctionsURIs,
-  M,
-  MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData,
->(values: Ts, utils: U, meta: M | undefined): DeepMergeRecordsDefaultHKT<Ts, Fs, M> {
+  M extends DeepMergeMetaData,
+  MM extends DeepMergeMetaMetaData = DeepMergeMetaMetaData,
+>(values: Ts, utils: U, meta: M): DeepMergeRecordsDefaultHKT<Ts, Fs, M> {
   const result: Record<PropertyKey, unknown> = {};
 
   for (const key of getKeysOfObjects(values)) {
@@ -52,7 +89,9 @@ function mergeRecords<
     const updatedMeta = utils.metaDataUpdater(meta, {
       key,
       parents: values,
-    } as unknown as MM);
+      values: propValues,
+      result,
+    } satisfies DeepMergeMetaMetaData as unknown as MM);
 
     const propertyResult = mergeUnknowns<ReadonlyArray<unknown>, U, Fs, M, MM>(propValues, utils, updatedMeta);
 
@@ -76,32 +115,6 @@ function mergeRecords<
 }
 
 /**
- * The default strategy to merge arrays.
- *
- * @param values - The arrays.
- */
-function mergeArrays<Ts extends ReadonlyArray<ReadonlyArray<unknown>>, Fs extends DeepMergeFunctionsURIs, M>(
-  values: Ts,
-): DeepMergeArraysDefaultHKT<Ts, Fs, M> {
-  return values.flat() as DeepMergeArraysDefaultHKT<Ts, Fs, M>;
-}
-
-/**
- * The default strategy to merge sets.
- *
- * @param values - The sets.
- */
-function mergeSets<Ts extends ReadonlyArray<Readonly<ReadonlySet<unknown>>>>(values: Ts): DeepMergeSetsDefaultHKT<Ts> {
-  const result = new Set<unknown>();
-  for (const set of values) {
-    for (const element of set) {
-      result.add(element);
-    }
-  }
-  return result as DeepMergeSetsDefaultHKT<Ts>;
-}
-
-/**
  * The default strategy to merge maps.
  *
  * @param values - The maps.
@@ -109,11 +122,11 @@ function mergeSets<Ts extends ReadonlyArray<Readonly<ReadonlySet<unknown>>>>(val
  * @param meta - The meta data.
  */
 function mergeMaps<
-  Ts extends ReadonlyArray<Readonly<ReadonlyMap<unknown, unknown>>>,
+  Ts extends ReadonlyArray<ReadonlyMap<unknown, unknown>>,
   U extends DeepMergeUtils<M, MM>,
   Fs extends DeepMergeFunctionsURIs,
-  M,
-  MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData,
+  M extends DeepMergeMetaData,
+  MM extends DeepMergeMetaMetaData = DeepMergeMetaMetaData,
 >(values: Ts, utils?: U, meta?: M): DeepMergeMapsDefaultHKT<Ts> {
   const result = new Map<unknown, unknown>();
 
@@ -143,25 +156,108 @@ function mergeMaps<
     const updatedMeta = utils.metaDataUpdater(meta, {
       key,
       parents: values,
-    } as unknown as MM);
+      values: keyValues,
+      result,
+    } satisfies DeepMergeMetaMetaData as unknown as MM);
 
-    const propertyResult = mergeUnknowns<ReadonlyArray<unknown>, U, Fs, M, MM>(keyValues, utils, updatedMeta);
+    const keyResult = mergeUnknowns<ReadonlyArray<unknown>, U, Fs, M, MM>(keyValues, utils, updatedMeta);
 
-    if (propertyResult === actions.skip) {
+    if (keyResult === actions.skip) {
       continue;
     }
 
-    result.set(key, propertyResult);
+    result.set(key, keyResult);
   }
 
   return result as DeepMergeMapsDefaultHKT<Ts>;
 }
 
 /**
- * Get the last value in the given array.
+ * Resolve any cyclic references within a non-cyclic object pointing to ancestors in meta.hierarchy.
+ *
+ * @param value - The value to resolve circular references for.
+ * @param utils - The utils.
+ * @param meta - The meta data.
  */
-function mergeOthers<Ts extends ReadonlyArray<unknown>>(values: Ts): unknown {
-  return values.at(-1);
+function resolveCyclicReferences<
+  U extends DeepMergeUtils<M, MM>,
+  M extends DeepMergeMetaData,
+  MM extends DeepMergeMetaMetaData = DeepMergeMetaMetaData,
+>(value: unknown, utils: U, meta: M): unknown {
+  if (typeof value !== "object" || value === null) {
+    return value;
+  }
+  const hierarchy = getMetaDataHierarchy(meta);
+  const depth = getCyclicReferenceDepth(value, hierarchy, 0);
+  if (depth > 0 && hierarchy !== undefined) {
+    return hierarchy[hierarchy.length - depth]?.result;
+  }
+  const type = getObjectType(value);
+  if (type === ObjectType.RECORD) {
+    const record = value as Record<PropertyKey, unknown>;
+    let mut_changed = false;
+    const result: Record<PropertyKey, unknown> = {};
+    for (const key of getKeysOfObject(record)) {
+      const propVal = record[key];
+      const updatedMeta = utils.metaDataUpdater(meta, {
+        key,
+        parents: [record],
+        values: [propVal],
+        result,
+      } satisfies DeepMergeMetaMetaData as unknown as MM);
+      const resolvedProp = resolveCyclicReferences<U, M, MM>(propVal, utils, updatedMeta);
+      if (resolvedProp !== propVal) {
+        mut_changed = true;
+      }
+      if (key === "__proto__") {
+        Object.defineProperty(result, key, {
+          value: resolvedProp,
+          configurable: true,
+          enumerable: true,
+          writable: true,
+        });
+      } else {
+        result[key] = resolvedProp;
+      }
+    }
+    return mut_changed ? result : value;
+  }
+  return value;
+}
+
+/**
+ * The default strategy to merge circular references.
+ *
+ * @param values - The circular references.
+ * @param cyclicDepths - The depth of each circular reference.
+ * @param utils - The utils.
+ * @param meta - The meta data.
+ */
+function mergeCircularReferences<
+  Ts extends ReadonlyArray<unknown>,
+  U extends DeepMergeUtils<M, MM>,
+  Fs extends DeepMergeFunctionsURIs,
+  M extends DeepMergeMetaData,
+  MM extends DeepMergeMetaMetaData = DeepMergeMetaMetaData,
+>(
+  values: Ts,
+  cyclicDepths: ReadonlyArray<number>,
+  utils: U,
+  meta: M,
+): DeepMergeCircularReferencesDefaultHKT<Ts, Fs, M> {
+  const depth = cyclicDepths[0]!;
+  const hierarchy = getMetaDataHierarchy(meta);
+  for (let mut_index = 1; mut_index < values.length; mut_index++) {
+    if (cyclicDepths[mut_index] !== depth) {
+      const lastCyclicDepth = cyclicDepths.at(-1)!;
+      return (
+        lastCyclicDepth === 0
+          ? resolveCyclicReferences<U, M, MM>(values.at(-1), utils, meta)
+          : hierarchy?.[hierarchy.length - lastCyclicDepth]?.result
+      ) as DeepMergeCircularReferencesDefaultHKT<Ts, Fs, M>;
+    }
+  }
+  return hierarchy?.[hierarchy.length - depth]?.result as DeepMergeCircularReferencesDefaultHKT<Ts, Fs, M>;
 }
 
 /**
@@ -172,5 +268,8 @@ export const mergeFunctions = {
   mergeArrays,
   mergeSets,
   mergeMaps,
+  mergeCircularReferences,
   mergeOthers,
 };
+
+export { mergeArrays, mergeSets, mergeOthers } from "./general.ts";
