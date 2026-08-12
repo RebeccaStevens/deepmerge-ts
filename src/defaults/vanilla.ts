@@ -9,7 +9,7 @@ import type {
   DeepMergeSetsDefaultHKT,
   DeepMergeUtils,
 } from "../types/index.ts";
-import { getIterableOfIterables, getKeys, objectHasProperty } from "../utils.ts";
+import { getIterableOfIterables, getKeysOfObjects, objectHasProperty } from "../utils.ts";
 
 /**
  * The default merge functions.
@@ -36,7 +36,7 @@ function mergeRecords<
 >(values: Ts, utils: U, meta: M | undefined): DeepMergeRecordsDefaultHKT<Ts, Fs, M> {
   const result: Record<PropertyKey, unknown> = {};
 
-  for (const key of getKeys(values)) {
+  for (const key of getKeysOfObjects(values)) {
     const propValues = [];
 
     for (const value of values) {
