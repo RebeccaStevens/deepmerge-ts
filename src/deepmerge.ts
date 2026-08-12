@@ -47,7 +47,7 @@ export function deepmergeCustom<BaseTs = unknown, PMF extends Partial<DeepMergeF
  * Deeply merge two or more objects using the given options and meta data.
  *
  * @param options - The options on how to customize the merge function.
- * @param rootMetaData - The meta data passed to the root items' being merged.
+ * @param rootMetaData - The meta data passed to the root items being merged.
  */
 export function deepmergeCustom<
   BaseTs = unknown,
@@ -88,9 +88,9 @@ export function deepmergeCustom<
 }
 
 /**
- * The the utils that are available to the merge functions.
+ * Get the utils that are available to the merge functions.
  *
- * @param options - The options the user specified
+ * @param options - The options the user specified.
  * @param customizedDeepmerge - The customized deepmerge function.
  */
 function getUtils<M extends DeepMergeMetaData, MM extends DeepMergeMetaMetaData = DeepMergeMetaMetaData>(

@@ -59,7 +59,7 @@ export function deepmergeIntoCustom<BaseTs = unknown>(
  * Deeply merge two or more objects using the given options and meta data.
  *
  * @param options - The options on how to customize the merge function.
- * @param rootMetaData - The meta data passed to the root items' being merged.
+ * @param rootMetaData - The meta data passed to the root items being merged.
  */
 export function deepmergeIntoCustom<
   BaseTs = unknown,
@@ -99,9 +99,9 @@ export function deepmergeIntoCustom<
 }
 
 /**
- * The the utils that are available to the merge functions.
+ * Get the utils that are available to the merge functions.
  *
- * @param options - The options the user specified
+ * @param options - The options the user specified.
  * @param customizedDeepmergeInto - The customized deepmergeInto function.
  */
 function getUtils<M extends DeepMergeMetaData, MM extends DeepMergeMetaMetaData = DeepMergeMetaMetaData>(

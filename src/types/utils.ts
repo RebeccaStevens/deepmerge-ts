@@ -25,7 +25,7 @@ export type FlattenTuple<T> = T extends readonly []
       : [T];
 
 /**
- * Safely test whether or not the first given types extends the second.
+ * Safely test whether or not the first given type extends the second.
  *
  * Needed in particular for testing if a type is "never".
  */
@@ -69,7 +69,7 @@ export type EveryIsNever<Ts extends ReadonlyArray<unknown>> = Ts extends readonl
   : true;
 
 /**
- * Returns whether or not the given type a record.
+ * Returns whether or not the given type is a record.
  *
  * Note: Does not pass for interfaces.
  */
@@ -231,7 +231,7 @@ export type IsTuple<T extends ReadonlyArray<unknown>> = T extends readonly []
     : false;
 
 /**
- * Perfrom a transpose operation on a 2D tuple.
+ * Perform a transpose operation on a 2D tuple.
  */
 export type TransposeTuple<T> = T extends readonly [...(readonly [...unknown[]])]
   ? T extends readonly []
