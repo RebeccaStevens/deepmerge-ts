@@ -62,7 +62,7 @@ describe("deepmergeFastUnsafe", () => {
       ["key2", "hello"],
     ]);
     const merged = deepmergeFastUnsafe(a, b);
-    expect(merged.get("key1")).toStrictEqual({ extra: 2 });
+    expect(merged.get("key1")).toStrictEqual({ val: 1, extra: 2 });
     expect(merged.get("key2")).toBe("hello");
   });
 
@@ -229,7 +229,7 @@ describe("deepmergeFastUnsafeCustom", () => {
     const b = new Map([["k", { y: 2 }]]);
     const c = new Map([["k", { z: 3 }]]);
     const result = deepmergeFastUnsafe(a, b, c);
-    expect(result.get("k")).toStrictEqual({ z: 3 });
+    expect(result.get("k")).toStrictEqual({ x: 1, y: 2, z: 3 });
   });
 
   it("supports actions.skip in fast custom merge for records", () => {

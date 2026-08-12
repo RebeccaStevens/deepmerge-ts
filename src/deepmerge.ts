@@ -4,6 +4,7 @@ import {
   defaultMetaDataUpdater,
   defaultMetaDataUpdaterFast,
   hasFallback,
+  resolveCustomMergeFunctions,
 } from "./defaults/general.ts";
 import { mergeFunctions as defaultMergeFunctions } from "./defaults/vanilla.ts";
 import type {
@@ -134,14 +135,10 @@ function getUtils<M, MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaD
 ): DeepMergeUtils<M, MM> {
   return {
     defaultMergeFunctions,
-    mergeFunctions: {
-      ...defaultMergeFunctions,
-      ...Object.fromEntries(
-        Object.entries(options)
-          .filter(([key, option]) => Object.hasOwn(defaultMergeFunctions, key))
-          .map(([key, option]) => (option === false ? [key, defaultMergeFunctions.mergeOthers] : [key, option])),
-      ),
-    } as DeepMergeUtils<M, MM>["mergeFunctions"],
+    mergeFunctions: resolveCustomMergeFunctions(options, defaultMergeFunctions) as DeepMergeUtils<
+      M,
+      MM
+    >["mergeFunctions"],
     metaDataUpdater: (options.metaDataUpdater ?? defaultMetaDataUpdater) as unknown as DeepMergeUtils<
       M,
       MM
@@ -306,7 +303,7 @@ function mergeMaps<U extends DeepMergeUtils<M, MM>, M, MM extends DeepMergeBuilt
   const result = utils.mergeFunctions.mergeMaps(values, utils, meta);
 
   if (hasFallback(utils, "mergeMaps", result)) {
-    return utils.defaultMergeFunctions.mergeMaps(values);
+    return utils.defaultMergeFunctions.mergeMaps(values, utils as any, meta);
   }
   return result;
 }

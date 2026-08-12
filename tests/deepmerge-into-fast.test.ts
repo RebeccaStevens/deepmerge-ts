@@ -39,7 +39,7 @@ describe("deepmergeIntoFastUnsafe", () => {
     ]);
     deepmergeIntoFastUnsafe(target, source);
 
-    expect(target.get("key1")).toStrictEqual({ extra: 2 });
+    expect(target.get("key1")).toStrictEqual({ val: 1, extra: 2 });
     expect(target.get("key2")).toBe("hello");
   });
 
@@ -156,6 +156,6 @@ describe("deepmergeIntoFastUnsafeCustom", () => {
     const b = new Map([["k", { b: 2 }]]);
     const c = new Map([["k", { c: 3 }]]);
     deepmergeIntoFastUnsafe(target, b, c);
-    expect(target.get("k")).toStrictEqual({ c: 3 });
+    expect(target.get("k")).toStrictEqual({ a: 1, b: 2, c: 3 });
   });
 });
