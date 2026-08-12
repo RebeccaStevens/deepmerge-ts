@@ -157,12 +157,18 @@ export function mergeUnknownsInto<
   const type = getObjectType(mut_target.value);
 
   if (type !== ObjectType.NOT && type !== ObjectType.OTHER) {
-    for (let mut_index = 1; mut_index < filteredValues.length; mut_index++) {
-      if (getObjectType(filteredValues[mut_index]) === type) {
-        continue;
+    if (filteredValues.length === 2) {
+      // Fast path: avoid loop overhead for 2 elements.
+      if (getObjectType(filteredValues[1]) !== type) {
+        return void mergeOthersInto<U, M, MM>(mut_target, filteredValues, utils, meta);
       }
-
-      return void mergeOthersInto<U, M, MM>(mut_target, filteredValues, utils, meta);
+    } else {
+      // Slow path: 3 or more elements require loop iteration.
+      for (let mut_index = 1; mut_index < filteredValues.length; mut_index++) {
+        if (getObjectType(filteredValues[mut_index]) !== type) {
+          return void mergeOthersInto<U, M, MM>(mut_target, filteredValues, utils, meta);
+        }
+      }
     }
   }
 

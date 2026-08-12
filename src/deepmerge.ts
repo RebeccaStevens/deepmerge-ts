@@ -136,12 +136,18 @@ export function mergeUnknowns<
   const type = getObjectType(filteredValues[0]);
 
   if (type !== ObjectType.NOT && type !== ObjectType.OTHER) {
-    for (let mut_index = 1; mut_index < filteredValues.length; mut_index++) {
-      if (getObjectType(filteredValues[mut_index]) === type) {
-        continue;
+    if (filteredValues.length === 2) {
+      // Fast path: avoid loop overhead for 2 elements.
+      if (getObjectType(filteredValues[1]) !== type) {
+        return mergeOthers<U, M, MM>(filteredValues, utils, meta) as DeepMergeHKT<Ts, Fs, M>;
       }
-
-      return mergeOthers<U, M, MM>(filteredValues, utils, meta) as DeepMergeHKT<Ts, Fs, M>;
+    } else {
+      // Slow path: 3 or more elements require loop iteration.
+      for (let mut_index = 1; mut_index < filteredValues.length; mut_index++) {
+        if (getObjectType(filteredValues[mut_index]) !== type) {
+          return mergeOthers<U, M, MM>(filteredValues, utils, meta) as DeepMergeHKT<Ts, Fs, M>;
+        }
+      }
     }
   }
 
