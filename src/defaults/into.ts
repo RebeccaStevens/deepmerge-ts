@@ -69,7 +69,12 @@ function mergeArraysInto<Ts extends ReadonlyArray<ReadonlyArray<unknown>>>(
   mut_target: Reference<unknown[]>,
   values: Ts,
 ): void {
-  mut_target.value.push(...values.slice(1).flat());
+  for (let mut_i = 1; mut_i < values.length; mut_i++) {
+    const arr = values[mut_i]!;
+    for (const element of arr) {
+      mut_target.value.push(element);
+    }
+  }
 }
 
 /**
@@ -82,8 +87,10 @@ function mergeSetsInto<Ts extends ReadonlyArray<Readonly<ReadonlySet<unknown>>>>
   mut_target: Reference<Set<unknown>>,
   values: Ts,
 ): void {
-  for (const value of getIterableOfIterables(values.slice(1))) {
-    mut_target.value.add(value);
+  for (let mut_i = 1; mut_i < values.length; mut_i++) {
+    for (const value of values[mut_i]!) {
+      mut_target.value.add(value);
+    }
   }
 }
 
