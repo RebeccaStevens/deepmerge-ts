@@ -9,7 +9,7 @@ import type {
   DeepMergeSetsDefaultHKT,
   DeepMergeUtils,
 } from "../types/index.ts";
-import { getIterableOfIterables, getKeysOfObjects, objectHasProperty } from "../utils.ts";
+import { getKeysOfObjects, objectHasProperty } from "../utils.ts";
 
 /**
  * The default merge functions.
@@ -109,7 +109,13 @@ function mergeSets<Ts extends ReadonlyArray<Readonly<ReadonlySet<unknown>>>>(val
 function mergeMaps<Ts extends ReadonlyArray<Readonly<ReadonlyMap<unknown, unknown>>>>(
   values: Ts,
 ): DeepMergeMapsDefaultHKT<Ts> {
-  return new Map(getIterableOfIterables(values)) as DeepMergeMapsDefaultHKT<Ts>;
+  const result = new Map<unknown, unknown>();
+  for (const map of values) {
+    for (const [key, value] of map) {
+      result.set(key, value);
+    }
+  }
+  return result as DeepMergeMapsDefaultHKT<Ts>;
 }
 
 /**

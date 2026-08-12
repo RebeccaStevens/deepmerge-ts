@@ -93,40 +93,6 @@ export function objectHasProperty(object: object, property: PropertyKey): boolea
   return typeof object === "object" && Object.prototype.propertyIsEnumerable.call(object, property);
 }
 
-/**
- * Get an iterable object that iterates over the given iterables.
- */
-export function getIterableOfIterables<T>(iterables: ReadonlyArray<Readonly<Iterable<T>>>): Iterable<T> {
-  let mut_iterablesIndex = 0;
-  let mut_iterator = iterables[0]?.[Symbol.iterator]();
-
-  return {
-    [Symbol.iterator](): Iterator<T, void> {
-      return {
-        next(): IteratorResult<T, void> {
-          do {
-            if (mut_iterator === undefined) {
-              return { done: true, value: undefined };
-            }
-
-            const result = mut_iterator.next();
-            if (result.done === true) {
-              mut_iterablesIndex += 1;
-              mut_iterator = iterables[mut_iterablesIndex]?.[Symbol.iterator]();
-              continue;
-            }
-
-            return {
-              done: false,
-              value: result.value,
-            };
-          } while (true);
-        },
-      };
-    },
-  };
-}
-
 // eslint-disable-next-line unicorn/prefer-set-has -- Array is more performant for a low number of elements.
 const validRecordToStringValues = ["[object Object]", "[object Module]"];
 
