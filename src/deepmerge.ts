@@ -12,6 +12,8 @@ import type {
 } from "./types/index.ts";
 import { ObjectType, getObjectType } from "./utils.ts";
 
+const defaultDeepmerge = /** @__PURE__ */ deepmergeCustom({});
+
 /**
  * Deeply merge objects.
  *
@@ -20,7 +22,7 @@ import { ObjectType, getObjectType } from "./utils.ts";
 export function deepmerge<Ts extends Readonly<ReadonlyArray<unknown>>>(
   ...objects: readonly [...Ts]
 ): DeepMergeHKT<Ts, DeepMergeFunctionsDefaultURIs, DeepMergeBuiltInMetaData> {
-  return deepmergeCustom({})(...objects);
+  return defaultDeepmerge(...objects);
 }
 
 /**

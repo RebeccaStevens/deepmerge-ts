@@ -12,6 +12,8 @@ import type {
 import type { SimplifyObject } from "./types/utils.ts";
 import { ObjectType, getObjectType } from "./utils.ts";
 
+const defaultDeepmergeInto = /** @__PURE__ */ deepmergeIntoCustom({});
+
 /**
  * Deeply merge objects into a target.
  *
@@ -39,7 +41,7 @@ export function deepmergeInto<Target extends object, Ts extends ReadonlyArray<un
 ): asserts target is SimplifyObject<
   Target & DeepMergeHKT<[Target, ...Ts], DeepMergeFunctionsDefaultURIs, DeepMergeBuiltInMetaData>
 > {
-  return void deepmergeIntoCustom({})(target, ...objects);
+  return void defaultDeepmergeInto(target, ...objects);
 }
 
 /**
