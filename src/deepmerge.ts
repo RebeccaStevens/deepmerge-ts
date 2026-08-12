@@ -1,5 +1,10 @@
 import { actions } from "./actions.ts";
-import { defaultFilterValues, defaultMetaDataUpdater } from "./defaults/general.ts";
+import {
+  defaultFilterValues,
+  defaultMetaDataUpdater,
+  hasFallback,
+  resolveCustomMergeFunctions,
+} from "./defaults/general.ts";
 import { mergeFunctions as defaultMergeFunctions } from "./defaults/vanilla.ts";
 import type {
   DeepMergeBuiltInMetaData,
@@ -95,14 +100,10 @@ function getUtils<M, MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaD
 ): DeepMergeUtils<M, MM> {
   return {
     defaultMergeFunctions,
-    mergeFunctions: {
-      ...defaultMergeFunctions,
-      ...Object.fromEntries(
-        Object.entries(options)
-          .filter(([key, option]) => Object.hasOwn(defaultMergeFunctions, key))
-          .map(([key, option]) => (option === false ? [key, defaultMergeFunctions.mergeOthers] : [key, option])),
-      ),
-    } as DeepMergeUtils<M, MM>["mergeFunctions"],
+    mergeFunctions: resolveCustomMergeFunctions(options, defaultMergeFunctions) as DeepMergeUtils<
+      M,
+      MM
+    >["mergeFunctions"],
     metaDataUpdater: (options.metaDataUpdater ?? defaultMetaDataUpdater) as unknown as DeepMergeUtils<
       M,
       MM
@@ -205,12 +206,7 @@ function mergeRecords<
 >(values: ReadonlyArray<Readonly<Record<PropertyKey, unknown>>>, utils: U, meta: M | undefined) {
   const result = utils.mergeFunctions.mergeRecords(values, utils, meta);
 
-  if (
-    result === actions.defaultMerge ||
-    (utils.useImplicitDefaultMerging &&
-      result === undefined &&
-      utils.mergeFunctions.mergeRecords !== utils.defaultMergeFunctions.mergeRecords)
-  ) {
+  if (hasFallback(utils, "mergeRecords", result)) {
     return utils.defaultMergeFunctions.mergeRecords<
       ReadonlyArray<Readonly<Record<PropertyKey, unknown>>>,
       U,
@@ -235,12 +231,7 @@ function mergeArrays<
 >(values: ReadonlyArray<Readonly<ReadonlyArray<unknown>>>, utils: U, meta: M | undefined) {
   const result = utils.mergeFunctions.mergeArrays(values, utils, meta);
 
-  if (
-    result === actions.defaultMerge ||
-    (utils.useImplicitDefaultMerging &&
-      result === undefined &&
-      utils.mergeFunctions.mergeArrays !== utils.defaultMergeFunctions.mergeArrays)
-  ) {
+  if (hasFallback(utils, "mergeArrays", result)) {
     return utils.defaultMergeFunctions.mergeArrays(values);
   }
   return result;
@@ -258,12 +249,7 @@ function mergeSets<U extends DeepMergeUtils<M, MM>, M, MM extends DeepMergeBuilt
 ) {
   const result = utils.mergeFunctions.mergeSets(values, utils, meta);
 
-  if (
-    result === actions.defaultMerge ||
-    (utils.useImplicitDefaultMerging &&
-      result === undefined &&
-      utils.mergeFunctions.mergeSets !== utils.defaultMergeFunctions.mergeSets)
-  ) {
+  if (hasFallback(utils, "mergeSets", result)) {
     return utils.defaultMergeFunctions.mergeSets(values);
   }
   return result;
@@ -281,12 +267,7 @@ function mergeMaps<U extends DeepMergeUtils<M, MM>, M, MM extends DeepMergeBuilt
 ) {
   const result = utils.mergeFunctions.mergeMaps(values, utils, meta);
 
-  if (
-    result === actions.defaultMerge ||
-    (utils.useImplicitDefaultMerging &&
-      result === undefined &&
-      utils.mergeFunctions.mergeMaps !== utils.defaultMergeFunctions.mergeMaps)
-  ) {
+  if (hasFallback(utils, "mergeMaps", result)) {
     return utils.defaultMergeFunctions.mergeMaps(values);
   }
   return result;
@@ -304,12 +285,7 @@ function mergeOthers<
 >(values: ReadonlyArray<unknown>, utils: U, meta: M | undefined) {
   const result = utils.mergeFunctions.mergeOthers(values, utils, meta);
 
-  if (
-    result === actions.defaultMerge ||
-    (utils.useImplicitDefaultMerging &&
-      result === undefined &&
-      utils.mergeFunctions.mergeOthers !== utils.defaultMergeFunctions.mergeOthers)
-  ) {
+  if (hasFallback(utils, "mergeOthers", result)) {
     return utils.defaultMergeFunctions.mergeOthers(values);
   }
   return result;
