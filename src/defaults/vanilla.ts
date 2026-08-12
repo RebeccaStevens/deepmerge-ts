@@ -92,7 +92,13 @@ function mergeArrays<Ts extends ReadonlyArray<ReadonlyArray<unknown>>, Fs extend
  * @param values - The sets.
  */
 function mergeSets<Ts extends ReadonlyArray<Readonly<ReadonlySet<unknown>>>>(values: Ts): DeepMergeSetsDefaultHKT<Ts> {
-  return new Set(getIterableOfIterables(values)) as DeepMergeSetsDefaultHKT<Ts>;
+  const result = new Set<unknown>();
+  for (const set of values) {
+    for (const element of set) {
+      result.add(element);
+    }
+  }
+  return result as DeepMergeSetsDefaultHKT<Ts>;
 }
 
 /**
