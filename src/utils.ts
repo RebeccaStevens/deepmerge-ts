@@ -41,6 +41,18 @@ export function getObjectType(object: unknown): ObjectType {
 }
 
 /**
+ * Get the keys of the given object(s) including symbol keys.
+ * If an array is given, the keys of all the objects within the array are returned.
+ *
+ * Note: Only keys to enumerable properties are returned.
+ *
+ * @deprecated Use `getKeysOfObjects` instead.
+ * @param objects - An array of objects to get the keys of.
+ * @returns A set containing all the keys of all the given objects.
+ */
+export const getKeys = getKeysOfObjects;
+
+/**
  * Get the keys of the given objects including symbol keys.
  *
  * Note: Only keys to enumerable properties are returned.
@@ -48,12 +60,22 @@ export function getObjectType(object: unknown): ObjectType {
  * @param objects - An array of objects to get the keys of.
  * @returns A set containing all the keys of all the given objects.
  */
-export function getKeys(objects: ReadonlyArray<object>): Set<PropertyKey> {
+export function getKeysOfObjects(objects: ReadonlyArray<object>): Set<PropertyKey> {
   const keys = new Set<PropertyKey>();
 
-  for (const object of objects) {
-    for (const key of [...Object.keys(object), ...Object.getOwnPropertySymbols(object)]) {
-      keys.add(key);
+  for (const currentObject of objects) {
+    const stringKeys = Object.keys(currentObject);
+    for (const stringKey of stringKeys) {
+      keys.add(stringKey);
+    }
+    const symbols = Object.getOwnPropertySymbols(currentObject);
+    // Fast path: skip symbol iteration when the object has no own symbols.
+    if (symbols.length > 0) {
+      for (const symbol of symbols) {
+        if (Object.prototype.propertyIsEnumerable.call(currentObject, symbol)) {
+          keys.add(symbol);
+        }
+      }
     }
   }
 
@@ -105,15 +127,22 @@ export function getIterableOfIterables<T>(iterables: ReadonlyArray<Readonly<Iter
   };
 }
 
-// eslint-disable-next-line unicorn/prefer-set-has -- Array is more performant for a low number of elements.
-const validRecordToStringValues = ["[object Object]", "[object Module]"];
-
 /**
  * Does the given object appear to be a record.
  */
 function isRecord(value: object): value is Record<PropertyKey, unknown> {
+  // Fast path: Objects created via `{}` (whose prototype is `Object.prototype`)
+  // or `Object.create(null)` (whose prototype is `null`) are plain records.
+  // Assumes that standard plain objects do not have modified prototypes.
+  const prototype: unknown = Object.getPrototypeOf(value);
+
+  if (prototype === null || prototype === Object.prototype) {
+    return true;
+  }
+
   // All records are objects.
-  if (!validRecordToStringValues.includes(Object.prototype.toString.call(value))) {
+  const objectToString = Object.prototype.toString.call(value);
+  if (objectToString !== "[object Object]" && objectToString !== "[object Module]") {
     return false;
   }
 
@@ -125,20 +154,20 @@ function isRecord(value: object): value is Record<PropertyKey, unknown> {
     return true;
   }
 
-  const prototype: unknown = constructor.prototype;
+  const constructorPrototype: unknown = constructor.prototype;
 
   // If has modified prototype.
-  if (
-    prototype === null ||
-    typeof prototype !== "object" ||
-    !validRecordToStringValues.includes(Object.prototype.toString.call(prototype))
-  ) {
+  if (constructorPrototype === null || typeof constructorPrototype !== "object") {
+    return false;
+  }
+
+  const constructorToString = Object.prototype.toString.call(constructorPrototype);
+  if (constructorToString !== "[object Object]" && constructorToString !== "[object Module]") {
     return false;
   }
 
   // If constructor does not have an Object-specific method.
-  // eslint-disable-next-line no-prototype-builtins
-  if (!prototype.hasOwnProperty("isPrototypeOf")) {
+  if (!Object.hasOwn(constructorPrototype, "isPrototypeOf")) {
     return false;
   }
 
