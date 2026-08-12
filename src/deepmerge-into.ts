@@ -301,7 +301,7 @@ function mergeMapsInto<
   const action = utils.mergeFunctions.mergeMaps(mut_target, values, utils, meta);
 
   if (action === actions.defaultMerge) {
-    utils.defaultMergeFunctions.mergeMaps(mut_target, values);
+    utils.defaultMergeFunctions.mergeMaps(mut_target, values, utils as any, meta);
   }
 }
 

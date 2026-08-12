@@ -105,16 +105,55 @@ function mergeSets<Ts extends ReadonlyArray<Readonly<ReadonlySet<unknown>>>>(val
  * The default strategy to merge maps.
  *
  * @param values - The maps.
+ * @param utils - The utils.
+ * @param meta - The meta data.
  */
-function mergeMaps<Ts extends ReadonlyArray<Readonly<ReadonlyMap<unknown, unknown>>>>(
-  values: Ts,
-): DeepMergeMapsDefaultHKT<Ts> {
+function mergeMaps<
+  Ts extends ReadonlyArray<Readonly<ReadonlyMap<unknown, unknown>>>,
+  U extends DeepMergeUtils<M, MM>,
+  Fs extends DeepMergeFunctionsURIs,
+  M,
+  MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData,
+>(values: Ts, utils?: U, meta?: M): DeepMergeMapsDefaultHKT<Ts> {
   const result = new Map<unknown, unknown>();
+
+  if (utils === undefined) {
+    for (const map of values) {
+      for (const [key, value] of map) {
+        result.set(key, value);
+      }
+    }
+    return result as DeepMergeMapsDefaultHKT<Ts>;
+  }
+
+  const valuesByKey = new Map<unknown, unknown[]>();
+
   for (const map of values) {
     for (const [key, value] of map) {
-      result.set(key, value);
+      const mut_keyValues = valuesByKey.get(key);
+      if (mut_keyValues === undefined) {
+        valuesByKey.set(key, [value]);
+      } else {
+        mut_keyValues.push(value);
+      }
     }
   }
+
+  for (const [key, keyValues] of valuesByKey) {
+    const updatedMeta = utils.metaDataUpdater(meta, {
+      key,
+      parents: values,
+    } as unknown as MM);
+
+    const propertyResult = mergeUnknowns<ReadonlyArray<unknown>, U, Fs, M, MM>(keyValues, utils, updatedMeta);
+
+    if (propertyResult === actions.skip) {
+      continue;
+    }
+
+    result.set(key, propertyResult);
+  }
+
   return result as DeepMergeMapsDefaultHKT<Ts>;
 }
 
