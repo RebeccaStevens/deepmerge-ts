@@ -74,6 +74,18 @@ export function hasFallback<M extends DeepMergeMetaData, MM extends DeepMergeMet
 }
 
 /**
+ * The default function to update meta data in fast mode.
+ *
+ * It doesn't track any meta data.
+ *
+ * @param previousMeta - The previous meta data.
+ * @param metaMeta - Meta information about the current merge state.
+ */
+export function defaultMetaDataUpdaterFast(previousMeta: undefined, metaMeta: DeepMergeMetaMetaData): undefined {
+  return undefined;
+}
+
+/**
  * Resolve custom merge functions from user options.
  *
  * @param options - The options passed by the user.
@@ -127,6 +139,8 @@ export function mergeArrays<
 export function mergeSets<
   Ts extends ReadonlyArray<Readonly<ReadonlySet<unknown>>>,
   U extends DeepMergeUtils<M, MM>,
+  // eslint-disable-next-line ts/no-unused-vars
+  Fs extends DeepMergeFunctionsURIs,
   M extends DeepMergeMetaData,
   MM extends DeepMergeMetaMetaData = DeepMergeMetaMetaData,
 >(values: Ts, utils?: U, meta?: M): DeepMergeSetsDefaultHKT<Ts> {
@@ -149,6 +163,8 @@ export function mergeSets<
 export function mergeOthers<
   Ts extends ReadonlyArray<unknown>,
   U extends DeepMergeUtils<M, MM>,
+  // eslint-disable-next-line ts/no-unused-vars
+  Fs extends DeepMergeFunctionsURIs,
   M extends DeepMergeMetaData,
   MM extends DeepMergeMetaMetaData = DeepMergeMetaMetaData,
 >(values: Ts, utils?: U, meta?: M): unknown {

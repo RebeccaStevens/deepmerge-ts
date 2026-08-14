@@ -39,7 +39,12 @@ export type MergeFunctions<
   ) => DeepMergeRecordsDefaultHKT<Ts, Fs, M>;
   mergeArrays: typeof mergeArrays;
   mergeSets: typeof mergeSets;
-  mergeMaps: <Ts extends ReadonlyArray<ReadonlyMap<unknown, unknown>>, U extends DeepMergeUtils<M, MM>>(
+  mergeMaps: <
+    Ts extends ReadonlyArray<ReadonlyMap<unknown, unknown>>,
+    U extends DeepMergeUtils<M, MM>,
+    // eslint-disable-next-line ts/no-unused-vars
+    Fs extends DeepMergeFunctionsURIs,
+  >(
     values: Ts,
     utils: U,
     meta: M,
@@ -127,17 +132,8 @@ function mergeMaps<
   Fs extends DeepMergeFunctionsURIs,
   M extends DeepMergeMetaData,
   MM extends DeepMergeMetaMetaData = DeepMergeMetaMetaData,
->(values: Ts, utils?: U, meta?: M): DeepMergeMapsDefaultHKT<Ts> {
+>(values: Ts, utils: U, meta: M): DeepMergeMapsDefaultHKT<Ts> {
   const result = new Map<unknown, unknown>();
-
-  if (utils === undefined) {
-    for (const map of values) {
-      for (const [key, value] of map) {
-        result.set(key, value);
-      }
-    }
-    return result as DeepMergeMapsDefaultHKT<Ts>;
-  }
 
   const valuesByKey = new Map<unknown, unknown[]>();
 

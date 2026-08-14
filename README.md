@@ -188,6 +188,22 @@ taking averages of the inputs.
 
 ![smart merge animation](./assets/smart-merge.gif)
 
+## High-Performance "FastUnsafe" Variants
+
+For performance-critical code where input is trusted and non-circular, we provide high-performance variants:
+
+- `deepmergeFastUnsafe(x, y, ...)`
+- `deepmergeIntoFastUnsafe(target, value, ...)`
+
+### Differences from Standard Versions
+
+- **No circular reference detection:** Does not track object hierarchies or detect cyclic references.
+- **No recursion depth limits:** Does not enforce a `maxDepth` limit.
+- **No metadata tracking:** Metadata updates and custom metadata tracking are bypassed, avoiding metadata object allocations.
+
+> [!WARNING]
+> Only use these functions with **trusted, non-circular data**. Using them with untrusted user data can lead to stack overflow on cyclic or deeply nested input.
+
 ## API
 
 See [API docs](./docs/API.md).

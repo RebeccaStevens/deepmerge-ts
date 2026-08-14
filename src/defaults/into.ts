@@ -105,16 +105,7 @@ function mergeMapsInto<
   U extends DeepMergeIntoUtils<M, MM>,
   M extends DeepMergeMetaData,
   MM extends DeepMergeMetaMetaData = DeepMergeMetaMetaData,
->(mut_target: Reference<Map<unknown, unknown>>, values: Ts, utils?: U, meta?: M): void {
-  if (utils === undefined) {
-    for (let mut_i = 1; mut_i < values.length; mut_i++) {
-      for (const [key, value] of values[mut_i]!) {
-        mut_target.value.set(key, value);
-      }
-    }
-    return;
-  }
-
+>(mut_target: Reference<Map<unknown, unknown>>, values: Ts, utils: U, meta: M | undefined): void {
   const valuesByKey = new Map<unknown, unknown[]>();
   for (let mut_i = 1; mut_i < values.length; mut_i++) {
     for (const [key, value] of values[mut_i]!) {

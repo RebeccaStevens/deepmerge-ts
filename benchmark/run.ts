@@ -1,7 +1,7 @@
 /* eslint-disable no-await-in-loop */
 import fastify from "@fastify/deepmerge";
 import deepmerge from "deepmerge";
-import { deepmerge as deepmergeTs } from "deepmerge-ts";
+import { deepmergeInto, deepmerge as deepmergeTs, deepmergeFastUnsafe as deepmergeTsFast } from "deepmerge-ts";
 import defu from "defu";
 import lodash from "lodash";
 import { merge as mergeAnything } from "merge-anything";
@@ -96,6 +96,14 @@ for (let mut_i = 0; mut_i < benchmarkData.all.length; mut_i++) {
 
   addBenchTask(benchAll, "deepmerge-ts", samplesAll, (s) => {
     deepmergeTs(...s);
+  });
+  addBenchTask(benchAll, "deepmerge-ts (fast)", samplesAll, (s) => {
+    deepmergeTsFast(...s);
+  });
+  // deepmergeInto is not a pure function (it mutates nested objects in-place).
+  // Use structuredClone to prevent corrupting the shared benchmark dataset across iterations.
+  addBenchTask(benchAll, "deepmerge-ts (into)", samplesAll, (s) => {
+    deepmergeInto({}, ...structuredClone(s));
   });
   addBenchTask(benchAll, "lodash.merge", samplesAll, (s) => {
     lodash.merge({}, ...s);

@@ -14,7 +14,7 @@ export type DeepMergeOptions<
 /**
  * The options the user can pass to customize deepmergeFastUnsafe.
  */
-export type DeepMergeFastOptions = Partial<
+export type DeepMergeFastUnsafeOptions = Partial<
   Omit<DeepMergeOptionsFull<undefined>, "metaDataUpdater" | "maxDepth" | "mergeCircularReferences">
 >;
 
@@ -29,7 +29,7 @@ export type DeepMergeIntoOptions<
 /**
  * The options the user can pass to customize deepmergeIntoFastUnsafe.
  */
-export type DeepMergeIntoFastOptions = Partial<
+export type DeepMergeIntoFastUnsafeOptions = Partial<
   Omit<DeepMergeIntoOptionsFull<undefined>, "metaDataUpdater" | "maxDepth" | "mergeCircularReferences">
 >;
 
@@ -240,9 +240,11 @@ export type DeepMergeIntoUtils<
 }>;
 
 /**
- * The utils provided to the into merge functions.
+ * The utils provided to the merge functions in fast mode.
  */
-export type DeepMergeIntoFunctionUtils<
-  M extends DeepMergeMetaData = DeepMergeBuiltInMetaData,
-  MM extends DeepMergeMetaMetaData = DeepMergeMetaMetaData,
-> = DeepMergeIntoUtils<M, MM>;
+export type DeepMergeFastUnsafeUtils = DeepMergeUtils<undefined>;
+
+/**
+ * The utils provided to the into merge functions in fast mode.
+ */
+export type DeepMergeIntoFastUnsafeUtils = DeepMergeIntoUtils<undefined>;
