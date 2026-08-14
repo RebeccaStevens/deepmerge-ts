@@ -1,62 +1,62 @@
 {
   "typescript": "5.9.3",
-  "created": "2026-08-15T08:00:33.000Z",
+  "created": "2026-08-15T06:37:44.894Z",
   "scenarios": {
     "collections": {
-      "Types": 37442,
-      "Instantiations": 95021,
-      "Symbols": 112360,
-      "Memory used": 145301,
-      "Check time": 0.72,
-      "Total time": 1.22
+      "Types": 26363,
+      "Instantiations": 68307,
+      "Symbols": 78127,
+      "Memory used": 126234,
+      "Check time": 0.64,
+      "Total time": 1.1
     },
     "custom": {
-      "Types": 37960,
-      "Instantiations": 100198,
-      "Symbols": 116649,
-      "Memory used": 152966,
-      "Check time": 0.73,
-      "Total time": 1.22
+      "Types": 26306,
+      "Instantiations": 68530,
+      "Symbols": 76457,
+      "Memory used": 124279,
+      "Check time": 0.6,
+      "Total time": 1.04
     },
     "deep": {
-      "Types": 64397,
-      "Instantiations": 437937,
-      "Symbols": 375499,
-      "Memory used": 283035,
-      "Check time": 1.33,
-      "Total time": 1.82
+      "Types": 25519,
+      "Instantiations": 66588,
+      "Symbols": 74900,
+      "Memory used": 137211,
+      "Check time": 0.61,
+      "Total time": 1.04
     },
     "into": {
-      "Types": 34580,
-      "Instantiations": 75637,
-      "Symbols": 89465,
-      "Memory used": 130032,
-      "Check time": 0.67,
-      "Total time": 1.2
+      "Types": 25351,
+      "Instantiations": 63563,
+      "Symbols": 73057,
+      "Memory used": 127282,
+      "Check time": 0.59,
+      "Total time": 1.05
     },
     "optional": {
-      "Types": 44570,
-      "Instantiations": 172189,
-      "Symbols": 195628,
-      "Memory used": 179294,
-      "Check time": 0.92,
-      "Total time": 1.39
+      "Types": 26889,
+      "Instantiations": 77391,
+      "Symbols": 82257,
+      "Memory used": 139344,
+      "Check time": 0.64,
+      "Total time": 1.06
     },
     "unions": {
-      "Types": 40176,
-      "Instantiations": 118263,
-      "Symbols": 137584,
-      "Memory used": 161085,
-      "Check time": 0.78,
-      "Total time": 1.26
+      "Types": 25813,
+      "Instantiations": 68446,
+      "Symbols": 76090,
+      "Memory used": 124473,
+      "Check time": 0.65,
+      "Total time": 1.1
     },
     "wide": {
-      "Types": 255669,
-      "Instantiations": 6459677,
-      "Symbols": 5817275,
-      "Memory used": 2377714,
-      "Check time": 10.03,
-      "Total time": 10.51
+      "Types": 25953,
+      "Instantiations": 82742,
+      "Symbols": 78550,
+      "Memory used": 145688,
+      "Check time": 0.64,
+      "Total time": 1.08
     }
   }
 }

@@ -37,6 +37,11 @@ export type Is<T1, T2> = [T1] extends [T2] ? true : false;
 export type IsNever<T> = Is<T, never>;
 
 /**
+ * Returns whether or not the given type is a union.
+ */
+export type IsUnion<T, U = T> = T extends unknown ? ([U] extends [T] ? false : true) : never;
+
+/**
  * And operator for types.
  */
 export type And<T1 extends boolean, T2 extends boolean> = T1 extends false ? false : T2;

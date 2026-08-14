@@ -2,18 +2,24 @@ import type {
   DeepMergeArraysDefaultHKT,
   DeepMergeCircularReferencesDefaultHKT,
   DeepMergeFilterValuesDefaultHKT,
+  DeepMergeFilterValuesDefaultURI,
+  DeepMergeFunctionsDefaultURIs,
   DeepMergeMapsDefaultHKT,
   DeepMergeRecordsDefaultHKT,
   DeepMergeSetsDefaultHKT,
 } from "./defaults.ts";
 import type {
+  And,
   AssertType,
-  EveryIsArray,
-  EveryIsMap,
-  EveryIsRecord,
-  EveryIsSet,
+  Is,
+  IsArray,
+  IsMap,
   IsNever,
+  IsRecord,
+  IsSet,
   IsTuple,
+  IsUnion,
+  Not,
   TupleTupleToTupleUnion,
   UnionToTuple,
 } from "./utils.ts";
@@ -94,7 +100,9 @@ export type DeepMergeHKT<Ts extends ReadonlyArray<unknown>, Fs extends DeepMerge
   IsTuple<Ts> extends true
     ? Ts extends readonly []
       ? undefined
-      : DeepMergeHKTHelper<FilterValuesHKT<Ts, Fs, M>, Fs, M>
+      : DeepMergeSameTypeShortcut<Ts, Fs> extends true
+        ? DeepMergeSameTypeElement<Ts>
+        : DeepMergeHKTHelper<FilterValuesHKT<Ts, Fs, M>, Fs, M>
     : unknown;
 
 type DeepMergeHKTHelper<Ts, Fs extends DeepMergeFunctionsURIs, M> =
@@ -104,17 +112,179 @@ type DeepMergeHKTHelper<Ts, Fs extends DeepMergeFunctionsURIs, M> =
         ? unknown
         : Ts extends readonly [infer T1]
           ? T1
-          : EveryIsArray<Ts> extends true
-            ? DeepMergeArraysHKT<Ts, Fs, M>
-            : EveryIsMap<Ts> extends true
-              ? DeepMergeMapsHKT<Ts, Fs, M>
-              : EveryIsSet<Ts> extends true
-                ? DeepMergeSetsHKT<Ts, Fs, M>
-                : EveryIsRecord<Ts> extends true
-                  ? DeepMergeRecordsHKT<Ts, Fs, M>
-                  : DeepMergeOthersHKT<Ts, Fs, M>
+          : DeepMergeDispatch<Ts, Fs, M, DeepMergeTupleKind<Ts>>
       : unknown
     : never;
+
+/**
+ * Returns whether or not all the given types can be deep merged by simply
+ * returning the first type as-is.
+ *
+ * When every value being merged has the same type and that type is sound to
+ * shortcut (see {@link DeepMergeSameTypeShortcutElement}), the result is that
+ * same type, so the full recursive computation can be skipped for that common
+ * case.
+ */
+type DeepMergeSameTypeShortcut<Ts extends ReadonlyArray<unknown>, Fs extends DeepMergeFunctionsURIs> =
+  Is<Fs, DeepMergeFunctionsDefaultURIs> extends true
+    ? AllSameTypes<Ts> extends true
+      ? Ts extends readonly [infer T1, ...ReadonlyArray<unknown>]
+        ? DeepMergeSameTypeShortcutElement<T1> extends true
+          ? true
+          : false
+        : false
+      : false
+    : false;
+
+/**
+ * Returns whether or not an element type is eligible for the same-type
+ * shortcut.
+ *
+ * A type is eligible when merging two values of that type is guaranteed to
+ * produce exactly that type (see {@link DeepMergeSameTypeValueSound}).
+ */
+type DeepMergeSameTypeShortcutElement<T1> = DeepMergeSameTypeValueSound<T1, []> extends true ? true : false;
+
+/**
+ * Returns whether or not the given type is sound to shortcut, meaning merging
+ * two values of this type is guaranteed to produce exactly this type.
+ *
+ * A type is unsound (and therefore excluded from the shortcut) when:
+ * - it is a union (merging two union values can produce a value outside the union, and `undefined`
+ * members are filtered out by default), or
+ * - it contains `undefined` (filtered out by default), or
+ * - it is a readonly array or a tuple (arrays are concatenated, so the readonly/width information
+ * would be lost), or
+ * - it is a readonly `Set`/`Map` (they are merged into mutable versions), or
+ * - it is a record that contains any readonly property or any unsound value (records are merged
+ * key-by-key, so `Readonly`/`Partial` wrappers are stripped from the result), or
+ * - it is part of a cycle of records (to keep the check terminating; the full merge handles
+ * recursive types correctly).
+ *
+ * `Seen` accumulates the records already visited so that recursive types are
+ * reported as unsound instead of causing a circular reference error.
+ */
+type DeepMergeSameTypeValueSound<V, Seen extends ReadonlyArray<unknown>> = [V] extends [Seen[number]]
+  ? false
+  : IsUnion<V> extends true
+    ? false
+    : undefined extends V
+      ? false
+      : V extends ReadonlyArray<unknown>
+        ? V extends unknown[]
+          ? Not<IsTuple<V>>
+          : false
+        : V extends ReadonlySet<unknown>
+          ? V extends Set<unknown>
+            ? true
+            : false
+          : V extends ReadonlyMap<unknown, unknown>
+            ? V extends Map<unknown, unknown>
+              ? true
+              : false
+            : V extends Readonly<Record<PropertyKey, unknown>>
+              ? DeepMergeSameTypeRecordSound<V, [V, ...Seen]>
+              : true;
+
+/**
+ * Returns whether or not every property of the given record is sound to
+ * shortcut (see {@link DeepMergeSameTypeValueSound}).
+ *
+ * `Readonly` properties are always unsound because the full merge strips the
+ * `readonly` modifier from the result.
+ */
+type DeepMergeSameTypeRecordSound<T, Seen extends ReadonlyArray<unknown>> = {
+  [K in keyof T]-?: IsReadonlyProperty<T, K> extends true
+    ? K
+    : DeepMergeSameTypeValueSound<Required<T>[K], Seen> extends true
+      ? never
+      : K;
+}[keyof T] extends never
+  ? true
+  : false;
+
+/**
+ * Returns whether or not the given property is readonly.
+ *
+ * This relies on TypeScript's identity check between a mutable and a readonly
+ * mapped type and correctly reports `false` for optional properties.
+ */
+type IsReadonlyProperty<T, K extends keyof T> =
+  // eslint-disable-next-line ts/consistent-indexed-object-style -- `Record<K, T[K]>` does not reliably distinguish readonly modifiers
+  (<P>() => P extends { [PK in K]: T[K] } ? 1 : 2) extends <P>() => P extends { readonly [PK in K]: T[K] } ? 1 : 2
+    ? true
+    : false;
+
+/**
+ * Get the first element of a non-empty tuple.
+ */
+type DeepMergeSameTypeElement<Ts extends ReadonlyArray<unknown>> = Ts extends readonly [
+  infer T1,
+  ...ReadonlyArray<unknown>,
+]
+  ? T1
+  : never;
+
+/**
+ * Returns whether or not all the given types are the same type
+ * (mutually assignable).
+ */
+type AllSameTypes<Ts extends ReadonlyArray<unknown>> = Ts extends readonly [infer Head, ...infer Rest]
+  ? Rest extends ReadonlyArray<unknown>
+    ? RestIsSameAs<Rest, Head>
+    : true
+  : true;
+
+/**
+ * Returns whether or not every type in the tuple is the same type as the
+ * given type (mutually assignable).
+ */
+type RestIsSameAs<Ts extends ReadonlyArray<unknown>, T> = Ts extends readonly [infer Head, ...infer Rest]
+  ? And<Is<Head, T>, Is<T, Head>> extends true
+    ? Rest extends ReadonlyArray<unknown>
+      ? RestIsSameAs<Rest, T>
+      : true
+    : false
+  : true;
+
+type DeepMergeDispatch<
+  Ts extends ReadonlyArray<unknown>,
+  Fs extends DeepMergeFunctionsURIs,
+  M,
+  Kind,
+> = Kind extends "array"
+  ? DeepMergeArraysHKT<Ts, Fs, M>
+  : Kind extends "map"
+    ? DeepMergeMapsHKT<Ts, Fs, M>
+    : Kind extends "set"
+      ? DeepMergeSetsHKT<Ts, Fs, M>
+      : Kind extends "record"
+        ? DeepMergeRecordsHKT<Ts, Fs, M>
+        : DeepMergeOthersHKT<Ts, Fs, M>;
+
+type DeepMergeElementKind<T> =
+  IsArray<T> extends true
+    ? "array"
+    : IsMap<T> extends true
+      ? "map"
+      : IsSet<T> extends true
+        ? "set"
+        : IsRecord<T> extends true
+          ? "record"
+          : "other";
+
+type DeepMergeTupleKind<Ts extends ReadonlyArray<unknown>> =
+  DeepMergeKinds<Ts> extends "array"
+    ? "array"
+    : DeepMergeKinds<Ts> extends "map"
+      ? "map"
+      : DeepMergeKinds<Ts> extends "set"
+        ? "set"
+        : DeepMergeKinds<Ts> extends "record"
+          ? "record"
+          : "other";
+
+type DeepMergeKinds<Ts extends ReadonlyArray<unknown>> = { [I in keyof Ts]: DeepMergeElementKind<Ts[I]> }[number];
 
 /**
  * Deep merge records.
@@ -207,13 +377,19 @@ export type DeepMergeLeaf<
                 AssertType<
                   ReadonlyArray<ReadonlyArray<unknown>>,
                   {
-                    [I in keyof Ts]: FilterValuesHKT<UnionToTuple<Ts[I]>, Fs, M>;
+                    [I in keyof Ts]: DeepMergeLeafElement<Ts[I], Fs, M>;
                   }
                 >
               >
             >
           >
       : never;
+
+type DeepMergeLeafElement<E, Fs extends DeepMergeFunctionsURIs, M> = undefined extends E
+  ? FilterValuesHKT<UnionToTuple<E>, Fs, M>
+  : Fs["DeepMergeFilterValuesURI"] extends DeepMergeFilterValuesDefaultURI
+    ? [E]
+    : FilterValuesHKT<UnionToTuple<E>, Fs, M>;
 
 type DeepMergeLeafApplyFilter<
   Original extends ReadonlyArray<unknown>,

@@ -40,3 +40,9 @@ expectType<{
   garply: number;
   grault: number;
 }>(testCustom);
+
+const same: { foo: string; bar: number } = { foo: "abc", bar: 1 };
+
+// Merging values of the same type returns that type.
+const testSame = deepmergeFastUnsafe(same, same);
+expectType<{ foo: string; bar: number }>(testSame);

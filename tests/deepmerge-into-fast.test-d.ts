@@ -36,3 +36,9 @@ const customInto = deepmergeIntoFastUnsafeCustom({
 
 const target2 = { ...a };
 customInto(target2, b);
+
+const same: { foo: string; bar: number } = { foo: "abc", bar: 1 };
+
+// Merging values of the same type into a target returns the target's type.
+deepmergeIntoFastUnsafe(same, same);
+expectType<{ foo: string; bar: number }>(same);

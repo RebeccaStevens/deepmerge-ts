@@ -95,3 +95,9 @@ expectAssignable<{
   waldo: boolean;
   fred?: number;
 }>(test7);
+
+const same: { foo: string; bar: number } = { foo: "abc", bar: 1 };
+
+// Merging values of the same type into a target returns the target's type.
+deepmergeInto(same, same);
+expectType<{ foo: string; bar: number }>(same);
