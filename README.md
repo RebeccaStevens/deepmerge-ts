@@ -68,6 +68,8 @@ bunx jsr add @rebeccastevens/deepmerge
 - Record merging support.
 - Array merging support.
 - Map and Set merging support.
+- Circular reference support.
+- Security safeguards.
 - Customized merging.
 
 ## Usage
