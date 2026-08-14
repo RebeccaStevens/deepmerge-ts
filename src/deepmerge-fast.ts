@@ -19,7 +19,7 @@ import type {
 } from "./types/index.ts";
 import { ObjectType, getObjectType } from "./utils.ts";
 
-const defaultDeepmergeFastUnsafe = /** @__PURE__ */ deepmergeFastUnsafeCustom({});
+const defaultDeepmergeFastUnsafe = /** @__PURE__ */ deepmergeFastUnsafeCustom();
 
 /**
  * Deeply merge objects using a high-performance strategy.
@@ -59,6 +59,19 @@ export function deepmergeFastUnsafe<Ts extends Readonly<ReadonlyArray<unknown>>>
  */
 export function deepmergeFastUnsafeCustom<BaseTs = unknown, PMF extends Partial<DeepMergeFunctionsURIs> = {}>(
   options: DeepMergeFastUnsafeOptions,
+): <Ts extends ReadonlyArray<BaseTs>>(...objects: Ts) => DeepMergeHKT<Ts, GetDeepMergeFunctionsURIs<PMF>, undefined>;
+
+/**
+ * Used by the default `deepmergeFastUnsafe` function.
+ *
+ * @internal
+ */
+export function deepmergeFastUnsafeCustom(): <Ts extends ReadonlyArray<unknown>>(
+  ...objects: Ts
+) => DeepMergeHKT<Ts, DeepMergeFunctionsDefaultURIs, undefined>;
+
+export function deepmergeFastUnsafeCustom<BaseTs = unknown, PMF extends Partial<DeepMergeFunctionsURIs> = {}>(
+  options: DeepMergeFastUnsafeOptions = {},
 ): <Ts extends ReadonlyArray<BaseTs>>(...objects: Ts) => DeepMergeHKT<Ts, GetDeepMergeFunctionsURIs<PMF>, undefined> {
   const utils: DeepMergeFastUnsafeUtils = getUtilsFast(options, customizedDeepmergeFast);
 
@@ -78,24 +91,11 @@ export function deepmergeFastUnsafeCustom<BaseTs = unknown, PMF extends Partial<
  * @param customizedDeepmergeFast - The customized deepmergeFastUnsafe function.
  */
 function getUtilsFast(
-  options: DeepMergeFastUnsafeOptions | undefined,
+  options: DeepMergeFastUnsafeOptions,
   customizedDeepmergeFast: DeepMergeFastUnsafeUtils["deepmerge"],
 ): DeepMergeFastUnsafeUtils {
   const defaultMergeFns = defaultMergeFunctionsFast as unknown as DeepMergeFastUnsafeUtils["defaultMergeFunctions"];
   const defaultMetaDataUpd = defaultMetaDataUpdaterFast as unknown as DeepMergeFastUnsafeUtils["metaDataUpdater"];
-
-  if (options === undefined) {
-    return {
-      defaultMergeFunctions: defaultMergeFns,
-      mergeFunctions: defaultMergeFns,
-      metaDataUpdater: defaultMetaDataUpd,
-      deepmerge: customizedDeepmergeFast,
-      useImplicitDefaultMerging: false,
-      filterValues: defaultFilterValues,
-      maxDepth: undefined,
-      actions,
-    };
-  }
 
   return {
     defaultMergeFunctions: defaultMergeFns,

@@ -101,7 +101,7 @@ describe("deepmergeCustom", () => {
       fourth: "abc",
     };
 
-    const customizedDeepmerge = deepmergeCustom({});
+    const customizedDeepmerge = deepmergeCustom();
 
     const merged = customizedDeepmerge(v, x, y, z);
 

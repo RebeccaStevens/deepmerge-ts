@@ -19,7 +19,7 @@ import type {
 } from "./types/index.ts";
 import { ObjectType, getCyclicReferenceDepth, getMetaDataHierarchy, getObjectType } from "./utils.ts";
 
-const defaultDeepmerge = /** @__PURE__ */ deepmergeCustom({});
+const defaultDeepmerge = /** @__PURE__ */ deepmergeCustom();
 
 /**
  * Deeply merge objects.
@@ -31,6 +31,15 @@ export function deepmerge<Ts extends Readonly<ReadonlyArray<unknown>>>(
 ): DeepMergeHKT<Ts, DeepMergeFunctionsDefaultURIs, DeepMergeBuiltInMetaData> {
   return defaultDeepmerge(...objects);
 }
+
+/**
+ * Used by the default `deepmerge` function.
+ *
+ * @internal
+ */
+export function deepmergeCustom(): <Ts extends ReadonlyArray<unknown>>(
+  ...objects: Ts
+) => DeepMergeHKT<Ts, DeepMergeFunctionsDefaultURIs, DeepMergeBuiltInMetaData>;
 
 /**
  * Deeply merge two or more objects using the given options.
@@ -66,7 +75,7 @@ export function deepmergeCustom<
   MetaData extends DeepMergeMetaData,
   MetaMetaData extends DeepMergeMetaMetaData,
 >(
-  options: DeepMergeOptions<MetaData, MetaMetaData>,
+  options: DeepMergeOptions<MetaData, MetaMetaData> = {},
   rootMetaData?: MetaData,
 ): <Ts extends ReadonlyArray<BaseTs>>(...objects: Ts) => DeepMergeHKT<Ts, GetDeepMergeFunctionsURIs<PMF>, MetaData> {
   const utils: DeepMergeUtils<MetaData, MetaMetaData> = getUtils(options, customizedDeepmerge);

@@ -14,7 +14,7 @@ import type {
 import type { SimplifyObject } from "./types/utils.ts";
 import { ObjectType, getCyclicReferenceDepth, getMetaDataHierarchy, getObjectType } from "./utils.ts";
 
-const defaultDeepmergeInto = /** @__PURE__ */ deepmergeIntoCustom({});
+const defaultDeepmergeInto = /** @__PURE__ */ deepmergeIntoCustom();
 
 /**
  * Deeply merge objects into a target.
@@ -47,6 +47,16 @@ export function deepmergeInto<Target extends object, Ts extends ReadonlyArray<un
 }
 
 /**
+ * Used by the default `deepmergeInto` function.
+ *
+ * @internal
+ */
+export function deepmergeIntoCustom(): <Target extends object, Ts extends ReadonlyArray<unknown>>(
+  target: Target,
+  ...objects: Ts
+) => void;
+
+/**
  * Deeply merge two or more objects using the given options.
  *
  * @param options - The options on how to customize the merge function.
@@ -75,7 +85,7 @@ export function deepmergeIntoCustom<
   MetaData extends DeepMergeMetaData,
   MetaMetaData extends DeepMergeMetaMetaData,
 >(
-  options: DeepMergeIntoOptions<MetaData, MetaMetaData>,
+  options: DeepMergeIntoOptions<MetaData, MetaMetaData> = {},
   rootMetaData?: MetaData,
 ): <Target extends object, Ts extends ReadonlyArray<BaseTs>>(target: Target, ...objects: Ts) => void {
   const utils: DeepMergeIntoUtils<MetaData, MetaMetaData> = getUtils(options, customizedDeepmergeInto);
