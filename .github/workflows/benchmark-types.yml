@@ -3,13 +3,34 @@ name: Type Benchmark
 on:
   pull_request:
   workflow_dispatch:
+    inputs:
+      update-baseline:
+        description: "Update baseline.json and push to the current branch"
+        type: boolean
+        default: false
   workflow_call:
+
+permissions:
+  contents: write
 
 jobs:
   type_benchmark:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 0
       - uses: ./.github/actions/prepare
       # Deterministic counters are stable across runs; a single run keeps CI fast.
-      - run: pnpm run benchmark:types -- --runs 1
+      # When `update-baseline` is set on a manual run, record a new baseline and
+      # push it to the branch the workflow was triggered on. PR runs never update.
+      - name: Compare against baseline
+        if: ${{ !inputs.update-baseline }}
+        run: pnpm run benchmark:types -- --runs 1
+      - name: Update baseline
+        if: ${{ inputs.update-baseline }}
+        run: |
+          pnpm run benchmark:types:baseline -- --runs 1
+          git add benchmark/types/baseline.json
+          git commit -m "chore: update the type benchmark baseline"
+          git push
