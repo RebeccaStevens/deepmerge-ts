@@ -7,8 +7,8 @@ import type {
   DeepMergeMetaMetaData,
   DeepMergeSetsDefaultHKT,
   DeepMergeUtils,
+  DeepMergeValueReference,
   HierarchyValue,
-  Reference,
 } from "../types/index.ts";
 
 /**
@@ -178,7 +178,7 @@ export function mergeOthers<
  * @param values - The arrays (including the target's value if there is one).
  */
 export function mergeArraysInto<Ts extends ReadonlyArray<ReadonlyArray<unknown>>>(
-  mut_target: Reference<unknown[]>,
+  mut_target: DeepMergeValueReference<unknown[]>,
   values: Ts,
 ): void {
   for (let mut_i = 1; mut_i < values.length; mut_i++) {
@@ -196,7 +196,7 @@ export function mergeArraysInto<Ts extends ReadonlyArray<ReadonlyArray<unknown>>
  * @param values - The sets (including the target's value if there is one).
  */
 export function mergeSetsInto<Ts extends ReadonlyArray<Readonly<ReadonlySet<unknown>>>>(
-  mut_target: Reference<Set<unknown>>,
+  mut_target: DeepMergeValueReference<Set<unknown>>,
   values: Ts,
 ): void {
   for (let mut_i = 1; mut_i < values.length; mut_i++) {
@@ -212,6 +212,9 @@ export function mergeSetsInto<Ts extends ReadonlyArray<Readonly<ReadonlySet<unkn
  * @param mut_target - The target to merge into.
  * @param values - The other things.
  */
-export function mergeOthersInto<Ts extends ReadonlyArray<unknown>>(mut_target: Reference<unknown>, values: Ts): void {
+export function mergeOthersInto<Ts extends ReadonlyArray<unknown>>(
+  mut_target: DeepMergeValueReference<unknown>,
+  values: Ts,
+): void {
   mut_target.value = values.at(-1);
 }

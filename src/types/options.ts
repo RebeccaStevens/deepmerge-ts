@@ -96,9 +96,9 @@ type DeepMergeIntoOptionsFull<
 }>;
 
 /**
- * An object that has a reference to a value.
+ * An object that has a reference to a value being merged into.
  */
-export type Reference<T> = {
+export type DeepMergeValueReference<T> = {
   value: T;
 };
 
@@ -165,42 +165,42 @@ type DeepMergeIntoFunctions<
   MM extends DeepMergeMetaMetaData = DeepMergeMetaMetaData,
 > = Readonly<{
   mergeRecords: <Ts extends ReadonlyArray<Readonly<Record<PropertyKey, unknown>>>, U extends DeepMergeIntoUtils<M, MM>>(
-    mut_target: Reference<Record<PropertyKey, unknown>>,
+    mut_target: DeepMergeValueReference<Record<PropertyKey, unknown>>,
     values: Ts,
     utils: U,
     meta: M | undefined,
   ) => DeepMergeIntoFunctionsReturnType;
 
   mergeArrays: <Ts extends ReadonlyArray<ReadonlyArray<unknown>>, U extends DeepMergeIntoUtils<M, MM>>(
-    mut_target: Reference<unknown[]>,
+    mut_target: DeepMergeValueReference<unknown[]>,
     values: Ts,
     utils: U,
     meta: M | undefined,
   ) => DeepMergeIntoFunctionsReturnType;
 
   mergeMaps: <Ts extends ReadonlyArray<Readonly<ReadonlyMap<unknown, unknown>>>, U extends DeepMergeIntoUtils<M, MM>>(
-    mut_target: Reference<Map<unknown, unknown>>,
+    mut_target: DeepMergeValueReference<Map<unknown, unknown>>,
     values: Ts,
     utils: U,
     meta: M | undefined,
   ) => DeepMergeIntoFunctionsReturnType;
 
   mergeSets: <Ts extends ReadonlyArray<Readonly<ReadonlySet<unknown>>>, U extends DeepMergeIntoUtils<M, MM>>(
-    mut_target: Reference<Set<unknown>>,
+    mut_target: DeepMergeValueReference<Set<unknown>>,
     values: Ts,
     utils: U,
     meta: M | undefined,
   ) => DeepMergeIntoFunctionsReturnType;
 
   mergeCircularReferences: <Ts extends ReadonlyArray<object>, U extends DeepMergeIntoUtils<M, MM>>(
-    mut_target: Reference<unknown>,
+    mut_target: DeepMergeValueReference<unknown>,
     values: Ts,
     utils: U,
     meta: M | undefined,
   ) => DeepMergeIntoFunctionsReturnType;
 
   mergeOthers: <Ts extends ReadonlyArray<unknown>, U extends DeepMergeIntoUtils<M, MM>>(
-    mut_target: Reference<unknown>,
+    mut_target: DeepMergeValueReference<unknown>,
     values: Ts,
     utils: U,
     meta: M | undefined,

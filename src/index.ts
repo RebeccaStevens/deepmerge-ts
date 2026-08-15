@@ -33,7 +33,7 @@ export type {
   DeepMergeIntoFastUnsafeOptions,
   DeepMergeRecordsDefaultHKT,
   DeepMergeSetsDefaultHKT,
-  Reference as DeepMergeValueReference,
+  DeepMergeValueReference,
   GetDeepMergeFunctionsURIs,
 } from "./types/index.ts";
 export type { FilterOut } from "./types/utils.ts";

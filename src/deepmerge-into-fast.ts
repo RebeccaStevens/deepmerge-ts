@@ -9,8 +9,8 @@ import type {
   DeepMergeIntoUtils,
   DeepMergeMetaData,
   DeepMergeMetaMetaData,
+  DeepMergeValueReference,
   MetaDataUpdater,
-  Reference,
 } from "./types/index.ts";
 import type { SimplifyObject } from "./types/utils.ts";
 import { ObjectType, getObjectType } from "./utils.ts";
@@ -154,7 +154,7 @@ export function mergeUnknownsIntoFast<
   M extends DeepMergeMetaData,
   MM extends DeepMergeMetaMetaData = DeepMergeMetaMetaData,
 >(
-  mut_target: Reference<unknown>,
+  mut_target: DeepMergeValueReference<unknown>,
   values: Ts,
   utils: U,
   // eslint-disable-next-line ts/no-invalid-void-type
@@ -189,7 +189,7 @@ export function mergeUnknownsIntoFast<
   switch (type) {
     case ObjectType.RECORD: {
       return void mergeRecordsIntoFast<U, M, MM>(
-        mut_target as Reference<Record<PropertyKey, unknown>>,
+        mut_target as DeepMergeValueReference<Record<PropertyKey, unknown>>,
         filteredValues as ReadonlyArray<Readonly<Record<PropertyKey, unknown>>>,
         utils,
       );
@@ -197,7 +197,7 @@ export function mergeUnknownsIntoFast<
 
     case ObjectType.ARRAY: {
       return void mergeArraysIntoFast<U, M, MM>(
-        mut_target as Reference<unknown[]>,
+        mut_target as DeepMergeValueReference<unknown[]>,
         filteredValues as ReadonlyArray<ReadonlyArray<unknown>>,
         utils,
       );
@@ -205,7 +205,7 @@ export function mergeUnknownsIntoFast<
 
     case ObjectType.SET: {
       return void mergeSetsIntoFast<U, M, MM>(
-        mut_target as Reference<Set<unknown>>,
+        mut_target as DeepMergeValueReference<Set<unknown>>,
         filteredValues as ReadonlyArray<Readonly<ReadonlySet<unknown>>>,
         utils,
       );
@@ -213,7 +213,7 @@ export function mergeUnknownsIntoFast<
 
     case ObjectType.MAP: {
       return void mergeMapsIntoFast<U, M, MM>(
-        mut_target as Reference<Map<unknown, unknown>>,
+        mut_target as DeepMergeValueReference<Map<unknown, unknown>>,
         filteredValues as ReadonlyArray<Readonly<ReadonlyMap<unknown, unknown>>>,
         utils,
       );
@@ -237,7 +237,7 @@ function mergeRecordsIntoFast<
   M extends DeepMergeMetaData,
   MM extends DeepMergeMetaMetaData = DeepMergeMetaMetaData,
 >(
-  mut_target: Reference<Record<PropertyKey, unknown>>,
+  mut_target: DeepMergeValueReference<Record<PropertyKey, unknown>>,
   values: ReadonlyArray<Readonly<Record<PropertyKey, unknown>>>,
   utils: U,
 ) {
@@ -259,7 +259,7 @@ function mergeArraysIntoFast<
   U extends DeepMergeIntoUtils<M, MM>,
   M extends DeepMergeMetaData,
   MM extends DeepMergeMetaMetaData = DeepMergeMetaMetaData,
->(mut_target: Reference<unknown[]>, values: ReadonlyArray<ReadonlyArray<unknown>>, utils: U) {
+>(mut_target: DeepMergeValueReference<unknown[]>, values: ReadonlyArray<ReadonlyArray<unknown>>, utils: U) {
   const action = utils.mergeFunctions.mergeArrays(mut_target, values, utils, undefined);
 
   if (action === actions.defaultMerge) {
@@ -278,7 +278,7 @@ function mergeSetsIntoFast<
   U extends DeepMergeIntoUtils<M, MM>,
   M extends DeepMergeMetaData,
   MM extends DeepMergeMetaMetaData = DeepMergeMetaMetaData,
->(mut_target: Reference<Set<unknown>>, values: ReadonlyArray<Readonly<ReadonlySet<unknown>>>, utils: U) {
+>(mut_target: DeepMergeValueReference<Set<unknown>>, values: ReadonlyArray<Readonly<ReadonlySet<unknown>>>, utils: U) {
   const action = utils.mergeFunctions.mergeSets(mut_target, values, utils, undefined);
 
   if (action === actions.defaultMerge) {
@@ -298,7 +298,7 @@ function mergeMapsIntoFast<
   M extends DeepMergeMetaData,
   MM extends DeepMergeMetaMetaData = DeepMergeMetaMetaData,
 >(
-  mut_target: Reference<Map<unknown, unknown>>,
+  mut_target: DeepMergeValueReference<Map<unknown, unknown>>,
   values: ReadonlyArray<Readonly<ReadonlyMap<unknown, unknown>>>,
   utils: U,
 ) {
@@ -320,7 +320,7 @@ function mergeOthersIntoFast<
   U extends DeepMergeIntoUtils<M, MM>,
   M extends DeepMergeMetaData,
   MM extends DeepMergeMetaMetaData = DeepMergeMetaMetaData,
->(mut_target: Reference<unknown>, values: ReadonlyArray<unknown>, utils: U) {
+>(mut_target: DeepMergeValueReference<unknown>, values: ReadonlyArray<unknown>, utils: U) {
   const action = utils.mergeFunctions.mergeOthers(mut_target, values, utils, undefined);
 
   if (action === actions.defaultMerge || mut_target.value === actions.defaultMerge) {
