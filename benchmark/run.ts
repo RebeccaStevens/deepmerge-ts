@@ -1,7 +1,7 @@
 /* eslint-disable no-await-in-loop */
 import fastify from "@fastify/deepmerge";
 import deepmerge from "deepmerge";
-import { deepmergeInto, deepmerge as deepmergeTs } from "deepmerge-ts";
+import { deepmerge as deepmergeTs } from "deepmerge-ts";
 import defu from "defu";
 import lodash from "lodash";
 import { merge as mergeAnything } from "merge-anything";
@@ -97,11 +97,6 @@ for (let mut_i = 0; mut_i < benchmarkData.all.length; mut_i++) {
   addBenchTask(benchAll, "deepmerge-ts", samplesAll, (s) => {
     deepmergeTs(...s);
   });
-  // deepmergeInto is not a pure function (it mutates nested objects in-place).
-  // Use structuredClone to prevent corrupting the shared benchmark dataset across iterations.
-  addBenchTask(benchAll, "deepmerge-ts (into)", samplesAll, (s) => {
-    deepmergeInto({}, ...structuredClone(s));
-  });
   addBenchTask(benchAll, "lodash.merge", samplesAll, (s) => {
     lodash.merge({}, ...s);
   });
@@ -114,14 +109,18 @@ for (let mut_i = 0; mut_i < benchmarkData.all.length; mut_i++) {
   addBenchTask(benchAll, "@fastify/deepmerge", samplesAll, (s) => {
     fastifyMergeAll(...s);
   });
+  // ts-deepmerge mutates the first argument (its reduce mutates the accumulator),
+  // so a fresh {} is passed as the target to prevent corrupting the shared sample.
   addBenchTask(benchAll, "ts-deepmerge", samplesAll, (s) => {
-    tsDeepmerge(...s);
+    tsDeepmerge({}, ...s);
   });
   addBenchTask(benchAll, "merge-anything", samplesAll, (s) => {
     (mergeAnything as any)(...s);
   });
+  // mergician mutates the first argument (its reduce mutates the accumulator),
+  // so a fresh {} is passed as the target to prevent corrupting the shared sample.
   addBenchTask(benchAll, "mergician", samplesAll, (s) => {
-    mergician(...s);
+    mergician({}, ...s);
   });
 
   await benchAll.run();
@@ -133,12 +132,6 @@ for (let mut_i = 0; mut_i < benchmarkData.all.length; mut_i++) {
 
   addBenchTask(bench2Arg, "deepmerge-ts", samples2Arg, (s) => {
     deepmergeTs(s[0], s[1]);
-  });
-  // deepmergeInto is not a pure function (it mutates nested objects in-place).
-  // Use structuredClone to prevent corrupting the shared benchmark dataset across iterations.
-  addBenchTask(bench2Arg, "deepmerge-ts (into)", samples2Arg, (s) => {
-    const [a, b] = structuredClone(s);
-    deepmergeInto({}, a, b);
   });
   addBenchTask(bench2Arg, "lodash.merge", samples2Arg, (s) => {
     lodash.merge({}, s[0], s[1]);
@@ -152,14 +145,18 @@ for (let mut_i = 0; mut_i < benchmarkData.all.length; mut_i++) {
   addBenchTask(bench2Arg, "@fastify/deepmerge", samples2Arg, (s) => {
     fastifyMerge2(s[0], s[1]);
   });
+  // ts-deepmerge mutates the first argument (its reduce mutates the accumulator),
+  // so a fresh {} is passed as the target to prevent corrupting the shared sample.
   addBenchTask(bench2Arg, "ts-deepmerge", samples2Arg, (s) => {
-    tsDeepmerge(s[0], s[1]);
+    tsDeepmerge({}, s[0], s[1]);
   });
   addBenchTask(bench2Arg, "merge-anything", samples2Arg, (s) => {
     (mergeAnything as any)(s[0], s[1]);
   });
+  // mergician mutates the first argument (its reduce mutates the accumulator),
+  // so a fresh {} is passed as the target to prevent corrupting the shared sample.
   addBenchTask(bench2Arg, "mergician", samples2Arg, (s) => {
-    mergician(s[0], s[1]);
+    mergician({}, s[0], s[1]);
   });
 
   await bench2Arg.run();
@@ -173,23 +170,41 @@ console.log(`Dataset "${collections.name}" — Set/Map/Date values`);
 console.log(`==================================================\n`);
 
 console.log(`--- Multi-object / Variadic Merging (all) ---`);
+
+// lodash.merge is given a customizer so it can deep-merge Set/Map/Date values
+// in the same way deepmerge-ts does (Sets/Maps union; source wins for matching
+// Date and Map-primitive values). The customizer fn-call overhead is inherent
+// to this approach and is part of what "compare against deepmerge-ts" measures
+// here. @fastify/deepmerge's customization hooks do not give us a hook that
+// sees both target and source at a leaf, so it is omitted from this bench.
+const lodashCollectionsCustomizer = (objValue: unknown, srcValue: unknown): unknown => {
+  if (objValue instanceof Set && srcValue instanceof Set) {
+    const merged = new Set(objValue);
+    for (const value of srcValue) {
+      merged.add(value);
+    }
+    return merged;
+  }
+  if (objValue instanceof Map && srcValue instanceof Map) {
+    const merged = new Map(objValue);
+    for (const [key, value] of srcValue) {
+      merged.set(key, value);
+    }
+    return merged;
+  }
+  if (objValue instanceof Date && srcValue instanceof Date) {
+    return new Date(srcValue.getTime());
+  }
+  return undefined;
+};
+
 const benchCollections = createBench();
 
 addBenchTask(benchCollections, "deepmerge-ts", collections.samples, (s) => {
   deepmergeTs(...s);
 });
-// deepmergeInto is not a pure function (it mutates nested objects in-place).
-// Use structuredClone to prevent corrupting the shared benchmark dataset across iterations.
-addBenchTask(benchCollections, "deepmerge-ts (into)", collections.samples, (s) => {
-  deepmergeInto({}, ...structuredClone(s));
-});
-// @fastify/deepmerge and lodash.merge do not deep-merge Set/Map contents (they replace
-// them wholesale). They are included as reference points that complete without errors.
-addBenchTask(benchCollections, "@fastify/deepmerge", collections.samples, (s) => {
-  fastifyMergeAll(...s);
-});
-addBenchTask(benchCollections, "lodash.merge", collections.samples, (s) => {
-  lodash.merge({}, ...s);
+addBenchTask(benchCollections, "lodash.mergeWith", collections.samples, (s) => {
+  lodash.mergeWith({}, ...s, lodashCollectionsCustomizer);
 });
 
 await benchCollections.run();
