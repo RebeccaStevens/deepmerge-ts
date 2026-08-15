@@ -1,6 +1,5 @@
 bar
 baz
-boop
 codesandbox
 corge
 customizer
@@ -21,16 +20,11 @@ knip
 litecoin
 mergician
 metas
-monero
 noreply
-octocat
-plugh
 quux
 qux
 Rebecca
 sonarjs
 Stevens
-thud
 tuplify
 waldo
-xyzzy

@@ -34,10 +34,7 @@ ignorePaths:
   - .gitignore
   - .husky
   - .lintstagedrc.yml
-  - .markdownlint.json
   - .npmrc
-  - .prettierignore
-  - .prettierrc.yml
   - .vscode
   - CHANGELOG.md
   - coverage
@@ -45,7 +42,6 @@ ignorePaths:
   - dist
   - node_modules
   - package.json
-  - patches
   - pnpm-lock.yaml
   - pnpm-workspace.yaml
   - project-dictionary.txt
