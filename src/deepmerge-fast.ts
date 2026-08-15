@@ -44,6 +44,15 @@ export function deepmergeFastUnsafe<Ts extends Readonly<ReadonlyArray<unknown>>>
 }
 
 /**
+ * Used by the default `deepmergeFastUnsafe` function.
+ *
+ * @internal
+ */
+export function deepmergeFastUnsafeCustom(): <Ts extends ReadonlyArray<unknown>>(
+  ...objects: Ts
+) => DeepMergeHKT<Ts, DeepMergeFunctionsDefaultURIs, undefined>;
+
+/**
  * Deeply merge two or more objects using the given options and a high-performance strategy.
  *
  * Differences from `deepmergeCustom` (standard version):
@@ -61,15 +70,6 @@ export function deepmergeFastUnsafe<Ts extends Readonly<ReadonlyArray<unknown>>>
 export function deepmergeFastUnsafeCustom<BaseTs = unknown, PMF extends Partial<DeepMergeFunctionsURIs> = {}>(
   options: DeepMergeFastUnsafeOptions,
 ): <Ts extends ReadonlyArray<BaseTs>>(...objects: Ts) => DeepMergeHKT<Ts, GetDeepMergeFunctionsURIs<PMF>, undefined>;
-
-/**
- * Used by the default `deepmergeFastUnsafe` function.
- *
- * @internal
- */
-export function deepmergeFastUnsafeCustom(): <Ts extends ReadonlyArray<unknown>>(
-  ...objects: Ts
-) => DeepMergeHKT<Ts, DeepMergeFunctionsDefaultURIs, undefined>;
 
 export function deepmergeFastUnsafeCustom<BaseTs = unknown, PMF extends Partial<DeepMergeFunctionsURIs> = {}>(
   options: DeepMergeFastUnsafeOptions = {},

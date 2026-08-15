@@ -64,6 +64,16 @@ export function deepmergeIntoFastUnsafe<Target extends object, Ts extends Readon
 }
 
 /**
+ * Used by the default `deepmergeIntoFastUnsafe` function.
+ *
+ * @internal
+ */
+export function deepmergeIntoFastUnsafeCustom(): <Target extends object, Ts extends ReadonlyArray<unknown>>(
+  target: Target,
+  ...objects: Ts
+) => void;
+
+/**
  * Deeply merge two or more objects into a target using the given options and a high-performance strategy.
  *
  * Differences from `deepmergeIntoCustom` (standard version):
@@ -81,16 +91,6 @@ export function deepmergeIntoFastUnsafe<Target extends object, Ts extends Readon
 export function deepmergeIntoFastUnsafeCustom<BaseTs = unknown>(
   options: DeepMergeIntoFastUnsafeOptions,
 ): <Target extends object, Ts extends ReadonlyArray<BaseTs>>(target: Target, ...objects: Ts) => void;
-
-/**
- * Used by the default `deepmergeIntoFastUnsafe` function.
- *
- * @internal
- */
-export function deepmergeIntoFastUnsafeCustom(): <Target extends object, Ts extends ReadonlyArray<unknown>>(
-  target: Target,
-  ...objects: Ts
-) => void;
 
 export function deepmergeIntoFastUnsafeCustom<BaseTs = unknown>(
   options: DeepMergeIntoFastUnsafeOptions = {},
