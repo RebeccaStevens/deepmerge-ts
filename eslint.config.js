@@ -29,11 +29,18 @@ export default rsEslint(
     },
   },
   {
+    files: ["tests/**/*.ts"],
+    rules: {
+      "ts/no-shadow": "off",
+    },
+  },
+  {
     files: ["benchmark/**/*.ts"],
     rules: {
       "import/no-extraneous-dependencies": "off",
       "jsdoc/require-jsdoc": "off",
       "no-console": "off",
+      "node/no-unpublished-import": "off",
     },
   },
 );

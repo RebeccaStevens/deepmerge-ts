@@ -1,4 +1,3 @@
-/* eslint-disable node/no-unpublished-import */
 /* eslint-disable no-await-in-loop */
 import fastify from "@fastify/deepmerge";
 import deepmerge from "deepmerge";
