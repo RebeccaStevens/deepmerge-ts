@@ -130,12 +130,12 @@ function hydrateValue(value: unknown): unknown {
   return value;
 }
 
-const hydrateSet = (set: BenchmarkDataSet): BenchmarkDataSet => ({
+const hydrateSet = (set: Readonly<BenchmarkDataSet>): BenchmarkDataSet => ({
   ...set,
   samples: set.samples.map((sample) => sample.map(hydrateValue) as object[]),
 });
 
-function hydrateData(data: BenchmarkData): BenchmarkData {
+function hydrateData(data: Readonly<BenchmarkData>): BenchmarkData {
   return {
     ...data,
     all: data.all.map(hydrateSet),
