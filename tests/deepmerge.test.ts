@@ -477,6 +477,28 @@ describe("deepmerge", () => {
     expect(merged[testSymbol3]).toStrictEqual(expected[testSymbol3]);
   });
 
+  it("preserves key insertion order when merging 2 records", () => {
+    const x = { a: 1, b: 2, c: 3 };
+    const y = { b: 4, d: 5, e: 6 };
+
+    const merged = deepmerge(x, y);
+
+    expect(Object.keys(merged)).toStrictEqual(["a", "b", "c", "d", "e"]);
+    expect(merged).toStrictEqual({ a: 1, b: 4, c: 3, d: 5, e: 6 });
+  });
+
+  it("merges 2 records identically to the general merge path", () => {
+    const testSymbol = Symbol("test symbol");
+    const x = { a: 1, b: { c: [1, 2], d: 3 }, [testSymbol]: `value1` };
+    const y = { a: 2, b: { c: [3] }, e: `value2` };
+
+    const twoRecordMerge = deepmerge(x, y);
+    const generalMerge = deepmerge(x, y, {});
+
+    expect(twoRecordMerge).toStrictEqual(generalMerge);
+    expect(Object.keys(twoRecordMerge)).toStrictEqual(Object.keys(generalMerge));
+  });
+
   it("only merges enumerable properties", () => {
     const symNonEnum = Symbol("symNonEnum");
     const symEnum = Symbol("symEnum");

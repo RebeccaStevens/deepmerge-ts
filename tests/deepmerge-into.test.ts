@@ -437,6 +437,33 @@ describe("deepmergeInto", () => {
     expect(x[testSymbol3]).toStrictEqual(expected[testSymbol3]);
   });
 
+  it("preserves key insertion order when merging 2 records into target", () => {
+    const x = { a: 1, b: 2, c: 3 };
+    const y = { b: 4, d: 5, e: 6 };
+
+    deepmergeInto(x, y);
+
+    expect(Object.keys(x)).toStrictEqual(["a", "b", "c", "d", "e"]);
+    expect(x).toStrictEqual({ a: 1, b: 4, c: 3, d: 5, e: 6 });
+  });
+
+  it("merges 2 records into target identically to the general merge path", () => {
+    const testSymbol = Symbol("test symbol");
+    const x1 = { a: 1, b: { c: [1, 2], d: 3 }, [testSymbol]: `value1` };
+    const y1 = { a: 2, b: { c: [3] }, e: `value2` };
+    const x2 = { a: 1, b: { c: [1, 2], d: 3 }, [testSymbol]: `value1` };
+    const y2 = { a: 2, b: { c: [3] }, e: `value2` };
+
+    const twoRecordTarget = { ...x1 };
+    const generalTarget = { ...x2 };
+
+    deepmergeInto(twoRecordTarget, y1);
+    deepmergeInto(generalTarget, y2, {});
+
+    expect(twoRecordTarget).toStrictEqual(generalTarget);
+    expect(Object.keys(twoRecordTarget)).toStrictEqual(Object.keys(generalTarget));
+  });
+
   it("only merges enumerable properties into target", () => {
     const mut_x = {};
     const mut_y = {};

@@ -56,6 +56,61 @@ function mergeRecordsInto<
   M extends DeepMergeMetaData,
   MM extends DeepMergeMetaMetaData = DeepMergeMetaMetaData,
 >(mut_target: Reference<Record<PropertyKey, unknown>>, values: Ts, utils: U, meta: M | undefined): void {
+  if (values.length === 2) {
+    // Fast path for 2 records: avoid building a union key set and per-key value
+    // arrays. Only the keys present in each record are iterated.
+    const mergeProperty = (key: PropertyKey, propValues: unknown[]) => {
+      const updatedMeta = utils.metaDataUpdater(meta, {
+        key,
+        parents: values,
+        values: propValues,
+        result: mut_target.value,
+      } satisfies DeepMergeMetaMetaData as unknown as MM);
+
+      const propertyTarget: Reference<unknown> = { value: propValues[0] };
+      mergeUnknownsInto<ReadonlyArray<unknown>, U, M, MM>(propertyTarget, propValues, utils, updatedMeta);
+
+      if (key === "__proto__") {
+        Object.defineProperty(mut_target.value, key, {
+          value: propertyTarget.value,
+          configurable: true,
+          enumerable: true,
+          writable: true,
+        });
+      } else {
+        mut_target.value[key] = propertyTarget.value;
+      }
+    };
+
+    const firstValue = values[0]!;
+    const secondValue = values[1]!;
+    for (const key of getKeysOfObject(firstValue)) {
+      mergeProperty(key, objectHasProperty(secondValue, key) ? [firstValue[key], secondValue[key]] : [firstValue[key]]);
+    }
+    for (const key of getKeysOfObject(secondValue)) {
+      if (!objectHasProperty(firstValue, key)) {
+        mergeProperty(key, [secondValue[key]]);
+      }
+    }
+    return;
+  }
+  mergeRecordsIntoGeneral<Ts, U, M, MM>(mut_target, values, utils, meta);
+}
+
+/**
+ * The default strategy to merge 3 or more records into a target record.
+ *
+ * @param mut_target - The target to merge into.
+ * @param values - The records (including the target's value if there is one).
+ * @param utils - The utils.
+ * @param meta - The meta data.
+ */
+function mergeRecordsIntoGeneral<
+  Ts extends ReadonlyArray<Record<PropertyKey, unknown>>,
+  U extends DeepMergeIntoUtils<M, MM>,
+  M extends DeepMergeMetaData,
+  MM extends DeepMergeMetaMetaData = DeepMergeMetaMetaData,
+>(mut_target: Reference<Record<PropertyKey, unknown>>, values: Ts, utils: U, meta: M | undefined): void {
   for (const key of getKeysOfObjects(values)) {
     const propValues = [];
 
@@ -63,10 +118,6 @@ function mergeRecordsInto<
       if (objectHasProperty(value, key)) {
         propValues.push(value[key]);
       }
-    }
-
-    if (propValues.length === 0) {
-      continue;
     }
 
     const updatedMeta = utils.metaDataUpdater(meta, {

@@ -8,7 +8,7 @@ import type {
   DeepMergeRecordsDefaultHKT,
   DeepMergeUtils,
 } from "../types/index.ts";
-import { getKeysOfObjects, objectHasProperty } from "../utils.ts";
+import { getKeysOfObject, getKeysOfObjects, objectHasProperty } from "../utils.ts";
 
 import { mergeArrays, mergeOthers, mergeSets } from "./general.ts";
 
@@ -38,6 +38,52 @@ function mergeRecordsFast<
   M extends DeepMergeMetaData,
   MM extends DeepMergeMetaMetaData = DeepMergeMetaMetaData,
 >(values: Ts, utils: U): DeepMergeRecordsDefaultHKT<Ts, Fs, M> {
+  if (values.length === 2) {
+    const result: Record<PropertyKey, unknown> = {};
+
+    // Fast path for 2 records: avoid building a union key set and per-key value
+    // arrays. Only the keys present in each record are iterated.
+    const mergeProperty = (key: PropertyKey, propValues: unknown[]) => {
+      const propertyResult = mergeUnknownsFast<ReadonlyArray<unknown>, U, Fs, M, MM>(propValues, utils);
+
+      if (propertyResult === actions.skip) {
+        return;
+      }
+
+      result[key] = propertyResult;
+    };
+
+    const firstValue = values[0]!;
+    const secondValue = values[1]!;
+    for (const key of getKeysOfObject(firstValue)) {
+      mergeProperty(key, objectHasProperty(secondValue, key) ? [firstValue[key], secondValue[key]] : [firstValue[key]]);
+    }
+    for (const key of getKeysOfObject(secondValue)) {
+      if (!objectHasProperty(firstValue, key)) {
+        mergeProperty(key, [secondValue[key]]);
+      }
+    }
+
+    return result as DeepMergeRecordsDefaultHKT<Ts, Fs, M>;
+  }
+  return mergeRecordsFastGeneral<Ts, U, Fs, M, MM>(values, utils);
+}
+
+/**
+ * The fast default strategy to merge 3 or more records without circular reference checks or depth limits.
+ *
+ * Assumes input is trusted and non-circular.
+ *
+ * @param values - The records.
+ * @param utils - The utils.
+ */
+function mergeRecordsFastGeneral<
+  Ts extends ReadonlyArray<Record<PropertyKey, unknown>>,
+  U extends DeepMergeUtils<M, MM>,
+  Fs extends DeepMergeFunctionsURIs,
+  M extends DeepMergeMetaData,
+  MM extends DeepMergeMetaMetaData = DeepMergeMetaMetaData,
+>(values: Ts, utils: U): DeepMergeRecordsDefaultHKT<Ts, Fs, M> {
   const result: Record<PropertyKey, unknown> = {};
 
   for (const key of getKeysOfObjects(values)) {
@@ -47,10 +93,6 @@ function mergeRecordsFast<
       if (objectHasProperty(value, key)) {
         propValues.push(value[key]);
       }
-    }
-
-    if (propValues.length === 0) {
-      continue;
     }
 
     const propertyResult = mergeUnknownsFast<ReadonlyArray<unknown>, U, Fs, M, MM>(propValues, utils);

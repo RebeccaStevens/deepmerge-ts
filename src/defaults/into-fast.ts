@@ -1,6 +1,6 @@
 import { mergeUnknownsIntoFast } from "../deepmerge-into-fast.ts";
 import type { DeepMergeIntoUtils, DeepMergeMetaData, DeepMergeMetaMetaData, Reference } from "../types/index.ts";
-import { getKeysOfObjects, objectHasProperty } from "../utils.ts";
+import { getKeysOfObject, getKeysOfObjects, objectHasProperty } from "../utils.ts";
 
 import { mergeArraysInto, mergeOthersInto, mergeSetsInto } from "./general.ts";
 
@@ -30,6 +30,46 @@ function mergeRecordsIntoFast<
   M extends DeepMergeMetaData,
   MM extends DeepMergeMetaMetaData = DeepMergeMetaMetaData,
 >(mut_target: Reference<Record<PropertyKey, unknown>>, values: Ts, utils: U): void {
+  if (values.length === 2) {
+    // Fast path for 2 records: avoid building a union key set and per-key value
+    // arrays. Only the keys present in each record are iterated.
+    const mergeProperty = (key: PropertyKey, propValues: unknown[]) => {
+      const propertyTarget: Reference<unknown> = { value: propValues[0] };
+      mergeUnknownsIntoFast<ReadonlyArray<unknown>, U, M, MM>(propertyTarget, propValues, utils);
+
+      mut_target.value[key] = propertyTarget.value;
+    };
+
+    const firstValue = values[0]!;
+    const secondValue = values[1]!;
+    for (const key of getKeysOfObject(firstValue)) {
+      mergeProperty(key, objectHasProperty(secondValue, key) ? [firstValue[key], secondValue[key]] : [firstValue[key]]);
+    }
+    for (const key of getKeysOfObject(secondValue)) {
+      if (!objectHasProperty(firstValue, key)) {
+        mergeProperty(key, [secondValue[key]]);
+      }
+    }
+    return;
+  }
+  mergeRecordsIntoFastGeneral<Ts, U, M, MM>(mut_target, values, utils);
+}
+
+/**
+ * The fast default strategy to merge 3 or more records into a target record without circular reference checks or depth limits.
+ *
+ * Assumes input is trusted and non-circular.
+ *
+ * @param mut_target - The target to merge into.
+ * @param values - The records (including the target's value if there is one).
+ * @param utils - The utils.
+ */
+function mergeRecordsIntoFastGeneral<
+  Ts extends ReadonlyArray<Record<PropertyKey, unknown>>,
+  U extends DeepMergeIntoUtils<M, MM>,
+  M extends DeepMergeMetaData,
+  MM extends DeepMergeMetaMetaData = DeepMergeMetaMetaData,
+>(mut_target: Reference<Record<PropertyKey, unknown>>, values: Ts, utils: U): void {
   for (const key of getKeysOfObjects(values)) {
     const propValues = [];
 
@@ -37,10 +77,6 @@ function mergeRecordsIntoFast<
       if (objectHasProperty(value, key)) {
         propValues.push(value[key]);
       }
-    }
-
-    if (propValues.length === 0) {
-      continue;
     }
 
     const propertyTarget: Reference<unknown> = { value: propValues[0] };
