@@ -1,7 +1,12 @@
 /* eslint-disable no-await-in-loop */
 import fastify from "@fastify/deepmerge";
 import deepmerge from "deepmerge";
-import { deepmergeInto, deepmerge as deepmergeTs, deepmergeFastUnsafe as deepmergeTsFast } from "deepmerge-ts";
+import {
+  deepmergeInto,
+  deepmerge as deepmergeTs,
+  deepmergeFastUnsafe as deepmergeTsFast,
+  deepmergeIntoFastUnsafe as deepmergeTsFastInto,
+} from "deepmerge-ts";
 import defu from "defu";
 import lodash from "lodash";
 import { merge as mergeAnything } from "merge-anything";
@@ -94,17 +99,25 @@ for (let mut_i = 0; mut_i < benchmarkData.all.length; mut_i++) {
   console.log(`--- Multi-object / Variadic Merging (all) ---`);
   const benchAll = createBench();
 
+  // We share `samplesAll` across all tasks. Each library is invoked with an
+  // explicit fresh target (e.g. `{}`) where its mutating-in-place semantic
+  // could damage inputs; libraries that are pure are called directly. This
+  // lets every task see identical fixed inputs across iterations without
+  // paying for a per-iteration `structuredClone`.
   addBenchTask(benchAll, "deepmerge-ts", samplesAll, (s) => {
     deepmergeTs(...s);
   });
   addBenchTask(benchAll, "deepmerge-ts (fast)", samplesAll, (s) => {
     deepmergeTsFast(...s);
   });
-  // deepmergeInto is not a pure function (it mutates nested objects in-place).
-  // Use structuredClone to prevent corrupting the shared benchmark dataset across iterations.
   addBenchTask(benchAll, "deepmerge-ts (into)", samplesAll, (s) => {
-    deepmergeInto({}, ...structuredClone(s));
+    deepmergeInto({}, ...s);
   });
+  addBenchTask(benchAll, "deepmerge-ts (into fast)", samplesAll, (s) => {
+    deepmergeTsFastInto({}, ...s);
+  });
+  // lodash.merge mutates the first argument in place. Pass a fresh `{}` so the
+  // shared sample is not touched across iterations.
   addBenchTask(benchAll, "lodash.merge", samplesAll, (s) => {
     lodash.merge({}, ...s);
   });
@@ -141,6 +154,17 @@ for (let mut_i = 0; mut_i < benchmarkData.all.length; mut_i++) {
   addBenchTask(bench2Arg, "deepmerge-ts", samples2Arg, (s) => {
     deepmergeTs(s[0], s[1]);
   });
+  addBenchTask(bench2Arg, "deepmerge-ts (fast)", samples2Arg, (s) => {
+    deepmergeTsFast(s[0], s[1]);
+  });
+  addBenchTask(bench2Arg, "deepmerge-ts (into)", samples2Arg, (s) => {
+    deepmergeInto({}, s[0], s[1]);
+  });
+  addBenchTask(bench2Arg, "deepmerge-ts (into fast)", samples2Arg, (s) => {
+    deepmergeTsFastInto({}, s[0], s[1]);
+  });
+  // lodash.merge mutates the first argument in place. Pass a fresh `{}` so the
+  // shared sample is not touched across iterations.
   addBenchTask(bench2Arg, "lodash.merge", samples2Arg, (s) => {
     lodash.merge({}, s[0], s[1]);
   });
@@ -208,8 +232,19 @@ const lodashCollectionsCustomizer = (objValue: unknown, srcValue: unknown): unkn
 
 const benchCollections = createBench();
 
+// Every task shares `collections.samples` and uses an explicit fresh target
+// where mutation would otherwise leak.
 addBenchTask(benchCollections, "deepmerge-ts", collections.samples, (s) => {
   deepmergeTs(...s);
+});
+addBenchTask(benchCollections, "deepmerge-ts (fast)", collections.samples, (s) => {
+  deepmergeTsFast(...s);
+});
+addBenchTask(benchCollections, "deepmerge-ts (into)", collections.samples, (s) => {
+  deepmergeInto({}, ...s);
+});
+addBenchTask(benchCollections, "deepmerge-ts (into fast)", collections.samples, (s) => {
+  deepmergeTsFastInto({}, ...s);
 });
 addBenchTask(benchCollections, "lodash.mergeWith", collections.samples, (s) => {
   lodash.mergeWith({}, ...s, lodashCollectionsCustomizer);
