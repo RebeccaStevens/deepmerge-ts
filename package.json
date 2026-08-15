@@ -62,6 +62,8 @@
   ],
   "scripts": {
     "benchmark": "pnpm run build:check && pnpm --dir benchmark run benchmark",
+    "benchmark:types": "node --strip-types scripts/benchmark-types.ts",
+    "benchmark:types:baseline": "node --strip-types scripts/benchmark-types.ts --update",
     "build": "rimraf dist && rollup -c rollup.config.ts --configPlugin @rollup/plugin-typescript --configImportAttributesKey with",
     "build:check": "node --strip-types scripts/check-build.ts",
     "cz": "git-cz",

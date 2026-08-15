@@ -1,0 +1,62 @@
+{
+  "typescript": "5.9.3",
+  "created": "2026-08-15T05:57:30.672Z",
+  "scenarios": {
+    "collections": {
+      "Types": 37442,
+      "Instantiations": 95021,
+      "Symbols": 112360,
+      "Memory used": 145447,
+      "Check time": 0.69,
+      "Total time": 1.13
+    },
+    "custom": {
+      "Types": 37959,
+      "Instantiations": 100195,
+      "Symbols": 116649,
+      "Memory used": 152339,
+      "Check time": 0.75,
+      "Total time": 1.32
+    },
+    "deep": {
+      "Types": 64397,
+      "Instantiations": 437937,
+      "Symbols": 375499,
+      "Memory used": 267878,
+      "Check time": 1.43,
+      "Total time": 1.84
+    },
+    "into": {
+      "Types": 34580,
+      "Instantiations": 75637,
+      "Symbols": 89465,
+      "Memory used": 156107,
+      "Check time": 0.74,
+      "Total time": 1.2
+    },
+    "optional": {
+      "Types": 44570,
+      "Instantiations": 172189,
+      "Symbols": 195628,
+      "Memory used": 178494,
+      "Check time": 0.95,
+      "Total time": 1.48
+    },
+    "unions": {
+      "Types": 40107,
+      "Instantiations": 117725,
+      "Symbols": 136997,
+      "Memory used": 142301,
+      "Check time": 0.82,
+      "Total time": 1.34
+    },
+    "wide": {
+      "Types": 255669,
+      "Instantiations": 6459677,
+      "Symbols": 5817275,
+      "Memory used": 2332700,
+      "Check time": 12.44,
+      "Total time": 12.99
+    }
+  }
+}
