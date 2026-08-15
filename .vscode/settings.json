@@ -34,7 +34,7 @@
     "yaml"
   ],
 
-  "editor.rulers": [80],
+  "editor.rulers": [120],
   "typescript.tsdk": "node_modules/typescript/lib",
   "json.schemas": [
     {
