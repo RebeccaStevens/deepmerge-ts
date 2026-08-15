@@ -449,3 +449,9 @@ export type DeepMergeMergeInfo = Readonly<{
   values: ReadonlyArray<unknown>;
   result: unknown;
 }>;
+
+/**
+ * @deprecated Use {@link DeepMergeMergeInfo} instead. Aliased for backwards
+ * compatibility and will be removed in a future major release.
+ */
+export type DeepMergeMetaMetaData = DeepMergeMergeInfo;
