@@ -12,6 +12,32 @@ import type {
 } from "../types/index.ts";
 
 /**
+ * Returns an empty container of the same outward type as `value`. Used when
+ * `deepmergeInto` recurses through a property the target does not have, so
+ * the recursion has a place to write its result without aliasing any source's
+ * nested array/set/map.
+ *
+ * @param value - A representative value (the kind to copy structurally).
+ * @returns A fresh `Array` / `Set` / `Map` / `Record` (or `value` itself if it
+ * is not one of those types).
+ */
+export function emptyLike(value: unknown): unknown {
+  if (Array.isArray(value)) {
+    return [];
+  }
+  if (value instanceof Set) {
+    return new Set();
+  }
+  if (value instanceof Map) {
+    return new Map();
+  }
+  if (typeof value === "object" && value !== null) {
+    return {};
+  }
+  return value;
+}
+
+/**
  * The default function to update meta data.
  *
  * It builds and updates the hierarchy tree.
@@ -181,12 +207,21 @@ export function mergeArraysInto<Ts extends ReadonlyArray<ReadonlyArray<unknown>>
   mut_target: DeepMergeValueReference<unknown[]>,
   values: Ts,
 ): void {
-  for (let mut_i = 1; mut_i < values.length; mut_i++) {
-    const arr = values[mut_i]!;
+  // Build the merged array.
+  const result: unknown[] = [];
+  for (const value of values) {
+    const arr = value;
     for (const element of arr) {
-      mut_target.value.push(element);
+      result.push(element);
     }
   }
+  // Mutate the target container in place. At the top level this preserves
+  // the user's target reference; in the recursion `mut_target.value` is
+  // either the user's target's nested array (so the same in-place semantic
+  // applies) or a clone we made ourselves, so the source can never be
+  // touched through this assignment.
+  const target = mut_target.value;
+  target.splice(0, target.length, ...result);
 }
 
 /**
@@ -199,10 +234,20 @@ export function mergeSetsInto<Ts extends ReadonlyArray<Readonly<ReadonlySet<unkn
   mut_target: DeepMergeValueReference<Set<unknown>>,
   values: Ts,
 ): void {
-  for (let mut_i = 1; mut_i < values.length; mut_i++) {
-    for (const value of values[mut_i]!) {
-      mut_target.value.add(value);
+  // Build the merged set.
+  const result = new Set<unknown>();
+  for (const value_ of values) {
+    for (const value of value_) {
+      result.add(value);
     }
+  }
+  // Mutate the target set in place. See `mergeArraysInto` for the rationale
+  // about why this is safe at recursion (the recursion only runs against
+  // the target's nested container or a clone we made, never a source).
+  const target = mut_target.value;
+  target.clear();
+  for (const value of result) {
+    target.add(value);
   }
 }
 
@@ -216,5 +261,8 @@ export function mergeOthersInto<Ts extends ReadonlyArray<unknown>>(
   mut_target: DeepMergeValueReference<unknown>,
   values: Ts,
 ): void {
+  // Idempotent for non-containers: assigning the leaf value mutates only
+  // the wrapper's `.value` slot (a property on our own object), so this is
+  // safe at recursion regardless of where the wrapper originated.
   mut_target.value = values.at(-1);
 }

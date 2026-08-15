@@ -638,4 +638,121 @@ describe("deepmergeInto", () => {
     expect(y.a0, "Safe y input").not.toBe(true);
     expect(x.a0, "Safe output").not.toBe(true);
   });
+
+  it("does not mutate nested array input containers", () => {
+    const yArr = [4, 5];
+    const x = { items: [1, 2, 3] };
+    const y = { items: yArr };
+
+    deepmergeInto(x, y);
+
+    expect(yArr).toStrictEqual([4, 5]);
+    expect(x.items).toStrictEqual([1, 2, 3, 4, 5]);
+  });
+
+  it("does not mutate nested set input containers", () => {
+    const ySet = new Set([4, 5]);
+    const x = { tags: new Set([1, 2, 3]) };
+    const y = { tags: ySet };
+
+    deepmergeInto(x, y);
+
+    expect(ySet).toStrictEqual(new Set([4, 5]));
+    expect(x.tags).toStrictEqual(new Set([1, 2, 3, 4, 5]));
+  });
+
+  it("does not mutate nested map input containers", () => {
+    const yMap = new Map<string, number>([["b", 2]]);
+    const x = { counts: new Map<string, number>([["a", 1]]) };
+    const y = { counts: yMap };
+
+    deepmergeInto(x, y);
+
+    expect(yMap).toStrictEqual(new Map([["b", 2]]));
+    expect(x.counts).toStrictEqual(
+      new Map<string, number>([
+        ["a", 1],
+        ["b", 2],
+      ]),
+    );
+  });
+
+  it("does not alias-mutate a source's nested array across repeated calls", () => {
+    // Regression: deepmergeInto used to alias the first source's nested
+    // array into the recursive merge wrapper so that each subsequent call
+    // extended it. After many iterations this caused OOM in the runtime
+    // benchmark.
+    const a = { sub: { items: [1, 2] } };
+    const b = { sub: { items: [3, 4] } };
+
+    for (let i = 0; i < 50; i++) {
+      deepmergeInto({}, a, b);
+    }
+
+    expect(a.sub.items).toStrictEqual([1, 2]);
+    expect(b.sub.items).toStrictEqual([3, 4]);
+  });
+
+  it("does not alias-mutate a source's nested set or map across repeated calls", () => {
+    const aSet = new Set([1]);
+    const aMap = new Map<string, number>([["a", 1]]);
+    const a = { s: aSet, m: aMap };
+    const bSet = new Set([2]);
+    const bMap = new Map<string, number>([["b", 2]]);
+    const b = { s: bSet, m: bMap };
+
+    for (let i = 0; i < 50; i++) {
+      deepmergeInto({}, a, b);
+    }
+
+    expect([...aSet]).toStrictEqual([1]);
+    expect([...bSet]).toStrictEqual([2]);
+    expect([...aMap.entries()]).toStrictEqual([["a", 1]]);
+    expect([...bMap.entries()]).toStrictEqual([["b", 2]]);
+  });
+
+  it("merges map properties into a fresh target, preserving the first source's entries", () => {
+    // Regression: mergeMapsInto skipped the first element of `values` under
+    // the assumption that it was the target map, so when the target lacked
+    // the key the first source's entries were dropped.
+    const a = { m: new Map([["a", 1]]) };
+    const b = { m: new Map([["b", 2]]) };
+
+    const target: Record<string, unknown> = {};
+    deepmergeInto(target, a, b);
+
+    expect(target["m"]).toStrictEqual(
+      new Map([
+        ["a", 1],
+        ["b", 2],
+      ]),
+    );
+  });
+
+  it("deeply merges map values that are records with nested containers without aliasing sources", () => {
+    const a = { m: new Map([["x", { items: [1, 2] }]]) };
+    const b = { m: new Map([["x", { items: [3, 4] }]]) };
+
+    const target: Record<string, unknown> = {};
+    deepmergeInto(target, a, b);
+
+    expect(target["m"]).toStrictEqual(new Map([["x", { items: [1, 2, 3, 4] }]]));
+    expect(a.m.get("x")!.items).toStrictEqual([1, 2]);
+    expect(b.m.get("x")!.items).toStrictEqual([3, 4]);
+  });
+
+  it("does not alias-mutate a source's map values that contain nested containers across repeated calls", () => {
+    // Regression: mergeMapsInto shallow-cloned the first candidate, aliasing
+    // the source's nested containers so that repeated calls grew them until
+    // the spread in mergeArraysInto blew the call stack.
+    const a = { m: new Map([["x", { items: [1, 2] }]]) };
+    const b = { m: new Map([["x", { items: [3, 4] }]]) };
+
+    for (let i = 0; i < 50; i++) {
+      deepmergeInto({}, a, b);
+    }
+
+    expect(a.m.get("x")!.items).toStrictEqual([1, 2]);
+    expect(b.m.get("x")!.items).toStrictEqual([3, 4]);
+  });
 });

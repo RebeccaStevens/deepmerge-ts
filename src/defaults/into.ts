@@ -15,7 +15,7 @@ import {
   objectHasProperty,
 } from "../utils.ts";
 
-import { mergeArraysInto, mergeOthersInto, mergeSetsInto } from "./general.ts";
+import { emptyLike, mergeArraysInto, mergeOthersInto, mergeSetsInto } from "./general.ts";
 
 /**
  * The default merge functions.
@@ -72,7 +72,9 @@ function mergeRecordsInto<
         result: mut_target.value,
       } satisfies DeepMergeMergeInfo as unknown as Partial<MI>);
 
-      const propertyTarget: DeepMergeValueReference<unknown> = { value: propValues[0] };
+      const propertyTarget: DeepMergeValueReference<unknown> = objectHasProperty(mut_target.value, key)
+        ? { value: propValues[0] }
+        : { value: emptyLike(propValues[0]) };
       mergeUnknownsInto<ReadonlyArray<unknown>, U, M, MI>(propertyTarget, propValues, utils, updatedMeta);
 
       if (key === "__proto__") {
@@ -132,7 +134,9 @@ function mergeRecordsIntoGeneral<
       result: mut_target.value,
     } satisfies DeepMergeMergeInfo as unknown as Partial<MI>);
 
-    const propertyTarget: DeepMergeValueReference<unknown> = { value: propValues[0] };
+    const propertyTarget: DeepMergeValueReference<unknown> = objectHasProperty(mut_target.value, key)
+      ? { value: propValues[0] }
+      : { value: emptyLike(propValues[0]) };
     mergeUnknownsInto<ReadonlyArray<unknown>, U, M, MI>(propertyTarget, propValues, utils, updatedMeta);
 
     if (key === "__proto__") {
@@ -162,21 +166,36 @@ function mergeMapsInto<
   M extends DeepMergeMetaData,
   MI extends DeepMergeMergeInfo = DeepMergeMergeInfo,
 >(mut_target: DeepMergeValueReference<Map<unknown, unknown>>, values: Ts, utils: U, meta: M | undefined): void {
+  // Merge into `mut_target.value` in place. The recursion branch never
+  // aliases a source's container: `mergeUnknownsInto` below only operates on
+  // the target's nested value (when target had the key) or on an empty
+  // container we made (when target didn't have the key), so mutating this
+  // map's contents cannot leak into a source.
+
   const valuesByKey = new Map<unknown, unknown[]>();
-  for (let mut_i = 1; mut_i < values.length; mut_i++) {
-    for (const [key, value] of values[mut_i]!) {
+  for (const value of values) {
+    if (value === mut_target.value) {
+      // `values` includes the target's own map when the recursion target
+      // already had the key; its entries are merged via `target.get(key)`.
+      continue;
+    }
+    for (const [key, entryValue] of value) {
       const mut_keyValues = valuesByKey.get(key);
       if (mut_keyValues === undefined) {
-        valuesByKey.set(key, [value]);
+        valuesByKey.set(key, [entryValue]);
       } else {
-        mut_keyValues.push(value);
+        mut_keyValues.push(entryValue);
       }
     }
   }
 
+  const target = mut_target.value;
   for (const [key, keyValues] of valuesByKey) {
-    const targetValue = mut_target.value.get(key);
+    const targetValue = target.get(key);
     const allValues = targetValue === undefined ? keyValues : [targetValue, ...keyValues];
+    // The `result` reported to metaDataUpdater must be `mut_target.value` so
+    // that the hierarchy captures a stable reference to the target. Input
+    // cycles that point back at the target then resolve correctly.
     const updatedMeta = utils.metaDataUpdater(meta, {
       key,
       parents: values,
@@ -184,10 +203,11 @@ function mergeMapsInto<
       result: mut_target.value,
     } satisfies DeepMergeMergeInfo as unknown as Partial<MI>);
 
-    const propTarget: DeepMergeValueReference<unknown> = { value: allValues[0] };
+    const propTarget: DeepMergeValueReference<unknown> =
+      targetValue === undefined ? { value: emptyLike(allValues[0]) } : { value: targetValue };
     mergeUnknownsInto<ReadonlyArray<unknown>, U, M, MI>(propTarget, allValues, utils, updatedMeta);
 
-    mut_target.value.set(key, propTarget.value);
+    target.set(key, propTarget.value);
   }
 }
 

@@ -7,7 +7,7 @@ import type {
 } from "../types/index.ts";
 import { getKeysOfObject, getKeysOfObjects, objectHasProperty } from "../utils.ts";
 
-import { mergeArraysInto, mergeOthersInto, mergeSetsInto } from "./general.ts";
+import { emptyLike, mergeArraysInto, mergeOthersInto, mergeSetsInto } from "./general.ts";
 
 /**
  * The fast default merge functions.
@@ -39,7 +39,9 @@ function mergeRecordsIntoFast<
     // Fast path for 2 records: avoid building a union key set and per-key value
     // arrays. Only the keys present in each record are iterated.
     const mergeProperty = (key: PropertyKey, propValues: unknown[]) => {
-      const propertyTarget: DeepMergeValueReference<unknown> = { value: propValues[0] };
+      const propertyTarget: DeepMergeValueReference<unknown> = objectHasProperty(mut_target.value, key)
+        ? { value: propValues[0] }
+        : { value: emptyLike(propValues[0]) };
       mergeUnknownsIntoFast<ReadonlyArray<unknown>, U, M, MI>(propertyTarget, propValues, utils);
 
       mut_target.value[key] = propertyTarget.value;
@@ -84,7 +86,9 @@ function mergeRecordsIntoFastGeneral<
       }
     }
 
-    const propertyTarget: DeepMergeValueReference<unknown> = { value: propValues[0] };
+    const propertyTarget: DeepMergeValueReference<unknown> = objectHasProperty(mut_target.value, key)
+      ? { value: propValues[0] }
+      : { value: emptyLike(propValues[0]) };
     mergeUnknownsIntoFast<ReadonlyArray<unknown>, U, M, MI>(propertyTarget, propValues, utils);
 
     mut_target.value[key] = propertyTarget.value;
@@ -106,26 +110,36 @@ function mergeMapsIntoFast<
   M extends DeepMergeMetaData,
   MI extends DeepMergeMergeInfo = DeepMergeMergeInfo,
 >(mut_target: DeepMergeValueReference<Map<unknown, unknown>>, values: Ts, utils: U): void {
+  // See `mergeMapsInto` in `defaults/into.ts` for the full rationale.
+  // Merge into `mut_target.value` in place.
+
   const valuesByKey = new Map<unknown, unknown[]>();
-  for (let mut_i = 1; mut_i < values.length; mut_i++) {
-    for (const [key, value] of values[mut_i]!) {
+  for (const value of values) {
+    if (value === mut_target.value) {
+      // `values` includes the target's own map when the recursion target
+      // already had the key; its entries are merged via `target.get(key)`.
+      continue;
+    }
+    for (const [key, entryValue] of value) {
       const mut_keyValues = valuesByKey.get(key);
       if (mut_keyValues === undefined) {
-        valuesByKey.set(key, [value]);
+        valuesByKey.set(key, [entryValue]);
       } else {
-        mut_keyValues.push(value);
+        mut_keyValues.push(entryValue);
       }
     }
   }
 
+  const target = mut_target.value;
   for (const [key, keyValues] of valuesByKey) {
-    const targetValue = mut_target.value.get(key);
+    const targetValue = target.get(key);
     const allValues = targetValue === undefined ? keyValues : [targetValue, ...keyValues];
 
-    const propTarget: DeepMergeValueReference<unknown> = { value: allValues[0] };
+    const propTarget: DeepMergeValueReference<unknown> =
+      targetValue === undefined ? { value: emptyLike(allValues[0]) } : { value: targetValue };
     mergeUnknownsIntoFast<ReadonlyArray<unknown>, U, M, MI>(propTarget, allValues, utils);
 
-    mut_target.value.set(key, propTarget.value);
+    target.set(key, propTarget.value);
   }
 }
 
