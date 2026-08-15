@@ -3,5 +3,6 @@
   "entry": ["src/index.ts!"],
   "project": ["src/**/*.ts!"],
   "ignoreDependencies": ["@eslint/compat", "tsc-files"],
+  "ignore": ["benchmark/types/scenarios/**"],
   "exclude": ["exports", "nsExports", "types", "nsTypes"],
 }
