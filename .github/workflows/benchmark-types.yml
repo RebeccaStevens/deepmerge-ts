@@ -1,0 +1,15 @@
+name: Type Benchmark
+
+on:
+  pull_request:
+  workflow_dispatch:
+  workflow_call:
+
+jobs:
+  type_benchmark:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: ./.github/actions/prepare
+      # Deterministic counters are stable across runs; a single run keeps CI fast.
+      - run: pnpm run benchmark:types -- --runs 1
