@@ -1,62 +1,62 @@
 {
   "typescript": "5.9.3",
-  "created": "2026-08-15T05:57:30.672Z",
+  "created": "2026-08-15T08:00:33.000Z",
   "scenarios": {
     "collections": {
       "Types": 37442,
       "Instantiations": 95021,
       "Symbols": 112360,
-      "Memory used": 145447,
-      "Check time": 0.69,
-      "Total time": 1.13
+      "Memory used": 145301,
+      "Check time": 0.72,
+      "Total time": 1.22
     },
     "custom": {
-      "Types": 37959,
-      "Instantiations": 100195,
+      "Types": 37960,
+      "Instantiations": 100198,
       "Symbols": 116649,
-      "Memory used": 152339,
-      "Check time": 0.75,
-      "Total time": 1.32
+      "Memory used": 152966,
+      "Check time": 0.73,
+      "Total time": 1.22
     },
     "deep": {
       "Types": 64397,
       "Instantiations": 437937,
       "Symbols": 375499,
-      "Memory used": 267878,
-      "Check time": 1.43,
-      "Total time": 1.84
+      "Memory used": 283035,
+      "Check time": 1.33,
+      "Total time": 1.82
     },
     "into": {
       "Types": 34580,
       "Instantiations": 75637,
       "Symbols": 89465,
-      "Memory used": 156107,
-      "Check time": 0.74,
+      "Memory used": 130032,
+      "Check time": 0.67,
       "Total time": 1.2
     },
     "optional": {
       "Types": 44570,
       "Instantiations": 172189,
       "Symbols": 195628,
-      "Memory used": 178494,
-      "Check time": 0.95,
-      "Total time": 1.48
+      "Memory used": 179294,
+      "Check time": 0.92,
+      "Total time": 1.39
     },
     "unions": {
-      "Types": 40107,
-      "Instantiations": 117725,
-      "Symbols": 136997,
-      "Memory used": 142301,
-      "Check time": 0.82,
-      "Total time": 1.34
+      "Types": 40176,
+      "Instantiations": 118263,
+      "Symbols": 137584,
+      "Memory used": 161085,
+      "Check time": 0.78,
+      "Total time": 1.26
     },
     "wide": {
       "Types": 255669,
       "Instantiations": 6459677,
       "Symbols": 5817275,
-      "Memory used": 2332700,
-      "Check time": 12.44,
-      "Total time": 12.99
+      "Memory used": 2377714,
+      "Check time": 10.03,
+      "Total time": 10.51
     }
   }
 }
