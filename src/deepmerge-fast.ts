@@ -2,8 +2,8 @@ import { actions } from "./actions.ts";
 import {
   defaultFilterValues,
   defaultMetaDataUpdaterFast,
-  hasFallback,
   resolveCustomMergeFunctions,
+  shouldFallbackToDefault,
 } from "./defaults/general.ts";
 import { mergeFunctionsFast as defaultMergeFunctionsFast } from "./defaults/vanilla-fast.ts";
 import type {
@@ -12,8 +12,8 @@ import type {
   DeepMergeFunctionsDefaultURIs,
   DeepMergeFunctionsURIs,
   DeepMergeHKT,
+  DeepMergeMergeInfo,
   DeepMergeMetaData,
-  DeepMergeMetaMetaData,
   DeepMergeUtils,
   GetDeepMergeFunctionsURIs,
   MetaDataUpdater,
@@ -123,10 +123,10 @@ function getUtilsFast(
  */
 export function mergeUnknownsFast<
   Ts extends ReadonlyArray<unknown>,
-  U extends DeepMergeUtils<M, MM>,
+  U extends DeepMergeUtils<M, MI>,
   Fs extends DeepMergeFunctionsURIs,
   M extends DeepMergeMetaData,
-  MM extends DeepMergeMetaMetaData = DeepMergeMetaMetaData,
+  MI extends DeepMergeMergeInfo = DeepMergeMergeInfo,
 >(values: Ts, utils: U): DeepMergeHKT<Ts, Fs, M> {
   const filteredValues = utils.filterValues?.(values, undefined) ?? values;
 
@@ -134,7 +134,7 @@ export function mergeUnknownsFast<
     return undefined as DeepMergeHKT<Ts, Fs, M>;
   }
   if (filteredValues.length === 1) {
-    return mergeOthersFast<U, M, MM>(filteredValues, utils) as DeepMergeHKT<Ts, Fs, M>;
+    return mergeOthersFast<U, M, MI>(filteredValues, utils) as DeepMergeHKT<Ts, Fs, M>;
   }
 
   const type = getObjectType(filteredValues[0]);
@@ -143,13 +143,13 @@ export function mergeUnknownsFast<
     if (filteredValues.length === 2) {
       // Fast path: avoid loop overhead for 2 elements.
       if (getObjectType(filteredValues[1]) !== type) {
-        return mergeOthersFast<U, M, MM>(filteredValues, utils) as DeepMergeHKT<Ts, Fs, M>;
+        return mergeOthersFast<U, M, MI>(filteredValues, utils) as DeepMergeHKT<Ts, Fs, M>;
       }
     } else {
       // Slow path: 3 or more elements require full iteration.
       for (let mut_index = 1; mut_index < filteredValues.length; mut_index++) {
         if (getObjectType(filteredValues[mut_index]) !== type) {
-          return mergeOthersFast<U, M, MM>(filteredValues, utils) as DeepMergeHKT<Ts, Fs, M>;
+          return mergeOthersFast<U, M, MI>(filteredValues, utils) as DeepMergeHKT<Ts, Fs, M>;
         }
       }
     }
@@ -157,35 +157,35 @@ export function mergeUnknownsFast<
 
   switch (type) {
     case ObjectType.RECORD: {
-      return mergeRecordsFast<U, M, MM>(
+      return mergeRecordsFast<U, M, MI>(
         filteredValues as ReadonlyArray<Readonly<Record<PropertyKey, unknown>>>,
         utils,
       ) as DeepMergeHKT<Ts, Fs, M>;
     }
 
     case ObjectType.ARRAY: {
-      return mergeArraysFast<U, M, MM>(
+      return mergeArraysFast<U, M, MI>(
         filteredValues as ReadonlyArray<Readonly<ReadonlyArray<unknown>>>,
         utils,
       ) as DeepMergeHKT<Ts, Fs, M>;
     }
 
     case ObjectType.SET: {
-      return mergeSetsFast<U, M, MM>(
+      return mergeSetsFast<U, M, MI>(
         filteredValues as ReadonlyArray<Readonly<ReadonlySet<unknown>>>,
         utils,
       ) as DeepMergeHKT<Ts, Fs, M>;
     }
 
     case ObjectType.MAP: {
-      return mergeMapsFast<U, M, MM>(
+      return mergeMapsFast<U, M, MI>(
         filteredValues as ReadonlyArray<Readonly<ReadonlyMap<unknown, unknown>>>,
         utils,
       ) as DeepMergeHKT<Ts, Fs, M>;
     }
 
     default: {
-      return mergeOthersFast<U, M, MM>(filteredValues, utils) as DeepMergeHKT<Ts, Fs, M>;
+      return mergeOthersFast<U, M, MI>(filteredValues, utils) as DeepMergeHKT<Ts, Fs, M>;
     }
   }
 }
@@ -197,12 +197,12 @@ export function mergeUnknownsFast<
  * @param utils - The utils.
  */
 function mergeRecordsFast<
-  U extends DeepMergeUtils<M, MM>,
+  U extends DeepMergeUtils<M, MI>,
   M extends DeepMergeMetaData,
-  MM extends DeepMergeMetaMetaData = DeepMergeMetaMetaData,
+  MI extends DeepMergeMergeInfo = DeepMergeMergeInfo,
 >(values: ReadonlyArray<Readonly<Record<PropertyKey, unknown>>>, utils: U) {
   const result = utils.mergeFunctions.mergeRecords(values, utils, undefined);
-  if (hasFallback(utils, "mergeRecords", result)) {
+  if (shouldFallbackToDefault(utils, "mergeRecords", result)) {
     return utils.defaultMergeFunctions.mergeRecords(values, utils, undefined as M);
   }
   return result;
@@ -215,12 +215,12 @@ function mergeRecordsFast<
  * @param utils - The utils.
  */
 function mergeArraysFast<
-  U extends DeepMergeUtils<M, MM>,
+  U extends DeepMergeUtils<M, MI>,
   M extends DeepMergeMetaData,
-  MM extends DeepMergeMetaMetaData = DeepMergeMetaMetaData,
+  MI extends DeepMergeMergeInfo = DeepMergeMergeInfo,
 >(values: ReadonlyArray<Readonly<ReadonlyArray<unknown>>>, utils: U) {
   const result = utils.mergeFunctions.mergeArrays(values, utils, undefined);
-  if (hasFallback(utils, "mergeArrays", result)) {
+  if (shouldFallbackToDefault(utils, "mergeArrays", result)) {
     return utils.defaultMergeFunctions.mergeArrays(values);
   }
   return result;
@@ -233,12 +233,12 @@ function mergeArraysFast<
  * @param utils - The utils.
  */
 function mergeSetsFast<
-  U extends DeepMergeUtils<M, MM>,
+  U extends DeepMergeUtils<M, MI>,
   M extends DeepMergeMetaData,
-  MM extends DeepMergeMetaMetaData = DeepMergeMetaMetaData,
+  MI extends DeepMergeMergeInfo = DeepMergeMergeInfo,
 >(values: ReadonlyArray<Readonly<ReadonlySet<unknown>>>, utils: U) {
   const result = utils.mergeFunctions.mergeSets(values, utils, undefined);
-  if (hasFallback(utils, "mergeSets", result)) {
+  if (shouldFallbackToDefault(utils, "mergeSets", result)) {
     return utils.defaultMergeFunctions.mergeSets(values);
   }
   return result;
@@ -251,12 +251,12 @@ function mergeSetsFast<
  * @param utils - The utils.
  */
 function mergeMapsFast<
-  U extends DeepMergeUtils<M, MM>,
+  U extends DeepMergeUtils<M, MI>,
   M extends DeepMergeMetaData,
-  MM extends DeepMergeMetaMetaData = DeepMergeMetaMetaData,
+  MI extends DeepMergeMergeInfo = DeepMergeMergeInfo,
 >(values: ReadonlyArray<Readonly<ReadonlyMap<unknown, unknown>>>, utils: U) {
   const result = utils.mergeFunctions.mergeMaps(values, utils, undefined);
-  if (hasFallback(utils, "mergeMaps", result)) {
+  if (shouldFallbackToDefault(utils, "mergeMaps", result)) {
     return utils.defaultMergeFunctions.mergeMaps(values, utils, undefined as M);
   }
   return result;
@@ -269,12 +269,12 @@ function mergeMapsFast<
  * @param utils - The utils.
  */
 function mergeOthersFast<
-  U extends DeepMergeUtils<M, MM>,
+  U extends DeepMergeUtils<M, MI>,
   M extends DeepMergeMetaData,
-  MM extends DeepMergeMetaMetaData = DeepMergeMetaMetaData,
+  MI extends DeepMergeMergeInfo = DeepMergeMergeInfo,
 >(values: ReadonlyArray<unknown>, utils: U) {
   const result = utils.mergeFunctions.mergeOthers(values, utils, undefined);
-  if (hasFallback(utils, "mergeOthers", result)) {
+  if (shouldFallbackToDefault(utils, "mergeOthers", result)) {
     return utils.defaultMergeFunctions.mergeOthers(values);
   }
   return result;

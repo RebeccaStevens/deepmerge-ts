@@ -3,8 +3,8 @@ import { mergeUnknownsFast } from "../deepmerge-fast.ts";
 import type {
   DeepMergeFunctionsURIs,
   DeepMergeMapsDefaultHKT,
+  DeepMergeMergeInfo,
   DeepMergeMetaData,
-  DeepMergeMetaMetaData,
   DeepMergeRecordsDefaultHKT,
   DeepMergeUtils,
 } from "../types/index.ts";
@@ -33,10 +33,10 @@ export type MergeFunctionsFast = {
  */
 function mergeRecordsFast<
   Ts extends ReadonlyArray<Record<PropertyKey, unknown>>,
-  U extends DeepMergeUtils<M, MM>,
+  U extends DeepMergeUtils<M, MI>,
   Fs extends DeepMergeFunctionsURIs,
   M extends DeepMergeMetaData,
-  MM extends DeepMergeMetaMetaData = DeepMergeMetaMetaData,
+  MI extends DeepMergeMergeInfo = DeepMergeMergeInfo,
 >(values: Ts, utils: U): DeepMergeRecordsDefaultHKT<Ts, Fs, M> {
   if (values.length === 2) {
     const result: Record<PropertyKey, unknown> = {};
@@ -44,7 +44,7 @@ function mergeRecordsFast<
     // Fast path for 2 records: avoid building a union key set and per-key value
     // arrays. Only the keys present in each record are iterated.
     const mergeProperty = (key: PropertyKey, propValues: unknown[]) => {
-      const propertyResult = mergeUnknownsFast<ReadonlyArray<unknown>, U, Fs, M, MM>(propValues, utils);
+      const propertyResult = mergeUnknownsFast<ReadonlyArray<unknown>, U, Fs, M, MI>(propValues, utils);
 
       if (propertyResult === actions.skip) {
         return;
@@ -66,7 +66,7 @@ function mergeRecordsFast<
 
     return result as DeepMergeRecordsDefaultHKT<Ts, Fs, M>;
   }
-  return mergeRecordsFastGeneral<Ts, U, Fs, M, MM>(values, utils);
+  return mergeRecordsFastGeneral<Ts, U, Fs, M, MI>(values, utils);
 }
 
 /**
@@ -79,10 +79,10 @@ function mergeRecordsFast<
  */
 function mergeRecordsFastGeneral<
   Ts extends ReadonlyArray<Record<PropertyKey, unknown>>,
-  U extends DeepMergeUtils<M, MM>,
+  U extends DeepMergeUtils<M, MI>,
   Fs extends DeepMergeFunctionsURIs,
   M extends DeepMergeMetaData,
-  MM extends DeepMergeMetaMetaData = DeepMergeMetaMetaData,
+  MI extends DeepMergeMergeInfo = DeepMergeMergeInfo,
 >(values: Ts, utils: U): DeepMergeRecordsDefaultHKT<Ts, Fs, M> {
   const result: Record<PropertyKey, unknown> = {};
 
@@ -95,7 +95,7 @@ function mergeRecordsFastGeneral<
       }
     }
 
-    const propertyResult = mergeUnknownsFast<ReadonlyArray<unknown>, U, Fs, M, MM>(propValues, utils);
+    const propertyResult = mergeUnknownsFast<ReadonlyArray<unknown>, U, Fs, M, MI>(propValues, utils);
 
     if (propertyResult === actions.skip) {
       continue;
@@ -117,10 +117,10 @@ function mergeRecordsFastGeneral<
  */
 function mergeMapsFast<
   Ts extends ReadonlyArray<ReadonlyMap<unknown, unknown>>,
-  U extends DeepMergeUtils<M, MM>,
+  U extends DeepMergeUtils<M, MI>,
   Fs extends DeepMergeFunctionsURIs,
   M extends DeepMergeMetaData,
-  MM extends DeepMergeMetaMetaData = DeepMergeMetaMetaData,
+  MI extends DeepMergeMergeInfo = DeepMergeMergeInfo,
 >(values: Ts, utils: U): DeepMergeMapsDefaultHKT<Ts> {
   const result = new Map<unknown, unknown>();
 
@@ -137,7 +137,7 @@ function mergeMapsFast<
   }
 
   for (const [key, keyValues] of valuesByKey) {
-    const keyResult = mergeUnknownsFast<ReadonlyArray<unknown>, U, Fs, M, MM>(keyValues, utils);
+    const keyResult = mergeUnknownsFast<ReadonlyArray<unknown>, U, Fs, M, MI>(keyValues, utils);
 
     if (keyResult === actions.skip) {
       continue;

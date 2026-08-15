@@ -366,11 +366,11 @@ describe("deepmergeCustom", () => {
       },
       ReadonlyArray<unknown>
     >({
-      metaDataUpdater: (previousMeta, metaMeta) => {
-        if (metaMeta.key === undefined) {
+      metaDataUpdater: (previousMeta, mergeInfo) => {
+        if (mergeInfo.key === undefined) {
           return previousMeta ?? [];
         }
-        return [...(previousMeta ?? []), metaMeta.key];
+        return [...(previousMeta ?? []), mergeInfo.key];
       },
       mergeOthers: (values, utils, meta) => {
         if (meta !== undefined && meta.length >= 2 && meta.at(-2) === "bar" && meta.at(-1) === "baz") {
@@ -444,7 +444,7 @@ describe("deepmergeCustom", () => {
 
     const customizedDeepmergeEntry = <K extends PropertyKey>(...idsPaths: ReadonlyArray<ReadonlyArray<K>>) => {
       const mergeSettings: DeepMergeOptions<ReadonlyArray<unknown>, Readonly<{ id: unknown }>> = {
-        metaDataUpdater: (previousMeta, metaMeta) => [...(previousMeta ?? []), metaMeta.key ?? metaMeta.id],
+        metaDataUpdater: (previousMeta, mergeInfo) => [...(previousMeta ?? []), mergeInfo.key ?? mergeInfo.id],
         mergeArrays: (values, utils, meta = []) => {
           const matchedIdPath = idsPaths.find((candidatePath) => {
             const parentPath = candidatePath.slice(0, -1);

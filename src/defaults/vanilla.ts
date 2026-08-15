@@ -4,8 +4,8 @@ import type {
   DeepMergeCircularReferencesDefaultHKT,
   DeepMergeFunctionsURIs,
   DeepMergeMapsDefaultHKT,
+  DeepMergeMergeInfo,
   DeepMergeMetaData,
-  DeepMergeMetaMetaData,
   DeepMergeRecordsDefaultHKT,
   DeepMergeUtils,
 } from "../types/index.ts";
@@ -26,11 +26,11 @@ import { mergeArrays, mergeOthers, mergeSets } from "./general.ts";
  */
 export type MergeFunctions<
   M extends DeepMergeMetaData = DeepMergeMetaData,
-  MM extends DeepMergeMetaMetaData = DeepMergeMetaMetaData,
+  MI extends DeepMergeMergeInfo = DeepMergeMergeInfo,
 > = {
   mergeRecords: <
     Ts extends ReadonlyArray<Record<PropertyKey, unknown>>,
-    U extends DeepMergeUtils<M, MM>,
+    U extends DeepMergeUtils<M, MI>,
     Fs extends DeepMergeFunctionsURIs,
   >(
     values: Ts,
@@ -41,7 +41,7 @@ export type MergeFunctions<
   mergeSets: typeof mergeSets;
   mergeMaps: <
     Ts extends ReadonlyArray<ReadonlyMap<unknown, unknown>>,
-    U extends DeepMergeUtils<M, MM>,
+    U extends DeepMergeUtils<M, MI>,
     // eslint-disable-next-line ts/no-unused-vars
     Fs extends DeepMergeFunctionsURIs,
   >(
@@ -51,7 +51,7 @@ export type MergeFunctions<
   ) => DeepMergeMapsDefaultHKT<Ts>;
   mergeCircularReferences: <
     Ts extends ReadonlyArray<unknown>,
-    U extends DeepMergeUtils<M, MM>,
+    U extends DeepMergeUtils<M, MI>,
     Fs extends DeepMergeFunctionsURIs,
   >(
     values: Ts,
@@ -71,10 +71,10 @@ export type MergeFunctions<
  */
 function mergeRecords<
   Ts extends ReadonlyArray<Record<PropertyKey, unknown>>,
-  U extends DeepMergeUtils<M, MM>,
+  U extends DeepMergeUtils<M, MI>,
   Fs extends DeepMergeFunctionsURIs,
   M extends DeepMergeMetaData,
-  MM extends DeepMergeMetaMetaData = DeepMergeMetaMetaData,
+  MI extends DeepMergeMergeInfo = DeepMergeMergeInfo,
 >(values: Ts, utils: U, meta: M): DeepMergeRecordsDefaultHKT<Ts, Fs, M> {
   if (values.length === 2) {
     const result: Record<PropertyKey, unknown> = {};
@@ -87,9 +87,9 @@ function mergeRecords<
         parents: values,
         values: propValues,
         result,
-      } satisfies DeepMergeMetaMetaData as unknown as Partial<MM>);
+      } satisfies DeepMergeMergeInfo as unknown as Partial<MI>);
 
-      const propertyResult = mergeUnknowns<ReadonlyArray<unknown>, U, Fs, M, MM>(propValues, utils, updatedMeta);
+      const propertyResult = mergeUnknowns<ReadonlyArray<unknown>, U, Fs, M, MI>(propValues, utils, updatedMeta);
 
       if (propertyResult === actions.skip) {
         return;
@@ -120,7 +120,7 @@ function mergeRecords<
 
     return result as DeepMergeRecordsDefaultHKT<Ts, Fs, M>;
   }
-  return mergeRecordsGeneral<Ts, U, Fs, M, MM>(values, utils, meta);
+  return mergeRecordsGeneral<Ts, U, Fs, M, MI>(values, utils, meta);
 }
 
 /**
@@ -132,10 +132,10 @@ function mergeRecords<
  */
 function mergeRecordsGeneral<
   Ts extends ReadonlyArray<Record<PropertyKey, unknown>>,
-  U extends DeepMergeUtils<M, MM>,
+  U extends DeepMergeUtils<M, MI>,
   Fs extends DeepMergeFunctionsURIs,
   M extends DeepMergeMetaData,
-  MM extends DeepMergeMetaMetaData = DeepMergeMetaMetaData,
+  MI extends DeepMergeMergeInfo = DeepMergeMergeInfo,
 >(values: Ts, utils: U, meta: M): DeepMergeRecordsDefaultHKT<Ts, Fs, M> {
   const result: Record<PropertyKey, unknown> = {};
 
@@ -153,9 +153,9 @@ function mergeRecordsGeneral<
       parents: values,
       values: propValues,
       result,
-    } satisfies DeepMergeMetaMetaData as unknown as Partial<MM>);
+    } satisfies DeepMergeMergeInfo as unknown as Partial<MI>);
 
-    const propertyResult = mergeUnknowns<ReadonlyArray<unknown>, U, Fs, M, MM>(propValues, utils, updatedMeta);
+    const propertyResult = mergeUnknowns<ReadonlyArray<unknown>, U, Fs, M, MI>(propValues, utils, updatedMeta);
 
     if (propertyResult === actions.skip) {
       continue;
@@ -185,10 +185,10 @@ function mergeRecordsGeneral<
  */
 function mergeMaps<
   Ts extends ReadonlyArray<ReadonlyMap<unknown, unknown>>,
-  U extends DeepMergeUtils<M, MM>,
+  U extends DeepMergeUtils<M, MI>,
   Fs extends DeepMergeFunctionsURIs,
   M extends DeepMergeMetaData,
-  MM extends DeepMergeMetaMetaData = DeepMergeMetaMetaData,
+  MI extends DeepMergeMergeInfo = DeepMergeMergeInfo,
 >(values: Ts, utils: U, meta: M): DeepMergeMapsDefaultHKT<Ts> {
   const result = new Map<unknown, unknown>();
 
@@ -211,9 +211,9 @@ function mergeMaps<
       parents: values,
       values: keyValues,
       result,
-    } satisfies DeepMergeMetaMetaData as unknown as Partial<MM>);
+    } satisfies DeepMergeMergeInfo as unknown as Partial<MI>);
 
-    const keyResult = mergeUnknowns<ReadonlyArray<unknown>, U, Fs, M, MM>(keyValues, utils, updatedMeta);
+    const keyResult = mergeUnknowns<ReadonlyArray<unknown>, U, Fs, M, MI>(keyValues, utils, updatedMeta);
 
     if (keyResult === actions.skip) {
       continue;
@@ -233,9 +233,9 @@ function mergeMaps<
  * @param meta - The meta data.
  */
 function resolveCyclicReferences<
-  U extends DeepMergeUtils<M, MM>,
+  U extends DeepMergeUtils<M, MI>,
   M extends DeepMergeMetaData,
-  MM extends DeepMergeMetaMetaData = DeepMergeMetaMetaData,
+  MI extends DeepMergeMergeInfo = DeepMergeMergeInfo,
 >(value: unknown, utils: U, meta: M): unknown {
   if (typeof value !== "object" || value === null) {
     return value;
@@ -257,8 +257,8 @@ function resolveCyclicReferences<
         parents: [record],
         values: [propVal],
         result,
-      } satisfies DeepMergeMetaMetaData as unknown as Partial<MM>);
-      const resolvedProp = resolveCyclicReferences<U, M, MM>(propVal, utils, updatedMeta);
+      } satisfies DeepMergeMergeInfo as unknown as Partial<MI>);
+      const resolvedProp = resolveCyclicReferences<U, M, MI>(propVal, utils, updatedMeta);
       if (resolvedProp !== propVal) {
         mut_changed = true;
       }
@@ -288,10 +288,10 @@ function resolveCyclicReferences<
  */
 function mergeCircularReferences<
   Ts extends ReadonlyArray<unknown>,
-  U extends DeepMergeUtils<M, MM>,
+  U extends DeepMergeUtils<M, MI>,
   Fs extends DeepMergeFunctionsURIs,
   M extends DeepMergeMetaData,
-  MM extends DeepMergeMetaMetaData = DeepMergeMetaMetaData,
+  MI extends DeepMergeMergeInfo = DeepMergeMergeInfo,
 >(
   values: Ts,
   cyclicDepths: ReadonlyArray<number>,
@@ -305,7 +305,7 @@ function mergeCircularReferences<
       const lastCyclicDepth = cyclicDepths.at(-1)!;
       return (
         lastCyclicDepth === 0
-          ? resolveCyclicReferences<U, M, MM>(values.at(-1), utils, meta)
+          ? resolveCyclicReferences<U, M, MI>(values.at(-1), utils, meta)
           : hierarchy?.[hierarchy.length - lastCyclicDepth]?.result
       ) as DeepMergeCircularReferencesDefaultHKT<Ts, Fs, M>;
     }

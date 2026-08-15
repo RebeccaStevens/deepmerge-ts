@@ -422,7 +422,7 @@ export type DeepMergeRootMetaData = undefined;
  */
 export type DeepMergeBuiltInMetaData =
   | DeepMergeRootMetaData
-  | (Partial<DeepMergeMetaMetaData> &
+  | (Partial<DeepMergeMergeInfo> &
       Readonly<{
         hierarchy?: ReadonlyArray<HierarchyValue>;
       }>);
@@ -433,9 +433,17 @@ export type DeepMergeBuiltInMetaData =
 export type DeepMergeMetaData = unknown;
 
 /**
- * The meta data deepmerge is able to provide.
+ * Information about a single merge step, passed to {@link MetaDataUpdater}.
+ *
+ * - `key` — the property key being merged (e.g. a `Record` property name,
+ * an array index for arrays, or `undefined` for the top-level merge).
+ * - `parents` — the input values (in their original positions) that are
+ * being merged at this step. For `deepmergeInto` these include the
+ * target's value at index 0.
+ * - `values` — the candidate values for `key` extracted from `parents`.
+ * - `result` — the partial merge result computed so far for this step.
  */
-export type DeepMergeMetaMetaData = Readonly<{
+export type DeepMergeMergeInfo = Readonly<{
   key: unknown;
   parents: ReadonlyArray<unknown>;
   values: ReadonlyArray<unknown>;

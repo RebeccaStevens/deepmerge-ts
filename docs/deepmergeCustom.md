@@ -348,19 +348,19 @@ const customizedDeepmerge = deepmergeCustom<
   }
 >({
   // Customize what the actual meta data.
-  metaDataUpdater: (previousMeta, metaMeta) => {
+  metaDataUpdater: (previousMeta, mergeInfo) => {
     if (previousMeta === undefined) {
-      if (metaMeta.key === undefined) {
+      if (mergeInfo.key === undefined) {
         return { keyPath: [] };
       }
-      return { keyPath: [metaMeta.key] };
+      return { keyPath: [mergeInfo.key] };
     }
-    if (metaMeta.key === undefined) {
+    if (mergeInfo.key === undefined) {
       return previousMeta;
     }
     return {
       ...previousMeta,
-      keyPath: [...previousMeta.keyPath, metaMeta.key],
+      keyPath: [...previousMeta.keyPath, mergeInfo.key],
     };
   },
   // Use the meta data when merging others.

@@ -1,8 +1,8 @@
 import { mergeUnknownsIntoFast } from "../deepmerge-into-fast.ts";
 import type {
   DeepMergeIntoUtils,
+  DeepMergeMergeInfo,
   DeepMergeMetaData,
-  DeepMergeMetaMetaData,
   DeepMergeValueReference,
 } from "../types/index.ts";
 import { getKeysOfObject, getKeysOfObjects, objectHasProperty } from "../utils.ts";
@@ -31,16 +31,16 @@ export type MergeFunctionsFast = {
  */
 function mergeRecordsIntoFast<
   Ts extends ReadonlyArray<Record<PropertyKey, unknown>>,
-  U extends DeepMergeIntoUtils<M, MM>,
+  U extends DeepMergeIntoUtils<M, MI>,
   M extends DeepMergeMetaData,
-  MM extends DeepMergeMetaMetaData = DeepMergeMetaMetaData,
+  MI extends DeepMergeMergeInfo = DeepMergeMergeInfo,
 >(mut_target: DeepMergeValueReference<Record<PropertyKey, unknown>>, values: Ts, utils: U): void {
   if (values.length === 2) {
     // Fast path for 2 records: avoid building a union key set and per-key value
     // arrays. Only the keys present in each record are iterated.
     const mergeProperty = (key: PropertyKey, propValues: unknown[]) => {
       const propertyTarget: DeepMergeValueReference<unknown> = { value: propValues[0] };
-      mergeUnknownsIntoFast<ReadonlyArray<unknown>, U, M, MM>(propertyTarget, propValues, utils);
+      mergeUnknownsIntoFast<ReadonlyArray<unknown>, U, M, MI>(propertyTarget, propValues, utils);
 
       mut_target.value[key] = propertyTarget.value;
     };
@@ -57,7 +57,7 @@ function mergeRecordsIntoFast<
     }
     return;
   }
-  mergeRecordsIntoFastGeneral<Ts, U, M, MM>(mut_target, values, utils);
+  mergeRecordsIntoFastGeneral<Ts, U, M, MI>(mut_target, values, utils);
 }
 
 /**
@@ -71,9 +71,9 @@ function mergeRecordsIntoFast<
  */
 function mergeRecordsIntoFastGeneral<
   Ts extends ReadonlyArray<Record<PropertyKey, unknown>>,
-  U extends DeepMergeIntoUtils<M, MM>,
+  U extends DeepMergeIntoUtils<M, MI>,
   M extends DeepMergeMetaData,
-  MM extends DeepMergeMetaMetaData = DeepMergeMetaMetaData,
+  MI extends DeepMergeMergeInfo = DeepMergeMergeInfo,
 >(mut_target: DeepMergeValueReference<Record<PropertyKey, unknown>>, values: Ts, utils: U): void {
   for (const key of getKeysOfObjects(values)) {
     const propValues = [];
@@ -85,7 +85,7 @@ function mergeRecordsIntoFastGeneral<
     }
 
     const propertyTarget: DeepMergeValueReference<unknown> = { value: propValues[0] };
-    mergeUnknownsIntoFast<ReadonlyArray<unknown>, U, M, MM>(propertyTarget, propValues, utils);
+    mergeUnknownsIntoFast<ReadonlyArray<unknown>, U, M, MI>(propertyTarget, propValues, utils);
 
     mut_target.value[key] = propertyTarget.value;
   }
@@ -102,9 +102,9 @@ function mergeRecordsIntoFastGeneral<
  */
 function mergeMapsIntoFast<
   Ts extends ReadonlyArray<Readonly<ReadonlyMap<unknown, unknown>>>,
-  U extends DeepMergeIntoUtils<M, MM>,
+  U extends DeepMergeIntoUtils<M, MI>,
   M extends DeepMergeMetaData,
-  MM extends DeepMergeMetaMetaData = DeepMergeMetaMetaData,
+  MI extends DeepMergeMergeInfo = DeepMergeMergeInfo,
 >(mut_target: DeepMergeValueReference<Map<unknown, unknown>>, values: Ts, utils: U): void {
   const valuesByKey = new Map<unknown, unknown[]>();
   for (let mut_i = 1; mut_i < values.length; mut_i++) {
@@ -123,7 +123,7 @@ function mergeMapsIntoFast<
     const allValues = targetValue === undefined ? keyValues : [targetValue, ...keyValues];
 
     const propTarget: DeepMergeValueReference<unknown> = { value: allValues[0] };
-    mergeUnknownsIntoFast<ReadonlyArray<unknown>, U, M, MM>(propTarget, allValues, utils);
+    mergeUnknownsIntoFast<ReadonlyArray<unknown>, U, M, MI>(propTarget, allValues, utils);
 
     mut_target.value.set(key, propTarget.value);
   }

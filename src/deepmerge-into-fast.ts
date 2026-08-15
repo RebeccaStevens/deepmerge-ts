@@ -7,8 +7,8 @@ import type {
   DeepMergeIntoFastUnsafeOptions,
   DeepMergeIntoFastUnsafeUtils,
   DeepMergeIntoUtils,
+  DeepMergeMergeInfo,
   DeepMergeMetaData,
-  DeepMergeMetaMetaData,
   DeepMergeValueReference,
   MetaDataUpdater,
 } from "./types/index.ts";
@@ -150,9 +150,9 @@ function getUtilsFast(
  */
 export function mergeUnknownsIntoFast<
   Ts extends ReadonlyArray<unknown>,
-  U extends DeepMergeIntoUtils<M, MM>,
+  U extends DeepMergeIntoUtils<M, MI>,
   M extends DeepMergeMetaData,
-  MM extends DeepMergeMetaMetaData = DeepMergeMetaMetaData,
+  MI extends DeepMergeMergeInfo = DeepMergeMergeInfo,
 >(
   mut_target: DeepMergeValueReference<unknown>,
   values: Ts,
@@ -165,7 +165,7 @@ export function mergeUnknownsIntoFast<
     return;
   }
   if (filteredValues.length === 1) {
-    return void mergeOthersIntoFast<U, M, MM>(mut_target, filteredValues, utils);
+    return void mergeOthersIntoFast<U, M, MI>(mut_target, filteredValues, utils);
   }
 
   const type = getObjectType(mut_target.value);
@@ -174,13 +174,13 @@ export function mergeUnknownsIntoFast<
     if (filteredValues.length === 2) {
       // Fast path: avoid loop overhead for 2 elements.
       if (getObjectType(filteredValues[1]) !== type) {
-        return void mergeOthersIntoFast<U, M, MM>(mut_target, filteredValues, utils);
+        return void mergeOthersIntoFast<U, M, MI>(mut_target, filteredValues, utils);
       }
     } else {
       // Slow path: 3 or more elements require full iteration.
       for (let mut_index = 1; mut_index < filteredValues.length; mut_index++) {
         if (getObjectType(filteredValues[mut_index]) !== type) {
-          return void mergeOthersIntoFast<U, M, MM>(mut_target, filteredValues, utils);
+          return void mergeOthersIntoFast<U, M, MI>(mut_target, filteredValues, utils);
         }
       }
     }
@@ -188,7 +188,7 @@ export function mergeUnknownsIntoFast<
 
   switch (type) {
     case ObjectType.RECORD: {
-      return void mergeRecordsIntoFast<U, M, MM>(
+      return void mergeRecordsIntoFast<U, M, MI>(
         mut_target as DeepMergeValueReference<Record<PropertyKey, unknown>>,
         filteredValues as ReadonlyArray<Readonly<Record<PropertyKey, unknown>>>,
         utils,
@@ -196,7 +196,7 @@ export function mergeUnknownsIntoFast<
     }
 
     case ObjectType.ARRAY: {
-      return void mergeArraysIntoFast<U, M, MM>(
+      return void mergeArraysIntoFast<U, M, MI>(
         mut_target as DeepMergeValueReference<unknown[]>,
         filteredValues as ReadonlyArray<ReadonlyArray<unknown>>,
         utils,
@@ -204,7 +204,7 @@ export function mergeUnknownsIntoFast<
     }
 
     case ObjectType.SET: {
-      return void mergeSetsIntoFast<U, M, MM>(
+      return void mergeSetsIntoFast<U, M, MI>(
         mut_target as DeepMergeValueReference<Set<unknown>>,
         filteredValues as ReadonlyArray<Readonly<ReadonlySet<unknown>>>,
         utils,
@@ -212,7 +212,7 @@ export function mergeUnknownsIntoFast<
     }
 
     case ObjectType.MAP: {
-      return void mergeMapsIntoFast<U, M, MM>(
+      return void mergeMapsIntoFast<U, M, MI>(
         mut_target as DeepMergeValueReference<Map<unknown, unknown>>,
         filteredValues as ReadonlyArray<Readonly<ReadonlyMap<unknown, unknown>>>,
         utils,
@@ -220,7 +220,7 @@ export function mergeUnknownsIntoFast<
     }
 
     default: {
-      return void mergeOthersIntoFast<U, M, MM>(mut_target, filteredValues, utils);
+      return void mergeOthersIntoFast<U, M, MI>(mut_target, filteredValues, utils);
     }
   }
 }
@@ -233,9 +233,9 @@ export function mergeUnknownsIntoFast<
  * @param utils - The utils.
  */
 function mergeRecordsIntoFast<
-  U extends DeepMergeIntoUtils<M, MM>,
+  U extends DeepMergeIntoUtils<M, MI>,
   M extends DeepMergeMetaData,
-  MM extends DeepMergeMetaMetaData = DeepMergeMetaMetaData,
+  MI extends DeepMergeMergeInfo = DeepMergeMergeInfo,
 >(
   mut_target: DeepMergeValueReference<Record<PropertyKey, unknown>>,
   values: ReadonlyArray<Readonly<Record<PropertyKey, unknown>>>,
@@ -256,9 +256,9 @@ function mergeRecordsIntoFast<
  * @param utils - The utils.
  */
 function mergeArraysIntoFast<
-  U extends DeepMergeIntoUtils<M, MM>,
+  U extends DeepMergeIntoUtils<M, MI>,
   M extends DeepMergeMetaData,
-  MM extends DeepMergeMetaMetaData = DeepMergeMetaMetaData,
+  MI extends DeepMergeMergeInfo = DeepMergeMergeInfo,
 >(mut_target: DeepMergeValueReference<unknown[]>, values: ReadonlyArray<ReadonlyArray<unknown>>, utils: U) {
   const action = utils.mergeFunctions.mergeArrays(mut_target, values, utils, undefined);
 
@@ -275,9 +275,9 @@ function mergeArraysIntoFast<
  * @param utils - The utils.
  */
 function mergeSetsIntoFast<
-  U extends DeepMergeIntoUtils<M, MM>,
+  U extends DeepMergeIntoUtils<M, MI>,
   M extends DeepMergeMetaData,
-  MM extends DeepMergeMetaMetaData = DeepMergeMetaMetaData,
+  MI extends DeepMergeMergeInfo = DeepMergeMergeInfo,
 >(mut_target: DeepMergeValueReference<Set<unknown>>, values: ReadonlyArray<Readonly<ReadonlySet<unknown>>>, utils: U) {
   const action = utils.mergeFunctions.mergeSets(mut_target, values, utils, undefined);
 
@@ -294,9 +294,9 @@ function mergeSetsIntoFast<
  * @param utils - The utils.
  */
 function mergeMapsIntoFast<
-  U extends DeepMergeIntoUtils<M, MM>,
+  U extends DeepMergeIntoUtils<M, MI>,
   M extends DeepMergeMetaData,
-  MM extends DeepMergeMetaMetaData = DeepMergeMetaMetaData,
+  MI extends DeepMergeMergeInfo = DeepMergeMergeInfo,
 >(
   mut_target: DeepMergeValueReference<Map<unknown, unknown>>,
   values: ReadonlyArray<Readonly<ReadonlyMap<unknown, unknown>>>,
@@ -317,9 +317,9 @@ function mergeMapsIntoFast<
  * @param utils - The utils.
  */
 function mergeOthersIntoFast<
-  U extends DeepMergeIntoUtils<M, MM>,
+  U extends DeepMergeIntoUtils<M, MI>,
   M extends DeepMergeMetaData,
-  MM extends DeepMergeMetaMetaData = DeepMergeMetaMetaData,
+  MI extends DeepMergeMergeInfo = DeepMergeMergeInfo,
 >(mut_target: DeepMergeValueReference<unknown>, values: ReadonlyArray<unknown>, utils: U) {
   const action = utils.mergeFunctions.mergeOthers(mut_target, values, utils, undefined);
 

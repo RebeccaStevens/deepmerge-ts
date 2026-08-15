@@ -3,8 +3,8 @@ import type {
   DeepMergeArraysDefaultHKT,
   DeepMergeBuiltInMetaData,
   DeepMergeFunctionsURIs,
+  DeepMergeMergeInfo,
   DeepMergeMetaData,
-  DeepMergeMetaMetaData,
   DeepMergeSetsDefaultHKT,
   DeepMergeUtils,
   DeepMergeValueReference,
@@ -17,17 +17,17 @@ import type {
  * It builds and updates the hierarchy tree.
  *
  * @param previousMeta - The previous meta data.
- * @param metaMeta - Meta information about the current merge state.
+ * @param mergeInfo - Meta information about the current merge state.
  */
 export function defaultMetaDataUpdater(
   previousMeta: DeepMergeBuiltInMetaData | undefined,
-  metaMeta: DeepMergeMetaMetaData,
+  mergeInfo: DeepMergeMergeInfo,
 ): DeepMergeBuiltInMetaData {
   const ancestor: HierarchyValue = {
-    key: metaMeta.key,
-    parents: metaMeta.parents,
-    values: metaMeta.values,
-    result: metaMeta.result,
+    key: mergeInfo.key,
+    parents: mergeInfo.parents,
+    values: mergeInfo.values,
+    result: mergeInfo.result,
   };
   const prevHierarchy = previousMeta?.hierarchy;
   return {
@@ -42,9 +42,9 @@ export function defaultMetaDataUpdater(
  * It doesn't track any meta data.
  *
  * @param previousMeta - The previous meta data.
- * @param metaMeta - Meta information about the current merge state.
+ * @param mergeInfo - Meta information about the current merge state.
  */
-export function defaultMetaDataUpdaterFast(previousMeta: undefined, metaMeta: DeepMergeMetaMetaData): undefined {
+export function defaultMetaDataUpdaterFast(previousMeta: undefined, mergeInfo: DeepMergeMergeInfo): undefined {
   return undefined;
 }
 
@@ -72,9 +72,9 @@ export function defaultFilterValues<Ts extends ReadonlyArray<unknown>, M>(
  * @param result - The result of the custom merge function.
  * @returns Whether to use the default merge function.
  */
-export function hasFallback<M extends DeepMergeMetaData, MM extends DeepMergeMetaMetaData>(
-  utils: DeepMergeUtils<M, MM>,
-  fallback: keyof DeepMergeUtils<M, MM>["mergeFunctions"],
+export function shouldFallbackToDefault<M extends DeepMergeMetaData, MI extends DeepMergeMergeInfo>(
+  utils: DeepMergeUtils<M, MI>,
+  fallback: keyof DeepMergeUtils<M, MI>["mergeFunctions"],
   result: unknown,
 ): boolean {
   return (
@@ -121,10 +121,10 @@ export function resolveCustomMergeFunctions<Fns extends { mergeOthers: unknown }
  */
 export function mergeArrays<
   Ts extends ReadonlyArray<ReadonlyArray<unknown>>,
-  U extends DeepMergeUtils<M, MM>,
+  U extends DeepMergeUtils<M, MI>,
   Fs extends DeepMergeFunctionsURIs,
   M extends DeepMergeMetaData,
-  MM extends DeepMergeMetaMetaData = DeepMergeMetaMetaData,
+  MI extends DeepMergeMergeInfo = DeepMergeMergeInfo,
 >(values: Ts, utils?: U, meta?: M): DeepMergeArraysDefaultHKT<Ts, Fs, M> {
   return values.flat() as DeepMergeArraysDefaultHKT<Ts, Fs, M>;
 }
@@ -138,11 +138,11 @@ export function mergeArrays<
  */
 export function mergeSets<
   Ts extends ReadonlyArray<Readonly<ReadonlySet<unknown>>>,
-  U extends DeepMergeUtils<M, MM>,
+  U extends DeepMergeUtils<M, MI>,
   // eslint-disable-next-line ts/no-unused-vars
   Fs extends DeepMergeFunctionsURIs,
   M extends DeepMergeMetaData,
-  MM extends DeepMergeMetaMetaData = DeepMergeMetaMetaData,
+  MI extends DeepMergeMergeInfo = DeepMergeMergeInfo,
 >(values: Ts, utils?: U, meta?: M): DeepMergeSetsDefaultHKT<Ts> {
   const result = new Set<unknown>();
   for (const set of values) {
@@ -162,11 +162,11 @@ export function mergeSets<
  */
 export function mergeOthers<
   Ts extends ReadonlyArray<unknown>,
-  U extends DeepMergeUtils<M, MM>,
+  U extends DeepMergeUtils<M, MI>,
   // eslint-disable-next-line ts/no-unused-vars
   Fs extends DeepMergeFunctionsURIs,
   M extends DeepMergeMetaData,
-  MM extends DeepMergeMetaMetaData = DeepMergeMetaMetaData,
+  MI extends DeepMergeMergeInfo = DeepMergeMergeInfo,
 >(values: Ts, utils?: U, meta?: M): unknown {
   return values.at(-1);
 }

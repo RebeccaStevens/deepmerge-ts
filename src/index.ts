@@ -19,7 +19,7 @@ export type {
   DeepMergeNoFilteringURI,
   DeepMergeMapsDefaultHKT,
   DeepMergeMetaData,
-  DeepMergeMetaMetaData,
+  DeepMergeMergeInfo,
   DeepMergeFunctionsDefaultURIs,
   DeepMergeFunctionsURIs,
   DeepMergeFunctionURItoKind,

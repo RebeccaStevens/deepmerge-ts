@@ -83,7 +83,7 @@ The maximum recursion depth to merge to (defaults to `1000`). Prevents stack exh
 
 #### `metaDataUpdater`
 
-Type: `(previousMeta: DeepMergeBuiltInMetaData | undefined, metaMeta: Readonly<Partial<DeepMergeMetaMetaData>>) => DeepMergeBuiltInMetaData` <!-- markdownlint-disable-line MD013 -->
+Type: `(previousMeta: DeepMergeBuiltInMetaData | undefined, mergeInfo: Readonly<Partial<DeepMergeMergeInfo>>) => DeepMergeBuiltInMetaData` <!-- markdownlint-disable-line MD013 -->
 
 A function used to generate/update metadata passed down the merge tree.
 
@@ -203,7 +203,7 @@ The maximum recursion depth to merge to (defaults to `1000`). Prevents stack exh
 
 #### `metaDataUpdater`
 
-Type: `(previousMeta: DeepMergeBuiltInMetaData | undefined, metaMeta: Readonly<Partial<DeepMergeMetaMetaData>>) => DeepMergeBuiltInMetaData` <!-- markdownlint-disable-line MD013 -->
+Type: `(previousMeta: DeepMergeBuiltInMetaData | undefined, mergeInfo: Readonly<Partial<DeepMergeMergeInfo>>) => DeepMergeBuiltInMetaData` <!-- markdownlint-disable-line MD013 -->
 
 A function used to generate/update metadata passed down the merge tree.
 
@@ -315,7 +315,7 @@ The following types are exported for convenience.
 - `DeepMergeFastUnsafeOptions` & `DeepMergeIntoFastUnsafeOptions` — The options accepted by the fast-unsafe variants.
 - `DeepMergeUtils` & `DeepMergeIntoUtils` — The utils passed to custom merge functions.
 - `DeepMergeFastUnsafeUtils` & `DeepMergeIntoFastUnsafeUtils` — The utils passed to fast-unsafe merge functions.
-- `DeepMergeMetaData` & `DeepMergeMetaMetaData` & `DeepMergeBuiltInMetaData` — Types related to the merge metadata.
+- `DeepMergeMetaData` & `DeepMergeMergeInfo` & `DeepMergeBuiltInMetaData` — Types related to the merge metadata.
 - `DeepMergeFunctionsDefaults` & `DeepMergeIntoFunctionsDefaults` — The default merge functions.
 - `DeepMergeFunctionsDefaultsFastUnsafe` & `DeepMergeIntoFunctionsDefaultsFastUnsafe` — The default fast-unsafe merge
   functions.
