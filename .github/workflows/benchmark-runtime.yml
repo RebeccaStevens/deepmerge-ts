@@ -1,0 +1,14 @@
+name: Runtime Benchmark
+
+on:
+  workflow_dispatch:
+
+jobs:
+  runtime_benchmark:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: ./.github/actions/prepare
+      # Runtime timings are noisy, so this benchmark is manual-only
+      # (workflow_dispatch) rather than running on every pull request.
+      - run: pnpm run benchmark
