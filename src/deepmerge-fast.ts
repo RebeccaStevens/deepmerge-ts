@@ -16,6 +16,7 @@ import type {
   DeepMergeMetaMetaData,
   DeepMergeUtils,
   GetDeepMergeFunctionsURIs,
+  MetaDataUpdater,
 } from "./types/index.ts";
 import { ObjectType, getObjectType } from "./utils.ts";
 
@@ -95,7 +96,7 @@ function getUtilsFast(
   customizedDeepmergeFast: DeepMergeFastUnsafeUtils["deepmerge"],
 ): DeepMergeFastUnsafeUtils {
   const defaultMergeFns = defaultMergeFunctionsFast as unknown as DeepMergeFastUnsafeUtils["defaultMergeFunctions"];
-  const defaultMetaDataUpd = defaultMetaDataUpdaterFast as unknown as DeepMergeFastUnsafeUtils["metaDataUpdater"];
+  const defaultMetaDataUpd = defaultMetaDataUpdaterFast as MetaDataUpdater<undefined>;
 
   return {
     defaultMergeFunctions: defaultMergeFns,
@@ -202,7 +203,7 @@ function mergeRecordsFast<
 >(values: ReadonlyArray<Readonly<Record<PropertyKey, unknown>>>, utils: U) {
   const result = utils.mergeFunctions.mergeRecords(values, utils, undefined);
   if (hasFallback(utils, "mergeRecords", result)) {
-    return utils.defaultMergeFunctions.mergeRecords(values, utils, undefined!);
+    return utils.defaultMergeFunctions.mergeRecords(values, utils, undefined as M);
   }
   return result;
 }
@@ -256,7 +257,7 @@ function mergeMapsFast<
 >(values: ReadonlyArray<Readonly<ReadonlyMap<unknown, unknown>>>, utils: U) {
   const result = utils.mergeFunctions.mergeMaps(values, utils, undefined);
   if (hasFallback(utils, "mergeMaps", result)) {
-    return utils.defaultMergeFunctions.mergeMaps(values, utils, undefined!);
+    return utils.defaultMergeFunctions.mergeMaps(values, utils, undefined as M);
   }
   return result;
 }

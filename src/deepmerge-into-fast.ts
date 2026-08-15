@@ -9,6 +9,7 @@ import type {
   DeepMergeIntoUtils,
   DeepMergeMetaData,
   DeepMergeMetaMetaData,
+  MetaDataUpdater,
   Reference,
 } from "./types/index.ts";
 import type { SimplifyObject } from "./types/utils.ts";
@@ -122,7 +123,7 @@ function getUtilsFast(
 ): DeepMergeIntoFastUnsafeUtils {
   const defaultMergeFns =
     defaultMergeIntoFunctionsFast as unknown as DeepMergeIntoFastUnsafeUtils["defaultMergeFunctions"];
-  const defaultMetaDataUpd = defaultMetaDataUpdaterFast as unknown as DeepMergeIntoFastUnsafeUtils["metaDataUpdater"];
+  const defaultMetaDataUpd = defaultMetaDataUpdaterFast as MetaDataUpdater<undefined>;
 
   return {
     defaultMergeFunctions: defaultMergeFns,

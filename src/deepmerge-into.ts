@@ -1,6 +1,6 @@
 import { actionsInto as actions } from "./actions.ts";
 import { defaultFilterValues, defaultMetaDataUpdater, resolveCustomMergeFunctions } from "./defaults/general.ts";
-import { mergeIntoFunctions as defaultMergeIntoFunctions } from "./defaults/into.ts";
+import { type MergeFunctions, mergeIntoFunctions as defaultMergeIntoFunctions } from "./defaults/into.ts";
 import type {
   DeepMergeBuiltInMetaData,
   DeepMergeFunctionsDefaultURIs,
@@ -9,6 +9,7 @@ import type {
   DeepMergeIntoUtils,
   DeepMergeMetaData,
   DeepMergeMetaMetaData,
+  MetaDataUpdater,
   Reference,
 } from "./types/index.ts";
 import type { SimplifyObject } from "./types/utils.ts";
@@ -118,8 +119,8 @@ function getUtils<M extends DeepMergeMetaData, MM extends DeepMergeMetaMetaData 
   options: DeepMergeIntoOptions<M, MM>,
   customizedDeepmergeInto: DeepMergeIntoUtils<M, MM>["deepmergeInto"],
 ): DeepMergeIntoUtils<M, MM> {
-  const defaultMergeFns = defaultMergeIntoFunctions as unknown as DeepMergeIntoUtils<M, MM>["defaultMergeFunctions"];
-  const defaultMetaDataUpd = defaultMetaDataUpdater as unknown as DeepMergeIntoUtils<M, MM>["metaDataUpdater"];
+  const defaultMergeFns = defaultMergeIntoFunctions as MergeFunctions<M, MM>;
+  const defaultMetaDataUpd = defaultMetaDataUpdater as MetaDataUpdater<M, MM>;
 
   return {
     defaultMergeFunctions: defaultMergeFns,

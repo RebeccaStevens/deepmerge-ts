@@ -33,7 +33,13 @@ export type DeepMergeIntoFastUnsafeOptions = Partial<
   Omit<DeepMergeIntoOptionsFull<undefined>, "metaDataUpdater" | "maxDepth" | "mergeCircularReferences">
 >;
 
-type MetaDataUpdater<
+/**
+ * The function used to update the meta data for a merge.
+ *
+ * @param previousMeta - The previous meta data.
+ * @param metaMeta - The meta data about the current merge operation.
+ */
+export type MetaDataUpdater<
   in out M extends DeepMergeMetaData = DeepMergeBuiltInMetaData,
   MM extends DeepMergeMetaMetaData = DeepMergeMetaMetaData,
 > = (previousMeta: M | undefined, metaMeta: Readonly<Partial<MM>>) => M;

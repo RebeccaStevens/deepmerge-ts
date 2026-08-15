@@ -65,7 +65,7 @@ function mergeRecordsInto<
         parents: values,
         values: propValues,
         result: mut_target.value,
-      } satisfies DeepMergeMetaMetaData as unknown as MM);
+      } satisfies DeepMergeMetaMetaData as unknown as Partial<MM>);
 
       const propertyTarget: Reference<unknown> = { value: propValues[0] };
       mergeUnknownsInto<ReadonlyArray<unknown>, U, M, MM>(propertyTarget, propValues, utils, updatedMeta);
@@ -125,7 +125,7 @@ function mergeRecordsIntoGeneral<
       parents: values,
       values: propValues,
       result: mut_target.value,
-    } satisfies DeepMergeMetaMetaData as unknown as MM);
+    } satisfies DeepMergeMetaMetaData as unknown as Partial<MM>);
 
     const propertyTarget: Reference<unknown> = { value: propValues[0] };
     mergeUnknownsInto<ReadonlyArray<unknown>, U, M, MM>(propertyTarget, propValues, utils, updatedMeta);
@@ -177,7 +177,7 @@ function mergeMapsInto<
       parents: values,
       values: allValues,
       result: mut_target.value,
-    } satisfies DeepMergeMetaMetaData as unknown as MM);
+    } satisfies DeepMergeMetaMetaData as unknown as Partial<MM>);
 
     const propTarget: Reference<unknown> = { value: allValues[0] };
     mergeUnknownsInto<ReadonlyArray<unknown>, U, M, MM>(propTarget, allValues, utils, updatedMeta);
@@ -218,7 +218,7 @@ function resolveCyclicReferencesInto<
         parents: [record],
         values: [propVal],
         result,
-      } satisfies DeepMergeMetaMetaData as unknown as MM);
+      } satisfies DeepMergeMetaMetaData as unknown as Partial<MM>);
       const resolvedProp = resolveCyclicReferencesInto<U, M, MM>(propVal, utils, updatedMeta);
       if (resolvedProp !== propVal) {
         mut_changed = true;

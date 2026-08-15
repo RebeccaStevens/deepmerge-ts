@@ -5,7 +5,7 @@ import {
   hasFallback,
   resolveCustomMergeFunctions,
 } from "./defaults/general.ts";
-import { mergeFunctions as defaultMergeFunctions } from "./defaults/vanilla.ts";
+import { type MergeFunctions, mergeFunctions as defaultMergeFunctions } from "./defaults/vanilla.ts";
 import type {
   DeepMergeBuiltInMetaData,
   DeepMergeFunctionsDefaultURIs,
@@ -16,6 +16,7 @@ import type {
   DeepMergeOptions,
   DeepMergeUtils,
   GetDeepMergeFunctionsURIs,
+  MetaDataUpdater,
 } from "./types/index.ts";
 import { ObjectType, getCyclicReferenceDepth, getMetaDataHierarchy, getObjectType } from "./utils.ts";
 
@@ -106,8 +107,8 @@ function getUtils<M extends DeepMergeMetaData, MM extends DeepMergeMetaMetaData 
   options: DeepMergeOptions<M, MM>,
   customizedDeepmerge: DeepMergeUtils<M, MM>["deepmerge"],
 ): DeepMergeUtils<M, MM> {
-  const defaultMergeFns = defaultMergeFunctions as unknown as DeepMergeUtils<M, MM>["defaultMergeFunctions"];
-  const defaultMetaDataUpd = defaultMetaDataUpdater as unknown as DeepMergeUtils<M, MM>["metaDataUpdater"];
+  const defaultMergeFns = defaultMergeFunctions as MergeFunctions<M, MM>;
+  const defaultMetaDataUpd = defaultMetaDataUpdater as MetaDataUpdater<M, MM>;
 
   return {
     defaultMergeFunctions: defaultMergeFns,
@@ -253,10 +254,10 @@ function mergeRecords<
   U extends DeepMergeUtils<M, MM>,
   M extends DeepMergeMetaData,
   MM extends DeepMergeMetaMetaData = DeepMergeMetaMetaData,
->(values: ReadonlyArray<Readonly<Record<PropertyKey, unknown>>>, utils: U, meta: M | undefined) {
-  const result = utils.mergeFunctions.mergeRecords(values, utils, meta!);
+>(values: ReadonlyArray<Readonly<Record<PropertyKey, unknown>>>, utils: U, meta: M) {
+  const result = utils.mergeFunctions.mergeRecords(values, utils, meta);
   if (hasFallback(utils, "mergeRecords", result)) {
-    return utils.defaultMergeFunctions.mergeRecords(values, utils, meta!);
+    return utils.defaultMergeFunctions.mergeRecords(values, utils, meta);
   }
   return result;
 }
@@ -272,8 +273,8 @@ function mergeArrays<
   U extends DeepMergeUtils<M, MM>,
   M extends DeepMergeMetaData,
   MM extends DeepMergeMetaMetaData = DeepMergeMetaMetaData,
->(values: ReadonlyArray<Readonly<ReadonlyArray<unknown>>>, utils: U, meta: M | undefined) {
-  const result = utils.mergeFunctions.mergeArrays(values, utils, meta!);
+>(values: ReadonlyArray<Readonly<ReadonlyArray<unknown>>>, utils: U, meta: M) {
+  const result = utils.mergeFunctions.mergeArrays(values, utils, meta);
   if (hasFallback(utils, "mergeArrays", result)) {
     return utils.defaultMergeFunctions.mergeArrays(values);
   }
@@ -291,8 +292,8 @@ function mergeSets<
   U extends DeepMergeUtils<M, MM>,
   M extends DeepMergeMetaData,
   MM extends DeepMergeMetaMetaData = DeepMergeMetaMetaData,
->(values: ReadonlyArray<Readonly<ReadonlySet<unknown>>>, utils: U, meta: M | undefined) {
-  const result = utils.mergeFunctions.mergeSets(values, utils, meta!);
+>(values: ReadonlyArray<Readonly<ReadonlySet<unknown>>>, utils: U, meta: M) {
+  const result = utils.mergeFunctions.mergeSets(values, utils, meta);
   if (hasFallback(utils, "mergeSets", result)) {
     return utils.defaultMergeFunctions.mergeSets(values);
   }
@@ -310,10 +311,10 @@ function mergeMaps<
   U extends DeepMergeUtils<M, MM>,
   M extends DeepMergeMetaData,
   MM extends DeepMergeMetaMetaData = DeepMergeMetaMetaData,
->(values: ReadonlyArray<Readonly<ReadonlyMap<unknown, unknown>>>, utils: U, meta: M | undefined) {
-  const result = utils.mergeFunctions.mergeMaps(values, utils, meta!);
+>(values: ReadonlyArray<Readonly<ReadonlyMap<unknown, unknown>>>, utils: U, meta: M) {
+  const result = utils.mergeFunctions.mergeMaps(values, utils, meta);
   if (hasFallback(utils, "mergeMaps", result)) {
-    return utils.defaultMergeFunctions.mergeMaps(values, utils, meta!);
+    return utils.defaultMergeFunctions.mergeMaps(values, utils, meta);
   }
   return result;
 }
@@ -330,10 +331,10 @@ function mergeCircularReferences<
   U extends DeepMergeUtils<M, MM>,
   M extends DeepMergeMetaData,
   MM extends DeepMergeMetaMetaData = DeepMergeMetaMetaData,
->(values: ReadonlyArray<unknown>, cyclicDepths: ReadonlyArray<number>, utils: U, meta: M | undefined) {
-  const result = utils.mergeFunctions.mergeCircularReferences(values, cyclicDepths, utils, meta!);
+>(values: ReadonlyArray<unknown>, cyclicDepths: ReadonlyArray<number>, utils: U, meta: M) {
+  const result = utils.mergeFunctions.mergeCircularReferences(values, cyclicDepths, utils, meta);
   if (hasFallback(utils, "mergeCircularReferences", result)) {
-    return utils.defaultMergeFunctions.mergeCircularReferences(values, cyclicDepths, utils, meta!);
+    return utils.defaultMergeFunctions.mergeCircularReferences(values, cyclicDepths, utils, meta);
   }
   return result;
 }
@@ -349,8 +350,8 @@ function mergeOthers<
   U extends DeepMergeUtils<M, MM>,
   M extends DeepMergeMetaData,
   MM extends DeepMergeMetaMetaData = DeepMergeMetaMetaData,
->(values: ReadonlyArray<unknown>, utils: U, meta: M | undefined) {
-  const result = utils.mergeFunctions.mergeOthers(values, utils, meta!);
+>(values: ReadonlyArray<unknown>, utils: U, meta: M) {
+  const result = utils.mergeFunctions.mergeOthers(values, utils, meta);
   if (hasFallback(utils, "mergeOthers", result)) {
     return utils.defaultMergeFunctions.mergeOthers(values);
   }
