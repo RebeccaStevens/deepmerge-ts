@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
+## [8.0.1](https://github.com/RebeccaStevens/deepmerge-ts/compare/v8.0.0...v8.0.1) (2026-08-16)
+
+
+### Bug Fixes
+
+* typescript 7 support ([#714](https://github.com/RebeccaStevens/deepmerge-ts/issues/714)) ([b307b77](https://github.com/RebeccaStevens/deepmerge-ts/commit/b307b77261375cc89b3a42d11d0df4ca029027ac))
+
 # [8.0.0](https://github.com/RebeccaStevens/deepmerge-ts/compare/v7.1.6...v8.0.0) (2026-08-16)
 
 
