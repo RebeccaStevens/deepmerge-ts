@@ -1,6 +1,54 @@
 # Changelog
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
+# [8.0.0](https://github.com/RebeccaStevens/deepmerge-ts/compare/v7.1.6...v8.0.0) (2026-08-16)
+
+
+### Bug Fixes
+
+* stop deepmergeInto from leak-mutating nested input containers ([2cd7824](https://github.com/RebeccaStevens/deepmerge-ts/commit/2cd782463b532a89c5196fc8ed24ccf0e3308395))
+
+
+### Code Refactoring
+
+* rename mergeInfo system and align shorthand, add JSDoc examples ([590ed9b](https://github.com/RebeccaStevens/deepmerge-ts/commit/590ed9ba3b5ef24572d8d7ef3ca3dd494d595823))
+
+
+### Features
+
+* add circular reference support, maxDepth option, and hierarchy tracking ([#707](https://github.com/RebeccaStevens/deepmerge-ts/issues/707)) ([3984927](https://github.com/RebeccaStevens/deepmerge-ts/commit/398492757b3f22a0d7d89b09ce1ae9cd32806c9a))
+* add deepmergeFastUnsafe and deepmergeIntoFastUnsafe entrypoints ([#708](https://github.com/RebeccaStevens/deepmerge-ts/issues/708)) ([df9b11c](https://github.com/RebeccaStevens/deepmerge-ts/commit/df9b11c0059be64081b2fef5a4c235c9e44bf52c))
+* support deep map value merging ([ac4bf7a](https://github.com/RebeccaStevens/deepmerge-ts/commit/ac4bf7aade17fb68dbb58e8594482e2fc8e67575)), closes [#705](https://github.com/RebeccaStevens/deepmerge-ts/issues/705)
+
+
+### Performance Improvements
+
+* add a dedicated fast path for merging 2 records ([4dbcea7](https://github.com/RebeccaStevens/deepmerge-ts/commit/4dbcea7280786a63e92b08034ef54ae902549e38))
+* avoid array reallocation when no undefined values exist ([99f2241](https://github.com/RebeccaStevens/deepmerge-ts/commit/99f2241c802cc8f348b6b9a0544abd2bd3967195)), closes [#696](https://github.com/RebeccaStevens/deepmerge-ts/issues/696)
+* optimize array and set merging ([8d435f9](https://github.com/RebeccaStevens/deepmerge-ts/commit/8d435f99dd2e4c7e72b2195f40914786a1895374)), closes [#698](https://github.com/RebeccaStevens/deepmerge-ts/issues/698)
+* optimize map merging and remove dead code ([14e1604](https://github.com/RebeccaStevens/deepmerge-ts/commit/14e1604588d417d7879d4acf482bd299b73cc4c9)), closes [#702](https://github.com/RebeccaStevens/deepmerge-ts/issues/702)
+* optimize record key and type detection ([fa85462](https://github.com/RebeccaStevens/deepmerge-ts/commit/fa854629e6a93b736c771369eb5187f71f2a1faf)), closes [#694](https://github.com/RebeccaStevens/deepmerge-ts/issues/694)
+* reduce benchmark sample count so the bench fits in 512MB heap ([66635e3](https://github.com/RebeccaStevens/deepmerge-ts/commit/66635e305854f2b90fea22511d3480cbe191058d))
+* reduce type-level work and shortcut same-type merges ([473a971](https://github.com/RebeccaStevens/deepmerge-ts/commit/473a97162bc97ca1bd6dc2e6e8d00450abbadec0))
+* speed up the mergeUnknowns hot path ([95b2964](https://github.com/RebeccaStevens/deepmerge-ts/commit/95b2964fbcceee9725ca6c9cb9169298415cebb3)), closes [#699](https://github.com/RebeccaStevens/deepmerge-ts/issues/699)
+
+
+### BREAKING CHANGES
+
+* deepmergeInto no longer leak-mutates input containers.
+Code that depended on inputs being merged into the target through alias
+must now pass copies explicitly. The documented 'update the target'
+behavior is preserved on the target itself.
+* - DeepMergeMetaMetaData has been renamed to DeepMergeMergeInfo. Imports
+  must be updated.
+- The MetaDataUpdater callback's `metaMeta` parameter is now `mergeInfo`.
+  Implementations must update the parameter name accordingly.
+- The MM generic shorthand has been renamed to MI (e.g. in
+  `MetaDataUpdater<M, MI>`).
+* The `DeepMergeIntoFunctionUtils` type has been renamed to `DeepMergeIntoUtils`.
+* Updates the internal calculation logic for mergeMaps and
+mergeMapsInto. Colliding keys will now be merged.
+
 ## [7.1.6](https://github.com/RebeccaStevens/deepmerge-ts/compare/v7.1.5...v7.1.6) (2026-08-11)
 
 
