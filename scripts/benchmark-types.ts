@@ -38,8 +38,8 @@ const BASELINE_PATH = join(ROOT_DIR, "benchmark", "types", "baseline.json");
 const GENERATED_CONFIG_DIR = join(ROOT_DIR, "benchmark", "types", ".generated");
 
 const require = createRequire(import.meta.url);
-const TSC_PATH = join(dirname(require.resolve("typescript/package.json")), "bin", "tsc");
-const TYPESCRIPT_VERSION = require("typescript/package.json").version;
+const TSC_PATH = join(dirname(require.resolve("@typescript/native/package.json")), "bin", "tsc");
+const TYPESCRIPT_VERSION = require("@typescript/native/package.json").version;
 
 const UPDATE_BASELINE_FLAG = "--update";
 const RUN_COUNT_FLAG = "--runs";

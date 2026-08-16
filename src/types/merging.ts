@@ -385,11 +385,13 @@ export type DeepMergeLeaf<
           >
       : never;
 
-type DeepMergeLeafElement<E, Fs extends DeepMergeFunctionsURIs, M> = undefined extends E
-  ? FilterValuesHKT<UnionToTuple<E>, Fs, M>
-  : Fs["DeepMergeFilterValuesURI"] extends DeepMergeFilterValuesDefaultURI
-    ? [E]
-    : FilterValuesHKT<UnionToTuple<E>, Fs, M>;
+type DeepMergeLeafElement<
+  E,
+  Fs extends DeepMergeFunctionsURIs,
+  M,
+> = Fs["DeepMergeFilterValuesURI"] extends DeepMergeFilterValuesDefaultURI
+  ? [E extends undefined ? never : E]
+  : FilterValuesHKT<UnionToTuple<E>, Fs, M>;
 
 type DeepMergeLeafApplyFilter<
   Original extends ReadonlyArray<unknown>,

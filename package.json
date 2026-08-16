@@ -89,6 +89,7 @@
     "test:js-run": "vitest run --coverage",
     "test:types": "pnpm run build:check && tsd -f 'tests/**/*.test-d.ts' -t 'dist/index.d.mts'",
     "typecheck": "pnpm run typecheck:root && pnpm run typecheck:src",
+    "typecheck:consumer-ts7": "pnpm run build:check && tsc -p ./tests/consumer-ts7/tsconfig.json --noEmit",
     "typecheck:root": "tsc -p ./tsconfig.json --noEmit",
     "typecheck:src": "tsc -p ./src/tsconfig.json --noEmit"
   },
@@ -106,6 +107,7 @@
     "@types/node": "22.20.1",
     "@typescript-eslint/eslint-plugin": "8.66.0",
     "@typescript-eslint/parser": "8.66.0",
+    "@typescript/native": "npm:typescript@7.0.2",
     "@vitest/coverage-v8": "4.1.10",
     "@vitest/eslint-plugin": "1.6.24",
     "commitizen": "4.3.2",
@@ -146,7 +148,7 @@
     "sort-package-json": "4.0.0",
     "tsc-files": "1.1.4",
     "tsd": "0.33.0",
-    "typescript": "5.9.3",
+    "typescript": "npm:@typescript/typescript6@6.0.2",
     "vite-tsconfig-paths": "6.1.1",
     "vitest": "4.1.10",
     "yaml-eslint-parser": "2.1.0"

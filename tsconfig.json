@@ -44,5 +44,5 @@
     "allowUnusedLabels": false
   },
   "include": [".", ".*"],
-  "exclude": ["benchmark"]
+  "exclude": ["benchmark", "tests/consumer-ts7"]
 }
