@@ -4,6 +4,8 @@ import { describe, expect, it } from "vitest";
 
 import { deepmergeInto } from "../src/index.ts";
 
+import { testIntoMutationAndCopySemantics } from "./deepmerge-semantics.ts";
+
 describe("deepmergeInto", () => {
   it("does not modify the target when nothing to merge", () => {
     const target = { prop: 1 };
@@ -755,4 +757,6 @@ describe("deepmergeInto", () => {
     expect(a.m.get("x")!.items).toStrictEqual([1, 2]);
     expect(b.m.get("x")!.items).toStrictEqual([3, 4]);
   });
+
+  testIntoMutationAndCopySemantics(deepmergeInto);
 });

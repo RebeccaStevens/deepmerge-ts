@@ -4,6 +4,8 @@ import { describe, expect, it } from "vitest";
 
 import { deepmerge } from "../src/index.ts";
 
+import { testSourceMutationAndCopySemantics } from "./deepmerge-semantics.ts";
+
 describe("deepmerge", () => {
   it("returns undefined when nothing to merge", () => {
     // eslint-disable-next-line ts/no-confusing-void-expression
@@ -687,4 +689,6 @@ describe("deepmerge", () => {
     const merged = deepmerge(a, b);
     expect(merged).toStrictEqual({ foo: 1, bar: 2 });
   });
+
+  testSourceMutationAndCopySemantics(deepmerge);
 });

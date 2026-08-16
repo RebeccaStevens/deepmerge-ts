@@ -101,3 +101,54 @@ const same: { foo: string; bar: number } = { foo: "abc", bar: 1 };
 // Merging values of the same type into a target returns the target's type.
 deepmergeInto(same, same);
 expectType<{ foo: string; bar: number }>(same);
+
+const testSetsMaps = {
+  foo: new Set([1, 2]),
+  bar: new Map([["key1", "value1"]]),
+};
+const sourceSetsMaps = {
+  foo: new Set(["abc"]),
+  bar: new Map([[1, 1]]),
+};
+
+// The target's container types are kept in the merge result.
+deepmergeInto(testSetsMaps, sourceSetsMaps);
+expectType<{ foo: Set<number>; bar: Map<string, string> }>(testSetsMaps);
+
+const testReadonlyArr = { foo: [1] } as { foo: ReadonlyArray<number> };
+const sourceReadonlyArr = { foo: [2] } as { foo: ReadonlyArray<number> };
+
+// Readonly array properties stay readonly in the target's type.
+deepmergeInto(testReadonlyArr, sourceReadonlyArr);
+expectType<{ foo: ReadonlyArray<number> }>(testReadonlyArr);
+
+const testUndefined = { foo: "abc" };
+
+// undefined values are filtered out of the merge result.
+deepmergeInto(testUndefined, { foo: undefined });
+expectType<{ foo: string }>(testUndefined);
+
+const testOptional = { foo: "abc", bar: 1 } as { foo: string; bar?: number };
+
+// Optional properties are preserved.
+deepmergeInto(testOptional, { foo: "x", bar: 2 } as { foo: string; bar?: number });
+expectType<{ foo: string; bar?: number }>(testOptional);
+
+const symA = Symbol("a");
+const symB = Symbol("b");
+const testSymbols = { [symA]: 1 };
+
+// Symbol keys are merged into the target.
+deepmergeInto(testSymbols, { [symB]: 2, [symA]: 3 });
+expectAssignable<{ [symA]: number; [symB]: number }>(testSymbols);
+
+const testNested = {
+  outer: { inner: { a: 1 } },
+} as { outer: { inner: { a: number; b?: number } } };
+const sourceNested = {
+  outer: { inner: { b: 2 } },
+} as { outer: { inner: { a?: number; b?: number } } };
+
+// Deeply nested objects are merged recursively.
+deepmergeInto(testNested, sourceNested);
+expectAssignable<{ outer: { inner: { a: number; b?: number } } }>(testNested);

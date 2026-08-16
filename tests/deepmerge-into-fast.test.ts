@@ -2,6 +2,8 @@ import { describe, expect, it } from "vitest";
 
 import { deepmergeIntoFastUnsafe, deepmergeIntoFastUnsafeCustom } from "../src/index.ts";
 
+import { testIntoMutationAndCopySemantics } from "./deepmerge-semantics.ts";
+
 describe("deepmergeIntoFastUnsafe", () => {
   it("merges records into target", () => {
     const target = { foo: 1, bar: { baz: 2 } };
@@ -68,6 +70,8 @@ describe("deepmergeIntoFastUnsafe", () => {
     expect(target[symA]).toBe(3);
     expect(target[symB]).toBe(2);
   });
+
+  testIntoMutationAndCopySemantics(deepmergeIntoFastUnsafe);
 });
 
 describe("deepmergeIntoFastUnsafeCustom", () => {
@@ -131,6 +135,26 @@ describe("deepmergeIntoFastUnsafeCustom", () => {
     expect(targetMap.get("b")).toBe(20);
   });
 
+  it("falls back to default merge functions when custom merge functions return actions.defaultMerge", () => {
+    const customMergeInto = deepmergeIntoFastUnsafeCustom({
+      mergeArrays: (mut_target, values, utils) => utils.actions.defaultMerge,
+      mergeSets: (mut_target, values, utils) => utils.actions.defaultMerge,
+      mergeMaps: (mut_target, values, utils) => utils.actions.defaultMerge,
+      mergeOthers: (mut_target, values, utils) => utils.actions.defaultMerge,
+    });
+
+    const targetSet = new Set<unknown>([1]);
+    const targetMap = new Map<unknown, unknown>([["a", 10]]);
+    const target = { list: [1], set: targetSet, map: targetMap, other: 1 };
+
+    customMergeInto(target, { list: [2, 3], set: new Set([2]), map: new Map([["a", 20]]), other: 2 });
+
+    expect(target.list).toStrictEqual([1, 2, 3]);
+    expect(targetSet).toStrictEqual(new Set([1, 2]));
+    expect(targetMap.get("a")).toBe(20);
+    expect(target.other).toBe(2);
+  });
+
   it("supports custom filterValues in deepmergeIntoFastUnsafeCustom", () => {
     const customMergeInto = deepmergeIntoFastUnsafeCustom({
       filterValues: (values) => values.filter((v) => v !== null),
@@ -170,4 +194,6 @@ describe("deepmergeIntoFastUnsafeCustom", () => {
       expect(target).toStrictEqual({ a: 1, b: 2 });
     });
   });
+
+  testIntoMutationAndCopySemantics(deepmergeIntoFastUnsafeCustom({}));
 });

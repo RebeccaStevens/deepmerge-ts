@@ -2,6 +2,8 @@ import { describe, expect, it } from "vitest";
 
 import { deepmergeFastUnsafe, deepmergeFastUnsafeCustom } from "../src/index.ts";
 
+import { testSourceMutationAndCopySemantics } from "./deepmerge-semantics.ts";
+
 describe("deepmergeFastUnsafe", () => {
   it("returns undefined when nothing to merge", () => {
     // eslint-disable-next-line ts/no-confusing-void-expression
@@ -105,6 +107,8 @@ describe("deepmergeFastUnsafe", () => {
     const merged = deepmergeFastUnsafe(a, b);
     expect(merged).toStrictEqual([1, 2]);
   });
+
+  testSourceMutationAndCopySemantics(deepmergeFastUnsafe);
 });
 
 describe("deepmergeFastUnsafeCustom", () => {
