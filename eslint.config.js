@@ -14,7 +14,7 @@ export default rsEslint(
     markdown: true,
     stylistic: true,
     yaml: true,
-    ignores: ["tests/modules", "tests/types", "benchmark/data.json"],
+    ignores: ["tests/modules", "tests/types", "tests/consumer-ts7", "benchmark/data.json"],
   },
   {
     rules: {

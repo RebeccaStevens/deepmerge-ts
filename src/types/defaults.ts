@@ -300,11 +300,13 @@ export type DeepMergeMapsDefaultHKT<Ts extends ReadonlyArray<unknown>> = Map<Uni
 export type DeepMergeFilterValuesDefaultHKT<Ts extends ReadonlyArray<unknown>> =
   DeepMergeFilterValuesShortcut<Ts> extends true ? Ts : FilterOut<Ts, undefined>;
 
-type DeepMergeFilterValuesShortcut<Ts extends ReadonlyArray<unknown>> = {
-  [I in keyof Ts]: Is<Ts[I], undefined>;
-}[number] extends false
-  ? true
-  : false;
+type DeepMergeFilterValuesShortcut<Ts extends ReadonlyArray<unknown>> = Ts extends readonly [infer Head, ...infer Rest]
+  ? Is<Head, undefined> extends true
+    ? false
+    : Rest extends ReadonlyArray<unknown>
+      ? DeepMergeFilterValuesShortcut<Rest>
+      : true
+  : true;
 
 /**
  * Get the merge functions with defaults apply from the given subset.
