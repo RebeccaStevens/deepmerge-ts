@@ -55,7 +55,7 @@ export type DeepMergeFunctionsDefaultURIs = Readonly<{
 }>;
 
 type KnownKeys<T> = keyof {
-  [K in keyof T as string extends K ? never : number extends K ? never : symbol extends K ? never : K]: any;
+  [K in keyof T as string extends K ? never : number extends K ? never : symbol extends K ? never : K]: unknown;
 };
 
 type RecordPropertyMeta<Key extends PropertyKey = PropertyKey, Value = unknown, Optional extends boolean = boolean> = {
