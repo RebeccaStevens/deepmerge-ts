@@ -289,9 +289,9 @@ export type TupleToIntersection<T extends ReadonlyArray<unknown>> =
  */
 export type UnionToTuple<T, L = LastOf<T>> = IsNever<T> extends true ? [] : [...UnionToTuple<Exclude<T, L>>, L];
 
-type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (k: infer I) => void ? I : never;
+type UnionToIntersection<U> = (U extends unknown ? (k: U) => void : never) extends (k: infer I) => void ? I : never;
 
-type LastOf<T> = UnionToIntersection<T extends any ? () => T : never> extends () => infer R ? R : never;
+type LastOf<T> = UnionToIntersection<T extends unknown ? () => T : never> extends () => infer R ? R : never;
 
 /**
  * Convert a tuple of tuples to a tuple of unions.

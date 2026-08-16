@@ -23,6 +23,12 @@ export default rsEslint(
     },
   },
   {
+    files: ["src/**/*.ts"],
+    rules: {
+      "ts/no-explicit-any": "error",
+    },
+  },
+  {
     files: ["tests/utils.ts"],
     rules: {
       "jsdoc/require-jsdoc": "off",
