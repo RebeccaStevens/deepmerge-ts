@@ -3,8 +3,8 @@ import path, { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const benchmarkDataFile = path.join(dirname(fileURLToPath(import.meta.url)), "data.json");
-const SAMPLES_PER_SHAPE = 20;
-const DATA_FORMAT_VERSION = 3;
+const SAMPLES_PER_SHAPE = 5;
+const DATA_FORMAT_VERSION = 4;
 const SEED = 0xde_ca_fb_ad;
 const MARKER_KEY = "$deepmergeTsBenchmark";
 

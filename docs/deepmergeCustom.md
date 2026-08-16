@@ -55,7 +55,7 @@ For example, the following `customizedDeepmerge` functions are equivalent:
 
 ```ts
 const customizedDeepmerge = deepmergeCustom({
-  mergeOthers: (value, utils) => {
+  mergeOthers: (values, utils) => {
     if (someCondition) {
       return someCustomValue;
     }
@@ -66,7 +66,7 @@ const customizedDeepmerge = deepmergeCustom({
 
 ```ts
 const customizedDeepmerge = deepmergeCustom({
-  mergeOthers: (value, utils) => {
+  mergeOthers: (values, utils) => {
     if (someCondition) {
       return someCustomValue;
     }
@@ -87,7 +87,7 @@ For example, the following `customizedDeepmerge` function is equivalent to the t
 ```ts
 const customizedDeepmerge = deepmergeCustom({
   enableImplicitDefaultMerging: true, // enable implicit default merging
-  mergeOthers: (value, utils) => {
+  mergeOthers: (values, utils) => {
     if (someCondition) {
       return someCustomValue;
     }
@@ -348,19 +348,19 @@ const customizedDeepmerge = deepmergeCustom<
   }
 >({
   // Customize what the actual meta data.
-  metaDataUpdater: (previousMeta, metaMeta) => {
+  metaDataUpdater: (previousMeta, mergeInfo) => {
     if (previousMeta === undefined) {
-      if (metaMeta.key === undefined) {
+      if (mergeInfo.key === undefined) {
         return { keyPath: [] };
       }
-      return { keyPath: [metaMeta.key] };
+      return { keyPath: [mergeInfo.key] };
     }
-    if (metaMeta.key === undefined) {
+    if (mergeInfo.key === undefined) {
       return previousMeta;
     }
     return {
-      ...metaMeta,
-      keyPath: [...previousMeta.keyPath, metaMeta.key],
+      ...previousMeta,
+      keyPath: [...previousMeta.keyPath, mergeInfo.key],
     };
   },
   // Use the meta data when merging others.
@@ -420,7 +420,8 @@ See [deepmerge custom API](./API.md#deepmergecustomoptions-rootmetadata).
 The signature of merging functions for `deepmergeIntoCustom` looks like this:
 
 ```ts
-(target: DeepMergeValueReference<T>, values: Ts, utils: U, meta: M | undefined) => symbol | undefined;
+// eslint-disable-next-line ts/no-invalid-void-type
+type MergeFunction = (target: DeepMergeValueReference<T>, values: Ts, utils: U, meta: M | undefined) => void | symbol;
 ```
 
 Instead of returning a value like with `deepmergeCustom`'s merge functions, mutations should be made to `target.value`.\

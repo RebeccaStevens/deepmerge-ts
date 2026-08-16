@@ -1,16 +1,21 @@
 import { actionsInto as actions } from "./actions.ts";
-import { defaultFilterValues, defaultMetaDataUpdater } from "./defaults/general.ts";
-import { mergeIntoFunctions as defaultMergeIntoFunctions } from "./defaults/into.ts";
+import { defaultFilterValues, defaultMetaDataUpdater, resolveCustomMergeFunctions } from "./defaults/general.ts";
+import { type MergeFunctions, mergeIntoFunctions as defaultMergeIntoFunctions } from "./defaults/into.ts";
 import type {
   DeepMergeBuiltInMetaData,
   DeepMergeFunctionsDefaultURIs,
   DeepMergeHKT,
-  DeepMergeIntoFunctionUtils,
   DeepMergeIntoOptions,
-  Reference,
+  DeepMergeIntoUtils,
+  DeepMergeMergeInfo,
+  DeepMergeMetaData,
+  DeepMergeValueReference,
+  MetaDataUpdater,
 } from "./types/index.ts";
 import type { SimplifyObject } from "./types/utils.ts";
-import { ObjectType, getObjectType } from "./utils.ts";
+import { ObjectType, getCyclicReferenceDepth, getMetaDataHierarchy, getObjectType } from "./utils.ts";
+
+const defaultDeepmergeInto = /** @__PURE__ */ deepmergeIntoCustom();
 
 /**
  * Deeply merge objects into a target.
@@ -39,8 +44,18 @@ export function deepmergeInto<Target extends object, Ts extends ReadonlyArray<un
 ): asserts target is SimplifyObject<
   Target & DeepMergeHKT<[Target, ...Ts], DeepMergeFunctionsDefaultURIs, DeepMergeBuiltInMetaData>
 > {
-  return void deepmergeIntoCustom({})(target, ...objects);
+  return void defaultDeepmergeInto(target, ...objects);
 }
+
+/**
+ * Used by the default `deepmergeInto` function.
+ *
+ * @internal
+ */
+export function deepmergeIntoCustom(): <Target extends object, Ts extends ReadonlyArray<unknown>>(
+  target: Target,
+  ...objects: Ts
+) => void;
 
 /**
  * Deeply merge two or more objects using the given options.
@@ -48,45 +63,62 @@ export function deepmergeInto<Target extends object, Ts extends ReadonlyArray<un
  * @param options - The options on how to customize the merge function.
  */
 export function deepmergeIntoCustom<BaseTs = unknown>(
-  options: DeepMergeIntoOptions<DeepMergeBuiltInMetaData, DeepMergeBuiltInMetaData>,
+  options: DeepMergeIntoOptions<DeepMergeBuiltInMetaData, DeepMergeMergeInfo>,
 ): <Target extends object, Ts extends ReadonlyArray<BaseTs>>(target: Target, ...objects: Ts) => void;
 
 /**
- * Deeply merge two or more objects using the given options and meta data.
+ * Deeply merge two or more objects into a target using the given options and meta data.
  *
  * @param options - The options on how to customize the merge function.
- * @param rootMetaData - The meta data passed to the root items' being merged.
+ * @param rootMetaData - The meta data passed to the root items being merged.
+ * @example
+ * ```ts
+ * import { deepmergeIntoCustom } from "deepmerge-ts";
+ *
+ * // Merge arrays by union instead of by concatenation.
+ * const mergeInto = deepmergeIntoCustom({
+ *   mergeArrays: (target, values) => {
+ *     const set = new Set(target.value);
+ *     for (const arr of values.slice(1)) {
+ *       for (const item of arr) {
+ *         set.add(item);
+ *       }
+ *     }
+ *     target.value = [...set];
+ *   },
+ * });
+ *
+ * const target = { tags: ["a"] };
+ * mergeInto(target, { tags: ["a", "b"] });
+ * // => { tags: ["a", "b"] }
+ * ```
  */
 export function deepmergeIntoCustom<
   BaseTs = unknown,
-  MetaData = DeepMergeBuiltInMetaData,
-  MetaMetaData extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData,
+  MetaData extends DeepMergeMetaData = DeepMergeBuiltInMetaData,
+  MetaMetaData extends DeepMergeMergeInfo = DeepMergeMergeInfo,
 >(
   options: DeepMergeIntoOptions<MetaData, MetaMetaData>,
   rootMetaData?: MetaData,
 ): <Target extends object, Ts extends ReadonlyArray<BaseTs>>(target: Target, ...objects: Ts) => void;
 
-export function deepmergeIntoCustom<BaseTs, MetaData, MetaMetaData extends DeepMergeBuiltInMetaData>(
-  options: DeepMergeIntoOptions<MetaData, MetaMetaData>,
+export function deepmergeIntoCustom<
+  BaseTs,
+  MetaData extends DeepMergeMetaData,
+  MetaMetaData extends DeepMergeMergeInfo,
+>(
+  options: DeepMergeIntoOptions<MetaData, MetaMetaData> = {},
   rootMetaData?: MetaData,
 ): <Target extends object, Ts extends ReadonlyArray<BaseTs>>(target: Target, ...objects: Ts) => void {
+  const utils: DeepMergeIntoUtils<MetaData, MetaMetaData> = getUtils(options, customizedDeepmergeInto);
+
   /**
-   * The type of the customized deepmerge function.
+   * The customized deepmergeInto function.
    */
-  type CustomizedDeepmergeInto = <Target extends object, Ts extends ReadonlyArray<unknown>>(
+  function customizedDeepmergeInto<Target extends object, Ts extends ReadonlyArray<unknown>>(
     target: Target,
     ...objects: Ts
-  ) => void;
-
-  const utils: DeepMergeIntoFunctionUtils<MetaData, MetaMetaData> = getIntoUtils(
-    options,
-    customizedDeepmergeInto as CustomizedDeepmergeInto,
-  );
-
-  /**
-   * The customized deepmerge function.
-   */
-  function customizedDeepmergeInto(target: object, ...objects: ReadonlyArray<unknown>) {
+  ): void {
     mergeUnknownsInto<ReadonlyArray<unknown>, typeof utils, MetaData, MetaMetaData>(
       { value: target },
       [target, ...objects],
@@ -99,30 +131,33 @@ export function deepmergeIntoCustom<BaseTs, MetaData, MetaMetaData extends DeepM
 }
 
 /**
- * The the utils that are available to the merge functions.
+ * Get the utils that are available to the merge functions.
  *
- * @param options - The options the user specified
+ * @param options - The options the user specified.
+ * @param customizedDeepmergeInto - The customized deepmergeInto function.
  */
-function getIntoUtils<M, MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData>(
-  options: DeepMergeIntoOptions<M, MM>,
-  customizedDeepmergeInto: DeepMergeIntoFunctionUtils<M, MM>["deepmergeInto"],
-): DeepMergeIntoFunctionUtils<M, MM> {
+function getUtils<M extends DeepMergeMetaData, MI extends DeepMergeMergeInfo = DeepMergeMergeInfo>(
+  options: DeepMergeIntoOptions<M, MI>,
+  customizedDeepmergeInto: DeepMergeIntoUtils<M, MI>["deepmergeInto"],
+): DeepMergeIntoUtils<M, MI> {
+  const defaultMergeFns = defaultMergeIntoFunctions as MergeFunctions<M, MI>;
+  const defaultMetaDataUpd = defaultMetaDataUpdater as MetaDataUpdater<M, MI>;
+
   return {
-    defaultMergeFunctions: defaultMergeIntoFunctions,
-    mergeFunctions: {
-      ...defaultMergeIntoFunctions,
-      ...Object.fromEntries(
-        Object.entries(options)
-          .filter(([key, option]) => Object.hasOwn(defaultMergeIntoFunctions, key))
-          .map(([key, option]) => (option === false ? [key, defaultMergeIntoFunctions.mergeOthers] : [key, option])),
-      ),
-    } as DeepMergeIntoFunctionUtils<M, MM>["mergeFunctions"],
-    metaDataUpdater: (options.metaDataUpdater ?? defaultMetaDataUpdater) as unknown as DeepMergeIntoFunctionUtils<
-      M,
-      MM
-    >["metaDataUpdater"],
+    defaultMergeFunctions: defaultMergeFns,
+    mergeFunctions: resolveCustomMergeFunctions(options, defaultMergeFns),
+    metaDataUpdater: typeof options.metaDataUpdater === "function" ? options.metaDataUpdater : defaultMetaDataUpd,
     deepmergeInto: customizedDeepmergeInto,
-    filterValues: options.filterValues === false ? undefined : (options.filterValues ?? defaultFilterValues),
+    filterValues:
+      options.filterValues === false
+        ? undefined
+        : typeof options.filterValues === "function"
+          ? options.filterValues
+          : defaultFilterValues,
+    maxDepth:
+      typeof options.maxDepth === "number" && !Number.isNaN(options.maxDepth) && options.maxDepth >= 0
+        ? options.maxDepth
+        : 1000,
     actions,
   };
 }
@@ -132,14 +167,16 @@ function getIntoUtils<M, MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInM
  *
  * @param mut_target - The target to merge into.
  * @param values - The values.
+ * @param utils - The utils.
+ * @param meta - The meta data.
  */
 export function mergeUnknownsInto<
   Ts extends ReadonlyArray<unknown>,
-  U extends DeepMergeIntoFunctionUtils<M, MM>,
-  M,
-  MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData,
+  U extends DeepMergeIntoUtils<M, MI>,
+  M extends DeepMergeMetaData,
+  MI extends DeepMergeMergeInfo = DeepMergeMergeInfo,
 >(
-  mut_target: Reference<unknown>,
+  mut_target: DeepMergeValueReference<unknown>,
   values: Ts,
   utils: U,
   meta: M | undefined,
@@ -150,26 +187,73 @@ export function mergeUnknownsInto<
   if (filteredValues.length === 0) {
     return;
   }
+  const hierarchy = getMetaDataHierarchy(meta);
+  const currentDepth =
+    hierarchy?.length ?? (typeof meta === "number" ? meta : ((meta as { depth?: number } | undefined)?.depth ?? 0));
+
+  if (utils.maxDepth !== undefined && currentDepth >= utils.maxDepth) {
+    return void mergeOthersInto<U, M, MI>(mut_target, filteredValues, utils, meta);
+  }
+
   if (filteredValues.length === 1) {
-    return void mergeOthersInto<U, M, MM>(mut_target, filteredValues, utils, meta);
+    if (hierarchy !== undefined) {
+      const depth = getCyclicReferenceDepth(filteredValues[0], hierarchy, 0);
+      if (depth > 0) {
+        mut_target.value =
+          hierarchy[hierarchy.length - depth]?.result ?? hierarchy[hierarchy.length - depth]?.parents[0];
+        return;
+      }
+    }
+    return void mergeOthersInto<U, M, MI>(mut_target, filteredValues, utils, meta);
   }
 
   const type = getObjectType(mut_target.value);
 
   if (type !== ObjectType.NOT && type !== ObjectType.OTHER) {
-    for (let mut_index = 1; mut_index < filteredValues.length; mut_index++) {
-      if (getObjectType(filteredValues[mut_index]) === type) {
-        continue;
+    if (filteredValues.length === 2) {
+      // Fast path: avoid dynamic array allocations and loop overhead for 2 elements.
+      if (getObjectType(filteredValues[1]) !== type) {
+        return void mergeOthersInto<U, M, MI>(mut_target, filteredValues, utils, meta);
+      }
+      const d0 = getCyclicReferenceDepth(filteredValues[0], hierarchy, 0);
+      const d1 = getCyclicReferenceDepth(filteredValues[1], hierarchy, 1);
+      if (d0 !== 0 || d1 !== 0) {
+        return void mergeCircularReferencesInto<U, M, MI>(
+          mut_target,
+          filteredValues as ReadonlyArray<object>,
+          utils,
+          meta,
+        );
+      }
+    } else {
+      // Slow path: 3 or more elements require dynamic array allocations and full iteration.
+      // eslint-disable-next-line unicorn/no-new-array -- We know the final length of the array.
+      const cyclicDepths = new Array(filteredValues.length);
+      cyclicDepths[0] = getCyclicReferenceDepth(filteredValues[0], hierarchy, 0);
+
+      for (let mut_index = 1; mut_index < filteredValues.length; mut_index++) {
+        if (getObjectType(filteredValues[mut_index]) !== type) {
+          return void mergeOthersInto<U, M, MI>(mut_target, filteredValues, utils, meta);
+        }
+
+        cyclicDepths[mut_index] = getCyclicReferenceDepth(filteredValues[mut_index], hierarchy, mut_index);
       }
 
-      return void mergeOthersInto<U, M, MM>(mut_target, filteredValues, utils, meta);
+      if (cyclicDepths.some((depth) => depth !== 0)) {
+        return void mergeCircularReferencesInto<U, M, MI>(
+          mut_target,
+          filteredValues as ReadonlyArray<object>,
+          utils,
+          meta,
+        );
+      }
     }
   }
 
   switch (type) {
     case ObjectType.RECORD: {
-      return void mergeRecordsInto<U, M, MM>(
-        mut_target as Reference<Record<PropertyKey, unknown>>,
+      return void mergeRecordsInto<U, M, MI>(
+        mut_target as DeepMergeValueReference<Record<PropertyKey, unknown>>,
         filteredValues as ReadonlyArray<Readonly<Record<PropertyKey, unknown>>>,
         utils,
         meta,
@@ -177,8 +261,8 @@ export function mergeUnknownsInto<
     }
 
     case ObjectType.ARRAY: {
-      return void mergeArraysInto<U, M, MM>(
-        mut_target as Reference<unknown[]>,
+      return void mergeArraysInto<U, M, MI>(
+        mut_target as DeepMergeValueReference<unknown[]>,
         filteredValues as ReadonlyArray<ReadonlyArray<unknown>>,
         utils,
         meta,
@@ -186,8 +270,8 @@ export function mergeUnknownsInto<
     }
 
     case ObjectType.SET: {
-      return void mergeSetsInto<U, M, MM>(
-        mut_target as Reference<Set<unknown>>,
+      return void mergeSetsInto<U, M, MI>(
+        mut_target as DeepMergeValueReference<Set<unknown>>,
         filteredValues as ReadonlyArray<Readonly<ReadonlySet<unknown>>>,
         utils,
         meta,
@@ -195,8 +279,8 @@ export function mergeUnknownsInto<
     }
 
     case ObjectType.MAP: {
-      return void mergeMapsInto<U, M, MM>(
-        mut_target as Reference<Map<unknown, unknown>>,
+      return void mergeMapsInto<U, M, MI>(
+        mut_target as DeepMergeValueReference<Map<unknown, unknown>>,
         filteredValues as ReadonlyArray<Readonly<ReadonlyMap<unknown, unknown>>>,
         utils,
         meta,
@@ -204,7 +288,7 @@ export function mergeUnknownsInto<
     }
 
     default: {
-      return void mergeOthersInto<U, M, MM>(mut_target, filteredValues, utils, meta);
+      return void mergeOthersInto<U, M, MI>(mut_target, filteredValues, utils, meta);
     }
   }
 }
@@ -214,13 +298,15 @@ export function mergeUnknownsInto<
  *
  * @param mut_target - The target to merge into.
  * @param values - The records.
+ * @param utils - The utils.
+ * @param meta - The meta data.
  */
 function mergeRecordsInto<
-  U extends DeepMergeIntoFunctionUtils<M, MM>,
-  M,
-  MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData,
+  U extends DeepMergeIntoUtils<M, MI>,
+  M extends DeepMergeMetaData,
+  MI extends DeepMergeMergeInfo = DeepMergeMergeInfo,
 >(
-  mut_target: Reference<Record<PropertyKey, unknown>>,
+  mut_target: DeepMergeValueReference<Record<PropertyKey, unknown>>,
   values: ReadonlyArray<Readonly<Record<PropertyKey, unknown>>>,
   utils: U,
   meta: M | undefined,
@@ -228,12 +314,7 @@ function mergeRecordsInto<
   const action = utils.mergeFunctions.mergeRecords(mut_target, values, utils, meta);
 
   if (action === actions.defaultMerge) {
-    utils.defaultMergeFunctions.mergeRecords<ReadonlyArray<Readonly<Record<PropertyKey, unknown>>>, U, M, MM>(
-      mut_target,
-      values,
-      utils,
-      meta,
-    );
+    utils.defaultMergeFunctions.mergeRecords(mut_target, values, utils, meta);
   }
 }
 
@@ -242,12 +323,19 @@ function mergeRecordsInto<
  *
  * @param mut_target - The target to merge into.
  * @param values - The arrays.
+ * @param utils - The utils.
+ * @param meta - The meta data.
  */
 function mergeArraysInto<
-  U extends DeepMergeIntoFunctionUtils<M, MM>,
-  M,
-  MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData,
->(mut_target: Reference<unknown[]>, values: ReadonlyArray<ReadonlyArray<unknown>>, utils: U, meta: M | undefined) {
+  U extends DeepMergeIntoUtils<M, MI>,
+  M extends DeepMergeMetaData,
+  MI extends DeepMergeMergeInfo = DeepMergeMergeInfo,
+>(
+  mut_target: DeepMergeValueReference<unknown[]>,
+  values: ReadonlyArray<ReadonlyArray<unknown>>,
+  utils: U,
+  meta: M | undefined,
+) {
   const action = utils.mergeFunctions.mergeArrays(mut_target, values, utils, meta);
 
   if (action === actions.defaultMerge) {
@@ -260,13 +348,15 @@ function mergeArraysInto<
  *
  * @param mut_target - The target to merge into.
  * @param values - The sets.
+ * @param utils - The utils.
+ * @param meta - The meta data.
  */
 function mergeSetsInto<
-  U extends DeepMergeIntoFunctionUtils<M, MM>,
-  M,
-  MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData,
+  U extends DeepMergeIntoUtils<M, MI>,
+  M extends DeepMergeMetaData,
+  MI extends DeepMergeMergeInfo = DeepMergeMergeInfo,
 >(
-  mut_target: Reference<Set<unknown>>,
+  mut_target: DeepMergeValueReference<Set<unknown>>,
   values: ReadonlyArray<Readonly<ReadonlySet<unknown>>>,
   utils: U,
   meta: M | undefined,
@@ -283,13 +373,15 @@ function mergeSetsInto<
  *
  * @param mut_target - The target to merge into.
  * @param values - The maps.
+ * @param utils - The utils.
+ * @param meta - The meta data.
  */
 function mergeMapsInto<
-  U extends DeepMergeIntoFunctionUtils<M, MM>,
-  M,
-  MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData,
+  U extends DeepMergeIntoUtils<M, MI>,
+  M extends DeepMergeMetaData,
+  MI extends DeepMergeMergeInfo = DeepMergeMergeInfo,
 >(
-  mut_target: Reference<Map<unknown, unknown>>,
+  mut_target: DeepMergeValueReference<Map<unknown, unknown>>,
   values: ReadonlyArray<Readonly<ReadonlyMap<unknown, unknown>>>,
   utils: U,
   meta: M | undefined,
@@ -297,7 +389,27 @@ function mergeMapsInto<
   const action = utils.mergeFunctions.mergeMaps(mut_target, values, utils, meta);
 
   if (action === actions.defaultMerge) {
-    utils.defaultMergeFunctions.mergeMaps(mut_target, values);
+    utils.defaultMergeFunctions.mergeMaps(mut_target, values, utils, meta);
+  }
+}
+
+/**
+ * Merge circular references into a target.
+ *
+ * @param mut_target - The target to merge into.
+ * @param values - The circular references.
+ * @param utils - The utils.
+ * @param meta - The meta data.
+ */
+function mergeCircularReferencesInto<
+  U extends DeepMergeIntoUtils<M, MI>,
+  M extends DeepMergeMetaData,
+  MI extends DeepMergeMergeInfo = DeepMergeMergeInfo,
+>(mut_target: DeepMergeValueReference<unknown>, values: ReadonlyArray<object>, utils: U, meta: M | undefined) {
+  const action = utils.mergeFunctions.mergeCircularReferences(mut_target, values, utils, meta);
+
+  if (action === actions.defaultMerge || mut_target.value === actions.defaultMerge) {
+    utils.defaultMergeFunctions.mergeCircularReferences(mut_target, values, utils, meta);
   }
 }
 
@@ -306,12 +418,14 @@ function mergeMapsInto<
  *
  * @param mut_target - The target to merge into.
  * @param values - The other things.
+ * @param utils - The utils.
+ * @param meta - The meta data.
  */
 function mergeOthersInto<
-  U extends DeepMergeIntoFunctionUtils<M, MM>,
-  M,
-  MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData,
->(mut_target: Reference<unknown>, values: ReadonlyArray<unknown>, utils: U, meta: M | undefined) {
+  U extends DeepMergeIntoUtils<M, MI>,
+  M extends DeepMergeMetaData,
+  MI extends DeepMergeMergeInfo = DeepMergeMergeInfo,
+>(mut_target: DeepMergeValueReference<unknown>, values: ReadonlyArray<unknown>, utils: U, meta: M | undefined) {
   const action = utils.mergeFunctions.mergeOthers(mut_target, values, utils, meta);
 
   if (action === actions.defaultMerge || mut_target.value === actions.defaultMerge) {

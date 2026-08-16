@@ -68,6 +68,10 @@ bunx jsr add @rebeccastevens/deepmerge
 - Record merging support.
 - Array merging support.
 - Map and Set merging support.
+- Circular reference support.
+- Security safeguards.
+- Recursion depth limit (defaults to `1000`) to prevent stack exhaustion.
+- High-performance `deepmergeFastUnsafe` variants for trusted data.
 - Customized merging.
 
 ## Usage
@@ -151,7 +155,7 @@ This function is best used with objects that are all of the same type.
 Note: If the target object's type differs from the input objects, we'll assert that the target's type has changed
 (this is not done automatically with `deepmergeIntoCustom`).
 
-### Customized the Merging Process
+### Customizing the Merging Process
 
 We provide a customizer function for each of our main deepmerge functions: `deepmergeCustom` and `deepmergeIntoCustom`.
 You can use these to customize the details of how values should be merged together.
@@ -163,6 +167,20 @@ See [deepmerge custom docs](./docs/deepmergeCustom.md) for more details.
 Due to how TypeScript handles interfaces ([microsoft/TypeScript#15300](https://github.com/microsoft/TypeScript/issues/15300)),
 `interface` types without an explicit index signature may not appear to merge correctly.
 For proper type inference when merging objects, use `type` aliases instead of `interface`s.
+
+### High-Performance "FastUnsafe" Variants
+
+For performance-critical code where inputs are trusted and non-circular, we provide high-performance variants that skip
+circular reference tracking, depth limits, prototype pollution safeguards, and metadata allocations:
+
+- `deepmergeFastUnsafe` & `deepmergeFastUnsafeCustom`
+- `deepmergeIntoFastUnsafe` & `deepmergeIntoFastUnsafeCustom`
+
+> [!WARNING]
+> Only use these functions with **trusted, non-circular data**. Using with untrusted user data can result in security
+> vulnerabilities such as prototype pollution and Denial of Service (DoS) from unbounded recursion / stack overflow.
+
+See [API docs](./docs/API.md#high-performance-fastunsafe-variants) for more details.
 
 ## Performance
 

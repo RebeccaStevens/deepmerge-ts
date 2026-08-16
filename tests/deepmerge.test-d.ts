@@ -303,3 +303,58 @@ const u: { outer: { inner: number } } = { outer: { inner: 1 } };
 const v: { outer?: { inner?: number } } = {};
 const test29 = deepmerge(u, v);
 expectType<{ outer: { inner: number } }>(test29);
+
+const w: { foo: string; bar: number; nested: { baz: boolean } } = { foo: "abc", bar: 1, nested: { baz: true } };
+
+// Merging values of the same type returns that type.
+const test30 = deepmerge(w, w);
+expectType<{ foo: string; bar: number; nested: { baz: boolean } }>(test30);
+
+const test31 = deepmerge(w, w, w);
+expectType<{ foo: string; bar: number; nested: { baz: boolean } }>(test31);
+
+const opt: { a?: string; b?: number } = { a: "a" };
+
+const test32 = deepmerge(opt, opt);
+expectType<{ a?: string; b?: number }>(test32);
+
+const mt: { list: number[]; set: Set<string>; map: Map<string, number> } = {
+  list: [],
+  set: new Set(),
+  map: new Map(),
+};
+
+const test33 = deepmerge(mt, mt);
+expectType<{ list: number[]; set: Set<string>; map: Map<string, number> }>(test33);
+
+// Merging values of the same type that is not sound to shortcut computes the
+// actual merge result.
+const tup: [number, string] = [1, "a"];
+
+const test34 = deepmerge(tup, tup);
+expectType<[number, string, number, string]>(test34);
+
+const ra: ReadonlyArray<number> = [1];
+const rb: ReadonlyArray<number> = [2];
+
+const test35 = deepmerge(ra, rb);
+expectType<number[]>(test35);
+
+const nd: { a: string | undefined } = { a: undefined };
+
+const test36 = deepmerge(nd, nd);
+expectType<{ a: string }>(test36);
+
+// Merging values of the same type that has readonly properties computes the
+// actual merge result, which strips the readonly modifiers.
+const ro: { readonly a: string } = { a: "x" };
+
+const test37 = deepmerge(ro, ro);
+expectType<{ a: string }>(test37);
+
+type IsEqual<X, Y> = (<T>() => T extends X ? 1 : 2) extends <T>() => T extends Y ? 1 : 2 ? true : false;
+
+// `expectType` cannot distinguish readonly from mutable (they are mutually
+// assignable), so assert the readonly modifier is gone with an exact check.
+const test37ReadonlyStripped: IsEqual<typeof test37, { a: string }> = true;
+expectType<true>(test37ReadonlyStripped);

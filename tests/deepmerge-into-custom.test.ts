@@ -1,7 +1,12 @@
 import _ from "lodash";
 import { describe, expect, it } from "vitest";
 
-import { type DeepMergeIntoOptions, type DeepMergeValueReference, deepmergeIntoCustom } from "../src/index.ts";
+import {
+  type DeepMergeIntoOptions,
+  type DeepMergeValueReference,
+  deepmergeInto,
+  deepmergeIntoCustom,
+} from "../src/index.ts";
 import { getKeys } from "../src/utils.ts";
 
 import { areAllNumbers, hasProp } from "./utils.ts";
@@ -257,12 +262,12 @@ describe("deepmergeIntoCustom", () => {
       bar: { baz: "special merge", qux: 9 },
     };
 
-    const customizedDeepmerge = deepmergeIntoCustom<unknown, ReadonlyArray<PropertyKey>>({
-      metaDataUpdater: (previousMeta, metaMeta) => {
-        if (metaMeta.key === undefined) {
+    const customizedDeepmerge = deepmergeIntoCustom<unknown, ReadonlyArray<unknown>>({
+      metaDataUpdater: (previousMeta, mergeInfo) => {
+        if (mergeInfo.key === undefined) {
           return previousMeta ?? [];
         }
-        return [...(previousMeta ?? []), metaMeta.key];
+        return [...(previousMeta ?? []), mergeInfo.key];
       },
       mergeOthers: (mut_target, values, utils, meta): void => {
         if (meta !== undefined && meta.length >= 2 && meta.at(-2) === "bar" && meta.at(-1) === "baz") {
@@ -337,18 +342,18 @@ describe("deepmergeIntoCustom", () => {
 
     const customizedDeepmergeEntry = <K extends PropertyKey>(...idsPaths: ReadonlyArray<ReadonlyArray<K>>) => {
       const mergeSettings: DeepMergeIntoOptions<ReadonlyArray<unknown>, Readonly<{ id: unknown }>> = {
-        metaDataUpdater: (previousMeta, metaMeta) => [...(previousMeta ?? []), metaMeta.key ?? metaMeta.id],
+        metaDataUpdater: (previousMeta, mergeInfo) => [...(previousMeta ?? []), mergeInfo.key ?? mergeInfo.id],
         mergeArrays: (mut_target, values, utils, meta = []) => {
-          const idPath = idsPaths.find((idPath) => {
-            const parentPath = idPath.slice(0, -1);
+          const matchedIdPath = idsPaths.find((candidatePath) => {
+            const parentPath = candidatePath.slice(0, -1);
             return parentPath.length === meta.length && parentPath.every((part, i) => part === meta[i]);
           });
-          if (idPath === undefined) {
+          if (matchedIdPath === undefined) {
             utils.defaultMergeFunctions.mergeArrays(mut_target, values);
             return;
           }
 
-          const id = idPath.at(-1)!;
+          const id = matchedIdPath.at(-1)!;
           const valuesById = values.reduce<Map<unknown, Array<Record<PropertyKey, unknown>>>>((carry, current) => {
             const currentElementsById = new Map<unknown, unknown>();
 
@@ -367,10 +372,10 @@ describe("deepmergeIntoCustom", () => {
             return carry;
           }, new Map<unknown, Array<Record<PropertyKey, unknown>>>());
 
-          mut_target.value = [...valuesById.entries()].reduce<unknown[]>((carry, [id, values]) => {
-            const childMeta = utils.metaDataUpdater(meta, { id });
+          mut_target.value = [...valuesById.entries()].reduce<unknown[]>((carry, [elementId, elementValues]) => {
+            const childMeta = utils.metaDataUpdater(meta, { id: elementId });
             const s = {};
-            deepmergeIntoCustom(mergeSettings, childMeta)(s, ...values);
+            deepmergeIntoCustom(mergeSettings, childMeta)(s, ...elementValues);
             return [...carry, s];
           }, []);
         },
@@ -397,7 +402,7 @@ describe("deepmergeIntoCustom", () => {
 
     const customizedDeepmerge = deepmergeIntoCustom({
       mergeOthers: (mut_target, values, utils, meta): void => {
-        if (meta !== undefined) {
+        if (meta?.parents !== undefined) {
           const { key, parents } = meta;
           if (key === "isBadObject") {
             mut_target.value = false;
@@ -405,7 +410,8 @@ describe("deepmergeIntoCustom", () => {
           }
 
           const goodValues = values.filter(
-            (value, index): value is number => parents[index]!["isBadObject"] !== true && typeof value === "number",
+            (value, index): value is number =>
+              (parents[index] as any)?.isBadObject !== true && typeof value === "number",
           );
 
           if (key === "sum") {
@@ -500,5 +506,80 @@ describe("deepmergeIntoCustom", () => {
     customizedDeepmerge(x, y);
 
     expect({ ...x }).toStrictEqual(expected);
+  });
+
+  it("custom mergeCircularReferences function", () => {
+    const customizedDeepmerge = deepmergeIntoCustom({
+      mergeCircularReferences: (mut_target: DeepMergeValueReference<unknown>) => {
+        mut_target.value = "[CUSTOM_CIRCULAR]";
+      },
+    });
+
+    const target = { foo: 1 } as any;
+    target.self = target;
+
+    const source = { bar: 2 } as any;
+    source.self = source;
+
+    customizedDeepmerge(target, source);
+
+    expect(target.foo).toBe(1);
+    expect(target.bar).toBe(2);
+    expect(target.self).toBe("[CUSTOM_CIRCULAR]");
+  });
+
+  it("stops merging beyond maxDepth", () => {
+    const customizedDeepmerge = deepmergeIntoCustom({
+      maxDepth: 1,
+    });
+
+    const target = { a: 1, nested: { x: 1, y: 2 } };
+    const source = { b: 2, nested: { y: 3, z: 4 } };
+
+    customizedDeepmerge(target, source);
+    expect(target).toStrictEqual({
+      a: 1,
+      b: 2,
+      nested: { y: 3, z: 4 },
+    });
+  });
+
+  it("prevents stack overflow on deeply nested object with maxDepth", () => {
+    const customizedDeepmerge = deepmergeIntoCustom({
+      maxDepth: 50,
+    });
+
+    let deepA: any = { val: 1 };
+    let deepB: any = { val: 2 };
+    for (let i = 0; i < 5000; i++) {
+      deepA = { next: deepA };
+      deepB = { next: deepB };
+    }
+
+    expect(() => customizedDeepmerge(deepA, deepB)).not.toThrow();
+  });
+
+  describe("invalid options graceful fallbacks", () => {
+    it("falls back to default merge functions and maxDepth when invalid values are provided", () => {
+      const customized = deepmergeIntoCustom({
+        mergeRecords: "invalid",
+        maxDepth: -1,
+      } as any);
+
+      const target = { a: 1 };
+      customized(target, { b: 2 });
+      expect(target).toStrictEqual({ a: 1, b: 2 });
+    });
+  });
+
+  it("deeply merges map values", () => {
+    const map1 = new Map([["key1", { a: 1 }]]);
+    const map2 = new Map([["key1", { b: 2 }]]);
+
+    const expected = new Map([["key1", { a: 1, b: 2 }]]);
+
+    deepmergeInto(map1, map2);
+
+    expect(map1).toStrictEqual(expected);
   });
 });

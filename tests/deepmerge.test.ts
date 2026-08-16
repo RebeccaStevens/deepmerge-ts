@@ -4,44 +4,46 @@ import { describe, expect, it } from "vitest";
 
 import { deepmerge } from "../src/index.ts";
 
+import { testSourceMutationAndCopySemantics } from "./deepmerge-semantics.ts";
+
 describe("deepmerge", () => {
-  it("return undefined when nothing to merge", () => {
+  it("returns undefined when nothing to merge", () => {
     // eslint-disable-next-line ts/no-confusing-void-expression
     const merged = deepmerge();
     expect(merged).toBe(undefined);
   });
 
-  it("return the same object if only 1 is passed", () => {
+  it("returns the same object when only 1 is passed", () => {
     const foo = { prop: 1 };
     const merged = deepmerge(foo);
     expect(merged).toBe(foo);
   });
 
-  it("return the same array if only 1 is passed", () => {
+  it("returns the same array when only 1 is passed", () => {
     const foo = [1];
     const merged = deepmerge(foo);
     expect(merged).toBe(foo);
   });
 
-  it("return the same set if only 1 is passed", () => {
+  it("returns the same set when only 1 is passed", () => {
     const foo = new Set([1]);
     const merged = deepmerge(foo);
     expect(merged).toBe(foo);
   });
 
-  it("return the same map if only 1 is passed", () => {
+  it("returns the same map when only 1 is passed", () => {
     const foo = new Map([[1, 2]]);
     const merged = deepmerge(foo);
     expect(merged).toBe(foo);
   });
 
-  it("return the same date if only 1 is passed", () => {
+  it("returns the same date when only 1 is passed", () => {
     const foo = new Date();
     const merged = deepmerge(foo);
     expect(merged).toBe(foo);
   });
 
-  it("can merge 2 objects with different props", () => {
+  it("merges 2 objects with different properties", () => {
     const x = { first: true };
     const y = { second: false };
 
@@ -55,7 +57,7 @@ describe("deepmerge", () => {
     expect(merged).toStrictEqual(expected);
   });
 
-  it("can merge many objects with different props", () => {
+  it("merges many objects with different properties", () => {
     const v = { first: true };
     const x = { second: false };
     const y = { third: 123 };
@@ -73,7 +75,7 @@ describe("deepmerge", () => {
     expect(merged).toStrictEqual(expected);
   });
 
-  it("can merge many objects with same props", () => {
+  it("merges many objects with overlapping properties", () => {
     const x = { key1: "value1", key2: "value2" };
     const y = { key1: "changed", key3: "value3" };
     const z = { key3: "changed", key4: "value4" };
@@ -90,7 +92,7 @@ describe("deepmerge", () => {
     expect(merged).toStrictEqual(expected);
   });
 
-  it("does not clone any elements", () => {
+  it("does not clone unmerged elements", () => {
     const x = { a: { d: 123 } };
     const y = { b: { e: true } };
     const z = { c: { f: "string" } };
@@ -102,7 +104,7 @@ describe("deepmerge", () => {
     expect(merged.c).toBe(z.c);
   });
 
-  it("does not mutate inputs", () => {
+  it("does not mutate input objects", () => {
     const x = { a: { d: 123 } };
     const y = { b: { e: true } };
     const z = { c: { f: "string" } };
@@ -114,7 +116,7 @@ describe("deepmerge", () => {
     expect(z).toStrictEqual({ c: { f: "string" } });
   });
 
-  it("merging with empty object shallow clones the object", () => {
+  it("shallow clones the object when merging with an empty object", () => {
     const value = { a: { d: 123 } };
 
     const merged = deepmerge({}, value);
@@ -124,7 +126,7 @@ describe("deepmerge", () => {
     expect(merged.a, "Value should not be deep cloned.").toBe(value.a);
   });
 
-  it(`can merge nested objects`, () => {
+  it("merges nested objects", () => {
     const x = {
       key1: {
         subkey1: `value1`,
@@ -157,7 +159,7 @@ describe("deepmerge", () => {
     expect(merged).toStrictEqual(expected);
   });
 
-  it(`replaces simple prop with nested object`, () => {
+  it("replaces simple property with nested object", () => {
     const x = {
       key1: `value1`,
       key2: `value2`,
@@ -182,7 +184,7 @@ describe("deepmerge", () => {
     expect(merged).toStrictEqual(expected);
   });
 
-  it(`should add nested object in target`, () => {
+  it("adds nested object in target", () => {
     const x = {
       a: {},
     };
@@ -205,7 +207,7 @@ describe("deepmerge", () => {
     expect(merged.b, "Value should not be deep cloned.").toBe(y.b);
   });
 
-  it(`replaces nested object with simple prop`, () => {
+  it("replaces nested object with simple property", () => {
     const x = {
       key1: {
         subkey1: `subvalue1`,
@@ -307,7 +309,7 @@ describe("deepmerge", () => {
     expect(merged).toStrictEqual(expected);
   });
 
-  it(`doesn't replaces records with undefined`, () => {
+  it("does not replace records with undefined", () => {
     const x = { key1: { subkey: `one` } };
     const y = { key1: undefined };
 
@@ -318,7 +320,7 @@ describe("deepmerge", () => {
     expect(merged).toStrictEqual(expected);
   });
 
-  it(`undefined doesn't intefer with merging`, () => {
+  it("does not let undefined values interfere with merging", () => {
     const x = { key1: { subkey1: `one` } };
     const y = { key1: undefined };
     const z = { key1: { subkey2: `two` } };
@@ -330,7 +332,7 @@ describe("deepmerge", () => {
     expect(merged).toStrictEqual(expected);
   });
 
-  it(`can merge arrays`, () => {
+  it("merges arrays by concatenation", () => {
     const x = [`one`, `two`];
     const y = [`one`, `three`];
 
@@ -342,7 +344,7 @@ describe("deepmerge", () => {
     expect(merged).toBeInstanceOf(Array);
   });
 
-  it(`can merge sets`, () => {
+  it("merges sets by union", () => {
     const x = new Set([`one`, `two`]);
     const y = new Set([`one`, `three`]);
 
@@ -354,7 +356,7 @@ describe("deepmerge", () => {
     expect(merged).toBeInstanceOf(Set);
   });
 
-  it(`can merge maps`, () => {
+  it("merges maps by key", () => {
     const x = new Map([
       ["key1", "value1"],
       ["key2", "value2"],
@@ -376,7 +378,7 @@ describe("deepmerge", () => {
     expect(merged).toBeInstanceOf(Map);
   });
 
-  it(`can merge array props`, () => {
+  it("merges array properties", () => {
     const x = { a: [`one`, `two`] };
     const y = { a: [`one`, `three`], b: [null] };
 
@@ -389,7 +391,7 @@ describe("deepmerge", () => {
     expect(merged.b).toBeInstanceOf(Array);
   });
 
-  it(`can merge set props`, () => {
+  it("merges set properties", () => {
     const x = { a: new Set([`one`, `two`]) };
     const y = { a: new Set([`one`, `three`]) };
 
@@ -401,7 +403,7 @@ describe("deepmerge", () => {
     expect(merged.a).toBeInstanceOf(Set);
   });
 
-  it(`can merge map props`, () => {
+  it("merges map properties", () => {
     const x = {
       a: new Map([
         ["key1", "value1"],
@@ -429,7 +431,7 @@ describe("deepmerge", () => {
     expect(merged.a).toBeInstanceOf(Map);
   });
 
-  it(`works with regular expressions`, () => {
+  it("replaces regular expressions as leaf values", () => {
     const x = { key1: /abc/u };
     const y = { key1: /efg/u };
 
@@ -442,7 +444,7 @@ describe("deepmerge", () => {
     expect(merged.key1.test("efg")).toBe(true);
   });
 
-  it(`works with dates`, () => {
+  it("replaces dates as leaf values", () => {
     const x = { key1: new Date() };
     const y = { key1: new Date() };
 
@@ -454,7 +456,7 @@ describe("deepmerge", () => {
     expect(merged.key1).toBeInstanceOf(Date);
   });
 
-  it(`supports symbols`, () => {
+  it("merges objects with symbol keys", () => {
     const testSymbol1 = Symbol("test symbol 1");
     const testSymbol2 = Symbol("test symbol 2");
     const testSymbol3 = Symbol("test symbol 3");
@@ -477,7 +479,32 @@ describe("deepmerge", () => {
     expect(merged[testSymbol3]).toStrictEqual(expected[testSymbol3]);
   });
 
-  it("enumerable keys", () => {
+  it("preserves key insertion order when merging 2 records", () => {
+    const x = { a: 1, b: 2, c: 3 };
+    const y = { b: 4, d: 5, e: 6 };
+
+    const merged = deepmerge(x, y);
+
+    expect(Object.keys(merged)).toStrictEqual(["a", "b", "c", "d", "e"]);
+    expect(merged).toStrictEqual({ a: 1, b: 4, c: 3, d: 5, e: 6 });
+  });
+
+  it("merges 2 records identically to the general merge path", () => {
+    const testSymbol = Symbol("test symbol");
+    const x = { a: 1, b: { c: [1, 2], d: 3 }, [testSymbol]: `value1` };
+    const y = { a: 2, b: { c: [3] }, e: `value2` };
+
+    const twoRecordMerge = deepmerge(x, y);
+    const generalMerge = deepmerge(x, y, {});
+
+    expect(twoRecordMerge).toStrictEqual(generalMerge);
+    expect(Object.keys(twoRecordMerge)).toStrictEqual(Object.keys(generalMerge));
+  });
+
+  it("only merges enumerable properties", () => {
+    const symNonEnum = Symbol("symNonEnum");
+    const symEnum = Symbol("symEnum");
+
     const mut_x = {};
     const mut_y = {};
 
@@ -488,6 +515,14 @@ describe("deepmerge", () => {
       },
       b: {
         value: 2,
+        enumerable: true,
+      },
+      [symNonEnum]: {
+        value: "hidden",
+        enumerable: false,
+      },
+      [symEnum]: {
+        value: "visible",
         enumerable: true,
       },
     });
@@ -501,16 +536,20 @@ describe("deepmerge", () => {
         value: 4,
         enumerable: false,
       },
+      [symNonEnum]: {
+        value: "hidden2",
+        enumerable: false,
+      },
     });
 
-    const expected = { b: 2 };
+    const expected = { b: 2, [symEnum]: "visible" };
 
     const merged = deepmerge(mut_x, mut_y);
 
     expect(merged).toStrictEqual(expected);
   });
 
-  it(`merging objects with plain and non-plain properties`, () => {
+  it("merges objects with plain and non-plain properties", () => {
     const plainSymbolKey = Symbol(`plainSymbolKey`);
     const parent = {
       parentKey: `should be undefined`,
@@ -537,7 +576,7 @@ describe("deepmerge", () => {
     expect(merged[plainSymbolKey], `enumerable own symbol properties should be merged`).toBe("qux");
   });
 
-  it(`merging objects with null prototype`, () => {
+  it("merges objects with null prototype", () => {
     const mut_x = Object.create(null);
     mut_x.a = 1;
     mut_x.b = { c: [2] };
@@ -559,7 +598,7 @@ describe("deepmerge", () => {
     expect(merged).toStrictEqual(expected);
   });
 
-  it("detecting valid records", () => {
+  it("correctly identifies valid records", () => {
     const mut_a = { a: 1 };
     // eslint-disable-next-line no-proto, no-restricted-properties
     (mut_a as any).__proto__.aProto = 1;
@@ -585,7 +624,7 @@ describe("deepmerge", () => {
     expect(merged).toStrictEqual(expected);
   });
 
-  it("detecting invalid records", () => {
+  it("correctly identifies invalid records", () => {
     const expected = {};
 
     // eslint-disable-next-line ts/no-extraneous-class
@@ -597,7 +636,7 @@ describe("deepmerge", () => {
     expect(deepmerge(mut_a, expected)).toStrictEqual(expected);
   });
 
-  it("merging cjs modules", () => {
+  it("merges CommonJS modules", () => {
     const require = createRequire(import.meta.url);
 
     const a = require("./modules/a.cjs");
@@ -613,7 +652,7 @@ describe("deepmerge", () => {
     expect(merged).toStrictEqual(expected);
   });
 
-  it("merging esm modules", async () => {
+  it("merges ESM modules", async () => {
     const a = await import("./modules/a.mjs");
     const b = await import("./modules/b.mjs");
 
@@ -627,7 +666,7 @@ describe("deepmerge", () => {
     expect(merged).toStrictEqual(expected);
   });
 
-  it("prototype pollution", () => {
+  it("guards against prototype pollution", () => {
     const payload = '{"__proto__":{"a0":true}}';
 
     const x: any = JSON.parse(payload);
@@ -642,4 +681,14 @@ describe("deepmerge", () => {
     expect(y.a0, "Safe y input").not.toBe(true);
     expect(merged.a0, "Safe output").not.toBe(true);
   });
+
+  it("merges Object.create(null) objects", () => {
+    const a = Object.assign(Object.create(null) as { foo: number }, { foo: 1 });
+    const b = Object.assign(Object.create(null) as { bar: number }, { bar: 2 });
+
+    const merged = deepmerge(a, b);
+    expect(merged).toStrictEqual({ foo: 1, bar: 2 });
+  });
+
+  testSourceMutationAndCopySemantics(deepmerge);
 });

@@ -1,31 +1,124 @@
 import { mergeUnknownsInto } from "../deepmerge-into.ts";
-import type { DeepMergeBuiltInMetaData, DeepMergeIntoFunctionUtils, Reference } from "../types/index.ts";
-import { getIterableOfIterables, getKeys, objectHasProperty } from "../utils.ts";
+import type {
+  DeepMergeIntoUtils,
+  DeepMergeMergeInfo,
+  DeepMergeMetaData,
+  DeepMergeValueReference,
+} from "../types/index.ts";
+import {
+  ObjectType,
+  getCyclicReferenceDepth,
+  getKeysOfObject,
+  getKeysOfObjects,
+  getMetaDataHierarchy,
+  getObjectType,
+  objectHasProperty,
+} from "../utils.ts";
+
+import { emptyLike, mergeArraysInto, mergeOthersInto, mergeSetsInto } from "./general.ts";
 
 /**
  * The default merge functions.
  */
-export type MergeFunctions = {
-  mergeRecords: typeof mergeRecordsInto;
+export type MergeFunctions<
+  M extends DeepMergeMetaData = DeepMergeMetaData,
+  MI extends DeepMergeMergeInfo = DeepMergeMergeInfo,
+> = {
+  mergeRecords: <Ts extends ReadonlyArray<Record<PropertyKey, unknown>>, U extends DeepMergeIntoUtils<M, MI>>(
+    mut_target: DeepMergeValueReference<Record<PropertyKey, unknown>>,
+    values: Ts,
+    utils: U,
+    meta: M | undefined,
+  ) => void;
   mergeArrays: typeof mergeArraysInto;
   mergeSets: typeof mergeSetsInto;
-  mergeMaps: typeof mergeMapsInto;
+  mergeMaps: <Ts extends ReadonlyArray<Readonly<ReadonlyMap<unknown, unknown>>>, U extends DeepMergeIntoUtils<M, MI>>(
+    mut_target: DeepMergeValueReference<Map<unknown, unknown>>,
+    values: Ts,
+    utils: U,
+    meta: M | undefined,
+  ) => void;
+  mergeCircularReferences: <Ts extends ReadonlyArray<object>, U extends DeepMergeIntoUtils<M, MI>>(
+    mut_target: DeepMergeValueReference<unknown>,
+    values: Ts,
+    utils: U,
+    meta: M | undefined,
+  ) => void;
   mergeOthers: typeof mergeOthersInto;
 };
 
 /**
  * The default strategy to merge records into a target record.
  *
- * @param mut_target - The result will be mutated into this record
+ * @param mut_target - The target to merge into.
  * @param values - The records (including the target's value if there is one).
+ * @param utils - The utils.
+ * @param meta - The meta data.
  */
 function mergeRecordsInto<
   Ts extends ReadonlyArray<Record<PropertyKey, unknown>>,
-  U extends DeepMergeIntoFunctionUtils<M, MM>,
-  M,
-  MM extends DeepMergeBuiltInMetaData = DeepMergeBuiltInMetaData,
->(mut_target: Reference<Record<PropertyKey, unknown>>, values: Ts, utils: U, meta: M | undefined): void {
-  for (const key of getKeys(values)) {
+  U extends DeepMergeIntoUtils<M, MI>,
+  M extends DeepMergeMetaData,
+  MI extends DeepMergeMergeInfo = DeepMergeMergeInfo,
+>(mut_target: DeepMergeValueReference<Record<PropertyKey, unknown>>, values: Ts, utils: U, meta: M | undefined): void {
+  if (values.length === 2) {
+    // Fast path for 2 records: avoid building a union key set and per-key value
+    // arrays. Only the keys present in each record are iterated.
+    const mergeProperty = (key: PropertyKey, propValues: unknown[]) => {
+      const updatedMeta = utils.metaDataUpdater(meta, {
+        key,
+        parents: values,
+        values: propValues,
+        result: mut_target.value,
+      } satisfies DeepMergeMergeInfo as unknown as Partial<MI>);
+
+      const propertyTarget: DeepMergeValueReference<unknown> = objectHasProperty(mut_target.value, key)
+        ? { value: propValues[0] }
+        : { value: emptyLike(propValues[0]) };
+      mergeUnknownsInto<ReadonlyArray<unknown>, U, M, MI>(propertyTarget, propValues, utils, updatedMeta);
+
+      if (key === "__proto__") {
+        Object.defineProperty(mut_target.value, key, {
+          value: propertyTarget.value,
+          configurable: true,
+          enumerable: true,
+          writable: true,
+        });
+      } else {
+        mut_target.value[key] = propertyTarget.value;
+      }
+    };
+
+    const firstValue = values[0]!;
+    const secondValue = values[1]!;
+    for (const key of getKeysOfObject(firstValue)) {
+      mergeProperty(key, objectHasProperty(secondValue, key) ? [firstValue[key], secondValue[key]] : [firstValue[key]]);
+    }
+    for (const key of getKeysOfObject(secondValue)) {
+      if (!objectHasProperty(firstValue, key)) {
+        mergeProperty(key, [secondValue[key]]);
+      }
+    }
+    return;
+  }
+  mergeRecordsIntoGeneral<Ts, U, M, MI>(mut_target, values, utils, meta);
+}
+
+/**
+ * The default strategy to merge 3 or more records into a target record.
+ *
+ * @param mut_target - The target to merge into.
+ * @param values - The records (including the target's value if there is one).
+ * @param utils - The utils.
+ * @param meta - The meta data.
+ */
+function mergeRecordsIntoGeneral<
+  Ts extends ReadonlyArray<Record<PropertyKey, unknown>>,
+  U extends DeepMergeIntoUtils<M, MI>,
+  M extends DeepMergeMetaData,
+  MI extends DeepMergeMergeInfo = DeepMergeMergeInfo,
+>(mut_target: DeepMergeValueReference<Record<PropertyKey, unknown>>, values: Ts, utils: U, meta: M | undefined): void {
+  for (const key of getKeysOfObjects(values)) {
     const propValues = [];
 
     for (const value of values) {
@@ -34,17 +127,17 @@ function mergeRecordsInto<
       }
     }
 
-    if (propValues.length === 0) {
-      continue;
-    }
-
     const updatedMeta = utils.metaDataUpdater(meta, {
       key,
       parents: values,
-    } as unknown as MM);
+      values: propValues,
+      result: mut_target.value,
+    } satisfies DeepMergeMergeInfo as unknown as Partial<MI>);
 
-    const propertyTarget: Reference<unknown> = { value: propValues[0] };
-    mergeUnknownsInto<ReadonlyArray<unknown>, U, M, MM>(propertyTarget, propValues, utils, updatedMeta);
+    const propertyTarget: DeepMergeValueReference<unknown> = objectHasProperty(mut_target.value, key)
+      ? { value: propValues[0] }
+      : { value: emptyLike(propValues[0]) };
+    mergeUnknownsInto<ReadonlyArray<unknown>, U, M, MI>(propertyTarget, propValues, utils, updatedMeta);
 
     if (key === "__proto__") {
       Object.defineProperty(mut_target.value, key, {
@@ -60,53 +153,146 @@ function mergeRecordsInto<
 }
 
 /**
- * The default strategy to merge arrays into a target array.
- *
- * @param mut_target - The result will be mutated into this array
- * @param values - The arrays (including the target's value if there is one).
- */
-function mergeArraysInto<Ts extends ReadonlyArray<ReadonlyArray<unknown>>>(
-  mut_target: Reference<unknown[]>,
-  values: Ts,
-): void {
-  mut_target.value.push(...values.slice(1).flat());
-}
-
-/**
- * The default strategy to merge sets into a target set.
- *
- * @param mut_target - The result will be mutated into this set
- * @param values - The sets (including the target's value if there is one).
- */
-function mergeSetsInto<Ts extends ReadonlyArray<Readonly<ReadonlySet<unknown>>>>(
-  mut_target: Reference<Set<unknown>>,
-  values: Ts,
-): void {
-  for (const value of getIterableOfIterables(values.slice(1))) {
-    mut_target.value.add(value);
-  }
-}
-
-/**
  * The default strategy to merge maps into a target map.
  *
- * @param mut_target - The result will be mutated into this map
+ * @param mut_target - The target to merge into.
  * @param values - The maps (including the target's value if there is one).
+ * @param utils - The utils.
+ * @param meta - The meta data.
  */
-function mergeMapsInto<Ts extends ReadonlyArray<Readonly<ReadonlyMap<unknown, unknown>>>>(
-  mut_target: Reference<Map<unknown, unknown>>,
-  values: Ts,
-): void {
-  for (const [key, value] of getIterableOfIterables(values.slice(1))) {
-    mut_target.value.set(key, value);
+function mergeMapsInto<
+  Ts extends ReadonlyArray<Readonly<ReadonlyMap<unknown, unknown>>>,
+  U extends DeepMergeIntoUtils<M, MI>,
+  M extends DeepMergeMetaData,
+  MI extends DeepMergeMergeInfo = DeepMergeMergeInfo,
+>(mut_target: DeepMergeValueReference<Map<unknown, unknown>>, values: Ts, utils: U, meta: M | undefined): void {
+  // Merge into `mut_target.value` in place. The recursion branch never
+  // aliases a source's container: `mergeUnknownsInto` below only operates on
+  // the target's nested value (when target had the key) or on an empty
+  // container we made (when target didn't have the key), so mutating this
+  // map's contents cannot leak into a source.
+
+  const valuesByKey = new Map<unknown, unknown[]>();
+  for (const value of values) {
+    if (value === mut_target.value) {
+      // `values` includes the target's own map when the recursion target
+      // already had the key; its entries are merged via `target.get(key)`.
+      continue;
+    }
+    for (const [key, entryValue] of value) {
+      const mut_keyValues = valuesByKey.get(key);
+      if (mut_keyValues === undefined) {
+        valuesByKey.set(key, [entryValue]);
+      } else {
+        mut_keyValues.push(entryValue);
+      }
+    }
+  }
+
+  const target = mut_target.value;
+  for (const [key, keyValues] of valuesByKey) {
+    const targetValue = target.get(key);
+    const allValues = targetValue === undefined ? keyValues : [targetValue, ...keyValues];
+    // The `result` reported to metaDataUpdater must be `mut_target.value` so
+    // that the hierarchy captures a stable reference to the target. Input
+    // cycles that point back at the target then resolve correctly.
+    const updatedMeta = utils.metaDataUpdater(meta, {
+      key,
+      parents: values,
+      values: allValues,
+      result: mut_target.value,
+    } satisfies DeepMergeMergeInfo as unknown as Partial<MI>);
+
+    const propTarget: DeepMergeValueReference<unknown> =
+      targetValue === undefined ? { value: emptyLike(allValues[0]) } : { value: targetValue };
+    mergeUnknownsInto<ReadonlyArray<unknown>, U, M, MI>(propTarget, allValues, utils, updatedMeta);
+
+    target.set(key, propTarget.value);
   }
 }
 
 /**
- * Set the target to the last value.
+ * Resolve any cyclic references within a non-cyclic object pointing to ancestors in meta.hierarchy.
+ *
+ * @param value - The value to resolve circular references for.
+ * @param utils - The utils.
+ * @param meta - The meta data.
  */
-function mergeOthersInto<Ts extends ReadonlyArray<unknown>>(mut_target: Reference<unknown>, values: Ts) {
-  mut_target.value = values.at(-1);
+function resolveCyclicReferencesInto<
+  U extends DeepMergeIntoUtils<M, MI>,
+  M extends DeepMergeMetaData,
+  MI extends DeepMergeMergeInfo = DeepMergeMergeInfo,
+>(value: unknown, utils: U, meta: M | undefined): unknown {
+  if (typeof value !== "object" || value === null) {
+    return value;
+  }
+  const hierarchy = getMetaDataHierarchy(meta);
+  const depth = getCyclicReferenceDepth(value, hierarchy, 0);
+  if (depth > 0 && hierarchy !== undefined) {
+    return hierarchy[hierarchy.length - depth]?.result ?? hierarchy[hierarchy.length - depth]?.parents[0];
+  }
+  const type = getObjectType(value);
+  if (type === ObjectType.RECORD) {
+    const record = value as Record<PropertyKey, unknown>;
+    let mut_changed = false;
+    const result: Record<PropertyKey, unknown> = {};
+    for (const key of getKeysOfObject(record)) {
+      const propVal = record[key];
+      const updatedMeta = utils.metaDataUpdater(meta, {
+        key,
+        parents: [record],
+        values: [propVal],
+        result,
+      } satisfies DeepMergeMergeInfo as unknown as Partial<MI>);
+      const resolvedProp = resolveCyclicReferencesInto<U, M, MI>(propVal, utils, updatedMeta);
+      if (resolvedProp !== propVal) {
+        mut_changed = true;
+      }
+      if (key === "__proto__") {
+        Object.defineProperty(result, key, {
+          value: resolvedProp,
+          configurable: true,
+          enumerable: true,
+          writable: true,
+        });
+      } else {
+        result[key] = resolvedProp;
+      }
+    }
+    return mut_changed ? result : value;
+  }
+  return value;
+}
+
+/**
+ * The default strategy to merge circular references into a target.
+ *
+ * @param mut_target - The target to merge into.
+ * @param values - The circular references.
+ * @param utils - The utils.
+ * @param meta - The meta data.
+ */
+function mergeCircularReferencesInto<
+  Ts extends ReadonlyArray<object>,
+  U extends DeepMergeIntoUtils<M, MI>,
+  M extends DeepMergeMetaData,
+  MI extends DeepMergeMergeInfo = DeepMergeMergeInfo,
+>(mut_target: DeepMergeValueReference<unknown>, values: Ts, utils: U, meta: M | undefined): void {
+  const hierarchy = getMetaDataHierarchy(meta);
+  const cyclicDepths = values.map((v, i) => getCyclicReferenceDepth(v, hierarchy, i));
+  const depth = cyclicDepths[0]!;
+  for (let mut_index = 1; mut_index < values.length; mut_index++) {
+    if (cyclicDepths[mut_index] !== depth) {
+      const lastCyclicDepth = cyclicDepths.at(-1)!;
+      mut_target.value =
+        lastCyclicDepth === 0
+          ? resolveCyclicReferencesInto<U, M, MI>(values.at(-1), utils, meta)
+          : (hierarchy?.[hierarchy.length - lastCyclicDepth]?.result ??
+            hierarchy?.[hierarchy.length - lastCyclicDepth]?.parents[0]);
+      return;
+    }
+  }
+  mut_target.value = hierarchy?.[hierarchy.length - depth]?.result ?? hierarchy?.[hierarchy.length - depth]?.parents[0];
 }
 
 /**
@@ -117,5 +303,8 @@ export const mergeIntoFunctions = {
   mergeArrays: mergeArraysInto,
   mergeSets: mergeSetsInto,
   mergeMaps: mergeMapsInto,
+  mergeCircularReferences: mergeCircularReferencesInto,
   mergeOthers: mergeOthersInto,
 };
+
+export { mergeArraysInto, mergeSetsInto, mergeOthersInto } from "./general.ts";
