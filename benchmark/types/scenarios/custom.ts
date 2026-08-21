@@ -8,7 +8,7 @@ const customMerge = deepmergeCustom({
 
 const defaultCustomMerge = deepmergeCustom({});
 const mapMerge = deepmergeCustom({
-  mergeMaps: (values) => new Map(values.flatMap((map) => [...map.entries()])),
+  mergeMaps: (values) => new Map(values.flatMap((map) => [...map])),
   mergeSets: (values) => new Set(values.flatMap((set) => [...set])),
 });
 

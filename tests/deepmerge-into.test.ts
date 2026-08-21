@@ -333,7 +333,7 @@ describe("deepmergeInto", () => {
     deepmergeInto(x, y);
 
     expect(x).toStrictEqual(expected);
-    expect(x instanceof Map).toBe(true);
+    expect(x).toBeInstanceOf(Map);
   });
 
   it("merges array properties into target", () => {
@@ -709,8 +709,8 @@ describe("deepmergeInto", () => {
 
     expect([...aSet]).toStrictEqual([1]);
     expect([...bSet]).toStrictEqual([2]);
-    expect([...aMap.entries()]).toStrictEqual([["a", 1]]);
-    expect([...bMap.entries()]).toStrictEqual([["b", 2]]);
+    expect([...aMap]).toStrictEqual([["a", 1]]);
+    expect([...bMap]).toStrictEqual([["b", 2]]);
   });
 
   it("merges map properties into a fresh target, preserving the first source's entries", () => {

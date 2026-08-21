@@ -46,7 +46,7 @@ function logSortedBenchTable(bench: Bench) {
     return task?.result.state === "completed" ? task.result.throughput.mean : 0;
   };
 
-  const sortedTable = [...bench.table()].sort((a, b) => getOps(b) - getOps(a));
+  const sortedTable = bench.table().toSorted((a, b) => getOps(b) - getOps(a));
   const firstRowOps = getOps(sortedTable[0] ?? null);
   const maxOps = firstRowOps > 0 ? firstRowOps : 1;
 
@@ -225,7 +225,7 @@ const lodashCollectionsCustomizer = (objValue: unknown, srcValue: unknown): unkn
     return merged;
   }
   if (objValue instanceof Date && srcValue instanceof Date) {
-    return new Date(srcValue.getTime());
+    return new Date(srcValue);
   }
   return undefined;
 };

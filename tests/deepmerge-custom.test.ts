@@ -1,4 +1,3 @@
-import _ from "lodash";
 import { describe, expect, it } from "vitest";
 
 import {
@@ -158,8 +157,7 @@ describe("deepmergeCustom", () => {
             if (mut_i >= array.length) {
               break;
             }
-            // eslint-disable-next-line ts/restrict-template-expressions
-            result[mut_i] += `${array[mut_i]}`;
+            result[mut_i] += String(array[mut_i]);
           }
         }
 
@@ -473,7 +471,7 @@ describe("deepmergeCustom", () => {
             return carry;
           }, new Map<unknown, unknown[]>());
 
-          return [...valuesById.entries()].reduce<unknown[]>((carry, [elementId, elementValues]) => {
+          return [...valuesById].reduce<unknown[]>((carry, [elementId, elementValues]) => {
             const childMeta = utils.metaDataUpdater(meta, { id: elementId });
             return [...carry, deepmergeCustom(mergeSettings, childMeta)(...elementValues)];
           }, []);
@@ -530,13 +528,13 @@ describe("deepmergeCustom", () => {
     const y = { bar: new Date("2021-02-02"), baz: { qux: 1 } };
 
     const expected = {
-      foo: _.cloneDeep(x.foo),
-      bar: _.cloneDeep(y.bar),
-      baz: _.cloneDeep(y.baz),
+      foo: structuredClone(x.foo),
+      bar: structuredClone(y.bar),
+      baz: structuredClone(y.baz),
     } as const;
 
     const customizedDeepmerge = deepmergeCustom({
-      mergeOthers: (values, utils) => _.cloneDeep(utils.defaultMergeFunctions.mergeOthers(values)),
+      mergeOthers: (values, utils) => structuredClone(utils.defaultMergeFunctions.mergeOthers(values)),
     });
 
     const merged = customizedDeepmerge(x, y);

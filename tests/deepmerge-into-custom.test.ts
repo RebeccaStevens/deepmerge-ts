@@ -1,4 +1,3 @@
-import _ from "lodash";
 import { describe, expect, it } from "vitest";
 
 import {
@@ -7,7 +6,7 @@ import {
   deepmergeInto,
   deepmergeIntoCustom,
 } from "../src/index.ts";
-import { getKeys } from "../src/utils.ts";
+import { getKeysOfObjects } from "../src/utils.ts";
 
 import { areAllNumbers, hasProp } from "./utils.ts";
 
@@ -76,8 +75,7 @@ describe("deepmergeIntoCustom", () => {
             if (mut_i >= array.length) {
               break;
             }
-            // eslint-disable-next-line ts/restrict-template-expressions
-            result[mut_i] += `${array[mut_i]}`;
+            result[mut_i] += String(array[mut_i]);
           }
         }
 
@@ -153,7 +151,7 @@ describe("deepmergeIntoCustom", () => {
 
     const customizedDeepmerge = deepmergeIntoCustom({
       mergeRecords: (mut_target, records, utils, meta) => {
-        for (const key of getKeys(records)) {
+        for (const key of getKeysOfObjects(records)) {
           mut_target.value[key] = key;
         }
       },
@@ -372,7 +370,7 @@ describe("deepmergeIntoCustom", () => {
             return carry;
           }, new Map<unknown, Array<Record<PropertyKey, unknown>>>());
 
-          mut_target.value = [...valuesById.entries()].reduce<unknown[]>((carry, [elementId, elementValues]) => {
+          mut_target.value = [...valuesById].reduce<unknown[]>((carry, [elementId, elementValues]) => {
             const childMeta = utils.metaDataUpdater(meta, { id: elementId });
             const s = {};
             deepmergeIntoCustom(mergeSettings, childMeta)(s, ...elementValues);

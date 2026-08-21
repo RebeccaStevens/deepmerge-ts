@@ -15,7 +15,7 @@ import type {
 import type { SimplifyObject } from "./types/utils.ts";
 import { ObjectType, getCyclicReferenceDepth, getMetaDataHierarchy, getObjectType } from "./utils.ts";
 
-const defaultDeepmergeInto = /** @__PURE__ */ deepmergeIntoCustom();
+const defaultDeepmergeInto = /* #__PURE__ */ deepmergeIntoCustom();
 
 /**
  * Deeply merge objects into a target.
@@ -51,6 +51,7 @@ export function deepmergeInto<Target extends object, Ts extends ReadonlyArray<un
  * Used by the default `deepmergeInto` function.
  *
  * @internal
+ * @returns A customized deepmergeInto function.
  */
 export function deepmergeIntoCustom(): <Target extends object, Ts extends ReadonlyArray<unknown>>(
   target: Target,
@@ -61,6 +62,7 @@ export function deepmergeIntoCustom(): <Target extends object, Ts extends Readon
  * Deeply merge two or more objects using the given options.
  *
  * @param options - The options on how to customize the merge function.
+ * @returns A customized deepmergeInto function.
  */
 export function deepmergeIntoCustom<BaseTs = unknown>(
   options: DeepMergeIntoOptions<DeepMergeBuiltInMetaData, DeepMergeMergeInfo>,
@@ -71,6 +73,7 @@ export function deepmergeIntoCustom<BaseTs = unknown>(
  *
  * @param options - The options on how to customize the merge function.
  * @param rootMetaData - The meta data passed to the root items being merged.
+ * @returns A customized deepmergeInto function.
  * @example
  * ```ts
  * import { deepmergeIntoCustom } from "deepmerge-ts";
@@ -114,6 +117,9 @@ export function deepmergeIntoCustom<
 
   /**
    * The customized deepmergeInto function.
+   *
+   * @param target - The target object to merge into.
+   * @param objects - The objects to merge into the target.
    */
   function customizedDeepmergeInto<Target extends object, Ts extends ReadonlyArray<unknown>>(
     target: Target,
@@ -135,6 +141,7 @@ export function deepmergeIntoCustom<
  *
  * @param options - The options the user specified.
  * @param customizedDeepmergeInto - The customized deepmergeInto function.
+ * @returns The merge into utils.
  */
 function getUtils<M extends DeepMergeMetaData, MI extends DeepMergeMergeInfo = DeepMergeMergeInfo>(
   options: DeepMergeIntoOptions<M, MI>,

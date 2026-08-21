@@ -10,7 +10,7 @@ describe("deepmerge", () => {
   it("returns undefined when nothing to merge", () => {
     // eslint-disable-next-line ts/no-confusing-void-expression
     const merged = deepmerge();
-    expect(merged).toBe(undefined);
+    expect(merged).toBeUndefined();
   });
 
   it("returns the same object when only 1 is passed", () => {

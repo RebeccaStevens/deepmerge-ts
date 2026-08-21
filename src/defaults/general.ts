@@ -44,6 +44,7 @@ export function emptyLike(value: unknown): unknown {
  *
  * @param previousMeta - The previous meta data.
  * @param mergeInfo - Meta information about the current merge state.
+ * @returns The updated meta data.
  */
 export function defaultMetaDataUpdater(
   previousMeta: DeepMergeBuiltInMetaData | undefined,
@@ -69,6 +70,7 @@ export function defaultMetaDataUpdater(
  *
  * @param previousMeta - The previous meta data.
  * @param mergeInfo - Meta information about the current merge state.
+ * @returns The updated meta data (undefined).
  */
 export function defaultMetaDataUpdaterFast(previousMeta: undefined, mergeInfo: DeepMergeMergeInfo): undefined {
   return undefined;
@@ -81,6 +83,7 @@ export function defaultMetaDataUpdaterFast(previousMeta: undefined, mergeInfo: D
  *
  * @param values - The values to filter.
  * @param meta - The meta data.
+ * @returns The filtered values.
  */
 export function defaultFilterValues<Ts extends ReadonlyArray<unknown>, M>(
   values: Ts,
@@ -144,6 +147,7 @@ export function resolveCustomMergeFunctions<Fns extends { mergeOthers: unknown }
  * @param values - The arrays.
  * @param utils - The utils.
  * @param meta - The meta data.
+ * @returns The merged array.
  */
 export function mergeArrays<
   Ts extends ReadonlyArray<ReadonlyArray<unknown>>,
@@ -161,6 +165,7 @@ export function mergeArrays<
  * @param values - The sets.
  * @param utils - The utils.
  * @param meta - The meta data.
+ * @returns The merged set.
  */
 export function mergeSets<
   Ts extends ReadonlyArray<Readonly<ReadonlySet<unknown>>>,
@@ -185,6 +190,7 @@ export function mergeSets<
  * @param values - The other things.
  * @param utils - The utils.
  * @param meta - The meta data.
+ * @returns The merged value.
  */
 export function mergeOthers<
   Ts extends ReadonlyArray<unknown>,

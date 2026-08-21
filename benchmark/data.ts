@@ -145,14 +145,16 @@ function hydrateData(data: Readonly<BenchmarkData>): BenchmarkData {
 }
 
 function isValidData(parsed: unknown): parsed is BenchmarkData {
+  if (typeof parsed !== "object" || parsed === null) {
+    return false;
+  }
+  const obj = parsed as Record<string, unknown>;
   return (
-    typeof parsed === "object" &&
-    parsed !== null &&
-    "version" in parsed &&
-    parsed.version === DATA_FORMAT_VERSION &&
-    "all" in parsed &&
-    "twoArg" in parsed &&
-    "collections" in parsed
+    "version" in obj &&
+    obj["version"] === DATA_FORMAT_VERSION &&
+    "all" in obj &&
+    "twoArg" in obj &&
+    "collections" in obj
   );
 }
 
@@ -186,8 +188,8 @@ function generateBenchmarkDataItem(
 
   for (const key_ of keys) {
     const key = key_;
+    const roll = rng();
     if (currentDepth < depth) {
-      const roll = rng();
       if (roll < 0.6) {
         obj[key] = generateBenchmarkDataItem(maxProperties, depth, currentDepth + 1, rng);
       } else if (roll < 0.85) {
@@ -195,15 +197,12 @@ function generateBenchmarkDataItem(
       } else {
         obj[key] = generateScalar(rng);
       }
+    } else if (roll < 0.65) {
+      obj[key] = generateScalar(rng);
+    } else if (roll < 0.85) {
+      obj[key] = generateLeafArray(rng);
     } else {
-      const roll = rng();
-      if (roll < 0.65) {
-        obj[key] = generateScalar(rng);
-      } else if (roll < 0.85) {
-        obj[key] = generateLeafArray(rng);
-      } else {
-        obj[key] = generateArrayValue(maxProperties, depth, currentDepth + 1, rng);
-      }
+      obj[key] = generateArrayValue(maxProperties, depth, currentDepth + 1, rng);
     }
   }
   return obj;
@@ -213,6 +212,13 @@ function generateBenchmarkDataItem(
  * A dataset packed with Set/Map/Date values. These types are only genuinely
  * deep-merged by deepmerge-ts, so this dataset is benched separately against a
  * small set of libraries rather than polluting the shared plain-object data.
+ *
+ * @param name - The name of the dataset.
+ * @param items - The number of items to merge in each sample.
+ * @param maxProperties - The maximum number of properties.
+ * @param maxDepth - The maximum depth.
+ * @param rng - The random number generator function.
+ * @returns The generated benchmark dataset.
  */
 function generateCollectionsDataSet(
   name: string,

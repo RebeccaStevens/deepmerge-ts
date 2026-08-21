@@ -68,6 +68,7 @@ export type MergeFunctions<
  * @param values - The records.
  * @param utils - The utils.
  * @param meta - The meta data.
+ * @returns The merged records.
  */
 function mergeRecords<
   Ts extends ReadonlyArray<Record<PropertyKey, unknown>>,
@@ -129,6 +130,7 @@ function mergeRecords<
  * @param values - The records.
  * @param utils - The utils.
  * @param meta - The meta data.
+ * @returns The merged records.
  */
 function mergeRecordsGeneral<
   Ts extends ReadonlyArray<Record<PropertyKey, unknown>>,
@@ -182,6 +184,7 @@ function mergeRecordsGeneral<
  * @param values - The maps.
  * @param utils - The utils.
  * @param meta - The meta data.
+ * @returns The merged map.
  */
 function mergeMaps<
   Ts extends ReadonlyArray<ReadonlyMap<unknown, unknown>>,
@@ -231,6 +234,7 @@ function mergeMaps<
  * @param value - The value to resolve circular references for.
  * @param utils - The utils.
  * @param meta - The meta data.
+ * @returns The resolved value.
  */
 function resolveCyclicReferences<
   U extends DeepMergeUtils<M, MI>,
@@ -242,7 +246,7 @@ function resolveCyclicReferences<
   }
   const hierarchy = getMetaDataHierarchy(meta);
   const depth = getCyclicReferenceDepth(value, hierarchy, 0);
-  if (depth > 0 && hierarchy !== undefined) {
+  if (hierarchy !== undefined && depth > 0) {
     return hierarchy[hierarchy.length - depth]?.result;
   }
   const type = getObjectType(value);
@@ -285,6 +289,7 @@ function resolveCyclicReferences<
  * @param cyclicDepths - The depth of each circular reference.
  * @param utils - The utils.
  * @param meta - The meta data.
+ * @returns The merged circular references.
  */
 function mergeCircularReferences<
   Ts extends ReadonlyArray<unknown>,

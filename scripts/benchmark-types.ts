@@ -69,24 +69,35 @@ type Baseline = Readonly<{
 
 const LINE_PATTERN = /^(?<name>[\w ]+):\s+(?<value>[\d.]+)[Ks]?\s*$/u;
 
-/** The median of a list of numbers. */
+/**
+ * The median of a list of numbers.
+ *
+ * @param values - The numbers to compute the median of.
+ * @returns The median value.
+ */
 const median = (values: ReadonlyArray<number>): number => {
-  const sorted = [...values].sort((a, b) => a - b);
+  const sorted = values.toSorted((a, b) => a - b);
   const middle = sorted.length >> 1;
   return sorted.length % 2 === 0 ? (sorted[middle - 1]! + sorted[middle]!) / 2 : sorted[middle]!;
 };
 
-/** Discover the benchmark scenario names, in alphabetical order. */
+/**
+ * Discover the benchmark scenario names, in alphabetical order.
+ *
+ * @returns The scenario names.
+ */
 const getScenarioNames = (): string[] =>
   readdirSync(SCENARIOS_DIR)
     .filter((fileName) => fileName.endsWith(".ts"))
     .map((fileName) => fileName.replace(/\.ts$/u, ""))
-    .sort();
+    .toSorted((a, b) => a.localeCompare(b));
 
 /**
  * Parse the extended diagnostics output of a single tsc run.
  *
- * @throws {Error} when any expected metric is missing from the output.
+ * @param output - The tsc output.
+ * @returns The parsed metrics.
+ * @throws {Error} When any expected metric is missing from the output.
  */
 const parseDiagnostics = (output: string): Metrics => {
   const metrics = {} as Metrics;
@@ -113,7 +124,8 @@ const parseDiagnostics = (output: string): Metrics => {
  * Run tsc against a single scenario and return the emitted metrics.
  *
  * @param scenario - The scenario name (without the `.ts` extension).
- * @throws {Error} when tsc exits with a non-zero status or output can't be parsed.
+ * @returns The emitted metrics.
+ * @throws {Error} When tsc exits with a non-zero status or output can't be parsed.
  */
 const runTscForScenario = (scenario: string): Metrics => {
   // Each scenario needs its own tsconfig that only includes that file, so the
@@ -134,7 +146,13 @@ const runTscForScenario = (scenario: string): Metrics => {
   return parseDiagnostics(output);
 };
 
-/** Run the benchmark for a scenario several times and return the median value of each metric. */
+/**
+ * Run the benchmark for a scenario several times and return the median value of each metric.
+ *
+ * @param scenario - The scenario name.
+ * @param runCount - Number of runs.
+ * @returns The aggregated metrics.
+ */
 const runScenario = (scenario: string, runCount: number): Metrics => {
   const runs: Metrics[] = [];
   for (let index = 0; index < runCount; index++) {
@@ -151,7 +169,13 @@ const runScenario = (scenario: string, runCount: number): Metrics => {
   return aggregated;
 };
 
-/** Run the benchmark for the given scenarios and return the median metrics of each. */
+/**
+ * Run the benchmark for the given scenarios and return the median metrics of each.
+ *
+ * @param scenarios - The scenarios to run.
+ * @param runCount - Number of runs per scenario.
+ * @returns The scenario metrics.
+ */
 const runBenchmark = (scenarios: ReadonlyArray<string>, runCount: number): ScenarioMetrics => {
   const metrics = {} as ScenarioMetrics;
   for (const scenario of scenarios) {
@@ -161,7 +185,13 @@ const runBenchmark = (scenarios: ReadonlyArray<string>, runCount: number): Scena
   return metrics;
 };
 
-/** Format a single metric value for the comparison table. */
+/**
+ * Format a single metric value for the comparison table.
+ *
+ * @param name - The metric name.
+ * @param value - The metric value.
+ * @returns The formatted value.
+ */
 const formatValue = (name: MetricName, value: number): string => {
   if ((TIME_NAMES as ReadonlyArray<string>).includes(name)) {
     return value.toFixed(2).padStart(12);
@@ -169,7 +199,13 @@ const formatValue = (name: MetricName, value: number): string => {
   return String(Math.round(value)).padStart(12);
 };
 
-/** Print the current metrics alongside the baseline with per-metric deltas. */
+/**
+ * Print the current metrics alongside the baseline with per-metric deltas.
+ *
+ * @param scenarios - The scenario names.
+ * @param metrics - The current metrics.
+ * @param baseline - The baseline metrics.
+ */
 const printComparison = (scenarios: ReadonlyArray<string>, metrics: ScenarioMetrics, baseline: Baseline): void => {
   const comparable = baseline.typescript === TYPESCRIPT_VERSION;
   console.log("");
@@ -192,7 +228,7 @@ const printComparison = (scenarios: ReadonlyArray<string>, metrics: ScenarioMetr
     for (const name of ALL_METRICS) {
       const baselineValue = baselineMetrics[name];
       const currentValue = currentMetrics[name];
-      const deltaPercent = comparable ? ((currentValue - baselineValue) / baselineValue) * 100 : Number.NaN;
+      const deltaPercent = comparable ? ((currentValue - baselineValue) / baselineValue) * 100 : NaN;
       const delta = Number.isNaN(deltaPercent) ? "" : `${deltaPercent >= 0 ? "+" : ""}${deltaPercent.toFixed(1)}%`;
       // Only the deterministic counters are regression signals; timings are too noisy.
       const isRegression =
@@ -219,8 +255,8 @@ const printComparison = (scenarios: ReadonlyArray<string>, metrics: ScenarioMetr
 /**
  * Read the baseline file.
  *
- * @returns the baseline, or undefined when it does not exist yet.
- * @throws {Error} when the baseline file exists but can't be read or parsed.
+ * @returns The baseline, or undefined when it does not exist yet.
+ * @throws {Error} When the baseline file exists but can't be read or parsed.
  */
 const loadBaseline = (): Baseline | undefined => {
   try {
@@ -239,7 +275,11 @@ const loadBaseline = (): Baseline | undefined => {
   }
 };
 
-/** Write the current metrics to the baseline file. */
+/**
+ * Write the current metrics to the baseline file.
+ *
+ * @param metrics - The scenario metrics to save.
+ */
 const saveBaseline = (metrics: ScenarioMetrics): void => {
   const baseline: Baseline = {
     typescript: TYPESCRIPT_VERSION,
@@ -259,7 +299,7 @@ const main = (): void => {
   const updateBaseline = args.includes(UPDATE_BASELINE_FLAG);
   const runCountFlagIndex = args.indexOf(RUN_COUNT_FLAG);
   const runCount = runCountFlagIndex === -1 ? DEFAULT_RUN_COUNT : Number(args[runCountFlagIndex + 1]);
-  if (!Number.isInteger(runCount) || runCount < 1) {
+  if (!Number.isSafeInteger(runCount) || runCount < 1) {
     throw new Error(`Invalid ${RUN_COUNT_FLAG} value; expected a positive integer.`);
   }
   const scenarioFlagIndex = args.indexOf(SCENARIO_FLAG);

@@ -217,6 +217,7 @@ function mergeMapsInto<
  * @param value - The value to resolve circular references for.
  * @param utils - The utils.
  * @param meta - The meta data.
+ * @returns The resolved value.
  */
 function resolveCyclicReferencesInto<
   U extends DeepMergeIntoUtils<M, MI>,
@@ -228,7 +229,7 @@ function resolveCyclicReferencesInto<
   }
   const hierarchy = getMetaDataHierarchy(meta);
   const depth = getCyclicReferenceDepth(value, hierarchy, 0);
-  if (depth > 0 && hierarchy !== undefined) {
+  if (hierarchy !== undefined && depth > 0) {
     return hierarchy[hierarchy.length - depth]?.result ?? hierarchy[hierarchy.length - depth]?.parents[0];
   }
   const type = getObjectType(value);

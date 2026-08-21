@@ -10,7 +10,7 @@ export default rsEslint(
     },
     formatters: true,
     functional: false,
-    jsonc: true,
+    json: true,
     markdown: true,
     stylistic: true,
     yaml: true,
@@ -20,6 +20,14 @@ export default rsEslint(
     rules: {
       // waiting for ts type support.
       "unicorn/no-instanceof-builtins": "off",
+      "unicorn/consistent-compound-words": "off",
+      "jsdoc/check-tag-names": [
+        "warn",
+        {
+          definedTags: ["warning"],
+        },
+      ],
+      "jsdoc/require-returns": "off",
     },
   },
   {

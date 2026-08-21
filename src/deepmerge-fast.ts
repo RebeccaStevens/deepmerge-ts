@@ -20,7 +20,7 @@ import type {
 } from "./types/index.ts";
 import { ObjectType, getObjectType } from "./utils.ts";
 
-const defaultDeepmergeFastUnsafe = /** @__PURE__ */ deepmergeFastUnsafeCustom();
+const defaultDeepmergeFastUnsafe = /* #__PURE__ */ deepmergeFastUnsafeCustom();
 
 /**
  * Deeply merge objects using a high-performance strategy.
@@ -36,6 +36,7 @@ const defaultDeepmergeFastUnsafe = /** @__PURE__ */ deepmergeFastUnsafeCustom();
  * - **Prototype pollution:** Prototype pollution safeguards are omitted for speed; malicious keys like `__proto__` can pollute object prototypes.
  * - **Denial of Service (DoS):** Circular reference detection and recursion depth limits are disabled; cyclic or deeply nested input will cause infinite recursion and crash via stack overflow.
  * @param objects - The objects to merge.
+ * @returns The merged result.
  */
 export function deepmergeFastUnsafe<Ts extends Readonly<ReadonlyArray<unknown>>>(
   ...objects: readonly [...Ts]
@@ -47,6 +48,7 @@ export function deepmergeFastUnsafe<Ts extends Readonly<ReadonlyArray<unknown>>>
  * Used by the default `deepmergeFastUnsafe` function.
  *
  * @internal
+ * @returns A customized deepmergeFastUnsafe function.
  */
 export function deepmergeFastUnsafeCustom(): <Ts extends ReadonlyArray<unknown>>(
   ...objects: Ts
@@ -66,6 +68,7 @@ export function deepmergeFastUnsafeCustom(): <Ts extends ReadonlyArray<unknown>>
  * - **Prototype pollution:** Prototype pollution safeguards are omitted for speed; malicious keys like `__proto__` can pollute object prototypes.
  * - **Denial of Service (DoS):** Circular reference detection and recursion depth limits are disabled; cyclic or deeply nested input will cause infinite recursion and crash via stack overflow.
  * @param options - The options on how to customize the merge function.
+ * @returns A customized deepmergeFastUnsafe function.
  */
 export function deepmergeFastUnsafeCustom<BaseTs = unknown, PMF extends Partial<DeepMergeFunctionsURIs> = {}>(
   options: DeepMergeFastUnsafeOptions,
@@ -90,6 +93,7 @@ export function deepmergeFastUnsafeCustom<BaseTs = unknown, PMF extends Partial<
  *
  * @param options - The options the user specified.
  * @param customizedDeepmergeFast - The customized deepmergeFastUnsafe function.
+ * @returns The fast merge utils.
  */
 function getUtilsFast(
   options: DeepMergeFastUnsafeOptions,
@@ -120,6 +124,7 @@ function getUtilsFast(
  *
  * @param values - The values.
  * @param utils - The utils.
+ * @returns The merged result.
  */
 export function mergeUnknownsFast<
   Ts extends ReadonlyArray<unknown>,
@@ -195,6 +200,7 @@ export function mergeUnknownsFast<
  *
  * @param values - The records.
  * @param utils - The utils.
+ * @returns The merged result.
  */
 function mergeRecordsFast<
   U extends DeepMergeUtils<M, MI>,
@@ -213,6 +219,7 @@ function mergeRecordsFast<
  *
  * @param values - The arrays.
  * @param utils - The utils.
+ * @returns The merged result.
  */
 function mergeArraysFast<
   U extends DeepMergeUtils<M, MI>,
@@ -231,6 +238,7 @@ function mergeArraysFast<
  *
  * @param values - The sets.
  * @param utils - The utils.
+ * @returns The merged result.
  */
 function mergeSetsFast<
   U extends DeepMergeUtils<M, MI>,
@@ -249,6 +257,7 @@ function mergeSetsFast<
  *
  * @param values - The maps.
  * @param utils - The utils.
+ * @returns The merged result.
  */
 function mergeMapsFast<
   U extends DeepMergeUtils<M, MI>,
@@ -267,6 +276,7 @@ function mergeMapsFast<
  *
  * @param values - The other things.
  * @param utils - The utils.
+ * @returns The merged result.
  */
 function mergeOthersFast<
   U extends DeepMergeUtils<M, MI>,

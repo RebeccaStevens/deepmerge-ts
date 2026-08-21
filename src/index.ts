@@ -2,6 +2,7 @@ export { deepmerge, deepmergeCustom } from "./deepmerge.ts";
 export { deepmergeFastUnsafe, deepmergeFastUnsafeCustom } from "./deepmerge-fast.ts";
 export { deepmergeInto, deepmergeIntoCustom } from "./deepmerge-into.ts";
 export { deepmergeIntoFastUnsafe, deepmergeIntoFastUnsafeCustom } from "./deepmerge-into-fast.ts";
+// eslint-disable-next-line ts/no-deprecated
 export { type ObjectType, getKeys, getKeysOfObjects, getObjectType, objectHasProperty } from "./utils.ts";
 
 export type { MergeFunctions as DeepMergeIntoFunctionsDefaults } from "./defaults/into.ts";

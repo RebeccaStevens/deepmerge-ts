@@ -30,6 +30,7 @@ export type MergeFunctionsFast = {
  *
  * @param values - The records.
  * @param utils - The utils.
+ * @returns The merged records.
  */
 function mergeRecordsFast<
   Ts extends ReadonlyArray<Record<PropertyKey, unknown>>,
@@ -76,6 +77,7 @@ function mergeRecordsFast<
  *
  * @param values - The records.
  * @param utils - The utils.
+ * @returns The merged records.
  */
 function mergeRecordsFastGeneral<
   Ts extends ReadonlyArray<Record<PropertyKey, unknown>>,
@@ -114,6 +116,7 @@ function mergeRecordsFastGeneral<
  *
  * @param values - The maps.
  * @param utils - The utils.
+ * @returns The merged map.
  */
 function mergeMapsFast<
   Ts extends ReadonlyArray<ReadonlyMap<unknown, unknown>>,

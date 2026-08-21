@@ -20,12 +20,13 @@ import type {
 } from "./types/index.ts";
 import { ObjectType, getCyclicReferenceDepth, getMetaDataHierarchy, getObjectType } from "./utils.ts";
 
-const defaultDeepmerge = /** @__PURE__ */ deepmergeCustom();
+const defaultDeepmerge = /* #__PURE__ */ deepmergeCustom();
 
 /**
  * Deeply merge objects.
  *
  * @param objects - The objects to merge.
+ * @returns The merged result.
  */
 export function deepmerge<Ts extends Readonly<ReadonlyArray<unknown>>>(
   ...objects: readonly [...Ts]
@@ -37,6 +38,7 @@ export function deepmerge<Ts extends Readonly<ReadonlyArray<unknown>>>(
  * Used by the default `deepmerge` function.
  *
  * @internal
+ * @returns A customized deepmerge function.
  */
 export function deepmergeCustom(): <Ts extends ReadonlyArray<unknown>>(
   ...objects: Ts
@@ -46,6 +48,7 @@ export function deepmergeCustom(): <Ts extends ReadonlyArray<unknown>>(
  * Deeply merge two or more objects using the given options.
  *
  * @param options - The options on how to customize the merge function.
+ * @returns A customized deepmerge function.
  */
 export function deepmergeCustom<BaseTs = unknown, PMF extends Partial<DeepMergeFunctionsURIs> = {}>(
   options: DeepMergeOptions<DeepMergeBuiltInMetaData, DeepMergeMergeInfo>,
@@ -58,6 +61,7 @@ export function deepmergeCustom<BaseTs = unknown, PMF extends Partial<DeepMergeF
  *
  * @param options - The options on how to customize the merge function.
  * @param rootMetaData - The meta data passed to the root items being merged.
+ * @returns A customized deepmerge function.
  * @example
  * ```ts
  * import { deepmergeCustom } from "deepmerge-ts";
@@ -95,6 +99,9 @@ export function deepmergeCustom<
 
   /**
    * The customized deepmerge function.
+   *
+   * @param objects - The objects to merge.
+   * @returns The merged result.
    */
   function customizedDeepmerge<Ts extends ReadonlyArray<unknown>>(
     ...objects: Ts
@@ -114,6 +121,7 @@ export function deepmergeCustom<
  *
  * @param options - The options the user specified.
  * @param customizedDeepmerge - The customized deepmerge function.
+ * @returns The merge utils.
  */
 function getUtils<M extends DeepMergeMetaData, MI extends DeepMergeMergeInfo = DeepMergeMergeInfo>(
   options: DeepMergeOptions<M, MI>,
@@ -148,6 +156,7 @@ function getUtils<M extends DeepMergeMetaData, MI extends DeepMergeMergeInfo = D
  * @param values - The values.
  * @param utils - The utils.
  * @param meta - The meta data.
+ * @returns The merged result.
  */
 export function mergeUnknowns<
   Ts extends ReadonlyArray<unknown>,
@@ -261,6 +270,7 @@ export function mergeUnknowns<
  * @param values - The records.
  * @param utils - The utils.
  * @param meta - The meta data.
+ * @returns The merged result.
  */
 function mergeRecords<
   U extends DeepMergeUtils<M, MI>,
@@ -280,6 +290,7 @@ function mergeRecords<
  * @param values - The arrays.
  * @param utils - The utils.
  * @param meta - The meta data.
+ * @returns The merged result.
  */
 function mergeArrays<
   U extends DeepMergeUtils<M, MI>,
@@ -299,6 +310,7 @@ function mergeArrays<
  * @param values - The sets.
  * @param utils - The utils.
  * @param meta - The meta data.
+ * @returns The merged result.
  */
 function mergeSets<
   U extends DeepMergeUtils<M, MI>,
@@ -318,6 +330,7 @@ function mergeSets<
  * @param values - The maps.
  * @param utils - The utils.
  * @param meta - The meta data.
+ * @returns The merged result.
  */
 function mergeMaps<
   U extends DeepMergeUtils<M, MI>,
@@ -338,6 +351,7 @@ function mergeMaps<
  * @param cyclicDepths - The depth of each circular reference.
  * @param utils - The utils.
  * @param meta - The meta data.
+ * @returns The merged result.
  */
 function mergeCircularReferences<
   U extends DeepMergeUtils<M, MI>,
@@ -357,6 +371,7 @@ function mergeCircularReferences<
  * @param values - The other things.
  * @param utils - The utils.
  * @param meta - The meta data.
+ * @returns The merged result.
  */
 function mergeOthers<
   U extends DeepMergeUtils<M, MI>,

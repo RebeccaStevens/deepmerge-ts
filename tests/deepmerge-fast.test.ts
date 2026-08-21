@@ -8,7 +8,7 @@ describe("deepmergeFastUnsafe", () => {
   it("returns undefined when nothing to merge", () => {
     // eslint-disable-next-line ts/no-confusing-void-expression
     const merged = deepmergeFastUnsafe();
-    expect(merged).toBe(undefined);
+    expect(merged).toBeUndefined();
   });
 
   it("returns the same object when only 1 is passed", () => {
@@ -122,7 +122,7 @@ describe("deepmergeFastUnsafeCustom", () => {
     });
 
     customMerge({ a: 1 }, { a: 2 });
-    expect(capturedMeta).toBe(undefined);
+    expect(capturedMeta).toBeUndefined();
   });
 
   it("custom mergeRecords and mergeArrays", () => {

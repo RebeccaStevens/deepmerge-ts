@@ -3,5 +3,7 @@ packages:
 allowBuilds:
   esbuild: true
   unrs-resolver: true
+minimumReleaseAgeExclude:
+  - "@rebeccastevens/eslint-config@4.0.2"
 onlyBuiltDependencies:
   - unrs-resolver

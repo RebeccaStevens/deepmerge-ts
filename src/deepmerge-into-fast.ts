@@ -15,7 +15,7 @@ import type {
 import type { SimplifyObject } from "./types/utils.ts";
 import { ObjectType, getObjectType } from "./utils.ts";
 
-const defaultDeepmergeIntoFastUnsafe = /** @__PURE__ */ deepmergeIntoFastUnsafeCustom();
+const defaultDeepmergeIntoFastUnsafe = /* #__PURE__ */ deepmergeIntoFastUnsafeCustom();
 
 /**
  * Deeply merge objects into a target using a high-performance strategy.
@@ -67,6 +67,7 @@ export function deepmergeIntoFastUnsafe<Target extends object, Ts extends Readon
  * Used by the default `deepmergeIntoFastUnsafe` function.
  *
  * @internal
+ * @returns A customized deepmergeIntoFastUnsafe function.
  */
 export function deepmergeIntoFastUnsafeCustom(): <Target extends object, Ts extends ReadonlyArray<unknown>>(
   target: Target,
@@ -87,6 +88,7 @@ export function deepmergeIntoFastUnsafeCustom(): <Target extends object, Ts exte
  * - **Prototype pollution:** Prototype pollution safeguards are omitted for speed; malicious keys like `__proto__` can pollute object prototypes.
  * - **Denial of Service (DoS):** Circular reference detection and recursion depth limits are disabled; cyclic or deeply nested input will cause infinite recursion and crash via stack overflow.
  * @param options - The options on how to customize the merge function.
+ * @returns A customized deepmergeIntoFastUnsafe function.
  */
 export function deepmergeIntoFastUnsafeCustom<BaseTs = unknown>(
   options: DeepMergeIntoFastUnsafeOptions,
@@ -116,6 +118,7 @@ export function deepmergeIntoFastUnsafeCustom<BaseTs = unknown>(
  *
  * @param options - The options the user specified.
  * @param customizedDeepmergeIntoFast - The customized deepmergeIntoFastUnsafe function.
+ * @returns The fast merge into utils.
  */
 function getUtilsFast(
   options: DeepMergeIntoFastUnsafeOptions,

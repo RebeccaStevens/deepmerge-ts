@@ -86,7 +86,7 @@ describe("deepmergeIntoFastUnsafeCustom", () => {
 
     const target = { a: 1 };
     customMergeInto(target, { a: 2 });
-    expect(capturedMeta).toBe(undefined);
+    expect(capturedMeta).toBeUndefined();
   });
 
   it("supports custom mergeArrays and mergeRecords", () => {
