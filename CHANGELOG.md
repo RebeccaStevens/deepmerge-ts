@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
+## [8.0.2](https://github.com/RebeccaStevens/deepmerge-ts/compare/v8.0.1...v8.0.2) (2026-08-21)
+
+
+### Bug Fixes
+
+* correct node engine requirement to >=16.9.0 ([ef54ea6](https://github.com/RebeccaStevens/deepmerge-ts/commit/ef54ea635ea3362a25afd4396d5cbf60a98c1c74))
+
 ## [8.0.1](https://github.com/RebeccaStevens/deepmerge-ts/compare/v8.0.0...v8.0.1) (2026-08-16)
 
 
