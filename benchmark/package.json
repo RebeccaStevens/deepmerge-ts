@@ -23,7 +23,7 @@
   },
   "devDependencies": {
     "@types/node": "22.20.1",
-    "tinybench": "6.1.2",
+    "tinybench": "6.1.4",
     "typescript": "5.9.3"
   }
 }
