@@ -155,7 +155,7 @@
     "vitest": "4.1.12",
     "yaml-eslint-parser": "2.1.0"
   },
-  "packageManager": "pnpm@11.24.0",
+  "packageManager": "pnpm@12.16.1",
   "engines": {
     "node": ">=16.9.0"
   }
