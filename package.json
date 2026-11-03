@@ -133,7 +133,7 @@
     "eslint-plugin-regexp": "3.3.2",
     "eslint-plugin-security": "4.2.0",
     "eslint-plugin-sonarjs": "4.2.2",
-    "eslint-plugin-unicorn": "74.0.0",
+    "eslint-plugin-unicorn": "79.0.0",
     "eslint-plugin-unused-imports": "4.4.1",
     "eslint-plugin-yml": "3.9.0",
     "husky": "9.1.7",
